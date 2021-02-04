@@ -1,0 +1,15 @@
+[MASTER]
+disable=
+    arguments-differ,
+    protected-access,
+    too-few-public-methods,
+    invalid-name,
+    abstract-method,
+    duplicate-code,
+    fixme,
+
+[FORMAT]
+max-line-length=120
+
+[STRING]
+check-quote-consistency=yes
