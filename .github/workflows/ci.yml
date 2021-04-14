@@ -3,7 +3,7 @@ name: Continuous Integration
 on:
   pull_request:
   schedule:
-    - corn: "0 0 * * *"
+    - cron: "0 0 * * *"
 
 jobs:
   build:
