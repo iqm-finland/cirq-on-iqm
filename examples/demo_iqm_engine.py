@@ -19,6 +19,7 @@ Demonstrates calling an IQM device.
 # https://quantumai.google/cirq/tutorials/ionq/getting_started
 # https://quantumai.google/cirq/devices
 
+from cirq_iqm.adonis import Adonis
 import cirq
 from cirq_iqm.iqm_device import IQMQubit
 import cirq_iqm.hardware
@@ -43,11 +44,14 @@ qasm_program = """
         cx q[2], q[1];
         ising(-0.6) q[0], q[2];  // QASM extension
     """
-#circuit = circuit_from_qasm(qasm_program)
+circuit = circuit_from_qasm(qasm_program)
+device = Adonis()
+circuit_adonis = device.map_circuit(circuit)
+iqm_dict= hardware.serialize_iqm(circuit_adonis)
 
 # Create an Engine object.
 # Replace YOUR_PROJECT_ID with the id from your cloud project.
-sampler = hardware.get_sampler()
+sampler = cirq_iqm.hardware.IQMSampler("","") # hardware.get_sampler()
 
 # This will run the circuit and return the results in a 'Result'
 results = sampler.run(circuit, repetitions=1000)

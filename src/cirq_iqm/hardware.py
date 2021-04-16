@@ -31,33 +31,32 @@ def get_sampler():  # todo: config file
     return IQMSampler(url=os.environ.get(env_endpoint_url), token=os.environ.get(env_token))
 
 
-class IQMJob:
-    def __init__(self):
-        pass
+def serialize_iqm(circuit: cirq.Circuit)-> dict:
+    """
+    Converts cirq circuit to IQM compatible representation.
+    """
+    instructions=[]
+    for moment in circuit.moments:
+        for operation in moment.operations:
+            gate_dict=operation.gate._json_dict_()
+            gate=operation.gate
+            instructions.append({
+                "name":gate_dict["cirq_type"],
+                "qubits":[qubit.name for qubit in operation.qubits],
+                "args": {key:val for key,val in gate_dict.items() if key is not "cirq_type"}
+            })
 
-    def results(self) -> List[study.Result]:
-        """Returns the job results, blocking until the job is complete or timed out."""
-        import cirq.google.engine.engine as engine_base
 
-        if not self._results:
-            result = self._wait_for_result()
-
-
-
-        return self._results
-
-    def _wait_for_result(self):
-        pass
+    circuit_dict = {
+        "name": "",
+        "instructions": instructions
+    }
+    return circuit_dict
 
 class IQMSampler(cirq.work.Sampler):
     def __init__(self, url, token):
         """
         Args:
-            engine: Quantum engine instance to use.
-            processor_id: String identifier, or list of string identifiers,
-                determining which processors may be used when sampling.
-            gate_set: Determines how to serialize circuits when requesting
-                samples.
         """
         self._url = url
         self._token = token
@@ -74,5 +73,22 @@ class IQMSampler(cirq.work.Sampler):
         run_context = self._serialize_run_context(sweeps, repetitions)
 
 
-        job = IQMJob(url=self._url, token=self.program_id)
         return job.results()
+
+    def _send_serialized_circuit(
+            self, serialization_str: str, repetitions: int = 1
+    ) -> cirq.study.Result:
+        """Sends the json string to the remote Pasqal device
+        Args:
+            serialization_str: Json representation of the circuit.
+            repetitions: Number of repetitions.
+        Returns:
+            json representation of the results
+        """
+
+
+        result_serialized = self._retrieve_serialized_result(task_id)
+        result = cirq.read_json(json_text=result_serialized)
+
+        return result
+
