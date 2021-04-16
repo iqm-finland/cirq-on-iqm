@@ -47,14 +47,10 @@ qasm_program = """
 circuit = circuit_from_qasm(qasm_program)
 device = Adonis()
 circuit_adonis = device.map_circuit(circuit)
-iqm_dict= hardware.serialize_iqm(circuit_adonis)
 
-# Create an Engine object.
-# Replace YOUR_PROJECT_ID with the id from your cloud project.
-sampler = cirq_iqm.hardware.IQMSampler("","") # hardware.get_sampler()
-
+sampler = hardware.get_sampler()
 # This will run the circuit and return the results in a 'Result'
-results = sampler.run(circuit, repetitions=1000)
+results = sampler.run(circuit_adonis, repetitions=1000)
 
 # Sampler results can be accessed several ways
 

@@ -1,5 +1,6 @@
 import datetime
 import enum
+import json
 import os
 import random
 import string
@@ -21,14 +22,13 @@ from cirq.google.engine import (
     engine_sampler,
 )
 from cirq import study
+from .iqm_client import IQMBackendClient
 
-
-def get_sampler():  # todo: config file
-    env_endpoint_url = "IQM_ENGINE_ENDPOINT"
+def get_sampler():
     env_token = "IQM_TOKEN"
-    for env_var in [env_endpoint_url, env_token]:
+    if not os.environ.get(env_token):
         raise EnvironmentError(f'Environment variable {env_var} is not set.')
-    return IQMSampler(url=os.environ.get(env_endpoint_url), token=os.environ.get(env_token))
+    return IQMSampler(token=os.environ.get(env_token))
 
 
 def serialize_iqm(circuit: cirq.Circuit)-> dict:
@@ -54,11 +54,10 @@ def serialize_iqm(circuit: cirq.Circuit)-> dict:
     return circuit_dict
 
 class IQMSampler(cirq.work.Sampler):
-    def __init__(self, url, token):
+    def __init__(self, token):
         """
         Args:
         """
-        self._url = url
         self._token = token
 
     def run_sweep(
@@ -70,13 +69,14 @@ class IQMSampler(cirq.work.Sampler):
 
 
         sweeps = study.to_sweeps(params or study.ParamResolver({}))
-        run_context = self._serialize_run_context(sweeps, repetitions)
+        result=self._send_circuit(program)
 
+        return result
 
-        return job.results()
-
-    def _send_serialized_circuit(
-            self, serialization_str: str, repetitions: int = 1
+    def _send_circuit(
+            self,
+            circuit: 'cirq.Circuit',
+            repetitions: int = 1
     ) -> cirq.study.Result:
         """Sends the json string to the remote Pasqal device
         Args:
@@ -85,7 +85,11 @@ class IQMSampler(cirq.work.Sampler):
         Returns:
             json representation of the results
         """
-
+        client=IQMBackendClient(self._token)
+        iqm_circuit = serialize_iqm(circuit) # todo: get device here?
+        job_id=client.submit_circuit(mapping={},circuit=iqm_circuit,shots=repetitions) # todo: mapping?
+        results=client.wait_results(job_id)
+        # todo: check if failed
 
         result_serialized = self._retrieve_serialized_result(task_id)
         result = cirq.read_json(json_text=result_serialized)
