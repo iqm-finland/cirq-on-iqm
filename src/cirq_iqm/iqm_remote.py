@@ -44,22 +44,21 @@ import numpy as np
 from cirq_iqm.iqm_client import IQMBackendClient, RunStatus, IQMCircuit, IQMInstruction
 
 
-def get_sampler() -> 'IQMSampler':
+def get_sampler_from_env() -> 'IQMSampler':
     """
-    Initialize an IQM sampler using environment variables
+    Initialize an IQM sampler using environment variables IQM_TOKEN and IQM_URL
 
     Returns:
         IQM Sampler
     """
-    env_token = "IQM_TOKEN"
-    env_url = "IQM_URL"
-    for env_var in [env_url, env_token]:
-        if not os.environ.get(env_var):
-            raise EnvironmentError(f'Environment variable {env_var} is not set.')
-    return IQMSampler(url=os.environ.get(env_url), token=os.environ.get(env_token))
+    IQM_URL = os.environ.get("IQM_URL")
+    IQM_TOKEN = os.environ.get("IQM_TOKEN")
+    if not IQM_URL or not IQM_TOKEN:
+        raise EnvironmentError(f'Environment variables IQM_URL or IQM_TOKEN are not set.')
+    return IQMSampler(url=IQM_URL, token=IQM_TOKEN)
 
 
-def serialize_iqm(circuit: cirq.Circuit) -> IQMCircuit:
+def _serialize_iqm(circuit: cirq.Circuit) -> IQMCircuit:
     """
     Converts cirq circuit to IQM compatible representation.
     Args:
@@ -145,7 +144,7 @@ class IQMSampler(cirq.work.Sampler):
             IQMException
             ApiTimeoutError
         """
-        iqm_circuit = serialize_iqm(circuit)
+        iqm_circuit = _serialize_iqm(circuit)
         job_id = self._client.submit_circuit(circuit=iqm_circuit, shots=repetitions)
         results = self._client.wait_results(job_id)
         measurements = {k: np.array(v) for k, v in results.measurements.items()}
