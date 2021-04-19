@@ -22,26 +22,54 @@ import requests
 from enum import Enum
 from datetime import datetime
 
-TIMEOUT_SECONDS=10
+TIMEOUT_SECONDS = 10
+
 
 class IQMException(Exception):
     pass
 
+
 class ApiTimeoutError(IQMException):
     pass
 
+
 class RunStatus(str, Enum):
-    PENDING="pending"
-    READY="ready"
-    FAILED="failed"
+    PENDING = "pending"
+    READY = "ready"
+    FAILED = "failed"
 
-# todo: docs
+
+@dataclass(frozen=True)
+class IQMInstruction:
+    name: str
+    qubits: list[str]
+    args: dict
+
+
+@dataclass(frozen=True)
+class IQMCircuit:
+    name: str
+    args: dict
+    instructions: list[IQMInstruction]
+
+
 class IQMBackendClient:
-    def __init__(self, url:str, token:str):
-        self._token=token
-        self._base_url=url
+    def __init__(self, url: str, token: str):
+        self._token = token
+        self._base_url = url
 
-    def submit_circuit(self, circuit:dict, mappings:list[dict[str,str]]={}, shots:int=1) -> int:
+    def submit_circuit(self, circuit: IQMCircuit, mappings: list[dict[str, str]] = {}, shots: int = 1) -> int:
+        """
+        Submits circuit to the IQM backend
+        Args:
+            circuit:
+            mappings:
+            shots:
+
+        Returns:
+            ID for the created task. This ID is needed to query the status and the results
+        """
+
         result = requests.post(f"{self._base_url}/circuit/run", data={
             "mappings": mappings,
             "circuit": circuit,
@@ -53,18 +81,15 @@ class IQMBackendClient:
     def get_run_status(self, id) -> dict:
         result = requests.get(f"{self._base_url}/circuit/run/{id}")
         result.raise_for_status()
-        parsed_result=json.loads(result.text)
-        if parsed_result["status"]==RunStatus.FAILED:
+        parsed_result = json.loads(result.text)
+        if parsed_result["status"] == RunStatus.FAILED:
             raise IQMException(parsed_result["message"])
         return parsed_result
 
-    def wait_results(self,id, timeout_secs=TIMEOUT_SECONDS)->dict:
-        start_time=datetime.now()
-        while (datetime.now()-start_time).total_seconds()<timeout_secs:
-            results=self.get_run_status(id)
+    def wait_results(self, id, timeout_secs=TIMEOUT_SECONDS) -> dict:
+        start_time = datetime.now()
+        while (datetime.now() - start_time).total_seconds() < timeout_secs:
+            results = self.get_run_status(id)
             if results["status"] != RunStatus.PENDING:
                 return results
         raise ApiTimeoutError(f"The task didn't finish in {timeout_secs} seconds")
-
-
-

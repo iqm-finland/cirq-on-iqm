@@ -42,44 +42,44 @@ from cirq.google.engine import (
 from cirq import study
 import numpy as np
 from .iqm_client import IQMBackendClient, RunStatus
+from iqm_client import IQMCircuit, IQMInstruction
 
 
 def get_sampler():
     env_token = "IQM_TOKEN"
     env_url = "IQM_URL"
-    for env_var in [env_url,env_token]:
+    for env_var in [env_url, env_token]:
         if not os.environ.get(env_var):
             raise EnvironmentError(f'Environment variable {env_var} is not set.')
     return IQMSampler(url=os.environ.get(env_url), token=os.environ.get(env_token))
 
 
-def serialize_iqm(circuit: cirq.Circuit)-> dict:
+def serialize_iqm(circuit: cirq.Circuit) -> dict:
     """
     Converts cirq circuit to IQM compatible representation.
     """
-    instructions=[]
+    instructions = []
     for moment in circuit.moments:
         for operation in moment.operations:
-            gate_dict=operation.gate._json_dict_()
-            gate=operation.gate
-            instructions.append({
-                "name":gate_dict["cirq_type"],
-                "qubits":[qubit.name for qubit in operation.qubits],
-                "args": {key:val for key,val in gate_dict.items() if key is not "cirq_type"}
-            })
+            gate_dict = operation.gate._json_dict_()
+            gate = operation.gate
+            instructions.append(
+                IQMInstruction(
+                    name=gate_dict["cirq_type"],
+                    qubits=[qubit.name for qubit in operation.qubits],
+                    args={key: val for key, val in gate_dict.items() if key is not "cirq_type"}
+                )
+            )
 
-
-    circuit_dict = {
-        "name": "",
-        "instructions": instructions
-    }
+    circuit_dict = IQMCircuit(
+        name="Serialized from cirq",
+        instructions=instructions
+    )
     return circuit_dict
+
 
 class IQMSampler(cirq.work.Sampler):
     def __init__(self, url, token):
-        """
-        Args:
-        """
         self._client = IQMBackendClient(url, token)
 
     def run_sweep(
@@ -89,7 +89,7 @@ class IQMSampler(cirq.work.Sampler):
             repetitions: int = 1,
     ) -> List['cirq.Result']:
         sweeps = study.to_sweeps(params or study.ParamResolver({}))
-        results=[]
+        results = []
         results.append(self._send_circuit(program))
         return results
 
@@ -106,11 +106,10 @@ class IQMSampler(cirq.work.Sampler):
             json representation of the results
         """
         iqm_circuit = serialize_iqm(circuit)
-        job_id=self._client.submit_circuit(circuit=iqm_circuit,shots=repetitions)
-        results=self._client.wait_results(job_id)
-        measurements=dict()
-        for key,value in results["measurements"].items():
-            measurements[key]=np.array(value)
+        job_id = self._client.submit_circuit(circuit=iqm_circuit, shots=repetitions)
+        results = self._client.wait_results(job_id)
+        measurements = dict()
+        for key, value in results["measurements"].items():
+            measurements[key] = np.array(value)
 
-        return study.Result(params={},measurements=measurements)
-
+        return study.Result(params={}, measurements=measurements)

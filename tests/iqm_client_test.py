@@ -16,9 +16,10 @@
 import json
 
 import pytest
-from cirq_iqm.iqm_client import IQMBackendClient
+from cirq_iqm.iqm_client import IQMBackendClient, IQMCircuit
 from requests import HTTPError
 from mockito import when, mock, unstub
+import jsons
 from tests.coco_mock import mock_backend
 BASE_URL = "https://meetiqm.com/api/"
 API_KEY = "random_key"
@@ -38,7 +39,8 @@ def test_submit_circuit():
             {"logical_name": "Qubit A", "physical_name": "qubit_1"},
             {"logical_name": "Qubit B", "physical_name": "qubit_2"}
         ],
-        circuit={
+        circuit=jsons.load(
+        {
         "name": "The circuit",
         "args": {
             "alpha": 1.2
@@ -74,7 +76,7 @@ def test_submit_circuit():
                 }
             }
         ]
-    }, shots=1000)
+    }, IQMCircuit), shots=1000)
     assert run_id == 14
 
 
