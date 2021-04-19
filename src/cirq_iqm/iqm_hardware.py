@@ -22,7 +22,7 @@ import json
 import os
 import random
 import string
-from typing import Dict, Iterable, List, Optional, Sequence, Set, TypeVar, Union, TYPE_CHECKING
+from typing import Iterable, Optional, Sequence, Set, TypeVar, Union, TYPE_CHECKING
 
 import cirq
 from google.protobuf import any_pb2
@@ -41,11 +41,16 @@ from cirq.google.engine import (
 )
 from cirq import study
 import numpy as np
-from .iqm_client import IQMBackendClient, RunStatus
-from iqm_client import IQMCircuit, IQMInstruction
+from cirq_iqm.iqm_client import IQMBackendClient, RunStatus,IQMCircuit, IQMInstruction
 
 
-def get_sampler():
+def get_sampler() -> 'IQMSampler':
+    """
+    Initialize an IQM sampler using environment variables
+
+    Returns:
+        IQM Sampler
+    """
     env_token = "IQM_TOKEN"
     env_url = "IQM_URL"
     for env_var in [env_url, env_token]:
@@ -54,9 +59,14 @@ def get_sampler():
     return IQMSampler(url=os.environ.get(env_url), token=os.environ.get(env_token))
 
 
-def serialize_iqm(circuit: cirq.Circuit) -> dict:
+def serialize_iqm(circuit: cirq.Circuit) -> IQMCircuit:
     """
     Converts cirq circuit to IQM compatible representation.
+    Args:
+        circuit: Circuit to serialize
+
+    Returns:
+        IQM circuit object
     """
     instructions = []
     for moment in circuit.moments:
@@ -67,18 +77,23 @@ def serialize_iqm(circuit: cirq.Circuit) -> dict:
                 IQMInstruction(
                     name=gate_dict["cirq_type"],
                     qubits=[qubit.name for qubit in operation.qubits],
-                    args={key: val for key, val in gate_dict.items() if key is not "cirq_type"}
+                    args={key: val for key, val in gate_dict.items() if key != "cirq_type"}
                 )
             )
 
     circuit_dict = IQMCircuit(
         name="Serialized from cirq",
-        instructions=instructions
+        instructions=instructions,
+        args={} # todo: implement arguments
     )
     return circuit_dict
 
 
 class IQMSampler(cirq.work.Sampler):
+    """
+    IQM implementation of a cirq sampler.
+    Allows to sample circuits using a real backend
+    """
     def __init__(self, url, token):
         self._client = IQMBackendClient(url, token)
 
@@ -87,10 +102,28 @@ class IQMSampler(cirq.work.Sampler):
             program: 'cirq.Circuit',
             params: 'cirq.Sweepable',
             repetitions: int = 1,
-    ) -> List['cirq.Result']:
+    ) -> list['cirq.Result']:
+        """Samples from the given Circuit.
+
+        In contrast to run, this allows for sweeping over different parameter
+        values.
+
+        Args:
+            program: The circuit to sample from.
+            params: Parameters to run with the program (NOT IMPLEMENTED, leave empty)
+            repetitions: The number of times to sample.
+
+        Returns:
+            Result list for this run; one for each possible parameter
+            resolver.
+
+        Raises:
+            NotImplementedError
+        """
         sweeps = study.to_sweeps(params or study.ParamResolver({}))
-        results = []
-        results.append(self._send_circuit(program))
+        if len(sweeps)>1 or len(sweeps[0].keys)>0:
+            raise NotImplementedError("Sweeps are not supported")
+        results = [self._send_circuit(program)]
         return results
 
     def _send_circuit(
@@ -98,12 +131,18 @@ class IQMSampler(cirq.work.Sampler):
             circuit: 'cirq.Circuit',
             repetitions: int = 1
     ) -> cirq.study.Result:
-        """Sends the json string to the remote Pasqal device
+        """
+        Sends the circuit to the remote IQM device
         Args:
-            serialization_str: Json representation of the circuit.
-            repetitions: Number of repetitions.
+            circuit: Circuit to run
+            repetitions: Number of repetitions
+
         Returns:
-            json representation of the results
+        Results of the run
+
+        Raises:
+            IQMException
+            ApiTimeoutError
         """
         iqm_circuit = serialize_iqm(circuit)
         job_id = self._client.submit_circuit(circuit=iqm_circuit, shots=repetitions)

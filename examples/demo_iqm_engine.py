@@ -22,7 +22,7 @@ Demonstrates calling an IQM device.
 from cirq_iqm.adonis import Adonis
 import cirq
 from cirq_iqm.iqm_device import IQMQubit
-from cirq_iqm import hardware
+from cirq_iqm import iqm_hardware
 
 # todo: remove mocking when the server is deployed
 import tests.coco_mock
@@ -38,7 +38,7 @@ circuit = cirq.Circuit(
 device = Adonis()
 circuit_adonis = device.map_circuit(circuit)
 
-sampler = hardware.get_sampler()
+sampler = iqm_hardware.get_sampler()
 # This will run the circuit and return the results in a 'Result'
 results = sampler.run(circuit_adonis, repetitions=1000)
 
