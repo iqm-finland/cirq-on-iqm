@@ -1,3 +1,21 @@
+# Copyright 2020–2021 Cirq on IQM developers
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""
+Implements a CIRQ compatible sampler that calls the IQM backend
+"""
+
 import datetime
 import enum
 import json
@@ -22,7 +40,9 @@ from cirq.google.engine import (
     engine_sampler,
 )
 from cirq import study
+import numpy as np
 from .iqm_client import IQMBackendClient
+
 
 def get_sampler():
     env_token = "IQM_TOKEN"
@@ -66,12 +86,11 @@ class IQMSampler(cirq.work.Sampler):
             params: 'cirq.Sweepable',
             repetitions: int = 1,
     ) -> List['cirq.Result']:
-
-
         sweeps = study.to_sweeps(params or study.ParamResolver({}))
-        result=self._send_circuit(program)
+        results=[]
+        results.append(self._send_circuit(program))
 
-        return result
+        return results
 
     def _send_circuit(
             self,
@@ -91,8 +110,9 @@ class IQMSampler(cirq.work.Sampler):
         results=client.wait_results(job_id)
         # todo: check if failed
 
-        result_serialized = self._retrieve_serialized_result(task_id)
-        result = cirq.read_json(json_text=result_serialized)
+        measurements=dict()
+        for key,value in results["measurements"].items():
+            measurements[key]=np.array(value)
 
-        return result
+        return study.Result(params={},measurements=measurements)
 
