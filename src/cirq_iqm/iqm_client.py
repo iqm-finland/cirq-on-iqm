@@ -23,7 +23,8 @@ from enum import Enum
 from datetime import datetime
 
 TIMEOUT_SECONDS = 10
-SECONDS_BETWEEN_CALLS=1
+SECONDS_BETWEEN_CALLS = 1
+
 
 class IQMException(Exception):
     pass
@@ -62,29 +63,13 @@ class QubitMapping:
 @dataclass(frozen=True)
 class RunResult():
     status: RunStatus
+    measurements: dict[str:list[list]] = None
+    message: str = None
 
     @staticmethod
     def parse(input: dict):
-        if input["status"]==RunStatus.READY:
-            return RunReady(**input)
-        elif input["status"]==RunStatus.PENDING:
-            return RunPending(**input)
-        elif input["status"]==RunStatus.FAILED:
-            return RunError(**input)
-        else:
-            raise Exception(f"Unknown message status: {input['status']}")
-
-@dataclass(frozen=True)
-class RunPending(RunResult):
-    pass
-
-@dataclass(frozen=True)
-class RunReady(RunResult):
-    measurements: dict[str:list[list]]
-
-@dataclass(frozen=True)
-class RunFailed(RunResult):
-    message: str
+        input_copy = input.copy()
+        return RunResult(status=RunStatus(input_copy.pop("status")), **input_copy)
 
 
 class IQMBackendClient:
@@ -128,7 +113,7 @@ class IQMBackendClient:
         """
         result = requests.get(f"{self._base_url}/circuit/run/{id}")
         result.raise_for_status()
-        result=RunResult.parse(json.loads(result.text))
+        result = RunResult.parse(json.loads(result.text))
         if result.status == RunStatus.FAILED:
             raise IQMException(parsed_result["message"])
         return result

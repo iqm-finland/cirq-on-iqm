@@ -41,7 +41,7 @@ from cirq.google.engine import (
 )
 from cirq import study
 import numpy as np
-from cirq_iqm.iqm_client import IQMBackendClient, RunStatus,IQMCircuit, IQMInstruction
+from cirq_iqm.iqm_client import IQMBackendClient, RunStatus, IQMCircuit, IQMInstruction
 
 
 def get_sampler() -> 'IQMSampler':
@@ -84,7 +84,7 @@ def serialize_iqm(circuit: cirq.Circuit) -> IQMCircuit:
     circuit_dict = IQMCircuit(
         name="Serialized from cirq",
         instructions=instructions,
-        args={} # todo: implement arguments
+        args={}  # todo: implement arguments
     )
     return circuit_dict
 
@@ -94,6 +94,7 @@ class IQMSampler(cirq.work.Sampler):
     IQM implementation of a cirq sampler.
     Allows to sample circuits using a real backend
     """
+
     def __init__(self, url, token):
         self._client = IQMBackendClient(url, token)
 
@@ -121,7 +122,7 @@ class IQMSampler(cirq.work.Sampler):
             NotImplementedError
         """
         sweeps = study.to_sweeps(params or study.ParamResolver({}))
-        if len(sweeps)>1 or len(sweeps[0].keys)>0:
+        if len(sweeps) > 1 or len(sweeps[0].keys) > 0:
             raise NotImplementedError("Sweeps are not supported")
         results = [self._send_circuit(program)]
         return results
@@ -147,5 +148,5 @@ class IQMSampler(cirq.work.Sampler):
         iqm_circuit = serialize_iqm(circuit)
         job_id = self._client.submit_circuit(circuit=iqm_circuit, shots=repetitions)
         results = self._client.wait_results(job_id)
-        measurements = {key:np.array(value) for (key,value) in results.measurements.items()}
+        measurements = {k: np.array(v) for k, v in results.measurements.items()}
         return study.Result(params={}, measurements=measurements)

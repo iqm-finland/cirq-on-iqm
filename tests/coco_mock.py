@@ -4,6 +4,7 @@ import requests
 
 BASE_URL = "https://meetiqm.com/api/"
 
+
 def mock_backend():
     success_submit_response = mock({'status_code': 201, 'text': json.dumps({"id": 14})})
     when(requests).post(f"{BASE_URL}/circuit/run", ...).thenReturn(success_submit_response)
