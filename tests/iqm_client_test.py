@@ -17,37 +17,31 @@ import json
 
 import pytest
 from cirq_iqm.iqm_client import IQMBackendClient
-from mockito import when, mock, unstub
-import requests
 from requests import HTTPError
-
+import requests
+from mockito import when, mock, unstub
+from tests.coco_mock import mock_backend
 BASE_URL = "https://meetiqm.com/api/"
-api_key = "random_key"
+API_KEY = "random_key"
 
 
 @pytest.fixture(scope="function", autouse=True)
 def prepare():
-    success_submit_response = mock({'status_code': 201, 'text': json.dumps({"id": 14})})
-    when(requests).post(f"{BASE_URL}/circuit/run", ...).thenReturn(success_submit_response)
-
-    running_response = mock({'status_code': 200, 'text': json.dumps({"status": "pending"})})
-    success_get_response = mock({'status_code': 200, 'text': json.dumps({"status": "ready", "results": "0101010101"})})
-    no_run_response = mock({'status_code': 404, 'text': "Run not found"})
-
-    when(requests).get(f"{BASE_URL}/circuit/run/14", ...).thenReturn(running_response).thenReturn(success_get_response)
-    when(requests).get(f"{BASE_URL}/circuit/run/13", ...).thenReturn(no_run_response)
-
+    mock_backend()
     yield  # running test function
-
     unstub()
 
 
-mapping = dict()
 
 
 def test_submit_circuit():
-    client = IQMBackendClient(api_key)
-    run_id = client.submit_circuit({"Qubit A": "qubit_1", "Qubit B": "qubit_2"}, {
+    client = IQMBackendClient(BASE_URL, API_KEY)
+    run_id = client.submit_circuit(
+        mappings=[
+            {"logical_name": "Qubit A", "physical_name": "qubit_1"},
+            {"logical_name": "Qubit B", "physical_name": "qubit_2"}
+        ],
+        circuit={
         "name": "The circuit",
         "args": {
             "alpha": 1.2
@@ -88,18 +82,18 @@ def test_submit_circuit():
 
 
 def test_get_run_status():
-    client = IQMBackendClient(api_key)
+    client = IQMBackendClient(BASE_URL, API_KEY)
     assert client.get_run_status(14)["status"] == "pending"
     assert client.get_run_status(14)["status"] == "ready"
 
 
 def test_wrong_run():
     unstub()
-    client = IQMBackendClient(api_key)
+    client = IQMBackendClient(BASE_URL, API_KEY)
     with pytest.raises(HTTPError):
         assert client.get_run_status(13)
 
 
 def test_wait_results():
-    client = IQMBackendClient(api_key)
+    client = IQMBackendClient(BASE_URL, API_KEY)
     assert client.wait_results(14)["status"] == "ready"
