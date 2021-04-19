@@ -108,8 +108,5 @@ class IQMSampler(cirq.work.Sampler):
         iqm_circuit = serialize_iqm(circuit)
         job_id = self._client.submit_circuit(circuit=iqm_circuit, shots=repetitions)
         results = self._client.wait_results(job_id)
-        measurements = dict()
-        for key, value in results["measurements"].items():
-            measurements[key] = np.array(value)
-
+        measurements = {key:np.array(value) for (key,value) in results.measurements.items()}
         return study.Result(params={}, measurements=measurements)
