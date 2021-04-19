@@ -54,7 +54,7 @@ def get_sampler_from_env() -> 'IQMSampler':
     IQM_URL = os.environ.get("IQM_URL")
     IQM_TOKEN = os.environ.get("IQM_TOKEN")
     if not IQM_URL or not IQM_TOKEN:
-        raise EnvironmentError(f'Environment variables IQM_URL or IQM_TOKEN are not set.')
+        raise EnvironmentError(f'Environment variables IQM_URL and IQM_TOKEN are not set.')
     return IQMSampler(url=IQM_URL, token=IQM_TOKEN)
 
 
