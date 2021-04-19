@@ -35,6 +35,7 @@ class RunStatus(str, Enum):
     READY="ready"
     FAILED="failed"
 
+# todo: docs
 class IQMBackendClient:
     def __init__(self, url:str, token:str):
         self._token=token
@@ -52,7 +53,10 @@ class IQMBackendClient:
     def get_run_status(self, id) -> dict:
         result = requests.get(f"{self._base_url}/circuit/run/{id}")
         result.raise_for_status()
-        return json.loads(result.text)
+        parsed_result=json.loads(result.text)
+        if parsed_result["status"]==RunStatus.FAILED:
+            raise IQMException(parsed_result["message"])
+        return parsed_result
 
     def wait_results(self,id, timeout_secs=TIMEOUT_SECONDS)->dict:
         start_time=datetime.now()

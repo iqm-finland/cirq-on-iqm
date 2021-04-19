@@ -41,14 +41,16 @@ from cirq.google.engine import (
 )
 from cirq import study
 import numpy as np
-from .iqm_client import IQMBackendClient
+from .iqm_client import IQMBackendClient, RunStatus
 
 
 def get_sampler():
     env_token = "IQM_TOKEN"
-    if not os.environ.get(env_token):
-        raise EnvironmentError(f'Environment variable {env_var} is not set.')
-    return IQMSampler(token=os.environ.get(env_token))
+    env_url = "IQM_URL"
+    for env_var in [env_url,env_token]:
+        if not os.environ.get(env_var):
+            raise EnvironmentError(f'Environment variable {env_var} is not set.')
+    return IQMSampler(url=os.environ.get(env_url), token=os.environ.get(env_token))
 
 
 def serialize_iqm(circuit: cirq.Circuit)-> dict:
@@ -74,11 +76,11 @@ def serialize_iqm(circuit: cirq.Circuit)-> dict:
     return circuit_dict
 
 class IQMSampler(cirq.work.Sampler):
-    def __init__(self, token):
+    def __init__(self, url, token):
         """
         Args:
         """
-        self._token = token
+        self._client = IQMBackendClient(url, token)
 
     def run_sweep(
             self,
@@ -89,7 +91,6 @@ class IQMSampler(cirq.work.Sampler):
         sweeps = study.to_sweeps(params or study.ParamResolver({}))
         results=[]
         results.append(self._send_circuit(program))
-
         return results
 
     def _send_circuit(
@@ -104,12 +105,9 @@ class IQMSampler(cirq.work.Sampler):
         Returns:
             json representation of the results
         """
-        client=IQMBackendClient(self._token)
-        iqm_circuit = serialize_iqm(circuit) # todo: get device here?
-        job_id=client.submit_circuit(mapping={},circuit=iqm_circuit,shots=repetitions) # todo: mapping?
-        results=client.wait_results(job_id)
-        # todo: check if failed
-
+        iqm_circuit = serialize_iqm(circuit)
+        job_id=self._client.submit_circuit(circuit=iqm_circuit,shots=repetitions)
+        results=self._client.wait_results(job_id)
         measurements=dict()
         for key,value in results["measurements"].items():
             measurements[key]=np.array(value)

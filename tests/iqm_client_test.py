@@ -18,7 +18,6 @@ import json
 import pytest
 from cirq_iqm.iqm_client import IQMBackendClient
 from requests import HTTPError
-import requests
 from mockito import when, mock, unstub
 from tests.coco_mock import mock_backend
 BASE_URL = "https://meetiqm.com/api/"
@@ -30,8 +29,6 @@ def prepare():
     mock_backend()
     yield  # running test function
     unstub()
-
-
 
 
 def test_submit_circuit():
