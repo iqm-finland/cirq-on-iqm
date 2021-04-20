@@ -15,33 +15,12 @@
 """
 Implements a CIRQ compatible sampler that calls the IQM backend
 """
-
-import datetime
-import enum
-import json
 import os
-import random
-import string
-from typing import Iterable, Optional, Sequence, Set, TypeVar, Union, TYPE_CHECKING
-
 import cirq
-from google.protobuf import any_pb2
-from cirq.google.engine.client import quantum
-from cirq.google.engine.result_type import ResultType
-from cirq import circuits, study, value
-from cirq.google import serializable_gate_set as sgs
-from cirq.google.api import v2
-from cirq.google.arg_func_langs import arg_to_proto
-from cirq.google.engine import (
-    engine_client,
-    engine_program,
-    engine_job,
-    engine_processor,
-    engine_sampler,
-)
-from cirq import study
 import numpy as np
-from cirq_iqm.iqm_client import IQMBackendClient, RunStatus, IQMCircuit, IQMInstruction
+from cirq import study
+from cirq.study import resolver
+from cirq_iqm.iqm_client import IQMBackendClient, IQMCircuit, IQMInstruction
 
 
 def get_sampler_from_env() -> 'IQMSampler':
@@ -51,11 +30,11 @@ def get_sampler_from_env() -> 'IQMSampler':
     Returns:
         IQM Sampler
     """
-    IQM_URL = os.environ.get("IQM_URL")
-    IQM_TOKEN = os.environ.get("IQM_TOKEN")
-    if not IQM_URL or not IQM_TOKEN:
-        raise EnvironmentError(f'Environment variables IQM_URL and IQM_TOKEN are not set.')
-    return IQMSampler(url=IQM_URL, token=IQM_TOKEN)
+    iqm_url = os.environ.get('IQM_URL')
+    iqm_token = os.environ.get('IQM_TOKEN')
+    if not iqm_url or not iqm_token:
+        raise EnvironmentError('Environment variables IQM_URL and IQM_TOKEN are not set.')
+    return IQMSampler(url=iqm_url, token=iqm_token)
 
 
 def _serialize_iqm(circuit: cirq.Circuit) -> IQMCircuit:
@@ -71,17 +50,16 @@ def _serialize_iqm(circuit: cirq.Circuit) -> IQMCircuit:
     for moment in circuit.moments:
         for operation in moment.operations:
             gate_dict = operation.gate._json_dict_()
-            gate = operation.gate
             instructions.append(
                 IQMInstruction(
-                    name=gate_dict["cirq_type"],
-                    qubits=[qubit.name for qubit in operation.qubits],
-                    args={key: val for key, val in gate_dict.items() if key != "cirq_type"}
+                    name=gate_dict['cirq_type'],
+                    qubits=[str(qubit) for qubit in operation.qubits],
+                    args={key: val for key, val in gate_dict.items() if key != 'cirq_type'}
                 )
             )
 
     circuit_dict = IQMCircuit(
-        name="Serialized from cirq",
+        name='Serialized from cirq',
         instructions=instructions,
         args={}  # todo: implement arguments
     )
@@ -122,7 +100,7 @@ class IQMSampler(cirq.work.Sampler):
         """
         sweeps = study.to_sweeps(params or study.ParamResolver({}))
         if len(sweeps) > 1 or len(sweeps[0].keys) > 0:
-            raise NotImplementedError("Sweeps are not supported")
+            raise NotImplementedError('Sweeps are not supported')
         results = [self._send_circuit(program)]
         return results
 
@@ -148,4 +126,4 @@ class IQMSampler(cirq.work.Sampler):
         job_id = self._client.submit_circuit(circuit=iqm_circuit, shots=repetitions)
         results = self._client.wait_results(job_id)
         measurements = {k: np.array(v) for k, v in results.measurements.items()}
-        return study.Result(params={}, measurements=measurements)
+        return study.Result(params=resolver.ParamResolver(), measurements=measurements)

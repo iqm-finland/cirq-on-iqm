@@ -18,23 +18,31 @@ Implements a client for calling the IQM backend
 import time
 from dataclasses import dataclass
 import json
-import requests
 from enum import Enum
 from datetime import datetime
+import requests
+
 
 TIMEOUT_SECONDS = 10
 SECONDS_BETWEEN_CALLS = 1
 
 
 class IQMException(Exception):
-    pass
+    """
+    IQM client specific exception
+    """
 
 
 class ApiTimeoutError(IQMException):
-    pass
+    """
+    Exception for when executing a task on the backend takes too long
+    """
 
 
 class RunStatus(str, Enum):
+    """
+    Status of a task
+    """
     PENDING = "pending"
     READY = "ready"
     FAILED = "failed"
@@ -42,6 +50,9 @@ class RunStatus(str, Enum):
 
 @dataclass(frozen=True)
 class IQMInstruction:
+    """
+    Transfer DTO for IQM insrtructions
+    """
     name: str
     qubits: list[str]
     args: dict
@@ -49,6 +60,9 @@ class IQMInstruction:
 
 @dataclass(frozen=True)
 class IQMCircuit:
+    """
+    Transfer DTO for IQM circuit
+    """
     name: str
     args: dict
     instructions: list[IQMInstruction]
@@ -56,28 +70,52 @@ class IQMCircuit:
 
 @dataclass(frozen=True)
 class QubitMapping:
+    """
+    Mapping of logical qubits to physical qubits
+    """
     logical_name: str
     physical_name: str
 
 
 @dataclass(frozen=True)
-class RunResult():
+class RunResult:
+    """
+    Result of a task execution
+    """
     status: RunStatus
     measurements: dict[str:list[list]] = None
     message: str = None
 
     @staticmethod
-    def parse(input: dict):
-        input_copy = input.copy()
+    def parse(inp: dict):
+        """
+        Parses the result from a dict
+        Args:
+            inp: value to parse
+
+        Returns:
+            Parsed object of RunResult
+
+        """
+        input_copy = inp.copy()
         return RunResult(status=RunStatus(input_copy.pop("status")), **input_copy)
 
 
 class IQMBackendClient:
+    """
+    Class to access backend quantum computer
+    """
     def __init__(self, url: str, token: str):
+        """
+        Init
+        Args:
+            url: Endpoint for accessing the quantum computer
+            token: Access token for authentification
+        """
         self._token = token
         self._base_url = url
 
-    def submit_circuit(self, circuit: IQMCircuit, mappings: list[QubitMapping] = {}, shots: int = 1) -> int:
+    def submit_circuit(self, circuit: IQMCircuit, mappings: list[QubitMapping] = None, shots: int = 1) -> int:
         """
         Submits circuit to the IQM backend
         Args:
@@ -97,11 +135,11 @@ class IQMBackendClient:
         result.raise_for_status()
         return json.loads(result.text)["id"]
 
-    def get_run(self, id) -> RunResult:
+    def get_run(self, run_id) -> RunResult:
         """
         Query the status of the running task
         Args:
-            id: id of the taks
+            run_id: id of the taks
 
         Returns:
             Run result (can be Pending)
@@ -111,18 +149,18 @@ class IQMBackendClient:
             IQMException for IQM backend specific exceptions
 
         """
-        result = requests.get(f"{self._base_url}/circuit/run/{id}")
+        result = requests.get(f"{self._base_url}/circuit/run/{run_id}")
         result.raise_for_status()
         result = RunResult.parse(json.loads(result.text))
         if result.status == RunStatus.FAILED:
-            raise IQMException(parsed_result["message"])
+            raise IQMException(result.message)
         return result
 
-    def wait_results(self, id, timeout_secs=TIMEOUT_SECONDS) -> RunResult:
+    def wait_results(self, run_id, timeout_secs=TIMEOUT_SECONDS) -> RunResult:
         """
         Poll results until run is Ready/Failed or timed out
         Args:
-            id: id of the task to wait
+            run_id: id of the task to wait
             timeout_secs: how long to wait for a response before raising an ApiTimeoutError
 
         Returns:
@@ -134,7 +172,7 @@ class IQMBackendClient:
         """
         start_time = datetime.now()
         while (datetime.now() - start_time).total_seconds() < timeout_secs:
-            results = self.get_run(id)
+            results = self.get_run(run_id)
             if results.status != RunStatus.PENDING:
                 return results
             time.sleep(SECONDS_BETWEEN_CALLS)

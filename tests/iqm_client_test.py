@@ -13,14 +13,13 @@
 # limitations under the License.
 
 """Testing IQM api client."""
-import json
-
 import pytest
-from cirq_iqm.iqm_client import IQMBackendClient, IQMCircuit, QubitMapping
 from requests import HTTPError
-from mockito import when, mock, unstub
+from mockito import unstub
 import jsons
+from cirq_iqm.iqm_client import IQMBackendClient, IQMCircuit, QubitMapping
 from tests.coco_mock import mock_backend
+
 
 BASE_URL = "https://meetiqm.com/api/"
 API_KEY = "random_key"
@@ -28,12 +27,18 @@ API_KEY = "random_key"
 
 @pytest.fixture(scope="function", autouse=True)
 def prepare():
+    """
+    Runs mocking separately for each test
+    """
     mock_backend()
     yield  # running test function
     unstub()
 
 
 def test_submit_circuit():
+    """
+    Tests sending a circuit
+    """
     client = IQMBackendClient(BASE_URL, API_KEY)
     run_id = client.submit_circuit(
         mappings=[
@@ -82,12 +87,18 @@ def test_submit_circuit():
 
 
 def test_get_run_status():
+    """
+    Tests getting the run status
+    """
     client = IQMBackendClient(BASE_URL, API_KEY)
     assert client.get_run(14).status == "pending"
     assert client.get_run(14).status == "ready"
 
 
 def test_wrong_run():
+    """
+    Tests getting a task that was not created
+    """
     unstub()
     client = IQMBackendClient(BASE_URL, API_KEY)
     with pytest.raises(HTTPError):
@@ -95,5 +106,8 @@ def test_wrong_run():
 
 
 def test_wait_results():
+    """
+    Tests waiting for results for an existing task
+    """
     client = IQMBackendClient(BASE_URL, API_KEY)
     assert client.wait_results(14).status == "ready"

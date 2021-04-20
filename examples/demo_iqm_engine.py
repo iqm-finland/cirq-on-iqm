@@ -19,15 +19,10 @@ Demonstrates calling an IQM device.
 # https://quantumai.google/cirq/tutorials/ionq/getting_started
 # https://quantumai.google/cirq/devices
 
-from cirq_iqm.adonis import Adonis
 import cirq
+from cirq_iqm.adonis import Adonis
 from cirq_iqm.iqm_device import IQMQubit
 from cirq_iqm import iqm_remote
-
-# todo: remove mocking when the server is deployed
-import tests.coco_mock
-tests.coco_mock.mock_backend()
-
 
 qubit = IQMQubit(1)
 circuit = cirq.Circuit(
@@ -38,8 +33,10 @@ circuit = cirq.Circuit(
 device = Adonis()
 circuit_adonis = device.map_circuit(circuit)
 
+# Set IQM_URL and IQM_TOKEN environment variables
 sampler = iqm_remote.get_sampler_from_env()
-# This will run the circuit and return the results in a 'Result'
+
+# This will send the circuit to the backend and return the results in a 'Result'
 results = sampler.run(circuit_adonis, repetitions=1000)
 
 # Sampler results can be accessed several ways
