@@ -1,18 +1,15 @@
 # Configuration file for the Sphinx documentation builder.
-#
-# This file only contains a selection of the most common options. For a full
-# list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
+
+import os
+import sys
+
 
 # -- Path setup --------------------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-import os
-import sys
-
 
 # Find the path to the source files we want to to document, relative to the location of this file,
 # convert it to an absolute path.
@@ -41,7 +38,7 @@ else:
 # -- General configuration ---------------------------------------------------
 
 # require a recent version of Sphinx
-needs_sphinx = '3.0'
+needs_sphinx = '3.5'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -111,4 +108,4 @@ mathjax_config = {
 # -- Options for sphinxcontrib.bibtex -------------------------------------------------
 
 # List of all bibliography files used.
-bibtex_bibfiles = ['references.bib']
+#bibtex_bibfiles = ['references.bib']
