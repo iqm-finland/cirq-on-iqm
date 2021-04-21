@@ -74,7 +74,12 @@ class IQMSampler(cirq.work.Sampler):
     Circuit sampler for evaluating quantum circuits on IQM quantum devices.
     """
 
-    def __init__(self, url):
+    def __init__(self, url: str):
+        """
+        Init
+        Args:
+            url: Endpoint for accessing the device. Has to start with http or https.
+        """
         self._client = IQMBackendClient(url)
 
     def run_sweep(
@@ -103,7 +108,7 @@ class IQMSampler(cirq.work.Sampler):
         sweeps = study.to_sweeps(params or study.ParamResolver({}))
         if len(sweeps) > 1 or len(sweeps[0].keys) > 0:
             raise NotImplementedError('Sweeps are not supported')
-        results = [self._send_circuit(program)]
+        results = [self._send_circuit(program, repetitions=repetitions)]
         return results
 
     def _send_circuit(
