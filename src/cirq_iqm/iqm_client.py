@@ -111,7 +111,7 @@ class IQMBackendClient:
         """
         Init
         Args:
-            url: Endpoint for accessing the quantum computer. Has to start from http or https
+            url: Endpoint for accessing the quantum computer. Has to start with http or https.
         """
         self._base_url = url
 
