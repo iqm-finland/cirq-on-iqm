@@ -17,7 +17,7 @@ from uuid import UUID
 import pytest
 from requests import HTTPError
 import jsons
-from cirq_iqm.iqm_client import IQMBackendClient, CircuitDTO, QubitMapping
+from cirq_iqm.iqm_client import IQMBackendClient, CircuitDTO, SingleQubitMapping
 
 BASE_URL = "https://example.com"
 existing_run = UUID("3c3fcda3-e860-46bf-92a4-bcc59fa76ce9")
@@ -30,9 +30,9 @@ def test_submit_circuit_returns_id(mock_backend):
     """
     client = IQMBackendClient(BASE_URL)
     run_id = client.submit_circuit(
-        mappings=[
-            QubitMapping(logical_name="Qubit A", physical_name="qubit_1"),
-            QubitMapping(logical_name="Qubit B", physical_name="qubit_2")
+        mapping=[
+            SingleQubitMapping(logical_name="Qubit A", physical_name="qubit_1"),
+            SingleQubitMapping(logical_name="Qubit B", physical_name="qubit_2")
         ],
         circuit=jsons.load(
             {

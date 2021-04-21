@@ -15,6 +15,8 @@
 """
 Implements a circuit sampler that calls the IQM backend.
 """
+from __future__ import annotations
+
 import os
 import cirq
 import numpy as np
@@ -23,7 +25,7 @@ from cirq.study import resolver
 from cirq_iqm.iqm_client import IQMBackendClient, CircuitDTO, InstructionDTO
 
 
-def get_sampler_from_env() -> 'IQMSampler':
+def get_sampler_from_env() -> IQMSampler:
     """
     Initialize an IQM sampler using environment variable IQM_SERVER_URL
 
@@ -40,6 +42,7 @@ def get_sampler_from_env() -> 'IQMSampler':
 def _serialize_iqm(circuit: cirq.Circuit) -> CircuitDTO:
     """
     Serializes a quantum circuit into the IQM data transfer format.
+
     Args:
         circuit: Circuit to serialize
 
@@ -76,10 +79,10 @@ class IQMSampler(cirq.work.Sampler):
 
     def run_sweep(
             self,
-            program: 'cirq.Circuit',
-            params: 'cirq.Sweepable',
+            program: cirq.Circuit,
+            params: cirq.Sweepable,
             repetitions: int = 1,
-    ) -> list['cirq.Result']:
+    ) -> list[cirq.Result]:
         """Samples from the given Circuit.
 
         Nontrivial sweeping is not yet supported.
@@ -105,12 +108,12 @@ class IQMSampler(cirq.work.Sampler):
 
     def _send_circuit(
             self,
-            circuit: 'cirq.Circuit',
+            circuit: cirq.Circuit,
             repetitions: int = 1
     ) -> cirq.study.Result:
         """
         Sends the circuit to be executed by the remote IQM device.
-        
+
         Args:
             circuit: Circuit to run
             repetitions: Number of repetitions
