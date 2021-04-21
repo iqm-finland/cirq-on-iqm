@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Implements a CIRQ compatible sampler that calls the IQM backend
+Implements a circuit sampler that calls the IQM backend.
 """
 import os
 import cirq
