@@ -20,7 +20,7 @@ import json
 import requests
 from mockito import when, mock
 
-BASE_URL = 'https://meetiqm.com/api/'
+BASE_URL = 'https://example.com/'
 
 
 def mock_backend():

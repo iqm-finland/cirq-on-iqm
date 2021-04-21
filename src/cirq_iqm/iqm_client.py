@@ -156,7 +156,7 @@ class IQMBackendClient:
             raise IQMException(result.message)
         return result
 
-    def wait_results(self, run_id: int, timeout_secs: float = TIMEOUT_SECONDS) -> RunResult:
+    def wait_for_results(self, run_id: int, timeout_secs: float = TIMEOUT_SECONDS) -> RunResult:
         """
         Poll results until run is Ready/Failed or timed out
         Args:

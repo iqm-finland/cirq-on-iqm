@@ -25,16 +25,16 @@ from cirq_iqm.iqm_client import IQMBackendClient, IQMCircuit, IQMInstruction
 
 def get_sampler_from_env() -> 'IQMSampler':
     """
-    Initialize an IQM sampler using environment variable IQM_URL
+    Initialize an IQM sampler using environment variable IQM_SERVER_URL
 
     Returns:
         IQM Sampler
     """
-    iqm_url = os.environ.get('IQM_URL')
-    if not iqm_url:
-        raise EnvironmentError('Environment variable IQM_URL is not set. '
-                               'You can set the variable with "export IQM_URL=\"https://iqmendpoint:port/\""')
-    return IQMSampler(url=iqm_url)
+    server_url = os.environ.get('IQM_SERVER_URL')
+    if not server_url:
+        raise EnvironmentError('Environment variable IQM_SERVER_URL is not set. '
+                               'You can set the variable with "export IQM_SERVER_URL=\"https://example.com/\""')
+    return IQMSampler(url=server_url)
 
 
 def _serialize_iqm(circuit: cirq.Circuit) -> IQMCircuit:
@@ -83,8 +83,8 @@ class IQMSampler(cirq.work.Sampler):
     ) -> list['cirq.Result']:
         """Samples from the given Circuit.
 
-        In contrast to run, this allows for sweeping over different parameter
-        values.
+        Sweeping is not supported by IQM yet. This method is kept for compatibility with cirq.
+        params argument has to be left empty, otherwise it will raise NotImplementedError.
 
         Args:
             program: The circuit to sample from.
@@ -124,6 +124,6 @@ class IQMSampler(cirq.work.Sampler):
         """
         iqm_circuit = _serialize_iqm(circuit)
         job_id = self._client.submit_circuit(circuit=iqm_circuit, shots=repetitions)
-        results = self._client.wait_results(job_id)
+        results = self._client.wait_for_results(job_id)
         measurements = {k: np.array(v) for k, v in results.measurements.items()}
         return study.Result(params=resolver.ParamResolver(), measurements=measurements)

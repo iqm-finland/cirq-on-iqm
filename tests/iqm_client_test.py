@@ -21,7 +21,7 @@ from cirq_iqm.iqm_client import IQMBackendClient, IQMCircuit, QubitMapping
 from tests.coco_mock import mock_backend
 
 
-BASE_URL = "https://meetiqm.com/api/"
+BASE_URL = "https://example.com/"
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -109,4 +109,4 @@ def test_wait_results():
     Tests waiting for results for an existing task
     """
     client = IQMBackendClient(BASE_URL)
-    assert client.wait_results(14).status == "ready"
+    assert client.wait_for_results(14).status == "ready"

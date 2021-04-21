@@ -33,7 +33,7 @@ circuit = cirq.Circuit(
 device = Adonis()
 circuit_adonis = device.map_circuit(circuit)
 
-# Set IQM_URL and IQM_TOKEN environment variables
+# Set IQM_SERVER_URL environment variable with 'export IQM_SERVER_URL="https://example.com/"'
 sampler = iqm_remote.get_sampler_from_env()
 
 # This will send the circuit to the backend and return the results in a 'Result'
