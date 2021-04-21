@@ -24,25 +24,33 @@ from cirq_iqm.adonis import Adonis
 from cirq_iqm.iqm_device import IQMQubit
 from cirq_iqm import iqm_remote
 
-qubit = IQMQubit(1)
-circuit = cirq.Circuit(
-    cirq.X(qubit) ** 0.5,  # Square root of NOT.
-    cirq.measure(qubit, key='result')  # Measurement.
-)
+def demo_adonis_backend():
+    """
+    Run a circuit on the backend quantum computer
+    """
+    qubit = IQMQubit(1)
+    circuit = cirq.Circuit(
+        cirq.X(qubit) ** 0.5,  # Square root of NOT.
+        cirq.measure(qubit, key='result')  # Measurement.
+    )
 
-device = Adonis()
-circuit_adonis = device.map_circuit(circuit)
+    device = Adonis()
+    circuit_adonis = device.map_circuit(circuit)
 
-# Set IQM_SERVER_URL environment variable with 'export IQM_SERVER_URL="https://example.com/"'
-sampler = iqm_remote.get_sampler_from_env()
+    # Set IQM_SERVER_URL environment variable with 'export IQM_SERVER_URL="https://example.com/"'
+    sampler = iqm_remote.get_sampler_from_env()
 
-# This will send the circuit to the backend and return the results in a 'Result'
-results = sampler.run(circuit_adonis, repetitions=1000)
+    # This will send the circuit to the backend and return the results in a 'Result'
+    results = sampler.run(circuit_adonis, repetitions=1000)
 
-# Sampler results can be accessed several ways
+    # Sampler results can be accessed several ways
 
-# For instance, to see the histogram of results
-print(results.histogram(key='result'))
+    # For instance, to see the histogram of results
+    print(results.histogram(key='result'))
 
-# Or the data itself
-print(results.data)
+    # Or the data itself
+    print(results.data)
+
+
+if __name__ == '__main__':
+    demo_adonis_backend()
