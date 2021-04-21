@@ -119,7 +119,7 @@ class IQMSampler(cirq.work.Sampler):
         Results of the run
 
         Raises:
-            IQMException
+            CircuitExecutionException
             ApiTimeoutError
         """
         iqm_circuit = _serialize_iqm(circuit)

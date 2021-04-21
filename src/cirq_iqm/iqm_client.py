@@ -28,13 +28,13 @@ TIMEOUT_SECONDS = 10
 SECONDS_BETWEEN_CALLS = 1
 
 
-class IQMException(Exception):
+class CircuitExecutionException(Exception):
     """
-    IQM client specific exception
+    Something went wrong on the server side
     """
 
 
-class ApiTimeoutError(IQMException):
+class ApiTimeoutError(CircuitExecutionException):
     """
     Exception for when executing a task on the backend takes too long
     """
@@ -146,14 +146,14 @@ class IQMBackendClient:
 
         Raises:
             HTTPException for http exceptions
-            IQMException for IQM backend specific exceptions
+            CircuitExecutionException for IQM backend specific exceptions
 
         """
         result = requests.get(f"{self._base_url}/circuit/run/{run_id}")
         result.raise_for_status()
         result = RunResult.from_dict(json.loads(result.text))
         if result.status == RunStatus.FAILED:
-            raise IQMException(result.message)
+            raise CircuitExecutionException(result.message)
         return result
 
     def wait_for_results(self, run_id: int, timeout_secs: float = TIMEOUT_SECONDS) -> RunResult:
