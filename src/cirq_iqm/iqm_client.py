@@ -81,7 +81,10 @@ class QubitMapping:
 @dataclass(frozen=True)
 class RunResult:
     """
-    Result of a task execution
+    Result of a task execution.
+    Measurements present only if the status is "ready".
+    Message carries the additional information for the "failed" status.
+    Measurements and messages expected to be None if the status is "pending"
     """
     status: RunStatus
     measurements: dict[str:list[list]] = None
