@@ -22,7 +22,7 @@ from cirq_iqm.iqm_client import IQMBackendClient, IQMCircuit, QubitMapping
 BASE_URL = "https://example.com"
 
 
-def test_submit_circuit():
+def test_submit_circuit_returns_id(mock_backend):
     """
     Tests sending a circuit
     """
@@ -73,7 +73,7 @@ def test_submit_circuit():
     assert run_id == 14
 
 
-def test_get_run_status():
+def test_get_run_status_for_existing_run(mock_backend):
     """
     Tests getting the run status
     """
@@ -82,7 +82,7 @@ def test_get_run_status():
     assert client.get_run(14).status == "ready"
 
 
-def test_wrong_run():
+def test_get_run_status_for_missing_run(mock_backend):
     """
     Tests getting a task that was not created
     """
@@ -91,7 +91,7 @@ def test_wrong_run():
         assert client.get_run(13)
 
 
-def test_wait_results():
+def test_waiting_for_results(mock_backend):
     """
     Tests waiting for results for an existing task
     """

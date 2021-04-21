@@ -23,20 +23,20 @@ import requests
 from mockito import unstub, when, mock
 from requests import Response
 
-BASE_URL = 'https://example.com/'
+BASE_URL = 'https://example.com'
 
 
-@pytest.fixture(scope='function', autouse=True)
-def prepare():
+@pytest.fixture(scope='function')
+def mock_backend():
     """
     Runs mocking separately for each test
     """
-    mock_backend()
+    generate_backend_stubs()
     yield  # running test function
     unstub()
 
 
-def mock_backend():
+def generate_backend_stubs():
     """
     Mocking some calls to backend by mocking 'requests'
     """
