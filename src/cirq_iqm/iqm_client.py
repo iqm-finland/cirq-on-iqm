@@ -20,8 +20,9 @@ from dataclasses import dataclass
 import json
 from enum import Enum
 from datetime import datetime
-import requests
+from typing import Any, Union
 
+import requests
 
 TIMEOUT_SECONDS = 10
 SECONDS_BETWEEN_CALLS = 1
@@ -87,11 +88,11 @@ class RunResult:
     message: str = None
 
     @staticmethod
-    def parse(inp: dict):
+    def from_dict(inp: dict[str, Union[str, dict]]):
         """
         Parses the result from a dict
         Args:
-            inp: value to parse
+            inp: value to parse, has to map to Run result
 
         Returns:
             Parsed object of RunResult
@@ -105,6 +106,7 @@ class IQMBackendClient:
     """
     Class to access backend quantum computer
     """
+
     def __init__(self, url: str):
         """
         Init
@@ -133,7 +135,7 @@ class IQMBackendClient:
         result.raise_for_status()
         return json.loads(result.text)["id"]
 
-    def get_run(self, run_id) -> RunResult:
+    def get_run(self, run_id: int) -> RunResult:
         """
         Query the status of the running task
         Args:
@@ -149,12 +151,12 @@ class IQMBackendClient:
         """
         result = requests.get(f"{self._base_url}/circuit/run/{run_id}")
         result.raise_for_status()
-        result = RunResult.parse(json.loads(result.text))
+        result = RunResult.from_dict(json.loads(result.text))
         if result.status == RunStatus.FAILED:
             raise IQMException(result.message)
         return result
 
-    def wait_results(self, run_id, timeout_secs=TIMEOUT_SECONDS) -> RunResult:
+    def wait_results(self, run_id: int, timeout_secs: float = TIMEOUT_SECONDS) -> RunResult:
         """
         Poll results until run is Ready/Failed or timed out
         Args:
