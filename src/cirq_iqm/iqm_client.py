@@ -21,9 +21,8 @@ import json
 from enum import Enum
 from datetime import datetime
 from typing import Any, Union
-
+from posixpath import join
 import requests
-
 TIMEOUT_SECONDS = 10
 SECONDS_BETWEEN_CALLS = 1
 
@@ -130,7 +129,7 @@ class IQMBackendClient:
             ID for the created task. This ID is needed to query the status and the execution results
 
         """
-        result = requests.post(f"{self._base_url}/circuit/run", data={
+        result = requests.post(join(self._base_url, "circuit/run"), data={
             "mappings": mappings,
             "circuit": circuit,
             "shots": shots
@@ -152,7 +151,7 @@ class IQMBackendClient:
             CircuitExecutionException for IQM backend specific exceptions
 
         """
-        result = requests.get(f"{self._base_url}/circuit/run/{run_id}")
+        result = requests.get(join(self._base_url, "circuit/run/", str(run_id)))
         result.raise_for_status()
         result = RunResult.from_dict(json.loads(result.text))
         if result.status == RunStatus.FAILED:
