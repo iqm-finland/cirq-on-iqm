@@ -25,16 +25,16 @@ from cirq_iqm.iqm_client import IQMBackendClient, IQMCircuit, IQMInstruction
 
 def get_sampler_from_env() -> 'IQMSampler':
     """
-    Initialize an IQM sampler using environment variables IQM_TOKEN and IQM_URL
+    Initialize an IQM sampler using environment variable IQM_URL
 
     Returns:
         IQM Sampler
     """
     iqm_url = os.environ.get('IQM_URL')
-    iqm_token = os.environ.get('IQM_TOKEN')
-    if not iqm_url or not iqm_token:
-        raise EnvironmentError('Environment variables IQM_URL and IQM_TOKEN are not set.')
-    return IQMSampler(url=iqm_url, token=iqm_token)
+    if not iqm_url:
+        raise EnvironmentError('Environment variable IQM_URL is not set. '
+                               'You can set the variable with "export IQM_URL=\"https://iqmendpoint:port\""')
+    return IQMSampler(url=iqm_url)
 
 
 def _serialize_iqm(circuit: cirq.Circuit) -> IQMCircuit:
@@ -72,8 +72,8 @@ class IQMSampler(cirq.work.Sampler):
     Allows to sample circuits using a real backend
     """
 
-    def __init__(self, url, token):
-        self._client = IQMBackendClient(url, token)
+    def __init__(self, url):
+        self._client = IQMBackendClient(url)
 
     def run_sweep(
             self,

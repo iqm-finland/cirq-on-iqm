@@ -105,14 +105,12 @@ class IQMBackendClient:
     """
     Class to access backend quantum computer
     """
-    def __init__(self, url: str, token: str):
+    def __init__(self, url: str):
         """
         Init
         Args:
-            url: Endpoint for accessing the quantum computer
-            token: Access token for authentification
+            url: Endpoint for accessing the quantum computer. Has to start from http or https
         """
-        self._token = token
         self._base_url = url
 
     def submit_circuit(self, circuit: IQMCircuit, mappings: list[QubitMapping] = None, shots: int = 1) -> int:

@@ -22,7 +22,6 @@ from tests.coco_mock import mock_backend
 
 
 BASE_URL = "https://meetiqm.com/api/"
-API_KEY = "random_key"
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -39,7 +38,7 @@ def test_submit_circuit():
     """
     Tests sending a circuit
     """
-    client = IQMBackendClient(BASE_URL, API_KEY)
+    client = IQMBackendClient(BASE_URL)
     run_id = client.submit_circuit(
         mappings=[
             QubitMapping(logical_name="Qubit A", physical_name="qubit_1"),
@@ -90,7 +89,7 @@ def test_get_run_status():
     """
     Tests getting the run status
     """
-    client = IQMBackendClient(BASE_URL, API_KEY)
+    client = IQMBackendClient(BASE_URL)
     assert client.get_run(14).status == "pending"
     assert client.get_run(14).status == "ready"
 
@@ -100,7 +99,7 @@ def test_wrong_run():
     Tests getting a task that was not created
     """
     unstub()
-    client = IQMBackendClient(BASE_URL, API_KEY)
+    client = IQMBackendClient(BASE_URL)
     with pytest.raises(HTTPError):
         assert client.get_run(13)
 
@@ -109,5 +108,5 @@ def test_wait_results():
     """
     Tests waiting for results for an existing task
     """
-    client = IQMBackendClient(BASE_URL, API_KEY)
+    client = IQMBackendClient(BASE_URL)
     assert client.wait_results(14).status == "ready"
