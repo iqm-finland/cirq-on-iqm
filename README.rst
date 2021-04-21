@@ -13,6 +13,7 @@ Currently Cirq on IQM can
 * map it into an equivalent circuit compatible with the chosen IQM architecture
 * optimize the circuit by commuting and merging gates
 * simulate the circuit using one of Cirq's simulators
+* send circuits to the IQM backend to be run on a real quantum computer
 
 See the `Jupyter Notebook with examples <docs/usage.ipynb>`_.
 
