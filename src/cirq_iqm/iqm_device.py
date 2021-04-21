@@ -17,13 +17,15 @@ Describes IQM quantum architectures in the Cirq framework.
 The description includes the qubit connectivity, the native gate set, and the gate decompositions
 and circuit optimization methods to use with the architecture.
 """
+from __future__ import annotations
+
 # pylint: disable=protected-access
 import abc
 import collections
 import collections.abc as ca
 import operator
 import re
-from typing import Dict, Iterable, List, Set, Tuple, Union, cast
+from typing import Type, Optional, cast
 
 import cirq
 import numpy as np
@@ -53,9 +55,10 @@ class IQMQubit(cirq.NamedQubit):
         return 'IQMQubit({})'.format(self.index)
 
 
-def _verify_unique_measurement_keys(operations: Iterable['cirq.Operation']):
-    """Raises an error if a measurement key is repeated in the given set of Operations."""
-    seen_keys: Set[str] = set()
+def _verify_unique_measurement_keys(operations: ca.Iterable[cirq.Operation]) -> None:
+    """Raises an error if a measurement key is repeated in the given set of Operations.
+    """
+    seen_keys: set[str] = set()
     for op in operations:
         if protocols.is_measurement(op):
             key = protocols.measurement_key(op)
@@ -71,14 +74,17 @@ class IQMDevice(devices.Device):
     optimizing circuits and mapping qubits.
     """
 
-    CONNECTIVITY = ()
-    """tuple[set[int]]: qubit connectivity graph of the device"""
+    CONNECTIVITY: tuple[set[int]] = ()
+    """qubit connectivity graph of the device"""
 
-    NATIVE_GATES = ()
-    """tuple[cirq.Gate]: native gate set of the device"""
+    NATIVE_GATES: tuple[Type[cirq.Gate]] = ()
+    """native gate set of the device (gate families)"""
 
-    DECOMPOSE_FINALLY = ()
-    """tuple[cirq.Gate]: non-native gates that should not be decomposed when inserted into the circuit
+    NATIVE_GATE_INSTANCES: tuple[cirq.Gate] = ()
+    """native gate set of the device (individual gates)"""
+
+    DECOMPOSE_FINALLY: tuple[Type[cirq.Gate]] = ()
+    """non-native gates that should not be decomposed when inserted into the circuit
     (we decompose them later, during the final circuit optimization stage)"""
 
     def __init__(self):
@@ -100,7 +106,10 @@ class IQMDevice(devices.Device):
         """Predicate, True iff the given operation is considered native for the architecture."""
         return (
             isinstance(op, (ops.GateOperation, ops.TaggedOperation))
-            and isinstance(op.gate, cls.NATIVE_GATES)
+            and (
+                isinstance(op.gate, cls.NATIVE_GATES)
+                or op.gate in cls.NATIVE_GATE_INSTANCES
+            )
         )
 
     @classmethod
@@ -108,10 +117,13 @@ class IQMDevice(devices.Device):
         """Predicate, True iff the given operation should not be decomposed when inserted into the circuit."""
         return (
             isinstance(op, (ops.GateOperation, ops.TaggedOperation))
-            and isinstance(op.gate, (cls.NATIVE_GATES, cls.DECOMPOSE_FINALLY))
+            and (
+                isinstance(op.gate, (cls.NATIVE_GATES, cls.DECOMPOSE_FINALLY))
+                or op.gate in cls.NATIVE_GATE_INSTANCES
+            )
         )
 
-    def map_circuit(self, circuit: 'cirq.Circuit', *, map_qubits: bool = True) -> 'cirq.Circuit':
+    def map_circuit(self, circuit: cirq.Circuit, *, map_qubits: bool = True) -> cirq.Circuit:
         """Map the given circuit into a form that can be executed on the device.
 
         * Maps qubits used in the circuit to qubits used by the device.
@@ -150,7 +162,7 @@ class IQMDevice(devices.Device):
         return circuit
 
     @abc.abstractmethod
-    def operation_decomposer(self, op: 'cirq.Operation') -> Union[List['cirq.Operation'], None]:
+    def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
         """Decomposes operations into the native operation set.
 
         Operations are decomposed immediately when they are inserted into the Circuit.
@@ -164,7 +176,7 @@ class IQMDevice(devices.Device):
             decomposition, or None to pass ``op`` to the Cirq native decomposition machinery instead
         """
 
-    def operation_final_decomposer(self, op: 'cirq.Operation') -> List['cirq.Operation']:
+    def operation_final_decomposer(self, op: cirq.Operation) -> list[cirq.Operation]:
         """Decomposes all the DECOMPOSE_FINALLY operations into the native operation set.
 
         Called at the end of the :meth:`IQMDevice.simplify_circuit` by :class:`DecomposeGatesFinal`,
@@ -178,7 +190,7 @@ class IQMDevice(devices.Device):
         """
         raise NotImplementedError('Decomposition missing: {}'.format(op.gate))
 
-    def decompose_operation_full(self, op: 'cirq.Operation') -> 'cirq.OP_TREE':
+    def decompose_operation_full(self, op: cirq.Operation) -> 'cirq.OP_TREE':
         """Decomposes an operation into the native operation set.
 
         Args:
@@ -210,7 +222,7 @@ class IQMDevice(devices.Device):
                 full_dec.append(k)
         return full_dec
 
-    def decompose_operation(self, operation: 'cirq.Operation') -> 'cirq.OP_TREE':
+    def decompose_operation(self, operation: cirq.Operation) -> 'cirq.OP_TREE':
         if self.is_native_or_final(operation):
             return operation
 
@@ -240,6 +252,7 @@ class IQMDevice(devices.Device):
             # FIXME This sucks, but it seems that Cirq optimizers have no way of communicating
             # if they actually made any changes to the Circuit, so we run a fixed number of iterations.
             # Ideally we would keep doing this until the circuit hits a fixed point and no further changes are made.
+            # See https://github.com/quantumlib/Cirq/issues/3761
             # all mergeable 2-qubit gates are merged
             MergeOneParameterGroupGates().optimize_circuit(circuit)
             optimizers.merge_single_qubit_gates_into_phased_x_z(circuit)
@@ -255,7 +268,7 @@ class IQMDevice(devices.Device):
         super().validate_circuit(circuit)
         _verify_unique_measurement_keys(circuit.all_operations())
 
-    def validate_operation(self, operation: 'cirq.Operation') -> None:
+    def validate_operation(self, operation: cirq.Operation) -> None:
         if not isinstance(operation.untagged, cirq.GateOperation):
             raise ValueError('Unsupported operation: {!r}'.format(operation))
 
@@ -269,7 +282,7 @@ class IQMDevice(devices.Device):
         self.check_qubit_connectivity(operation)
 
     @classmethod
-    def check_qubit_connectivity(cls, operation: 'cirq.Operation') -> None:
+    def check_qubit_connectivity(cls, operation: cirq.Operation) -> None:
         """Raises a ValueError if operation acts on qubits that are not connected.
         """
         if len(operation.qubits) >= 2 and not isinstance(operation.gate, ops.MeasurementGate):
@@ -358,9 +371,9 @@ class IQMEjectZ(optimizers.EjectZ):
     def optimize_circuit(self, circuit: circuits.Circuit):
         # pylint: disable=too-many-locals
         # Tracks qubit phases (in half turns; multiply by pi to get radians).
-        qubit_phase: Dict[ops.Qid, float] = collections.defaultdict(lambda: 0)
+        qubit_phase: dict[ops.Qid, float] = collections.defaultdict(lambda: 0)
 
-        def dump_tracked_phase(qubits: Iterable[ops.Qid],
+        def dump_tracked_phase(qubits: ca.Iterable[ops.Qid],
                                index: int) -> None:
             """Zeroes qubit_phase entries by emitting Z gates."""
             for q in qubits:
@@ -370,9 +383,9 @@ class IQMEjectZ(optimizers.EjectZ):
                     insertions.append((index, dump_op))
                 qubit_phase[q] = 0
 
-        deletions: List[Tuple[int, ops.Operation]] = []
-        inline_intos: List[Tuple[int, ops.Operation]] = []
-        insertions: List[Tuple[int, ops.Operation]] = []
+        deletions: list[tuple[int, ops.Operation]] = []
+        inline_intos: list[tuple[int, ops.Operation]] = []
+        insertions: list[tuple[int, ops.Operation]] = []
         for moment_index, moment in enumerate(circuit):
             for op in moment.operations:
                 # Move Z gates into tracked qubit phases.

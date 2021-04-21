@@ -2,6 +2,16 @@
 Changelog
 =========
 
+
+Version 0.2
+===========
+
+Features
+--------
+
+* Adonis native gate set updated, CZ-targeting decompositions added. :mr:`15`
+
+
 Version 0.1
 ===========
 
