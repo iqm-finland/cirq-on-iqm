@@ -13,13 +13,15 @@
 # limitations under the License.
 
 """Testing IQM api client."""
+from uuid import UUID
 import pytest
 from requests import HTTPError
 import jsons
 from cirq_iqm.iqm_client import IQMBackendClient, CircuitDTO, QubitMapping
 
-
 BASE_URL = "https://example.com"
+existing_run = UUID("3c3fcda3-e860-46bf-92a4-bcc59fa76ce9")
+missing_run = UUID("059e4186-50a3-4e6c-ba1f-37fe6afbdfc2")
 
 
 def test_submit_circuit_returns_id(mock_backend):
@@ -70,7 +72,7 @@ def test_submit_circuit_returns_id(mock_backend):
                     }
                 ]
             }, CircuitDTO), shots=1000)
-    assert run_id == 14
+    assert run_id == existing_run
 
 
 def test_get_run_status_for_existing_run(mock_backend):
@@ -78,8 +80,8 @@ def test_get_run_status_for_existing_run(mock_backend):
     Tests getting the run status
     """
     client = IQMBackendClient(BASE_URL)
-    assert client.get_run(14).status == "pending"
-    assert client.get_run(14).status == "ready"
+    assert client.get_run(existing_run).status == "pending"
+    assert client.get_run(existing_run).status == "ready"
 
 
 def test_get_run_status_for_missing_run(mock_backend):
@@ -88,7 +90,7 @@ def test_get_run_status_for_missing_run(mock_backend):
     """
     client = IQMBackendClient(BASE_URL)
     with pytest.raises(HTTPError):
-        assert client.get_run(13)
+        assert client.get_run(missing_run)
 
 
 def test_waiting_for_results(mock_backend):
@@ -96,4 +98,4 @@ def test_waiting_for_results(mock_backend):
     Tests waiting for results for an existing task
     """
     client = IQMBackendClient(BASE_URL)
-    assert client.wait_for_results(14).status == "ready"
+    assert client.wait_for_results(existing_run).status == "ready"

@@ -16,6 +16,7 @@
 Implements a client for calling the IQM backend
 """
 import time
+from uuid import UUID
 from dataclasses import dataclass
 import json
 from enum import Enum
@@ -117,7 +118,7 @@ class IQMBackendClient:
         """
         self._base_url = url
 
-    def submit_circuit(self, circuit: CircuitDTO, mappings: list[QubitMapping] = None, shots: int = 1) -> int:
+    def submit_circuit(self, circuit: CircuitDTO, mappings: list[QubitMapping] = None, shots: int = 1) -> UUID:
         """
         Submits circuit to the IQM backend
         Args:
@@ -135,9 +136,9 @@ class IQMBackendClient:
             "shots": shots
         })
         result.raise_for_status()
-        return json.loads(result.text)["id"]
+        return UUID(json.loads(result.text)["id"])
 
-    def get_run(self, run_id: int) -> RunResult:
+    def get_run(self, run_id: UUID) -> RunResult:
         """
         Query the status of the running task
         Args:
@@ -158,7 +159,7 @@ class IQMBackendClient:
             raise CircuitExecutionException(result.message)
         return result
 
-    def wait_for_results(self, run_id: int, timeout_secs: float = TIMEOUT_SECONDS) -> RunResult:
+    def wait_for_results(self, run_id: UUID, timeout_secs: float = TIMEOUT_SECONDS) -> RunResult:
         """
         Poll results until run is Ready/Failed or timed out
         Args:
