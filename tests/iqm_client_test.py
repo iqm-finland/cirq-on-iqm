@@ -15,23 +15,11 @@
 """Testing IQM api client."""
 import pytest
 from requests import HTTPError
-from mockito import unstub
 import jsons
 from cirq_iqm.iqm_client import IQMBackendClient, IQMCircuit, QubitMapping
-from tests.coco_mock import mock_backend
 
 
 BASE_URL = "https://example.com/"
-
-
-@pytest.fixture(scope="function", autouse=True)
-def prepare():
-    """
-    Runs mocking separately for each test
-    """
-    mock_backend()
-    yield  # running test function
-    unstub()
 
 
 def test_submit_circuit():
@@ -98,7 +86,6 @@ def test_wrong_run():
     """
     Tests getting a task that was not created
     """
-    unstub()
     client = IQMBackendClient(BASE_URL)
     with pytest.raises(HTTPError):
         assert client.get_run(13)

@@ -17,10 +17,23 @@ Mocks backend calls for testing
 """
 
 import json
+
+import pytest
 import requests
-from mockito import when, mock
+from mockito import unstub, when, mock
+from requests import Response
 
 BASE_URL = 'https://example.com/'
+
+
+@pytest.fixture(scope='function', autouse=True)
+def prepare():
+    """
+    Runs mocking separately for each test
+    """
+    mock_backend()
+    yield  # running test function
+    unstub()
 
 
 def mock_backend():
@@ -33,7 +46,11 @@ def mock_backend():
     running_response = mock({'status_code': 200, 'text': json.dumps({'status': 'pending'})})
     success_get_response = mock({'status_code': 200, 'text': json.dumps(
         {'status': 'ready', 'measurements': {'result': [[1, 0, 1, 1], [1, 0, 0, 1], [1, 0, 1, 1], [1, 0, 1, 1]]}})})
-    no_run_response = mock({'status_code': 404, 'text': 'Run not found'})
+
+    # run was not created response
+    no_run_response= Response()
+    no_run_response.status_code=404
+    no_run_response.reason='Run not found'
 
     when(requests).get(f'{BASE_URL}/circuit/run/14', ...).thenReturn(running_response).thenReturn(success_get_response)
     when(requests).get(f'{BASE_URL}/circuit/run/13', ...).thenReturn(no_run_response)
