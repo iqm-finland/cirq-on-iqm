@@ -82,7 +82,6 @@ class SingleQubitMapping:
 class RunResult:
     """
     Results of a circuit execution.
-    
     Measurements present only if the status is "ready".
     Message carries the additional information for the "failed" status.
     Measurements and messages expected to be None if the status is "pending"
@@ -119,7 +118,7 @@ class IQMBackendClient:
         """
         self._base_url = url
 
-    def submit_circuit(self, circuit: CircuitDTO, mappings: list[QubitMapping] = None, shots: int = 1) -> UUID:
+    def submit_circuit(self, circuit: CircuitDTO, mapping: list[SingleQubitMapping] = None, shots: int = 1) -> UUID:
         """
         Submits circuit to the IQM backend
         Args:
@@ -180,4 +179,4 @@ class IQMBackendClient:
             if results.status != RunStatus.PENDING:
                 return results
             time.sleep(SECONDS_BETWEEN_CALLS)
-        raise ApiTimeoutError(f"The task didn't finish in {timeout_secs} seconds")
+        raise APITimeoutError(f"The task didn't finish in {timeout_secs} seconds")
