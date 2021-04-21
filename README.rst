@@ -51,6 +51,13 @@ Run the demo:
 
    python cirq-on-iqm/examples/demo_adonis.py
 
+Run code on a real quantum computer:
+
+.. code-block:: bash
+
+   export IQM_URL="https://address-of-the-backend"
+   python cirq-on-iqm/examples/demo_iqm_engine.py
+
 
 Running a Jupyter notebook in virtualenv takes a bit of extra work,
 you will need to create a custom Jupyter kernel for your virtual environment:
