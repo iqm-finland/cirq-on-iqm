@@ -30,7 +30,7 @@ def test_submit_circuit_returns_id(mock_backend):
     """
     client = IQMBackendClient(BASE_URL)
     run_id = client.submit_circuit(
-        mapping=[
+        qubit_mapping=[
             SingleQubitMapping(logical_name="Qubit A", physical_name="qubit_1"),
             SingleQubitMapping(logical_name="Qubit B", physical_name="qubit_2")
         ],

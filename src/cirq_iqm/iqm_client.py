@@ -119,12 +119,13 @@ class IQMBackendClient:
         """
         self._base_url = url
 
-    def submit_circuit(self, circuit: CircuitDTO, mapping: list[SingleQubitMapping] = None, shots: int = 1) -> UUID:
+    def submit_circuit(self, circuit: CircuitDTO, qubit_mapping: list[SingleQubitMapping] = None, shots: int = 1) \
+            -> UUID:
         """
         Submits circuit to the IQM backend
         Args:
             circuit: Circuit to be executed on the IQM backend
-            mappings: Mappings of human-readable names to physical names
+            qubit_mapping: Mappings of human-readable names to physical names
             shots: number of repetitions
 
         Returns:
@@ -132,7 +133,7 @@ class IQMBackendClient:
 
         """
         result = requests.post(join(self._base_url, "circuit/run"), data={
-            "mapping": mapping,
+            "mapping": qubit_mapping,
             "circuit": circuit,
             "shots": shots
         })
