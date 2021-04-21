@@ -34,7 +34,7 @@ class CircuitExecutionException(Exception):
     """
 
 
-class ApiTimeoutError(CircuitExecutionException):
+class APITimeoutError(CircuitExecutionException):
     """
     Exception for when executing a task on the backend takes too long
     """
@@ -52,7 +52,7 @@ class RunStatus(str, Enum):
 @dataclass(frozen=True)
 class InstructionDTO:
     """
-    Transfer DTO for IQM insrtructions
+    DTO for operations constituting a quantum circuit.
     """
     name: str
     qubits: list[str]
@@ -62,17 +62,17 @@ class InstructionDTO:
 @dataclass(frozen=True)
 class CircuitDTO:
     """
-    Transfer DTO for IQM circuit
+    DTO for quantum circuits.
     """
     name: str
-    args: dict
+    args: dict[str, Any]
     instructions: list[InstructionDTO]
 
 
 @dataclass(frozen=True)
-class QubitMapping:
+class SingleQubitMapping:
     """
-    Mapping of logical qubits to physical qubits
+    Mapping of a logical qubit to a physical qubit.
     """
     logical_name: str
     physical_name: str
@@ -81,13 +81,14 @@ class QubitMapping:
 @dataclass(frozen=True)
 class RunResult:
     """
-    Result of a task execution.
+    Results of a circuit execution.
+    
     Measurements present only if the status is "ready".
     Message carries the additional information for the "failed" status.
     Measurements and messages expected to be None if the status is "pending"
     """
     status: RunStatus
-    measurements: dict[str:list[list]] = None
+    measurements: dict[str, list[list[int]]] = None
     message: str = None
 
     @staticmethod
@@ -95,7 +96,7 @@ class RunResult:
         """
         Parses the result from a dict
         Args:
-            inp: value to parse, has to map to Run result
+            inp: value to parse, has to map to RunResult
 
         Returns:
             Parsed object of RunResult
@@ -107,14 +108,14 @@ class RunResult:
 
 class IQMBackendClient:
     """
-    Class to access backend quantum computer
+    Provides access to a remote IQM quantum device.
     """
 
     def __init__(self, url: str):
         """
         Init
         Args:
-            url: Endpoint for accessing the quantum computer. Has to start with http or https.
+            url: Endpoint for accessing the device. Has to start with http or https.
         """
         self._base_url = url
 
@@ -131,7 +132,7 @@ class IQMBackendClient:
 
         """
         result = requests.post(join(self._base_url, "circuit/run"), data={
-            "mappings": mappings,
+            "mapping": mapping,
             "circuit": circuit,
             "shots": shots
         })

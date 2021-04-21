@@ -28,7 +28,7 @@ def get_sampler_from_env() -> 'IQMSampler':
     Initialize an IQM sampler using environment variable IQM_SERVER_URL
 
     Returns:
-        IQM Sampler
+        circuit sampler
     """
     server_url = os.environ.get('IQM_SERVER_URL')
     if not server_url:
@@ -39,12 +39,12 @@ def get_sampler_from_env() -> 'IQMSampler':
 
 def _serialize_iqm(circuit: cirq.Circuit) -> CircuitDTO:
     """
-    Converts cirq circuit to IQM compatible representation.
+    Serializes a quantum circuit into the IQM data transfer format.
     Args:
         circuit: Circuit to serialize
 
     Returns:
-        IQM circuit object
+        data transfer object
     """
     instructions = []
     for moment in circuit.moments:
@@ -68,8 +68,7 @@ def _serialize_iqm(circuit: cirq.Circuit) -> CircuitDTO:
 
 class IQMSampler(cirq.work.Sampler):
     """
-    IQM implementation of a cirq sampler.
-    Allows to sample circuits using a real backend
+    Circuit sampler for evaluating quantum circuits on IQM quantum devices.
     """
 
     def __init__(self, url):
@@ -83,8 +82,8 @@ class IQMSampler(cirq.work.Sampler):
     ) -> list['cirq.Result']:
         """Samples from the given Circuit.
 
-        Sweeping is not supported by IQM yet. This method is kept for compatibility with cirq.
-        params argument has to be left empty, otherwise it will raise NotImplementedError.
+        Nontrivial sweeping is not yet supported.
+        ``params`` has to be left empty, otherwise it will raise ``NotImplementedError``.
 
         Args:
             program: The circuit to sample from.
@@ -110,13 +109,14 @@ class IQMSampler(cirq.work.Sampler):
             repetitions: int = 1
     ) -> cirq.study.Result:
         """
-        Sends the circuit to the remote IQM device
+        Sends the circuit to be executed by the remote IQM device.
+        
         Args:
             circuit: Circuit to run
             repetitions: Number of repetitions
 
         Returns:
-        Results of the run
+            results of the run
 
         Raises:
             CircuitExecutionException

@@ -13,11 +13,9 @@
 # limitations under the License.
 
 """
-Demonstrates calling an IQM device.
+Demonstrates executing a quantum circuit on an IQM device.
 """
 
-# https://quantumai.google/cirq/tutorials/ionq/getting_started
-# https://quantumai.google/cirq/devices
 
 import cirq
 from cirq_iqm.adonis import Adonis
@@ -26,7 +24,7 @@ from cirq_iqm import iqm_remote
 
 def demo_adonis_backend():
     """
-    Run a circuit on the backend quantum computer
+    Run a circuit on the Adonis quantum computer.
     """
     qubit = IQMQubit(1)
     circuit = cirq.Circuit(
@@ -40,7 +38,8 @@ def demo_adonis_backend():
     # Set IQM_SERVER_URL environment variable with 'export IQM_SERVER_URL="https://example.com"'
     sampler = iqm_remote.get_sampler_from_env()
 
-    # This will send the circuit to the backend and return the results in a 'Result'
+    # This will send the circuit to the backend to be run, and return a cirq.study.Result
+    # containing the measurement results.
     results = sampler.run(circuit_adonis, repetitions=1000)
 
     # Sampler results can be accessed several ways
