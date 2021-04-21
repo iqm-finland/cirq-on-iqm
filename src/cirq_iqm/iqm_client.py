@@ -49,7 +49,7 @@ class RunStatus(str, Enum):
 
 
 @dataclass(frozen=True)
-class IQMInstruction:
+class InstructionDTO:
     """
     Transfer DTO for IQM insrtructions
     """
@@ -59,13 +59,13 @@ class IQMInstruction:
 
 
 @dataclass(frozen=True)
-class IQMCircuit:
+class CircuitDTO:
     """
     Transfer DTO for IQM circuit
     """
     name: str
     args: dict
-    instructions: list[IQMInstruction]
+    instructions: list[InstructionDTO]
 
 
 @dataclass(frozen=True)
@@ -117,7 +117,7 @@ class IQMBackendClient:
         """
         self._base_url = url
 
-    def submit_circuit(self, circuit: IQMCircuit, mappings: list[QubitMapping] = None, shots: int = 1) -> int:
+    def submit_circuit(self, circuit: CircuitDTO, mappings: list[QubitMapping] = None, shots: int = 1) -> int:
         """
         Submits circuit to the IQM backend
         Args:

@@ -20,7 +20,7 @@ import cirq
 import numpy as np
 from cirq import study
 from cirq.study import resolver
-from cirq_iqm.iqm_client import IQMBackendClient, IQMCircuit, IQMInstruction
+from cirq_iqm.iqm_client import IQMBackendClient, CircuitDTO, InstructionDTO
 
 
 def get_sampler_from_env() -> 'IQMSampler':
@@ -37,7 +37,7 @@ def get_sampler_from_env() -> 'IQMSampler':
     return IQMSampler(url=server_url)
 
 
-def _serialize_iqm(circuit: cirq.Circuit) -> IQMCircuit:
+def _serialize_iqm(circuit: cirq.Circuit) -> CircuitDTO:
     """
     Converts cirq circuit to IQM compatible representation.
     Args:
@@ -51,14 +51,14 @@ def _serialize_iqm(circuit: cirq.Circuit) -> IQMCircuit:
         for operation in moment.operations:
             gate_dict = operation.gate._json_dict_()
             instructions.append(
-                IQMInstruction(
+                InstructionDTO(
                     name=gate_dict['cirq_type'],
                     qubits=[str(qubit) for qubit in operation.qubits],
                     args={key: val for key, val in gate_dict.items() if key != 'cirq_type'}
                 )
             )
 
-    circuit_dict = IQMCircuit(
+    circuit_dict = CircuitDTO(
         name='Serialized from cirq',
         instructions=instructions,
         args={}  # todo: implement arguments

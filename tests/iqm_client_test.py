@@ -16,7 +16,7 @@
 import pytest
 from requests import HTTPError
 import jsons
-from cirq_iqm.iqm_client import IQMBackendClient, IQMCircuit, QubitMapping
+from cirq_iqm.iqm_client import IQMBackendClient, CircuitDTO, QubitMapping
 
 
 BASE_URL = "https://example.com"
@@ -69,7 +69,7 @@ def test_submit_circuit_returns_id(mock_backend):
                         }
                     }
                 ]
-            }, IQMCircuit), shots=1000)
+            }, CircuitDTO), shots=1000)
     assert run_id == 14
 
 
