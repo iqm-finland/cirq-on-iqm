@@ -33,7 +33,7 @@ def get_sampler_from_env() -> 'IQMSampler':
     server_url = os.environ.get('IQM_SERVER_URL')
     if not server_url:
         raise EnvironmentError('Environment variable IQM_SERVER_URL is not set. '
-                               'You can set the variable with "export IQM_SERVER_URL=\"https://example.com/\""')
+                               'You can set the variable with "export IQM_SERVER_URL=\"https://example.com\""')
     return IQMSampler(url=server_url)
 
 

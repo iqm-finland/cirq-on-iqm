@@ -19,7 +19,7 @@ import jsons
 from cirq_iqm.iqm_client import IQMBackendClient, IQMCircuit, QubitMapping
 
 
-BASE_URL = "https://example.com/"
+BASE_URL = "https://example.com"
 
 
 def test_submit_circuit():
