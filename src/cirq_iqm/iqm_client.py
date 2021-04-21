@@ -55,7 +55,7 @@ class IQMInstruction:
     """
     name: str
     qubits: list[str]
-    args: dict
+    args: dict[str, Any]
 
 
 @dataclass(frozen=True)
