@@ -49,6 +49,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.mathjax',
     'sphinx.ext.todo',
+    'sphinx.ext.extlinks',
     'sphinx_automodapi.automodapi',
 ]
 
@@ -102,6 +103,14 @@ mathjax_config = {
             'iprod': [r'\left\langle #1 | #2 \right\rangle', 2],  # two arguments
         }
     }
+}
+
+
+# -- External mapping ------------------------------------------------------------
+
+extlinks = {
+    'issue': ('https://github.com/iqm-finland/cirq-on-iqm/issues/%s', 'issue '),
+    'mr': ('https://github.com/iqm-finland/cirq-on-iqm/pull/%s', 'MR '),
 }
 
 
