@@ -13,30 +13,31 @@
 # limitations under the License.
 
 """
-Implements a client for calling the IQM backend
+Client for calling the IQM backend.
 """
-import time
-from uuid import UUID
-from dataclasses import dataclass
 import json
-from enum import Enum
-from datetime import datetime
-from typing import Any, Union
-from posixpath import join
 import requests
+import time
+
+from dataclasses import dataclass
+from datetime import datetime
+from enum import Enum
+from posixpath import join
+from typing import Any, Optional, Union
+from uuid import UUID
+
+
 TIMEOUT_SECONDS = 10
 SECONDS_BETWEEN_CALLS = 1
 
 
 class CircuitExecutionException(Exception):
-    """
-    Something went wrong on the server side
+    """Something went wrong on the server side.
     """
 
 
 class APITimeoutError(CircuitExecutionException):
-    """
-    Exception for when executing a task on the backend takes too long
+    """Exception for when executing a task on the backend takes too long.
     """
 
 
@@ -51,8 +52,7 @@ class RunStatus(str, Enum):
 
 @dataclass(frozen=True)
 class InstructionDTO:
-    """
-    DTO for operations constituting a quantum circuit.
+    """DTO for operations constituting a quantum circuit.
     """
     name: str
     qubits: list[str]
@@ -61,8 +61,7 @@ class InstructionDTO:
 
 @dataclass(frozen=True)
 class CircuitDTO:
-    """
-    DTO for quantum circuits.
+    """DTO for quantum circuits.
     """
     name: str
     args: dict[str, Any]
@@ -71,8 +70,7 @@ class CircuitDTO:
 
 @dataclass(frozen=True)
 class SingleQubitMapping:
-    """
-    Mapping of a logical qubit to a physical qubit.
+    """Mapping of a logical qubit to a physical qubit.
     """
     logical_name: str
     physical_name: str
@@ -80,26 +78,25 @@ class SingleQubitMapping:
 
 @dataclass(frozen=True)
 class RunResult:
-    """
-    Results of a circuit execution.
-    Measurements present only if the status is "ready".
-    Message carries the additional information for the "failed" status.
-    Measurements and messages expected to be None if the status is "pending"
+    """Results of a circuit execution.
+
+    * ``measurements`` is present iff the status is ``'ready'``.
+    * ``message`` carries additional information for the ``'failed'`` status.
+    * If the status is ``'pending'``, ``measurements`` and ``message`` are ``None``.
     """
     status: RunStatus
-    measurements: dict[str, list[list[int]]] = None
-    message: str = None
+    measurements: Optional[dict[str, list[list[int]]]] = None
+    message: Optional[str] = None
 
     @staticmethod
-    def from_dict(inp: dict[str, Union[str, dict]]):
-        """
-        Parses the result from a dict
+    def from_dict(inp: dict[str, Union[str, dict]]) -> RunResult:
+        """Parses the result from a dict.
 
         Args:
             inp: value to parse, has to map to RunResult
 
         Returns:
-            Parsed object of RunResult
+            parsed RunResult
 
         """
         input_copy = inp.copy()
@@ -107,30 +104,29 @@ class RunResult:
 
 
 class IQMBackendClient:
-    """
-    Provides access to a remote IQM quantum device.
-    """
+    """Provides access to a remote IQM quantum device.
 
+    Args:
+        url: Endpoint for accessing the device. Has to start with http or https.
+    """
     def __init__(self, url: str):
-        """
-        Init
-        Args:
-            url: Endpoint for accessing the device. Has to start with http or https.
-        """
         self._base_url = url
 
-    def submit_circuit(self, circuit: CircuitDTO, qubit_mapping: list[SingleQubitMapping] = None, shots: int = 1) \
-            -> UUID:
-        """
-        Submits circuit to the IQM backend
+    def submit_circuit(
+            self,
+            circuit: CircuitDTO,
+            qubit_mapping: list[SingleQubitMapping] = None,
+            shots: int = 1
+    ) -> UUID:
+        """Submits a quantum circuit to be executed on the backend.
+
         Args:
-            circuit: Circuit to be executed on the IQM backend
-            qubit_mapping: Mappings of human-readable names to physical names
-            shots: number of repetitions
+            circuit: circuit to be executed
+            qubit_mapping: mapping of human-readable qubit names to physical qubit names
+            shots: number of times the circuit is sampled
 
         Returns:
-            ID for the created task. This ID is needed to query the status and the execution results
-
+            ID for the created task. This ID is needed to query the status and the execution results.
         """
         result = requests.post(join(self._base_url, "circuit/run"), data={
             "mapping": qubit_mapping,
@@ -141,17 +137,17 @@ class IQMBackendClient:
         return UUID(json.loads(result.text)["id"])
 
     def get_run(self, run_id: UUID) -> RunResult:
-        """
-        Query the status of the running task
+        """Query the status of the running task.
+
         Args:
             run_id: id of the taks
 
         Returns:
-            Run result (can be Pending)
+            result of the run (can be pending)
 
         Raises:
-            HTTPException for http exceptions
-            CircuitExecutionException for IQM backend specific exceptions
+            HTTPException: http exceptions
+            CircuitExecutionException: IQM backend specific exceptions
 
         """
         result = requests.get(join(self._base_url, "circuit/run/", str(run_id)))
@@ -162,17 +158,17 @@ class IQMBackendClient:
         return result
 
     def wait_for_results(self, run_id: UUID, timeout_secs: float = TIMEOUT_SECONDS) -> RunResult:
-        """
-        Poll results until run is Ready/Failed or timed out
+        """Poll results until run is ready, failed, or timed out.
+
         Args:
             run_id: id of the task to wait
-            timeout_secs: how long to wait for a response before raising an ApiTimeoutError
+            timeout_secs: how long to wait for a response before raising an APITimeoutError
 
         Returns:
-            Run result
+            run result
 
         Raises:
-            ApiTimeoutError if time exceeded the set timeout
+            APITimeoutError: time exceeded the set timeout
 
         """
         start_time = datetime.now()
@@ -181,4 +177,4 @@ class IQMBackendClient:
             if results.status != RunStatus.PENDING:
                 return results
             time.sleep(SECONDS_BETWEEN_CALLS)
-        raise APITimeoutError(f"The task didn't finish in {timeout_secs} seconds")
+        raise APITimeoutError(f"The task didn't finish in {timeout_secs} seconds.")
