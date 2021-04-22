@@ -15,16 +15,19 @@
 """
 Client for calling the IQM backend.
 """
-import json
-import requests
-import time
+from __future__ import annotations
 
+import json
+import time
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from posixpath import join
 from typing import Any, Optional, Union
 from uuid import UUID
+
+import requests
+
 
 
 TIMEOUT_SECONDS = 10
