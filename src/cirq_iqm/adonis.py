@@ -72,13 +72,18 @@ class Adonis(idev.IQMDevice):
         if isinstance(op.gate, ops.ISwapPowGate):
             # the ISwap family is implemented using the XY interaction
             s = -0.5 * op.gate.exponent
-            return [ig.XYGate(exponent=s).on(*op.qubits)]
+            return [
+                ig.XYGate(exponent=s).on(*op.qubits)
+            ]
         if isinstance(op.gate, ops.CZPowGate):
             # decompose CZPowGate using IsingGate
             s = -0.5 * op.gate.exponent
-            G = ig.IsingGate(exponent=s, global_shift=-0.5)
             L = ops.ZPowGate(exponent=-s, global_shift=-0.5)
-            return [G.on(*op.qubits), L.on(op.qubits[0]), L.on(op.qubits[1])]
+            return [
+                ig.IsingGate(exponent=s, global_shift=-0.5).on(*op.qubits),
+                L.on(op.qubits[0]),
+                L.on(op.qubits[1]),
+            ]
         if isinstance(op.gate, ig.IsingGate):
             # decompose IsingGate using two CZs
             s = op.gate.exponent
