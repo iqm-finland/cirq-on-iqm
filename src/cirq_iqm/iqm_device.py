@@ -102,7 +102,7 @@ class IQMDevice(devices.Device):
         self.qubits = tuple(IQMQubit(k) for k in expected)
 
     @classmethod
-    def is_native_operation(cls, op: ops.Operation) -> bool:
+    def is_native_operation(cls, op: cirq.Operation) -> bool:
         """Predicate, True iff the given operation is considered native for the architecture."""
         return (
             isinstance(op, (ops.GateOperation, ops.TaggedOperation))
@@ -113,7 +113,7 @@ class IQMDevice(devices.Device):
         )
 
     @classmethod
-    def is_native_or_final(cls, op: ops.Operation) -> bool:
+    def is_native_or_final(cls, op: cirq.Operation) -> bool:
         """Predicate, True iff the given operation should not be decomposed when inserted into the circuit."""
         return (
             isinstance(op, (ops.GateOperation, ops.TaggedOperation))
@@ -144,7 +144,7 @@ class IQMDevice(devices.Device):
                 return self.qubits[idx]
             return qubit
 
-        def map_op(op: cirq.ops.Operation) -> cirq.ops.Operation:
+        def map_op(op: cirq.Operation) -> cirq.Operation:
             """Replaces the qubits the gate is acting on with corresponding device qubits."""
             qubits = map(map_qubit, op.qubits)
             return op.gate.on(*qubits)
@@ -190,7 +190,7 @@ class IQMDevice(devices.Device):
         """
         raise NotImplementedError('Decomposition missing: {}'.format(op.gate))
 
-    def decompose_operation_full(self, op: cirq.Operation) -> 'cirq.OP_TREE':
+    def decompose_operation_full(self, op: cirq.Operation) -> cirq.OP_TREE:
         """Decomposes an operation into the native operation set.
 
         Args:
@@ -222,7 +222,7 @@ class IQMDevice(devices.Device):
                 full_dec.append(k)
         return full_dec
 
-    def decompose_operation(self, operation: cirq.Operation) -> 'cirq.OP_TREE':
+    def decompose_operation(self, operation: cirq.Operation) -> cirq.OP_TREE:
         if self.is_native_or_final(operation):
             return operation
 
@@ -234,7 +234,7 @@ class IQMDevice(devices.Device):
         )
 
     @staticmethod
-    def simplify_circuit(circuit: 'cirq.Circuit') -> None:
+    def simplify_circuit(circuit: cirq.Circuit) -> None:
         """Simplifies and optimizes the given circuit (in place).
 
         Args:
@@ -264,7 +264,7 @@ class IQMDevice(devices.Device):
         optimizers.DropEmptyMoments().optimize_circuit(circuit)
         DecomposeGatesFinal().optimize_circuit(circuit)
 
-    def validate_circuit(self, circuit: 'cirq.Circuit'):
+    def validate_circuit(self, circuit: cirq.Circuit) -> None:
         super().validate_circuit(circuit)
         _verify_unique_measurement_keys(circuit.all_operations())
 
@@ -305,7 +305,7 @@ class MergeOneParameterGroupGates(circuits.PointOptimizer):
         if not isinstance(op.gate, self.one_parameter_families):
             return None
 
-        def is_not_mergable(next_op):
+        def is_not_mergable(next_op: cirq.Operation) -> bool:
             """Predicate for finding gates that can be merged with op.
 
             A gate is mergable with op iff it (1) belongs to the same gate family,
@@ -352,7 +352,7 @@ class IQMEjectZ(optimizers.EjectZ):
     """
 
     @staticmethod
-    def _is_swaplike(op: ops.Operation):
+    def _is_swaplike(op: cirq.Operation) -> bool:
         """Returns True iff z rotations can be commuted throught the gate to the _other_ qubit."""
         if isinstance(op.gate, ops.SwapPowGate):
             return op.gate.exponent == 1
@@ -371,10 +371,12 @@ class IQMEjectZ(optimizers.EjectZ):
     def optimize_circuit(self, circuit: circuits.Circuit):
         # pylint: disable=too-many-locals
         # Tracks qubit phases (in half turns; multiply by pi to get radians).
-        qubit_phase: dict[ops.Qid, float] = collections.defaultdict(lambda: 0)
+        qubit_phase: dict[cirq.ops.Qid, float] = collections.defaultdict(lambda: 0)
 
-        def dump_tracked_phase(qubits: ca.Iterable[ops.Qid],
-                               index: int) -> None:
+        def dump_tracked_phase(
+                qubits: ca.Iterable[cirq.ops.Qid],
+                index: int
+        ) -> None:
             """Zeroes qubit_phase entries by emitting Z gates."""
             for q in qubits:
                 p = qubit_phase[q]
@@ -383,9 +385,9 @@ class IQMEjectZ(optimizers.EjectZ):
                     insertions.append((index, dump_op))
                 qubit_phase[q] = 0
 
-        deletions: list[tuple[int, ops.Operation]] = []
-        inline_intos: list[tuple[int, ops.Operation]] = []
-        insertions: list[tuple[int, ops.Operation]] = []
+        deletions: list[tuple[int, cirq.Operation]] = []
+        inline_intos: list[tuple[int, cirq.Operation]] = []
+        insertions: list[tuple[int, cirq.Operation]] = []
         for moment_index, moment in enumerate(circuit):
             for op in moment.operations:
                 # Move Z gates into tracked qubit phases.
@@ -420,7 +422,7 @@ class IQMEjectZ(optimizers.EjectZ):
 
                 if phased_op is not None:
                     deletions.append((moment_index, op))
-                    inline_intos.append((moment_index, cast(ops.Operation, phased_op)))
+                    inline_intos.append((moment_index, cast(cirq.Operation, phased_op)))
                 else:
                     dump_tracked_phase(op.qubits, moment_index)
 
@@ -437,13 +439,13 @@ class DropRZBeforeMeasurement(circuits.PointOptimizer):
     """
     def optimization_at(self, circuit, index, op):
 
-        def find_removable_rz():
+        def find_removable_rz() -> list[int]:
             """Finds z rotations that can be removed.
 
             A z rotation is removable iff it is followed by a z-basis measurement.
 
             Returns:
-                list[int]: moment indices of the z rotations to be removed
+                moment indices of the z rotations to be removed
             """
             remove_indices = []
             for idx, moment in enumerate(circuit[index:], start=index):
