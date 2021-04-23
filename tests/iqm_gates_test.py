@@ -29,10 +29,16 @@ class TestGates:
     def test_gate_matrices_ising(self, t):
         """Verify that the Ising gates work as expected."""
 
-        CZ = cirq.CZPowGate(exponent=t)._unitary_()
-        s = 1 - t / 2
+        G = cirq.CZPowGate(exponent=t)._unitary_()
+        s = -t / 2
         L = cirq.rz(-np.pi * s)._unitary_()
-        assert np.allclose(np.exp(-1j * np.pi / 2 * s) * np.kron(L, L) @ ig.IsingGate(exponent=s)._unitary_(), CZ)
+        U = np.exp(-1j * np.pi / 2 * s) * np.kron(L, L) @ ig.IsingGate(exponent=s)._unitary_()
+        assert np.allclose(U, G)
+
+        L = cirq.ZPowGate(exponent=-s)._unitary_()
+        U = np.exp(1j * np.pi / 2 * s) * np.kron(L, L) @ ig.IsingGate(exponent=s)._unitary_()
+        assert np.allclose(U, G)
+
 
     @pytest.mark.parametrize('t', [1.83, 0.5, -0.5])
     def test_gate_matrices_xy(self, t):

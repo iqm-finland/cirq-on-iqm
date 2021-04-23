@@ -15,11 +15,28 @@
 """Tests for the Adonis device.
 """
 # pylint: disable=redefined-outer-name,no-self-use,duplicate-code
+
+from __future__ import annotations
+
 import cirq
+import numpy as np
 import pytest
 
 import cirq_iqm.adonis as ad
 import cirq_iqm.iqm_gates as ig
+
+
+def dist(U: np.ndarray, W: np.ndarray) -> float:
+    r"""Distance between two unitary matrices, modulo global phase.
+
+    Returns:
+        minimal squared Frobenius norm distance between the unitaries over all global phases
+
+    .. math::
+       \mathrm{dist}(U, W) = \inf_{\phi \in \mathbb{R}} \|U - e^{i \phi} W\|_F^2
+       = 2 (\dim_A - |\mathrm{Tr}(U^\dagger W)|)
+    """
+    return 2 * (len(U) - np.abs(np.trace(U.T.conj() @ W)))
 
 
 @pytest.fixture(scope='module')
@@ -43,8 +60,7 @@ native_1q_gates = [
 finally_decomposed_1q_gates = []
 
 native_2q_gates = [
-    ig.IsingGate(exponent=0.45),
-    ig.XYGate(exponent=0.38),
+    cirq.CZ,
 ]
 
 non_native_1q_gates = [
@@ -54,12 +70,13 @@ non_native_1q_gates = [
 ]
 
 non_native_2q_gates = [
-    cirq.ISwapPowGate(exponent=0.27),
+    ig.IsingGate(exponent=0.45),
+    ig.XYGate(exponent=0.38),
     cirq.ISWAP,
+    cirq.ISwapPowGate(exponent=0.27),
     cirq.SWAP,
     cirq.CNOT,
     cirq.CXPowGate(exponent=-2.2),
-    cirq.CZ,
     cirq.CZPowGate(exponent=1.6),
 ]
 
@@ -208,6 +225,11 @@ class TestGateDecomposition:
         ):
             decomposition = adonis.decompose_operation_full(op)
             assert TestGateDecomposition.is_native(decomposition)
+
+            # matrix representations must match up to global phase
+            U = cirq.Circuit(op)._unitary_()
+            W = cirq.Circuit(decomposition)._unitary_()
+            assert dist(U, W) == pytest.approx(0)
 
 
 class TestCircuitValidation:
