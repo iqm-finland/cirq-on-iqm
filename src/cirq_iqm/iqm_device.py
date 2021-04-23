@@ -17,9 +17,9 @@ Describes IQM quantum architectures in the Cirq framework.
 The description includes the qubit connectivity, the native gate set, and the gate decompositions
 and circuit optimization methods to use with the architecture.
 """
+# pylint: disable=protected-access
 from __future__ import annotations
 
-# pylint: disable=protected-access
 import abc
 import collections
 import collections.abc as ca
@@ -301,7 +301,12 @@ class MergeOneParameterGroupGates(circuits.PointOptimizer):
     """
     one_parameter_families = (ig.XYGate, ig.IsingGate)
 
-    def optimization_at(self, circuit, index, op):
+    def optimization_at(
+            self,
+            circuit: cirq.Circuit,
+            index: int,
+            op: cirq.Operation,
+    ) -> Optional[cirq.PointOptimizationSummary]:
         if not isinstance(op.gate, self.one_parameter_families):
             return None
 
@@ -368,7 +373,7 @@ class IQMEjectZ(optimizers.EjectZ):
 
         return False
 
-    def optimize_circuit(self, circuit: circuits.Circuit):
+    def optimize_circuit(self, circuit: circuits.Circuit) -> None:
         # pylint: disable=too-many-locals
         # Tracks qubit phases (in half turns; multiply by pi to get radians).
         qubit_phase: dict[cirq.ops.Qid, float] = collections.defaultdict(lambda: 0)
@@ -437,7 +442,12 @@ class DropRZBeforeMeasurement(circuits.PointOptimizer):
 
     These z rotations do not affect the result of the measurement, so we may ignore them.
     """
-    def optimization_at(self, circuit, index, op):
+    def optimization_at(
+            self,
+            circuit: cirq.Circuit,
+            index: int,
+            op: cirq.Operation,
+    ) -> Optional[cirq.PointOptimizationSummary]:
 
         def find_removable_rz() -> list[int]:
             """Finds z rotations that can be removed.
@@ -472,7 +482,12 @@ class DropRZBeforeMeasurement(circuits.PointOptimizer):
 class DecomposeGatesFinal(circuits.PointOptimizer):
     """Decomposes gates during the final decomposition round.
     """
-    def optimization_at(self, circuit, index, op):
+    def optimization_at(
+            self,
+            circuit: cirq.Circuit,
+            index: int,
+            op: cirq.Operation,
+    ) -> Optional[cirq.PointOptimizationSummary]:
         if not isinstance(op.gate, circuit.device.DECOMPOSE_FINALLY):
             return None  # no changes
 

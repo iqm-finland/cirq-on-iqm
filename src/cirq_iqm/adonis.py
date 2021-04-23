@@ -14,6 +14,11 @@
 """
 IQM's Adonis quantum architecture.
 """
+from __future__ import annotations
+
+from typing import Optional
+
+import cirq
 from cirq import ops
 
 import cirq_iqm.iqm_device as idev
@@ -62,7 +67,7 @@ class Adonis(idev.IQMDevice):
         ops.CZPowGate(),
     )
 
-    def operation_decomposer(self, op):
+    def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
         """Decomposes gates into the native Adonis gate set.
         """
         # NOTE: All the decompositions below keep track of global phase (required for decomposing
