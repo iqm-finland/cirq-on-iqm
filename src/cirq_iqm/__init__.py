@@ -23,7 +23,6 @@ from .iqm_device import IQMDevice
 from .iqm_gates import IsingGate, XYGate
 from .valkmusa import Valkmusa
 
-
 try:
     DIST_NAME = 'cirq-iqm'
     __version__ = version(DIST_NAME)
