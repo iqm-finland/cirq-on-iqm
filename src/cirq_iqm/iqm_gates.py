@@ -39,6 +39,7 @@ class IsingGate(ops.eigen_gate.EigenGate,
     global phase, but the default Cirq decomposition logic decomposes it using
     :class:`cirq.ops.CZPowGate`, which we wish to avoid.
     """
+
     # the most important part, defines the gate family using a scaled spectral decomposition of the generator
     def _eigen_components(self):
         return [
@@ -89,6 +90,7 @@ class XYGate(ops.eigen_gate.EigenGate,
     ``XYGate(s) == cirq.ops.ISwapPowGate(-2*s)``, but we redefine it to bypass the default
     Cirq decomposition logic which decomposes it using CNOTs.
     """
+
     def _eigen_components(self):
         return [
             (0, np.diag([1, 0, 0, 1])),

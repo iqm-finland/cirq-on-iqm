@@ -15,3 +15,12 @@ Features
 * Optimizes the circuit by merging neighboring gates, and commuting z rotations towards the end of the circuit.
 * Circuits can be simulated using both the standard Cirq simulators and the
   `qsim <https://quantumai.google/qsim>`_ simulators.
+
+
+Version 0.2
+===========
+
+Features
+--------
+
+* Circuits can be sent to be executed remotely

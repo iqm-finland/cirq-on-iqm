@@ -65,7 +65,7 @@ class Valkmusa(idev.IQMDevice):
             # CNOT is a special case, we decompose it using iSWAPs to be able to commute Z rotations through
             control_qubit = op.qubits[0]
             target_qubit = op.qubits[1]
-            iSWAP = ig.XYGate(exponent=-1/2)
+            iSWAP = ig.XYGate(exponent=-1 / 2)
             return [
                 ops.XPowGate(exponent=0.5).on(target_qubit),
                 ops.ZPowGate(exponent=-0.5).on(control_qubit),
@@ -90,7 +90,7 @@ class Valkmusa(idev.IQMDevice):
                 ops.YPowGate(exponent=0.5).on(op.qubits[1]),
                 ops.XPowGate(exponent=-0.5).on(op.qubits[1]),
                 ops.ZPowGate(exponent=r).on(op.qubits[0]),
-                ops.ZPowGate(exponent=r+1).on(op.qubits[1]),
+                ops.ZPowGate(exponent=r + 1).on(op.qubits[1]),
             ]
         if isinstance(op.gate, ops.ISwapPowGate):
             # the ISwap family is implemented using the XY interaction

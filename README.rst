@@ -13,6 +13,7 @@ Currently Cirq on IQM can
 * map it into an equivalent circuit compatible with the chosen IQM architecture
 * optimize the circuit by commuting and merging gates
 * simulate the circuit using one of Cirq's simulators
+* send circuits to the IQM backend to be run on a real quantum computer
 
 See the `Jupyter Notebook with examples <docs/usage.ipynb>`_.
 
@@ -50,6 +51,13 @@ Run the demo:
 .. code-block:: bash
 
    python cirq-on-iqm/examples/demo_adonis.py
+
+Run code on a real quantum computer:
+
+.. code-block:: bash
+
+   export IQM_SERVER_URL="https://example.com"
+   python cirq-on-iqm/examples/demo_iqm_engine.py
 
 
 Running a Jupyter notebook in virtualenv takes a bit of extra work,
