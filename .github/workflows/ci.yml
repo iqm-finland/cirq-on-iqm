@@ -20,4 +20,3 @@ jobs:
         run: pip install -e ".[dev]"
       - name: Run Tox
         run: tox -e py
-        
