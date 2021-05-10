@@ -19,7 +19,6 @@ from __future__ import annotations
 
 import json
 import time
-from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from posixpath import join
@@ -27,7 +26,7 @@ from typing import Any, Optional, Union
 from uuid import UUID
 
 import requests
-
+from pydantic import BaseModel
 
 
 TIMEOUT_SECONDS = 10
@@ -53,8 +52,7 @@ class RunStatus(str, Enum):
     FAILED = "failed"
 
 
-@dataclass(frozen=True)
-class InstructionDTO:
+class InstructionDTO(BaseModel):
     """DTO for operations constituting a quantum circuit.
     """
     name: str
@@ -62,8 +60,7 @@ class InstructionDTO:
     args: dict[str, Any]
 
 
-@dataclass(frozen=True)
-class CircuitDTO:
+class CircuitDTO(BaseModel):
     """DTO for quantum circuits.
     """
     name: str
@@ -71,16 +68,15 @@ class CircuitDTO:
     instructions: list[InstructionDTO]
 
 
-@dataclass(frozen=True)
-class SingleQubitMapping:
+
+class SingleQubitMapping(BaseModel):
     """Mapping of a logical qubit to a physical qubit.
     """
     logical_name: str
     physical_name: str
 
 
-@dataclass(frozen=True)
-class RunResult:
+class RunResult(BaseModel):
     """Results of a circuit execution.
 
     * ``measurements`` is present iff the status is ``'ready'``.
@@ -103,7 +99,7 @@ class RunResult:
 
         """
         input_copy = inp.copy()
-        return RunResult(status=RunStatus(input_copy.pop("status")), **input_copy)
+        return RunResult(status=RunStatus(input_copy.pop("status")), measurements=input_copy)
 
 
 class IQMBackendClient:
@@ -131,13 +127,17 @@ class IQMBackendClient:
         Returns:
             ID for the created task. This ID is needed to query the status and the execution results.
         """
-        result = requests.post(join(self._base_url, "circuit/run"), data={
+        if qubit_mapping is None:
+            qubit_mapping=[]
+
+        data = {
             "mapping": qubit_mapping,
-            "circuit": circuit,
+            "circuit": circuit.dict(),
             "shots": shots
-        })
+        }
+        result = requests.post(join(self._base_url, "circuit/run"), json=data)
         result.raise_for_status()
-        return UUID(json.loads(result.text)["id"])
+        return json.loads(result.text)["id"]
 
     def get_run(self, run_id: UUID) -> RunResult:
         """Query the status of the running task.
