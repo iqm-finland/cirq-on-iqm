@@ -28,7 +28,6 @@ from uuid import UUID
 import requests
 from pydantic import BaseModel
 
-
 TIMEOUT_SECONDS = 10
 SECONDS_BETWEEN_CALLS = 1
 
@@ -66,7 +65,6 @@ class CircuitDTO(BaseModel):
     name: str
     args: dict[str, Any]
     instructions: list[InstructionDTO]
-
 
 
 class SingleQubitMapping(BaseModel):
@@ -108,8 +106,10 @@ class IQMBackendClient:
     Args:
         url: Endpoint for accessing the device. Has to start with http or https.
     """
-    def __init__(self, url: str):
+
+    def __init__(self, url: str, settings: dict[str, Any]):
         self._base_url = url
+        self._settings = settings
 
     def submit_circuit(
             self,
@@ -128,11 +128,12 @@ class IQMBackendClient:
             ID for the created task. This ID is needed to query the status and the execution results.
         """
         if qubit_mapping is None:
-            qubit_mapping=[]
+            qubit_mapping = []
 
         data = {
             "mapping": qubit_mapping,
             "circuit": circuit.dict(),
+            "settings": self._settings,
             "shots": shots
         }
         result = requests.post(join(self._base_url, "circuit/run"), json=data)

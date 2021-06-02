@@ -18,9 +18,10 @@ Mocks backend calls for testing
 
 import json
 from uuid import UUID
+
 import pytest
 import requests
-from mockito import unstub, when, mock
+from mockito import mock, unstub, when
 from requests import Response
 
 BASE_URL = 'https://example.com'
