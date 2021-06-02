@@ -25,7 +25,7 @@ import collections
 import collections.abc as ca
 import operator
 import re
-from typing import Type, Optional, cast
+from typing import Optional, Type, cast
 
 import cirq
 import numpy as np
@@ -34,7 +34,6 @@ from cirq.optimizers import decompositions
 from cirq.optimizers import eject_z as ez
 
 import cirq_iqm.iqm_gates as ig
-
 
 GATE_MERGING_TOLERANCE = 1e-10
 

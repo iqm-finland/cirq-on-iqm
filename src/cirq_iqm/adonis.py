@@ -24,7 +24,6 @@ from cirq import ops
 import cirq_iqm.iqm_device as idev
 import cirq_iqm.iqm_gates as ig
 
-
 # common gates used in gate decompositions
 CZ = ops.CZPowGate()
 Lx = ops.XPowGate(exponent=0.5, global_shift=-0.5)

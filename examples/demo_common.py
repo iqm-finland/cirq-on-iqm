@@ -16,9 +16,8 @@
 Demonstrates transforming a quantum circuit into the native gateset and connectivity of a given
 IQM device, optimizing it, and then executing it on a simulator.
 """
-import numpy as np
 import cirq
-
+import numpy as np
 
 np.set_printoptions(precision=3)
 

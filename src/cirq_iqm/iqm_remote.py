@@ -18,13 +18,12 @@ Circuit sampler that executes quantum circuits on the IQM backend.
 from __future__ import annotations
 
 import json
-import os
-from typing import Any
 
 import cirq
 import numpy as np
 from cirq import study
 from cirq.study import resolver
+
 from cirq_iqm.iqm_client import CircuitDTO, InstructionDTO, IQMBackendClient
 
 

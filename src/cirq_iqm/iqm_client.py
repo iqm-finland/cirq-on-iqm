@@ -97,7 +97,7 @@ class RunResult(BaseModel):
 
         """
         input_copy = inp.copy()
-        return RunResult(status=RunStatus(input_copy.pop("status")), measurements=input_copy)
+        return RunResult(status=RunStatus(input_copy.pop("status")), **input_copy)
 
 
 class IQMBackendClient:
@@ -131,14 +131,14 @@ class IQMBackendClient:
             qubit_mapping = []
 
         data = {
-            "mapping": qubit_mapping,
+            "qubit_mapping": qubit_mapping,
             "circuit": circuit.dict(),
             "settings": self._settings,
             "shots": shots
         }
         result = requests.post(join(self._base_url, "circuit/run"), json=data)
         result.raise_for_status()
-        return json.loads(result.text)["id"]
+        return UUID(json.loads(result.text)["id"])
 
     def get_run(self, run_id: UUID) -> RunResult:
         """Query the status of the running task.

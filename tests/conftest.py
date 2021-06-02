@@ -17,6 +17,7 @@ Mocks backend calls for testing
 """
 
 import json
+import os
 from uuid import UUID
 
 import pytest
@@ -29,6 +30,7 @@ BASE_URL = 'https://example.com'
 existing_run = UUID('3c3fcda3-e860-46bf-92a4-bcc59fa76ce9')
 missing_run = UUID('059e4186-50a3-4e6c-ba1f-37fe6afbdfc2')
 
+
 @pytest.fixture(scope='function')
 def mock_backend():
     """
@@ -37,6 +39,16 @@ def mock_backend():
     generate_backend_stubs()
     yield  # running test function
     unstub()
+
+
+@pytest.fixture
+def settings_dict():
+    """
+    Reads and parses settings file into a dictionary
+    """
+    settings_path = os.path.dirname(os.path.realpath(__file__)) + '/settings.json'
+    with open(settings_path, 'r') as f:
+        return json.loads(f.read())
 
 
 def generate_backend_stubs():
@@ -55,6 +67,6 @@ def generate_backend_stubs():
     no_run_response.status_code = 404
     no_run_response.reason = 'Run not found'
 
-    when(requests).get(f'{BASE_URL}/circuit/run/{existing_run}', ...).\
+    when(requests).get(f'{BASE_URL}/circuit/run/{existing_run}', ...). \
         thenReturn(running_response).thenReturn(success_get_response)
     when(requests).get(f'{BASE_URL}/circuit/run/{missing_run}', ...).thenReturn(no_run_response)

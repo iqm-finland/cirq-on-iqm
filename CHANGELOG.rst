@@ -2,6 +2,14 @@
 Changelog
 =========
 
+Version 0.3
+===========
+
+Features
+--------
+
+* Settings file support. :mr:`17`
+
 
 Version 0.2
 ===========

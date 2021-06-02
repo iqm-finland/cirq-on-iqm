@@ -15,7 +15,7 @@
 
 IQM builds quantum computers based on superconducting transmon technology.
 """
-from importlib.metadata import version, PackageNotFoundError
+from importlib.metadata import PackageNotFoundError, version
 
 from .adonis import Adonis
 from .extended_qasm_parser import circuit_from_qasm
