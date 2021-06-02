@@ -57,6 +57,7 @@ Run code on a real quantum computer:
 .. code-block:: bash
 
    export IQM_SERVER_URL="https://example.com"
+   export IQM_SETTINGS_PATH="/path/to/settings"
    python cirq-on-iqm/examples/demo_iqm_engine.py
 
 

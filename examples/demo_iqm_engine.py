@@ -15,12 +15,13 @@
 """
 Demonstrates executing a quantum circuit on an IQM device.
 """
-
+import os
 
 import cirq
 from cirq_iqm.adonis import Adonis
 from cirq_iqm.iqm_device import IQMQubit
-from cirq_iqm import iqm_remote
+from cirq_iqm.iqm_remote import IQMSampler
+
 
 def demo_adonis_backend():
     """
@@ -36,7 +37,9 @@ def demo_adonis_backend():
     circuit_adonis = device.map_circuit(circuit)
 
     # Set IQM_SERVER_URL environment variable with 'export IQM_SERVER_URL="https://example.com"'
-    sampler = iqm_remote.get_sampler_from_env()
+    # Set IQM_SETTINGS_PATH environment variable with 'export IQM_SETTINGS_PATH="/path/to/file"'
+    with open(os.environ['IQM_SETTINGS_PATH'], 'r') as f:
+        sampler = IQMSampler(os.environ['IQM_SERVER_URL'], f.read())
 
     # This will send the circuit to the backend to be run, and return a cirq.study.Result
     # containing the measurement results.
