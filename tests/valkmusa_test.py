@@ -14,12 +14,12 @@
 
 """Tests for the Valkmusa device.
 """
+import cirq
 # pylint: disable=redefined-outer-name,no-self-use,duplicate-code
 import pytest
-import cirq
 
-import cirq_iqm.valkmusa as valk
 import cirq_iqm.iqm_gates as ig
+import cirq_iqm.valkmusa as valk
 
 
 @pytest.fixture(scope='module')

@@ -17,11 +17,10 @@ Demonstrates importing a quantum circuit from an OpenQASM 2.0 file, transforming
 the Adonis native gateset and connectivity, and then executing it on a simulator.
 """
 import cirq
+from demo_common import demo
 
 from cirq_iqm.adonis import Adonis
 from cirq_iqm.extended_qasm_parser import circuit_from_qasm
-
-from demo_common import demo
 
 
 def demo_adonis(do_measure=False, use_qsim=False):

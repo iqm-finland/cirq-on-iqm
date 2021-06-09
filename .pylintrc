@@ -5,11 +5,15 @@ disable=
     too-few-public-methods,
     invalid-name,
     abstract-method,
-    duplicate-code,
     fixme,
+    duplicate-code
+extension-pkg-whitelist=pydantic
 
 [FORMAT]
 max-line-length=120
 
 [STRING]
 check-quote-consistency=yes
+
+[SIMILARITIES]
+ignore-imports=yes

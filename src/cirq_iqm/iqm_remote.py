@@ -17,28 +17,14 @@ Circuit sampler that executes quantum circuits on the IQM backend.
 """
 from __future__ import annotations
 
-import os
+import json
 
 import cirq
 import numpy as np
 from cirq import study
 from cirq.study import resolver
-from cirq_iqm.iqm_client import IQMBackendClient, CircuitDTO, InstructionDTO
 
-
-def get_sampler_from_env() -> IQMSampler:
-    """Initialize an IQM sampler using the environment variable ``IQM_SERVER_URL``.
-
-    Returns:
-        circuit sampler
-    """
-    server_url = os.environ.get('IQM_SERVER_URL')
-    if not server_url:
-        raise EnvironmentError(
-            'Environment variable IQM_SERVER_URL is not set. '
-            'You can set the variable with "export IQM_SERVER_URL=\"https://example.com\""'
-        )
-    return IQMSampler(url=server_url)
+from cirq_iqm.iqm_client import CircuitDTO, InstructionDTO, IQMBackendClient
 
 
 def _serialize_iqm(circuit: cirq.Circuit) -> CircuitDTO:
@@ -75,9 +61,11 @@ class IQMSampler(cirq.work.Sampler):
 
     Args:
         url: Endpoint for accessing the device. Has to start with http or https.
+        settings: Settings for the quantum hardware.
     """
-    def __init__(self, url: str):
-        self._client = IQMBackendClient(url)
+
+    def __init__(self, url: str, settings: str):
+        self._client = IQMBackendClient(url, settings=json.loads(settings))
 
     def run_sweep(
             self,

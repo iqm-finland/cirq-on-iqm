@@ -14,13 +14,12 @@
 
 """Tests for the circuit optimization passes.
 """
+import cirq
 # pylint: disable=no-self-use
 import pytest
-import cirq
 
 import cirq_iqm.iqm_gates as ig
-from cirq_iqm.iqm_device import MergeOneParameterGroupGates, IQMEjectZ
-
+from cirq_iqm.iqm_device import IQMEjectZ, MergeOneParameterGroupGates
 
 tol = 1e-10  # numerical tolerance
 
