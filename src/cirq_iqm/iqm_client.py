@@ -28,7 +28,7 @@ from uuid import UUID
 import requests
 from pydantic import BaseModel
 
-TIMEOUT_SECONDS = 10
+TIMEOUT_SECONDS = 120
 SECONDS_BETWEEN_CALLS = 1
 
 
