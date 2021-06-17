@@ -114,7 +114,7 @@ class IQMBackendClient:
     def submit_circuit(
             self,
             circuit: CircuitDTO,
-            qubit_mapping: list[SingleQubitMapping] = None,
+            qubit_mapping: list[SingleQubitMapping],
             shots: int = 1
     ) -> UUID:
         """Submits a quantum circuit to be executed on the backend.
@@ -127,15 +127,14 @@ class IQMBackendClient:
         Returns:
             ID for the created task. This ID is needed to query the status and the execution results.
         """
-        if qubit_mapping is None:
-            qubit_mapping = []
 
         data = {
-            "qubit_mapping": qubit_mapping,
+            "qubit_mapping": [q.dict() for q in qubit_mapping],
             "circuit": circuit.dict(),
             "settings": self._settings,
             "shots": shots
         }
+
         result = requests.post(join(self._base_url, "circuit/run"), json=data)
         result.raise_for_status()
         return UUID(json.loads(result.text)["id"])

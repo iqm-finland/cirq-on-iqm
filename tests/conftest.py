@@ -25,18 +25,21 @@ import requests
 from mockito import mock, unstub, when
 from requests import Response
 
-BASE_URL = 'https://example.com'
-
 existing_run = UUID('3c3fcda3-e860-46bf-92a4-bcc59fa76ce9')
 missing_run = UUID('059e4186-50a3-4e6c-ba1f-37fe6afbdfc2')
 
 
+@pytest.fixture()
+def base_url():
+    return 'https://example.com'
+
+
 @pytest.fixture(scope='function')
-def mock_backend():
+def mock_backend(base_url):
     """
     Runs mocking separately for each test
     """
-    generate_backend_stubs()
+    generate_backend_stubs(base_url)
     yield  # running test function
     unstub()
 
@@ -51,12 +54,12 @@ def settings_dict():
         return json.loads(f.read())
 
 
-def generate_backend_stubs():
+def generate_backend_stubs(base_url):
     """
     Mocking some calls to backend by mocking 'requests'
     """
     success_submit_response = mock({'status_code': 201, 'text': json.dumps({'id': str(existing_run)})})
-    when(requests).post(f'{BASE_URL}/circuit/run', ...).thenReturn(success_submit_response)
+    when(requests).post(f'{base_url}/circuit/run', ...).thenReturn(success_submit_response)
 
     running_response = mock({'status_code': 200, 'text': json.dumps({'status': 'pending'})})
     success_get_response = mock({'status_code': 200, 'text': json.dumps(
@@ -67,6 +70,6 @@ def generate_backend_stubs():
     no_run_response.status_code = 404
     no_run_response.reason = 'Run not found'
 
-    when(requests).get(f'{BASE_URL}/circuit/run/{existing_run}', ...). \
+    when(requests).get(f'{base_url}/circuit/run/{existing_run}', ...). \
         thenReturn(running_response).thenReturn(success_get_response)
-    when(requests).get(f'{BASE_URL}/circuit/run/{missing_run}', ...).thenReturn(no_run_response)
+    when(requests).get(f'{base_url}/circuit/run/{missing_run}', ...).thenReturn(no_run_response)
