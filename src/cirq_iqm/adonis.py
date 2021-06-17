@@ -16,20 +16,23 @@ IQM's Adonis quantum architecture.
 """
 from __future__ import annotations
 
+from math import pi as PI
 from typing import Optional
 
 import cirq
 from cirq import ops
 
 import cirq_iqm.iqm_device as idev
-import cirq_iqm.iqm_gates as ig
+
+
+PI_2 = PI / 2
 
 # common gates used in gate decompositions
 CZ = ops.CZPowGate()
-Lx = ops.XPowGate(exponent=0.5, global_shift=-0.5)
-Lxi = ops.XPowGate(exponent=-0.5, global_shift=-0.5)
-Ly = ops.YPowGate(exponent=0.5, global_shift=-0.5)
-Lyi = ops.YPowGate(exponent=-0.5, global_shift=-0.5)
+Lx = ops.rx(PI_2)
+Lxi = ops.rx(-PI_2)
+Ly = ops.ry(PI_2)
+Lyi = ops.ry(-PI_2)
 
 
 class Adonis(idev.IQMDevice):
@@ -69,45 +72,42 @@ class Adonis(idev.IQMDevice):
     def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
         """Decomposes gates into the native Adonis gate set.
         """
-        # NOTE: All the decompositions below keep track of global phase (required for decomposing
-        # controlled gates), but for now assume that op.gate.global_shift is zero.
-        # It seems that Cirq native decompositions ignore global phase entirely.
+        # All the decompositions below keep track of global phase (required for decomposing controlled gates).
+        # It seems that Cirq native decompositions ignore global phase entirely?
 
-        if isinstance(op.gate, ops.ISwapPowGate):
-            # the ISwap family is implemented using the XY interaction
-            s = -0.5 * op.gate.exponent
-            return [
-                ig.XYGate(exponent=s).on(*op.qubits)
-            ]
         if isinstance(op.gate, ops.CZPowGate):
-            # decompose CZPowGate using IsingGate
-            s = -0.5 * op.gate.exponent
-            L = ops.ZPowGate(exponent=-s, global_shift=-0.5)
+            # decompose CZPowGate using ZZPowGate
+            t = op.gate.exponent
+            s = op.gate.global_shift
+            L = ops.rz(t / 2 * PI)
             return [
-                ig.IsingGate(exponent=s, global_shift=-0.5).on(*op.qubits),
+                ops.ZZPowGate(exponent=-0.5 * t, global_shift=-2 * s - 1).on(*op.qubits),
                 L.on(op.qubits[0]),
                 L.on(op.qubits[1]),
             ]
-        if isinstance(op.gate, ig.IsingGate):
-            # decompose IsingGate using two CZs
-            s = op.gate.exponent
+        if isinstance(op.gate, ops.ZZPowGate):
+            # decompose ZZPowGate using two CZs
+            t = op.gate.exponent
+            s = op.gate.global_shift
             return [
                 Lyi.on(op.qubits[1]),
                 CZ.on(*op.qubits),
-                ops.XPowGate(exponent=-s, global_shift=-0.5).on(op.qubits[1]),
+                ops.XPowGate(exponent=-t, global_shift=-1 - s).on(op.qubits[1]),
                 CZ.on(*op.qubits),
                 Ly.on(op.qubits[1]),
             ]
-        if isinstance(op.gate, ig.XYGate):
-            # decompose XYGate using two CZs
-            s = op.gate.exponent
+        if isinstance(op.gate, ops.ISwapPowGate):
+            # decompose ISwapPowGate using two CZs
+            t = op.gate.exponent
+            s = op.gate.global_shift
+            x = -0.5 * t
             return [
                 Lxi.on(op.qubits[0]),
                 Lxi.on(op.qubits[1]),
                 Lyi.on(op.qubits[1]),
                 CZ.on(*op.qubits),
-                ops.XPowGate(exponent=s, global_shift=-0.5).on(op.qubits[0]),
-                ops.XPowGate(exponent=-s, global_shift=-0.5).on(op.qubits[1]),
+                ops.XPowGate(exponent=x, global_shift=-0.5 -2 * s).on(op.qubits[0]),
+                ops.XPowGate(exponent=-x, global_shift=-0.5).on(op.qubits[1]),
                 CZ.on(*op.qubits),
                 Ly.on(op.qubits[1]),
                 Lx.on(op.qubits[0]),

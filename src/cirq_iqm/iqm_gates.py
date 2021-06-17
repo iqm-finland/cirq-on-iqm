@@ -36,8 +36,7 @@ class IsingGate(ops.eigen_gate.EigenGate,
     We do not support most of the various Gate protocols.
 
     Cirq already has :class:`cirq.ops.ZZPowGate` which is equivalent to :class:`IsingGate` with a
-    global phase, but the default Cirq decomposition logic decomposes it using
-    :class:`cirq.ops.CZPowGate`, which we wish to avoid.
+    global phase, ``Ising(exponent=t, global_shift=s) = ZZPowGate(exponent=t, global_shift=s-0.5)``.
     """
 
     # the most important part, defines the gate family using a scaled spectral decomposition of the generator
@@ -54,7 +53,7 @@ class IsingGate(ops.eigen_gate.EigenGate,
 
     def _circuit_diagram_info_(self, args: 'cirq.CircuitDiagramInfoArgs') -> 'cirq.CircuitDiagramInfo':
         return protocols.CircuitDiagramInfo(
-            wire_symbols=('ZZ', 'ZZ'),
+            wire_symbols=('Ising', 'Ising'),
             exponent=self._diagram_exponent(args)
         )
 
@@ -86,9 +85,8 @@ class XYGate(ops.eigen_gate.EigenGate,
 
     We do not support most of the Gate protocols.
 
-    :class:`XYGate` is effectively a reparameterization of :class:`cirq.ops.ISwapPowGate`,
-    ``XYGate(s) == cirq.ops.ISwapPowGate(-2*s)``, but we redefine it to bypass the default
-    Cirq decomposition logic which decomposes it using CNOTs.
+    :class:`XYGate` is a reparameterization of :class:`cirq.ops.ISwapPowGate` up to global phase,
+    ``XYGate(exponent=t, global_shift=s) == ISwapPowGate(exponent=-2*t, global_shift=-s/2)``.
     """
 
     def _eigen_components(self):

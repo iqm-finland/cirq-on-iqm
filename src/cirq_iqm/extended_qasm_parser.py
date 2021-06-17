@@ -34,13 +34,13 @@ def circuit_from_qasm(qasm: str) -> cirq.circuits.Circuit:
     parser = QasmParser()
     parser.all_gates['ising'] = QasmGateStatement(
         qasm_gate='ising',
-        cirq_gate=lambda params: ig.IsingGate(exponent=params[0]),
+        cirq_gate=lambda params: cirq.ops.ZZPowGate(exponent=params[0], global_shift=-0.5),
         num_params=1,
         num_args=2
     )
     parser.all_gates['xy'] = QasmGateStatement(
         qasm_gate='xy',
-        cirq_gate=lambda params: ig.XYGate(exponent=params[0]),
+        cirq_gate=lambda params: cirq.ops.ISwapPowGate(exponent=-2 * params[0]),
         num_params=1,
         num_args=2
     )

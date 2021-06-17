@@ -14,10 +14,23 @@
 """
 IQM's Valkmusa quantum architecture.
 """
+from math import pi as PI
+
 from cirq import ops
 
 import cirq_iqm.iqm_device as idev
-import cirq_iqm.iqm_gates as ig
+#import cirq_iqm.iqm_gates as ig
+
+
+PI_2 = PI / 2
+
+# common gates used in gate decompositions
+Lx = ops.rx(PI_2)
+Lxi = ops.rx(-PI_2)
+Ly = ops.ry(PI_2)
+Lyi = ops.ry(-PI_2)
+Lz = ops.rz(PI_2)
+Lzi = ops.rz(-PI_2)
 
 
 class Valkmusa(idev.IQMDevice):
@@ -28,7 +41,7 @@ class Valkmusa(idev.IQMDevice):
       QB1 - QB2
 
     Each qubit can be rotated about any axis in the xy plane by an arbitrary angle.
-    The native two qubit-gate is XYGate.
+    The native two qubit-gate is ISwapPowGate.
     The qubits are always measured simultaneously at the end of the computation.
     """
 
@@ -40,7 +53,7 @@ class Valkmusa(idev.IQMDevice):
         # so we would have to add those rules...
         ops.XPowGate,
         ops.YPowGate,
-        ig.XYGate,
+        ops.ISwapPowGate,
         ops.MeasurementGate
     )
 
@@ -60,39 +73,48 @@ class Valkmusa(idev.IQMDevice):
         raise NotImplementedError('Decomposition missing: {}'.format(op.gate))
 
     def operation_decomposer(self, op: ops.Operation):
-        """Decomposes CNOT and the CZPowGate family to Valkmusa native gates."""
+        """Decomposes CNOT and the CZPowGate family to Valkmusa native gates.
+        """
+        # All the decompositions below keep track of global phase (required for decomposing controlled gates).
+
         if isinstance(op.gate, ops.CXPowGate) and op.gate.exponent == 1.0:
             # CNOT is a special case, we decompose it using iSWAPs to be able to commute Z rotations through
             control_qubit = op.qubits[0]
             target_qubit = op.qubits[1]
-            iSWAP = ig.XYGate(exponent=-1 / 2)
+            s = op.gate.global_shift
+            iSWAP = ops.ISwapPowGate(exponent=1, global_shift=(s + 0.25) / 2)
             return [
-                ops.XPowGate(exponent=0.5).on(target_qubit),
-                ops.ZPowGate(exponent=-0.5).on(control_qubit),
-                ops.ZPowGate(exponent=0.5).on(target_qubit),
+                Lx.on(target_qubit),
+                Lzi.on(control_qubit),
+                Lz.on(target_qubit),
                 iSWAP.on(*op.qubits),
-                ops.XPowGate(exponent=0.5).on(control_qubit),
+                Lx.on(control_qubit),
                 iSWAP.on(*op.qubits),
-                ops.ZPowGate(exponent=0.5).on(target_qubit),
+                Lz.on(target_qubit),
             ]
         if isinstance(op.gate, ops.CZPowGate):
-            # the CZ family is decomposed using two applications of the XY interaction
-            s = -op.gate.exponent / 4
-            r = -2 * s
+            # decompose CZPowGate using ZZPowGate
+            t = op.gate.exponent
+            s = op.gate.global_shift
+            L = ops.rz(t / 2 * PI)
             return [
-                ops.XPowGate(exponent=0.5).on(op.qubits[0]),
-                ops.YPowGate(exponent=-0.5).on(op.qubits[1]),
-                ops.ZPowGate(exponent=0.5).on(op.qubits[1]),
-                ig.XYGate(exponent=s).on(*op.qubits),
-                ops.YPowGate(exponent=1).on(op.qubits[1]),
-                ig.XYGate(exponent=s).on(*op.qubits),
-                ops.XPowGate(exponent=-0.5).on(op.qubits[0]),
-                ops.YPowGate(exponent=0.5).on(op.qubits[1]),
-                ops.XPowGate(exponent=-0.5).on(op.qubits[1]),
-                ops.ZPowGate(exponent=r).on(op.qubits[0]),
-                ops.ZPowGate(exponent=r + 1).on(op.qubits[1]),
+                ops.ZZPowGate(exponent=-0.5 * t, global_shift=-2 * s - 1).on(*op.qubits),
+                L.on(op.qubits[0]),
+                L.on(op.qubits[1]),
             ]
-        if isinstance(op.gate, ops.ISwapPowGate):
-            # the ISwap family is implemented using the XY interaction
-            return [ig.XYGate(exponent=-0.5 * op.gate.exponent).on(*op.qubits)]
+        if isinstance(op.gate, ops.ZZPowGate):
+            # ZZPowGate is decomposed using two applications of the XY interaction
+            t = op.gate.exponent
+            s = op.gate.global_shift
+            XY = ops.ISwapPowGate(exponent=-t, global_shift=-(s + 0.5) / 2)
+            return [
+                Lyi.on(op.qubits[0]),
+                Lyi.on(op.qubits[1]),
+                XY.on(*op.qubits),
+                ops.XPowGate(exponent=-1, global_shift=-0.5).on(op.qubits[0]),
+                XY.on(*op.qubits),
+                ops.XPowGate(exponent=1, global_shift=-0.5).on(op.qubits[0]),
+                Ly.on(op.qubits[0]),
+                Ly.on(op.qubits[1]),
+            ]
         return None
