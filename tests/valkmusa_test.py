@@ -18,7 +18,6 @@ import cirq
 # pylint: disable=redefined-outer-name,no-self-use,duplicate-code
 import pytest
 
-import cirq_iqm.iqm_gates as ig
 import cirq_iqm.valkmusa as valk
 
 
@@ -44,7 +43,8 @@ finally_decomposed_1q_gates = [
 ]
 
 native_2q_gates = [
-    ig.XYGate(exponent=0.38),
+    cirq.ISWAP,
+    cirq.ISwapPowGate(exponent=0.27),
 ]
 
 non_native_1q_gates = [
@@ -54,13 +54,12 @@ non_native_1q_gates = [
 ]
 
 non_native_2q_gates = [
-    cirq.ISwapPowGate(exponent=0.27),
-    cirq.ISWAP,
     cirq.SWAP,
     cirq.CNOT,
     cirq.CXPowGate(exponent=-2.2),
     cirq.CZ,
     cirq.CZPowGate(exponent=1.6),
+    cirq.ZZPowGate(exponent=1.3),
 ]
 
 

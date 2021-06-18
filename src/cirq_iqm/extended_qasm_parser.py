@@ -17,8 +17,6 @@ Extends the OpenQASM 2.0 language by gates native to the IQM architectures.
 import cirq
 from cirq.contrib.qasm_import._parser import QasmGateStatement, QasmParser
 
-import cirq_iqm.iqm_gates as ig
-
 
 def circuit_from_qasm(qasm: str) -> cirq.circuits.Circuit:
     """Parses an OpenQASM 2.0 program to a Cirq circuit.

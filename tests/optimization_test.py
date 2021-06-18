@@ -14,12 +14,13 @@
 
 """Tests for the circuit optimization passes.
 """
-import cirq
 # pylint: disable=no-self-use
+
+import cirq
+from cirq import ops, optimizers
 import pytest
 
-import cirq_iqm.iqm_gates as ig
-from cirq_iqm.iqm_device import IQMEjectZ, MergeOneParameterGroupGates
+from cirq_iqm.iqm_device import MergeOneParameterGroupGates
 
 tol = 1e-10  # numerical tolerance
 
@@ -28,10 +29,10 @@ class TestGateOptimization:
     """Test various circuit optimization techniques."""
 
     @pytest.mark.parametrize('family', [
-        ig.IsingGate,
-        ig.XYGate,
+        ops.ZZPowGate,
+        ops.ISwapPowGate,
     ])
-    @pytest.mark.parametrize('a, b', [(0, 0.3), (-0.5, 0.5), (0.3, 1.7), (0.1, -4.1)])
+    @pytest.mark.parametrize('a, b', [(0, 0.3), (-0.5, 0.5), (1.0, 2.0), (0.1, -4.1)])
     def test_gate_merging(self, family, a, b):
         """Merging one-parameter group gates."""
 
@@ -46,21 +47,33 @@ class TestGateOptimization:
         MergeOneParameterGroupGates().optimize_circuit(c)
         cirq.optimizers.DropEmptyMoments().optimize_circuit(c)
 
-        if abs((a + b) % 2) < 1e-10:
+        if abs((a + b) % MergeOneParameterGroupGates.PERIOD) < 1e-10:
             # the gates have canceled each other out
             assert len(c) == 0
         else:
             # the gates have been merged
             assert len(c) == 1
-            assert c[0].operations[0].gate.exponent == pytest.approx(a + b, abs=tol)
+            expected = MergeOneParameterGroupGates._normalize_par(a + b)
+            assert c[0].operations[0].gate.exponent == pytest.approx(expected, abs=tol)
 
 
     @pytest.mark.parametrize('family, ex', [
-        (ig.IsingGate, 0.37),  # always commutes with Rz
-        (ig.XYGate, 0.5),  # is swaplike with Rz only when ex is int+0.5
-        (ig.XYGate, 1.5),
-        pytest.param(ig.XYGate, 0.3, marks=pytest.mark.xfail(strict=True)),
-        (cirq.ops.CZPowGate, 0.2),
+        (cirq.ops.CZPowGate, 0.2),  # diagonal
+        (ops.ISwapPowGate, 1),      # swaplike with Rz when ex is an odd integer
+        (ops.ISwapPowGate, 3),
+        pytest.param(
+            ops.ISwapPowGate, 0.6,
+            marks=pytest.mark.xfail(strict=True)
+        ),
+        # diagonal, but currently do not work with EjectZ
+        pytest.param(
+            ops.ZZPowGate, 0.37,
+            marks=pytest.mark.xfail(strict=True, reason='Implementation missing in Cirq.')
+        ),
+        pytest.param(
+            ops.ISwapPowGate, 2,
+            marks=pytest.mark.xfail(strict=True, reason='Implementation missing in Cirq.')
+        ),
     ])
     def test_eject_z(self, family, ex):
         """Commuting z rotations towards the end of the circuit."""
@@ -76,8 +89,8 @@ class TestGateOptimization:
             cirq.MeasurementGate(1)(q1),
         ])
 
-        IQMEjectZ().optimize_circuit(c)
+        optimizers.EjectZ().optimize_circuit(c)
         cirq.optimizers.DropEmptyMoments().optimize_circuit(c)
 
-        # the gates have been commuted and canceled
+        # the ZPowGates have been commuted and canceled
         assert len(c) == 2
