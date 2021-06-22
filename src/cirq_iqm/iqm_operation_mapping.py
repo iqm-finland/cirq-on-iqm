@@ -22,7 +22,7 @@ class OperationNotSupportedError(RuntimeError):
 
 
 def map_operation(operation: Operation) -> InstructionDTO:
-    """Map a Cirq Operation to the IQM internal gate representation.
+    """Map a Cirq Operation to the IQM data transfer format.
 
     Assumes that the circuit has been converted to using only circuits natively supported by the given IQM architecture.
     """
