@@ -16,7 +16,7 @@ import pytest
 from cirq import ZPowGate, GateOperation, MeasurementGate, CZPowGate, XPowGate, YPowGate, PhasedXPowGate
 from cirq_iqm.iqm_client import InstructionDTO
 from cirq_iqm.iqm_device import IQMQubit
-from cirq_iqm.iqm_operation_mapping import OperationNotSupportedException, map_operation
+from cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, map_operation
 
 
 @pytest.fixture()
@@ -31,7 +31,7 @@ def qubit_2() -> IQMQubit:
 
 def test_raises_error_for_unsupported_operation(qubit_1):
     operation = GateOperation(ZPowGate(), [qubit_1])
-    with pytest.raises(OperationNotSupportedException):
+    with pytest.raises(OperationNotSupportedError):
         map_operation(operation)
 
 
@@ -74,5 +74,5 @@ def test_maps_cz_gate(qubit_1, qubit_2):
 
 def test_raises_error_for_general_cz_pow_gate(qubit_1, qubit_2):
     operation = GateOperation(CZPowGate(exponent=0.5), [qubit_1, qubit_2])
-    with pytest.raises(OperationNotSupportedException):
+    with pytest.raises(OperationNotSupportedError):
         map_operation(operation)

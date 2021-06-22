@@ -74,6 +74,15 @@ class SingleQubitMapping(BaseModel):
     physical_name: str
 
 
+class RunRequest(BaseModel):
+    """Request for IQM backend to execute a circuit.
+    """
+    qubit_mapping: list[SingleQubitMapping]
+    circuit: CircuitDTO
+    settings: dict[str, Any]
+    shots: int
+
+
 class RunResult(BaseModel):
     """Results of a circuit execution.
 
@@ -128,14 +137,14 @@ class IQMBackendClient:
             ID for the created task. This ID is needed to query the status and the execution results.
         """
 
-        data = {
-            "qubit_mapping": [q.dict() for q in qubit_mapping],
-            "circuit": circuit.dict(),
-            "settings": self._settings,
-            "shots": shots
-        }
+        data = RunRequest(
+            qubit_mapping=qubit_mapping,
+            circuit=circuit,
+            settings=self._settings,
+            shots=shots
+        )
 
-        result = requests.post(join(self._base_url, "circuit/run"), json=data)
+        result = requests.post(join(self._base_url, "circuit/run"), json=data.dict())
         result.raise_for_status()
         return UUID(json.loads(result.text)["id"])
 

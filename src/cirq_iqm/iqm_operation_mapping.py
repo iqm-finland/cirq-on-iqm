@@ -24,7 +24,18 @@ class OperationNotSupportedError(RuntimeError):
 def map_operation(operation: Operation) -> InstructionDTO:
     """Map a Cirq Operation to the IQM data transfer format.
 
-    Assumes that the circuit has been converted to using only circuits natively supported by the given IQM architecture.
+    Assumes that the circuit has been converted to a formt where it only contains operations natively supported by the
+    given IQM architecture.
+
+    Args:
+        operation: a Cirq Operation
+
+    Returns:
+        InstructionDTO: the converted operation
+
+    Raises:
+        OperationNotSupportedError When the circuit contains an unsupported operation.
+
     """
     phased_rx_name = 'phased_rx'
     qubits = [str(qubit) for qubit in operation.qubits]
@@ -64,6 +75,6 @@ def map_operation(operation: Operation) -> InstructionDTO:
                 qubits=qubits,
                 args={}
             )
-        raise OperationNotSupportedException(f'CZPowGate exponent was {operation.gate.exponent}, can only be 1.')
+        raise OperationNotSupportedError(f'CZPowGate exponent was {operation.gate.exponent}, can only be 1.')
 
-    raise OperationNotSupportedException(f'{type(operation)} not natively supported.')
+    raise OperationNotSupportedError(f'{type(operation)} not natively supported.')
