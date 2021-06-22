@@ -33,7 +33,7 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   api/API
+   API
    license
    authors
    changelog

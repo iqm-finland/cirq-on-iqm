@@ -310,6 +310,7 @@ class MergeOneParameterGroupGates(circuits.PointOptimizer):
             index: int,
             op: cirq.Operation,
     ) -> Optional[cirq.PointOptimizationSummary]:
+        """TODO the parent class at Cirq has a broken docstring here, which we have to override."""
         if not isinstance(op.gate, self.ONE_PARAMETER_FAMILIES):
             return None
 
@@ -364,6 +365,7 @@ class DropRZBeforeMeasurement(circuits.PointOptimizer):
             index: int,
             op: cirq.Operation,
     ) -> Optional[cirq.PointOptimizationSummary]:
+        """TODO the parent class at Cirq has a broken docstring here, which we have to override."""
 
         def find_removable_rz() -> list[int]:
             """Finds z rotations that can be removed.
@@ -404,6 +406,7 @@ class DecomposeGatesFinal(circuits.PointOptimizer):
             index: int,
             op: cirq.Operation,
     ) -> Optional[cirq.PointOptimizationSummary]:
+        """TODO the parent class at Cirq has a broken docstring here, which we have to override."""
         if not isinstance(op.gate, circuit.device.DECOMPOSE_FINALLY):
             return None  # no changes
 
