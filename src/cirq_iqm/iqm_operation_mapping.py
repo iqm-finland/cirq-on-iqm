@@ -66,4 +66,4 @@ def map_operation(operation: Operation) -> InstructionDTO:
             )
         raise OperationNotSupportedException(f'CZPowGate exponent was {operation.gate.exponent}, can only be 1.')
 
-    raise OperationNotSupportedException(f'Operation of type {type(operation)} not supported by IQM architecture')
+    raise OperationNotSupportedException(f'{type(operation)} not natively supported.')
