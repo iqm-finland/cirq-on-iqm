@@ -17,7 +17,7 @@ from cirq.ops import Operation, PhasedXPowGate, XPowGate, YPowGate, MeasurementG
 from cirq_iqm.iqm_client import InstructionDTO
 
 
-class OperationNotSupportedException(Exception):
+class OperationNotSupportedError(RuntimeError):
     """Raised when a given operation is not supported by IQM architecture."""
 
 
