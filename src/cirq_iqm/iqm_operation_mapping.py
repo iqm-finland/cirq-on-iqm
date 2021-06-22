@@ -18,7 +18,7 @@ from cirq_iqm.iqm_client import InstructionDTO
 
 
 class OperationNotSupportedError(RuntimeError):
-    """Raised when a given operation is not supported by IQM architecture."""
+    """Raised when a given operation is not supported by the data transfer format."""
 
 
 def map_operation(operation: Operation) -> InstructionDTO:
