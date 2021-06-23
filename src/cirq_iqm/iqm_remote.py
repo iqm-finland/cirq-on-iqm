@@ -23,8 +23,8 @@ import cirq
 import numpy as np
 from cirq import study
 from cirq.study import resolver
-
-from cirq_iqm.iqm_client import CircuitDTO, InstructionDTO, IQMBackendClient
+from cirq_iqm.iqm_client import CircuitDTO, IQMBackendClient, SingleQubitMapping
+from cirq_iqm.iqm_operation_mapping import map_operation
 
 
 def _serialize_iqm(circuit: cirq.Circuit) -> CircuitDTO:
@@ -39,21 +39,13 @@ def _serialize_iqm(circuit: cirq.Circuit) -> CircuitDTO:
     instructions = []
     for moment in circuit.moments:
         for operation in moment.operations:
-            gate_dict = operation.gate._json_dict_()
-            instructions.append(
-                InstructionDTO(
-                    name=gate_dict['cirq_type'],
-                    qubits=[str(qubit) for qubit in operation.qubits],
-                    args={key: val for key, val in gate_dict.items() if key != 'cirq_type'}
-                )
-            )
+            instructions.append(map_operation(operation))
 
-    circuit_dict = CircuitDTO(
+    return CircuitDTO(
         name='Serialized from Cirq',
         instructions=instructions,
         args={}  # todo: implement arguments
     )
-    return circuit_dict
 
 
 class IQMSampler(cirq.work.Sampler):
@@ -62,10 +54,11 @@ class IQMSampler(cirq.work.Sampler):
     Args:
         url: Endpoint for accessing the device. Has to start with http or https.
         settings: Settings for the quantum hardware.
+        qubit_mapping: A dict that maps qubit logical names to physical qubit names
     """
-
-    def __init__(self, url: str, settings: str):
+    def __init__(self, url: str, settings: str, qubit_mapping: dict[str, str]):
         self._client = IQMBackendClient(url, settings=json.loads(settings))
+        self._qubit_mapping = [SingleQubitMapping(logical_name=k, physical_name=v) for k, v in qubit_mapping.items()]
 
     def run_sweep(
             self,
@@ -98,7 +91,7 @@ class IQMSampler(cirq.work.Sampler):
     def _send_circuit(
             self,
             circuit: cirq.Circuit,
-            repetitions: int = 1
+            repetitions: int = 1,
     ) -> cirq.study.Result:
         """Sends the circuit to be executed by the remote IQM device.
 
@@ -114,7 +107,7 @@ class IQMSampler(cirq.work.Sampler):
             APITimeoutError: server did not return the results in the allocated time
         """
         iqm_circuit = _serialize_iqm(circuit)
-        job_id = self._client.submit_circuit(circuit=iqm_circuit, shots=repetitions)
+        job_id = self._client.submit_circuit(iqm_circuit, self._qubit_mapping, repetitions)
         results = self._client.wait_for_results(job_id)
         measurements = {k: np.array(v) for k, v in results.measurements.items()}
         return study.Result(params=resolver.ParamResolver(), measurements=measurements)

@@ -35,12 +35,13 @@ def demo_adonis_backend():
     )
 
     device = Adonis()
-    circuit_adonis = device.map_circuit(circuit)
+    circuit_adonis = device.map_circuit(circuit, map_qubits=False)
+    qubit_mapping = {qubit.name: 'qubit_1'}
 
     # Set IQM_SERVER_URL environment variable with 'export IQM_SERVER_URL="https://example.com"'
     # Set IQM_SETTINGS_PATH environment variable with 'export IQM_SETTINGS_PATH="/path/to/file"'
     with open(os.environ['IQM_SETTINGS_PATH'], 'r') as f:
-        sampler = IQMSampler(os.environ['IQM_SERVER_URL'], f.read())
+        sampler = IQMSampler(os.environ['IQM_SERVER_URL'], f.read(), qubit_mapping)
 
     # This will send the circuit to the backend to be run, and return a cirq.study.Result
     # containing the measurement results.
