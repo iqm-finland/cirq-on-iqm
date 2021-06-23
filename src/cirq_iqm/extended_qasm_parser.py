@@ -17,6 +17,8 @@ Extends the OpenQASM 2.0 language by gates native to the IQM architectures.
 import cirq
 from cirq.contrib.qasm_import._parser import QasmGateStatement, QasmParser
 
+from cirq_iqm.iqm_gates import IsingGate, XYGate
+
 
 def circuit_from_qasm(qasm: str) -> cirq.circuits.Circuit:
     """Parses an OpenQASM 2.0 program to a Cirq circuit.
@@ -32,13 +34,13 @@ def circuit_from_qasm(qasm: str) -> cirq.circuits.Circuit:
     parser = QasmParser()
     parser.all_gates['ising'] = QasmGateStatement(
         qasm_gate='ising',
-        cirq_gate=lambda params: cirq.ops.ZZPowGate(exponent=params[0], global_shift=-0.5),
+        cirq_gate=lambda params: IsingGate(params[0]),
         num_params=1,
         num_args=2
     )
     parser.all_gates['xy'] = QasmGateStatement(
         qasm_gate='xy',
-        cirq_gate=lambda params: cirq.ops.ISwapPowGate(exponent=-2 * params[0]),
+        cirq_gate=lambda params: XYGate(params[0]),
         num_params=1,
         num_args=2
     )
