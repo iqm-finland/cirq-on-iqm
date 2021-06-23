@@ -27,7 +27,7 @@ using ``setup.cfg``, or install it manually:
 
 .. code-block:: bash
 
-   pip install cirq-iqm
+   $ pip install cirq-iqm
 
 
 Alternatively, you can clone the repository, and build and install the distribution package yourself.
@@ -35,8 +35,8 @@ Note the trailing slash to install from the local directory.
 
 .. code-block:: bash
 
-   git clone git@github.com:iqm-finland/cirq-on-iqm.git
-   pip install cirq-on-iqm/
+   $ git clone git@github.com:iqm-finland/cirq-on-iqm.git
+   $ pip install cirq-on-iqm/
 
 
 Import the module in your Python code:
@@ -50,15 +50,15 @@ Run the demo:
 
 .. code-block:: bash
 
-   python cirq-on-iqm/examples/demo_adonis.py
+   $ python cirq-on-iqm/examples/demo_adonis.py
 
 Run code on a real quantum computer:
 
 .. code-block:: bash
 
-   export IQM_SERVER_URL="https://example.com"
-   export IQM_SETTINGS_PATH="/path/to/settings.json"
-   python cirq-on-iqm/examples/demo_iqm_engine.py
+   $ export IQM_SERVER_URL="https://example.com"
+   $ export IQM_SETTINGS_PATH="/path/to/settings.json"
+   $ python cirq-on-iqm/examples/demo_iqm_engine.py
 
 
 Running a Jupyter notebook in virtualenv takes a bit of extra work,
@@ -66,10 +66,10 @@ you will need to create a custom Jupyter kernel for your virtual environment:
 
 .. code-block:: bash
 
-   virtualenv my_virtualenv
-   source my_virtualenv/bin/activate
-   pip install --user ipykernel
-   python -m ipykernel install --user --name=my_virtualenv
+   $ virtualenv my_virtualenv
+   $ source my_virtualenv/bin/activate
+   $ pip install --user ipykernel
+   $ python -m ipykernel install --user --name=my_virtualenv
 
 
 How to develop
@@ -79,24 +79,24 @@ Clone the repository and install it in editable mode with all the extras:
 
 .. code-block:: bash
 
-   git clone git@github.com:iqm-finland/cirq-on-iqm.git
-   cd cirq-on-iqm
-   pip install -e ".[dev,docs]"
+   $ git clone git@github.com:iqm-finland/cirq-on-iqm.git
+   $ cd cirq-on-iqm
+   $ pip install -e ".[dev,docs]"
 
 
 Build and view the docs:
 
 .. code-block:: bash
 
-   python setup.py docs
-   firefox build/sphinx/html/index.html
+   $ tox -e docs
+   $ firefox build/sphinx/html/index.html
 
 
 Run the tests:
 
 .. code-block:: bash
 
-   tox
+   $ tox
 
 
 Copyright

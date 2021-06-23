@@ -116,7 +116,7 @@ htmlhelp_basename = 'cirq_iqm-doc'
 
 # Here we configure MathJax, mostly to define LaTeX macros.
 mathjax3_config = {
-    'teX': {
+    'tex': {
         'macros': {
             'vr': r'\vec{r}',  # no arguments
             'ket': [r'\left| #1 \right\rangle', 1],  # one argument
