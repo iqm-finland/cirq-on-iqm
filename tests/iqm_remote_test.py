@@ -18,7 +18,7 @@ import pytest
 
 import cirq
 
-from cirq_iqm.iqm_client import SingleQubitMapping
+from cirq_iqm.iqm_client import SingleQubitMappingDTO
 from cirq_iqm.iqm_device import IQMQubit
 from cirq_iqm.iqm_remote import IQMSampler
 
@@ -34,8 +34,8 @@ def qubit_mapping():
 def test_transforms_qubit_mapping(qubit_mapping):
     sampler = IQMSampler('example.com', '{"stuff": "some settings"}', qubit_mapping)
     assert sampler._qubit_mapping == [
-        SingleQubitMapping(logical_name='q1 log.', physical_name='q1 phys.'),
-        SingleQubitMapping(logical_name='q2 log.', physical_name='q2 phys.'),
+        SingleQubitMappingDTO(logical_name='q1 log.', physical_name='q1 phys.'),
+        SingleQubitMappingDTO(logical_name='q2 log.', physical_name='q2 phys.'),
     ]
 
 

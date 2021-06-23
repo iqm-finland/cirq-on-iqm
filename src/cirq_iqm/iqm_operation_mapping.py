@@ -11,8 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Logic for mapping Operations to IQM internal representations"""
-
+"""Logic for mapping Cirq Operations to the IQM transfer format.
+"""
 from cirq.ops import Operation, PhasedXPowGate, XPowGate, YPowGate, MeasurementGate, CZPowGate
 from cirq_iqm.iqm_client import InstructionDTO
 

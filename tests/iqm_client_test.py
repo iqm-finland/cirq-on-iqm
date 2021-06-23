@@ -20,7 +20,7 @@ import pytest
 from requests import HTTPError
 
 from cirq_iqm.iqm_client import (CircuitDTO, IQMBackendClient, RunStatus,
-                                 SingleQubitMapping)
+                                 SingleQubitMappingDTO)
 
 existing_run = UUID("3c3fcda3-e860-46bf-92a4-bcc59fa76ce9")
 missing_run = UUID("059e4186-50a3-4e6c-ba1f-37fe6afbdfc2")
@@ -33,8 +33,8 @@ def test_submit_circuit_returns_id(mock_backend, settings_dict, base_url):
     client = IQMBackendClient(base_url, settings_dict)
     run_id = client.submit_circuit(
         qubit_mapping=[
-            SingleQubitMapping(logical_name="Qubit A", physical_name="qubit_1"),
-            SingleQubitMapping(logical_name="Qubit B", physical_name="qubit_2")
+            SingleQubitMappingDTO(logical_name="Qubit A", physical_name="qubit_1"),
+            SingleQubitMappingDTO(logical_name="Qubit B", physical_name="qubit_2")
         ],
         circuit=CircuitDTO.parse_obj(
             {
