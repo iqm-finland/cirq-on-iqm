@@ -19,7 +19,6 @@ from math import pi as PI
 from cirq import ops
 
 import cirq_iqm.iqm_device as idev
-#import cirq_iqm.iqm_gates as ig
 
 
 PI_2 = PI / 2
