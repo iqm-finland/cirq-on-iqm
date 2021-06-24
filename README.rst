@@ -81,7 +81,7 @@ Clone the repository and install it in editable mode with all the extras:
 
    $ git clone git@github.com:iqm-finland/cirq-on-iqm.git
    $ cd cirq-on-iqm
-   $ pip install -e ".[dev,docs]"
+   $ pip install -e ".[dev,docs,testing]"
 
 
 Build and view the docs:
