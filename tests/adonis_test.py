@@ -23,7 +23,6 @@ import numpy as np
 import pytest
 
 import cirq_iqm.adonis as ad
-import cirq_iqm.iqm_gates as ig
 
 
 def dist(U: np.ndarray, W: np.ndarray) -> float:
@@ -70,14 +69,13 @@ non_native_1q_gates = [
 ]
 
 non_native_2q_gates = [
-    ig.IsingGate(exponent=0.45),
-    ig.XYGate(exponent=0.38),
     cirq.ISWAP,
     cirq.ISwapPowGate(exponent=0.27),
     cirq.SWAP,
     cirq.CNOT,
     cirq.CXPowGate(exponent=-2.2),
     cirq.CZPowGate(exponent=1.6),
+    cirq.ZZPowGate(exponent=-0.94),
 ]
 
 

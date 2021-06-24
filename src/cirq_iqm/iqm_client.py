@@ -11,9 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """
-Client for calling the IQM backend.
+Client for calling the IQM computation backend.
 """
 from __future__ import annotations
 
@@ -32,12 +31,12 @@ TIMEOUT_SECONDS = 120
 SECONDS_BETWEEN_CALLS = 1
 
 
-class CircuitExecutionException(Exception):
+class CircuitExecutionError(RuntimeError):
     """Something went wrong on the server side.
     """
 
 
-class APITimeoutError(CircuitExecutionException):
+class APITimeoutError(CircuitExecutionError):
     """Exception for when executing a task on the backend takes too long.
     """
 
@@ -67,17 +66,17 @@ class CircuitDTO(BaseModel):
     instructions: list[InstructionDTO]
 
 
-class SingleQubitMapping(BaseModel):
+class SingleQubitMappingDTO(BaseModel):
     """Mapping of a logical qubit to a physical qubit.
     """
     logical_name: str
     physical_name: str
 
 
-class RunRequest(BaseModel):
+class RunRequestDTO(BaseModel):
     """Request for IQM backend to execute a circuit.
     """
-    qubit_mapping: list[SingleQubitMapping]
+    qubit_mapping: list[SingleQubitMappingDTO]
     circuit: CircuitDTO
     settings: dict[str, Any]
     shots: int
@@ -123,7 +122,7 @@ class IQMBackendClient:
     def submit_circuit(
             self,
             circuit: CircuitDTO,
-            qubit_mapping: list[SingleQubitMapping],
+            qubit_mapping: list[SingleQubitMappingDTO],
             shots: int = 1
     ) -> UUID:
         """Submits a quantum circuit to be executed on the backend.
@@ -137,7 +136,7 @@ class IQMBackendClient:
             ID for the created task. This ID is needed to query the status and the execution results.
         """
 
-        data = RunRequest(
+        data = RunRequestDTO(
             qubit_mapping=qubit_mapping,
             circuit=circuit,
             settings=self._settings,
@@ -159,14 +158,14 @@ class IQMBackendClient:
 
         Raises:
             HTTPException: http exceptions
-            CircuitExecutionException: IQM backend specific exceptions
+            CircuitExecutionError: IQM backend specific exceptions
 
         """
         result = requests.get(join(self._base_url, "circuit/run/", str(run_id)))
         result.raise_for_status()
         result = RunResult.from_dict(json.loads(result.text))
         if result.status == RunStatus.FAILED:
-            raise CircuitExecutionException(result.message)
+            raise CircuitExecutionError(result.message)
         return result
 
     def wait_for_results(self, run_id: UUID, timeout_secs: float = TIMEOUT_SECONDS) -> RunResult:

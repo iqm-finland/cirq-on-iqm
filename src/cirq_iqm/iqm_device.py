@@ -21,19 +21,14 @@ and circuit optimization methods to use with the architecture.
 from __future__ import annotations
 
 import abc
-import collections
 import collections.abc as ca
 import operator
 import re
-from typing import Optional, Type, cast
+from typing import Optional
 
 import cirq
-import numpy as np
 from cirq import circuits, devices, ops, optimizers, protocols
-from cirq.optimizers import decompositions
-from cirq.optimizers import eject_z as ez
 
-import cirq_iqm.iqm_gates as ig
 
 GATE_MERGING_TOLERANCE = 1e-10
 
@@ -76,13 +71,13 @@ class IQMDevice(devices.Device):
     CONNECTIVITY: tuple[set[int]] = ()
     """qubit connectivity graph of the device"""
 
-    NATIVE_GATES: tuple[Type[cirq.Gate]] = ()
+    NATIVE_GATES: tuple[type[cirq.Gate]] = ()
     """native gate set of the device (gate families)"""
 
     NATIVE_GATE_INSTANCES: tuple[cirq.Gate] = ()
     """native gate set of the device (individual gates)"""
 
-    DECOMPOSE_FINALLY: tuple[Type[cirq.Gate]] = ()
+    DECOMPOSE_FINALLY: tuple[type[cirq.Gate]] = ()
     """non-native gates that should not be decomposed when inserted into the circuit
     (we decompose them later, during the final circuit optimization stage)"""
 
@@ -256,7 +251,7 @@ class IQMDevice(devices.Device):
             MergeOneParameterGroupGates().optimize_circuit(circuit)
             optimizers.merge_single_qubit_gates_into_phased_x_z(circuit)
             # all z rotations are pushed past the first two-qubit gate following them
-            IQMEjectZ(eject_parameterized=True).optimize_circuit(circuit)
+            optimizers.EjectZ(eject_parameterized=True).optimize_circuit(circuit)
             optimizers.DropEmptyMoments().optimize_circuit(circuit)
 
         DropRZBeforeMeasurement().optimize_circuit(circuit)
@@ -296,9 +291,18 @@ class MergeOneParameterGroupGates(circuits.PointOptimizer):
     The merged gates have to act on the same sequence of qubits.
     This optimizer only works with gate families that are known to be one-parameter groups.
 
-    For now, all the families are assumed to be periodic with a period of 2.
+    For now, all the families are assumed to be periodic with a period of 4.
     """
-    one_parameter_families = (ig.XYGate, ig.IsingGate)
+    # TODO: ZZPowGate has a period of 2
+    ONE_PARAMETER_FAMILIES = (ops.ISwapPowGate, ops.ZZPowGate)
+    PERIOD = 4
+
+    @classmethod
+    def _normalize_par(cls, par):
+        """Normalizes the given parameter value to (-period/2, period/2].
+        """
+        shift = cls.PERIOD / 2
+        return operator.mod(par - shift, -cls.PERIOD) + shift
 
     def optimization_at(
             self,
@@ -306,7 +310,7 @@ class MergeOneParameterGroupGates(circuits.PointOptimizer):
             index: int,
             op: cirq.Operation,
     ) -> Optional[cirq.PointOptimizationSummary]:
-        if not isinstance(op.gate, self.one_parameter_families):
+        if not isinstance(op.gate, self.ONE_PARAMETER_FAMILIES):
             return None
 
         def is_not_mergable(next_op: cirq.Operation) -> bool:
@@ -336,7 +340,7 @@ class MergeOneParameterGroupGates(circuits.PointOptimizer):
         # zero parameter (mod period) corresponds to identity
         # due to floating point errors we may be just a little below the period, which should also be
         # considered close to zero so let's shift away from the troublesome point before taking the modulo
-        par = operator.mod(par + 1, 2) - 1
+        par = self._normalize_par(par)
         if abs(par) <= GATE_MERGING_TOLERANCE:
             rewritten = []
         else:
@@ -347,93 +351,6 @@ class MergeOneParameterGroupGates(circuits.PointOptimizer):
             clear_qubits=op.qubits,
             new_operations=rewritten
         )
-
-
-class IQMEjectZ(optimizers.EjectZ):
-    """Commutes Z gates towards the end of the circuit.
-
-    Updates the Cirq parent class by adding the commutation rule for :class:`XYGate`.
-    """
-
-    @staticmethod
-    def _is_swaplike(op: cirq.Operation) -> bool:
-        """Returns True iff z rotations can be commuted throught the gate to the _other_ qubit."""
-        if isinstance(op.gate, ops.SwapPowGate):
-            return op.gate.exponent == 1
-
-        if isinstance(op.gate, ops.ISwapPowGate):
-            return ez._is_integer((op.gate.exponent - 1) / 2)
-
-        if isinstance(op.gate, ops.FSimGate):
-            return ez._is_integer(op.gate.theta / np.pi - 1 / 2)
-
-        if isinstance(op.gate, ig.XYGate):
-            return ez._is_integer(op.gate.exponent + 0.5)
-
-        return False
-
-    def optimize_circuit(self, circuit: circuits.Circuit) -> None:
-        # pylint: disable=too-many-locals
-        # Tracks qubit phases (in half turns; multiply by pi to get radians).
-        qubit_phase: dict[cirq.ops.Qid, float] = collections.defaultdict(lambda: 0)
-
-        def dump_tracked_phase(
-                qubits: ca.Iterable[cirq.ops.Qid],
-                index: int
-        ) -> None:
-            """Zeroes qubit_phase entries by emitting Z gates."""
-            for q in qubits:
-                p = qubit_phase[q]
-                if not decompositions.is_negligible_turn(p, self.tolerance):
-                    dump_op = ops.Z(q)**(p * 2)
-                    insertions.append((index, dump_op))
-                qubit_phase[q] = 0
-
-        deletions: list[tuple[int, cirq.Operation]] = []
-        inline_intos: list[tuple[int, cirq.Operation]] = []
-        insertions: list[tuple[int, cirq.Operation]] = []
-        for moment_index, moment in enumerate(circuit):
-            for op in moment.operations:
-                # Move Z gates into tracked qubit phases.
-                h = ez._try_get_known_z_half_turns(op, self.eject_parameterized)
-                if h is not None:
-                    q = op.qubits[0]
-                    qubit_phase[q] += h / 2
-                    deletions.append((moment_index, op))
-                    continue
-
-                # Z gate before measurement is a no-op. Drop tracked phase.
-                if isinstance(op.gate, ops.MeasurementGate):
-                    for q in op.qubits:
-                        qubit_phase[q] = 0
-
-                # If there's no tracked phase, we can move on.
-                phases = [qubit_phase[q] for q in op.qubits]
-                if all(decompositions.is_negligible_turn(p, self.tolerance)
-                       for p in phases):
-                    continue
-
-                if IQMEjectZ._is_swaplike(op):
-                    a, b = op.qubits
-                    qubit_phase[a], qubit_phase[b] = qubit_phase[b], qubit_phase[a]
-                    continue
-
-                # Try to move the tracked phasing over the operation.
-                phased_op = op
-                for i, p in enumerate(phases):
-                    if not decompositions.is_negligible_turn(p, self.tolerance):
-                        phased_op = protocols.phase_by(phased_op, -p, i, default=None)
-
-                if phased_op is not None:
-                    deletions.append((moment_index, op))
-                    inline_intos.append((moment_index, cast(cirq.Operation, phased_op)))
-                else:
-                    dump_tracked_phase(op.qubits, moment_index)
-
-        dump_tracked_phase(qubit_phase.keys(), len(circuit))
-        circuit.batch_remove(deletions)
-        circuit.batch_insert_into(inline_intos)
-        circuit.batch_insert(insertions)
 
 
 class DropRZBeforeMeasurement(circuits.PointOptimizer):

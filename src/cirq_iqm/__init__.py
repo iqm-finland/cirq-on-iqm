@@ -20,7 +20,6 @@ from importlib.metadata import PackageNotFoundError, version
 from .adonis import Adonis
 from .extended_qasm_parser import circuit_from_qasm
 from .iqm_device import IQMDevice
-from .iqm_gates import IsingGate, XYGate
 from .valkmusa import Valkmusa
 
 try:

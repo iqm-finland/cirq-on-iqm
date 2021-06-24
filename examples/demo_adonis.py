@@ -35,8 +35,10 @@ def demo_adonis(do_measure=False, use_qsim=False):
         creg meas[3];
         U(0.2, 0.5, 1.7) q[1];
         h q[0];
+        h q[2];
         cx q[2], q[1];
         ising(-0.6) q[0], q[2];  // QASM extension
+        xy(0.32) q[2], q[1];  // QASM extension
     """
     if do_measure:
         qasm_program += '\nmeasure q -> meas;'
