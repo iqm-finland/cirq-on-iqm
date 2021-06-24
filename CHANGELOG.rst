@@ -8,10 +8,10 @@ Version 0.5
 Features
 --------
 
-* Simplify gate decompositions
-* Update cirq version to 0.11.
+* Gate decomposition and circuit optimization procedure simplified. :mr:`21`
+* Cirq dependency bumped to 0.11.
 
-NOTE: Before installing this version, please manually uninstall cirq 0.10. See Cirq 0.11
+NOTE: Before installing this version, please manually uninstall Cirq 0.10. See Cirq 0.11
 release notes for more details: https://github.com/quantumlib/Cirq/releases/tag/v0.11.0
 
 Version 0.4
