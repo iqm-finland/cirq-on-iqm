@@ -9,7 +9,14 @@ Features
 --------
 
 * Gate decomposition and circuit optimization procedure simplified. :mr:`21`
-* Cirq dependency bumped to 0.11.
+* Cirq dependency bumped to 0.11. :mr:`23`
+* Project setup updated. :mr:`22`
+
+  * ``pyproject.toml`` added.
+  * ``PyScaffold`` dependency removed.
+  * Sphinx bumped to version 4.0.2.
+  * API docs generated using recursive ``sphinx.ext.autosummary``.
+  * ``tox`` scripts for building docs, dist packages.
 
 NOTE: Before installing this version, please manually uninstall Cirq 0.10. See Cirq 0.11
 release notes for more details: https://github.com/quantumlib/Cirq/releases/tag/v0.11.0
