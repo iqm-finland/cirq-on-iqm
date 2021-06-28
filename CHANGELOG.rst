@@ -2,14 +2,13 @@
 Changelog
 =========
 
-Version 0.5
+
+Version 0.6
 ===========
 
 Features
 --------
 
-* Gate decomposition and circuit optimization procedure simplified. :mr:`21`
-* Cirq dependency bumped to 0.11. :mr:`23`
 * Project setup updated. :mr:`22`
 
   * ``pyproject.toml`` added.
@@ -18,8 +17,19 @@ Features
   * API docs generated using recursive ``sphinx.ext.autosummary``.
   * ``tox`` scripts for building docs, dist packages.
 
+
+Version 0.5
+===========
+
+Features
+--------
+
+* Gate decomposition and circuit optimization procedure simplified. :mr:`21`
+* Cirq dependency bumped to 0.11. :mr:`23`
+
 NOTE: Before installing this version, please manually uninstall Cirq 0.10. See Cirq 0.11
 release notes for more details: https://github.com/quantumlib/Cirq/releases/tag/v0.11.0
+
 
 Version 0.4
 ===========
@@ -28,6 +38,7 @@ Features
 --------
 
 * Convert data to IQM internal format when running requests. :mr:`20`
+
 
 Version 0.3
 ===========
