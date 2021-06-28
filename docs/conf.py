@@ -77,9 +77,6 @@ show_authors = True
 # member ordering in autodoc output (default: 'alphabetical')
 autodoc_member_order = 'bysource'
 
-# mock some imports when building the docs
-#autodoc_mock_imports = ["django"]
-
 # where should signature annotations appear in the docs, function signature or parameter description?
 autodoc_typehints = 'description'
 # autodoc_typehints = 'description' puts the __init__ annotations into its docstring,
@@ -106,7 +103,7 @@ html_theme = 'nature'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+#html_static_path = ['_static']
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'cirq_iqm-doc'
