@@ -5,3 +5,4 @@ License
 =======
 
 .. include:: ../LICENSE
+   :literal:

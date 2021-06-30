@@ -1,6 +1,5 @@
 [MASTER]
 disable=
-    arguments-differ,
     protected-access,
     too-few-public-methods,
     invalid-name,

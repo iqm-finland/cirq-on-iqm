@@ -37,7 +37,7 @@ else:
 # -- General configuration ---------------------------------------------------
 
 # require a recent version of Sphinx
-needs_sphinx = '3.5'
+needs_sphinx = '4.0'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -47,9 +47,10 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
     'sphinx.ext.mathjax',
+    'sphinx.ext.inheritance_diagram',
     'sphinx.ext.todo',
     'sphinx.ext.extlinks',
-    'sphinx_automodapi.automodapi',
+    'sphinx.ext.intersphinx',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -71,8 +72,25 @@ today_fmt = '%Y-%m-%d'
 show_authors = True
 
 
-# directory for the automodapi generated doc files
-automodapi_toctreedirnm = 'api/api'
+# -- Autodoc ------------------------------------------------------------
+
+# member ordering in autodoc output (default: 'alphabetical')
+autodoc_member_order = 'bysource'
+
+# where should signature annotations appear in the docs, function signature or parameter description?
+autodoc_typehints = 'description'
+# autodoc_typehints = 'description' puts the __init__ annotations into its docstring,
+# which we thus have to include in the class documentation.
+autoclass_content = 'both'
+
+# Sphinx 3.3+: manually clean up type alias rendering in the docs
+# autodoc_type_aliases = {'TypeAlias': 'exa.experiment.somemodule.TypeAlias'}
+
+
+# -- Autosummary ------------------------------------------------------------
+
+# use autosummary to generate stub pages for API docs
+autosummary_generate = True
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -85,7 +103,7 @@ html_theme = 'nature'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+#html_static_path = ['_static']
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'cirq_iqm-doc'
@@ -94,9 +112,9 @@ htmlhelp_basename = 'cirq_iqm-doc'
 # -- MathJax options ----------------------------------------------------------
 
 # Here we configure MathJax, mostly to define LaTeX macros.
-mathjax_config = {
-    'TeX': {
-        'Macros': {
+mathjax3_config = {
+    'tex': {
+        'macros': {
             'vr': r'\vec{r}',  # no arguments
             'ket': [r'\left| #1 \right\rangle', 1],  # one argument
             'iprod': [r'\left\langle #1 | #2 \right\rangle', 2],  # two arguments
@@ -106,6 +124,15 @@ mathjax_config = {
 
 
 # -- External mapping ------------------------------------------------------------
+
+python_version = '.'.join(map(str, sys.version_info[0:2]))
+intersphinx_mapping = {
+    'sphinx': ('https://www.sphinx-doc.org/en/master', None),
+    'python': ('https://docs.python.org/' + python_version, None),
+    'matplotlib': ('https://matplotlib.org/stable', None),
+    'numpy': ('https://numpy.org/doc/stable', None),
+    'scipy': ('https://docs.scipy.org/doc/scipy/reference', None),
+}
 
 extlinks = {
     'issue': ('https://github.com/iqm-finland/cirq-on-iqm/issues/%s', 'issue '),
