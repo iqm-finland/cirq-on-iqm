@@ -9,13 +9,13 @@ What is it good for?
 
 Currently Cirq on IQM can
 
-* load an arbitrary quantum circuit from a QASM file
+* load an arbitrary quantum circuit from an OpenQASM 2.0 file
 * map it into an equivalent circuit compatible with the chosen IQM architecture
 * optimize the circuit by commuting and merging gates
 * simulate the circuit using one of Cirq's simulators
 * send circuits to the IQM backend to be run on a real quantum computer
 
-See the `Jupyter Notebook with examples <docs/usage.ipynb>`_.
+See the `Jupyter Notebook <https://jupyter.org/>`_ with examples: ``examples/usage.ipynb``.
 
 
 How to use in another project
@@ -52,6 +52,7 @@ Run the demo:
 
    $ python cirq-on-iqm/examples/demo_adonis.py
 
+
 Run code on a real quantum computer:
 
 .. code-block:: bash
@@ -59,17 +60,6 @@ Run code on a real quantum computer:
    $ export IQM_SERVER_URL="https://example.com"
    $ export IQM_SETTINGS_PATH="/path/to/settings.json"
    $ python cirq-on-iqm/examples/demo_iqm_engine.py
-
-
-Running a Jupyter notebook in virtualenv takes a bit of extra work,
-you will need to create a custom Jupyter kernel for your virtual environment:
-
-.. code-block:: bash
-
-   $ virtualenv my_virtualenv
-   $ source my_virtualenv/bin/activate
-   $ pip install --user ipykernel
-   $ python -m ipykernel install --user --name=my_virtualenv
 
 
 How to develop
