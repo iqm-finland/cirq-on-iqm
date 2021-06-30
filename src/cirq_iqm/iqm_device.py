@@ -311,6 +311,7 @@ class MergeOneParameterGroupGates(circuits.PointOptimizer):
             op: cirq.Operation,
     ) -> Optional[cirq.PointOptimizationSummary]:
         """TODO the parent class at Cirq has a broken docstring here, which we have to override."""
+        """https://github.com/quantumlib/Cirq/issues/4276"""
         if not isinstance(op.gate, self.ONE_PARAMETER_FAMILIES):
             return None
 
