@@ -10,27 +10,18 @@ What is it good for?
 Currently Cirq on IQM can
 
 * load an arbitrary quantum circuit from a QASM file
-* map it into an equivalent circuit compatible with the chosen IQM architecture
+* map it into an equivalent circuit compatible with the chosen IQM quantum architecture
 * optimize the circuit by commuting and merging gates
 * simulate the circuit using one of Cirq's simulators
-* send circuits to the IQM backend to be run on a real quantum computer
+* run quantum circuits on an IQM quantum computer
 
 See the `Jupyter Notebook with examples <docs/usage.ipynb>`_.
 
 
-How to use in another project
-=============================
+How to use
+==========
 
-The recommended way is to install the distribution package ``cirq-iqm`` directly from the
-Python Package Index (PyPI). You can either add ``cirq-iqm`` as a dependency to your project
-using ``setup.cfg``, or install it manually:
-
-.. code-block:: bash
-
-   $ pip install cirq-iqm
-
-
-Alternatively, you can clone the repository, and build and install the distribution package yourself.
+Clone the repository, and build and install the distribution package.
 Note the trailing slash to install from the local directory.
 
 .. code-block:: bash
