@@ -60,7 +60,7 @@ class Valkmusa(idev.IQMDevice):
     DECOMPOSE_FINALLY = (ops.ZPowGate,)
 
     def operation_final_decomposer(self, op: ops.Operation):
-        """Decomposes z rotations using x and y rotations."""
+        # Decomposes z rotations using x and y rotations.
         if isinstance(op.gate, ops.ZPowGate):
             # Rz using Rx, Ry
             q = op.qubits[0]
@@ -72,8 +72,7 @@ class Valkmusa(idev.IQMDevice):
         raise NotImplementedError('Decomposition missing: {}'.format(op.gate))
 
     def operation_decomposer(self, op: ops.Operation):
-        """Decomposes CNOT and the CZPowGate family to Valkmusa native gates.
-        """
+        # Decomposes CNOT and the CZPowGate family to Valkmusa native gates.
         # All the decompositions below keep track of global phase (required for decomposing controlled gates).
 
         if isinstance(op.gate, ops.CXPowGate) and op.gate.exponent == 1.0:
