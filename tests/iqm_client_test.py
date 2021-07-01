@@ -26,7 +26,7 @@ existing_run = UUID("3c3fcda3-e860-46bf-92a4-bcc59fa76ce9")
 missing_run = UUID("059e4186-50a3-4e6c-ba1f-37fe6afbdfc2")
 
 
-def test_submit_circuit_returns_id(mock_backend, settings_dict, base_url):
+def test_submit_circuit_returns_id(mock_server, settings_dict, base_url):
     """
     Tests sending a circuit
     """
@@ -78,7 +78,7 @@ def test_submit_circuit_returns_id(mock_backend, settings_dict, base_url):
     assert run_id == existing_run
 
 
-def test_get_run_status_for_existing_run(mock_backend, base_url, settings_dict):
+def test_get_run_status_for_existing_run(mock_server, base_url, settings_dict):
     """
     Tests getting the run status
     """
@@ -87,7 +87,7 @@ def test_get_run_status_for_existing_run(mock_backend, base_url, settings_dict):
     assert client.get_run(existing_run).status == RunStatus.READY
 
 
-def test_get_run_status_for_missing_run(mock_backend, base_url, settings_dict):
+def test_get_run_status_for_missing_run(mock_server, base_url, settings_dict):
     """
     Tests getting a task that was not created
     """
@@ -96,7 +96,7 @@ def test_get_run_status_for_missing_run(mock_backend, base_url, settings_dict):
         assert client.get_run(missing_run)
 
 
-def test_waiting_for_results(mock_backend, base_url, settings_dict):
+def test_waiting_for_results(mock_server, base_url, settings_dict):
     """
     Tests waiting for results for an existing task
     """
