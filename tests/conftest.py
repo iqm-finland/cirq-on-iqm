@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Mocks backend calls for testing
+Mocks server calls for testing
 """
 
 import json
