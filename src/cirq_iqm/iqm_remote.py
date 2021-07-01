@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Circuit sampler that executes quantum circuits on the IQM backend.
+Circuit sampler that executes quantum circuits on an IQM quantum computer.
 """
 from __future__ import annotations
 
@@ -49,12 +49,12 @@ def _serialize_iqm(circuit: cirq.Circuit) -> CircuitDTO:
 
 
 class IQMSampler(cirq.work.Sampler):
-    """Circuit sampler for evaluating quantum circuits on IQM quantum devices.
+    """Circuit sampler for executing quantum circuits on IQM quantum computers.
 
     Args:
-        url: Endpoint for accessing the device. Has to start with http or https.
-        settings: Settings for the quantum hardware.
-        qubit_mapping: A dict that maps qubit logical names to physical qubit names
+        url: Endpoint for accessing the server interface. Has to start with http or https.
+        settings: Settings for the quantum computer.
+        qubit_mapping: A dict that maps logical qubit names to physical qubit names
     """
     def __init__(self, url: str, settings: str, qubit_mapping: dict[str, str]):
         self._client = IQMBackendClient(url, settings=json.loads(settings))
@@ -66,12 +66,12 @@ class IQMSampler(cirq.work.Sampler):
             params: cirq.Sweepable,
             repetitions: int = 1,
     ) -> list[cirq.Result]:
-        """Samples from the given quantum circuit.
+        """Samples from, i.e. executes, the given quantum circuit.
 
         Nontrivial sweeping is not yet supported, ``params`` should be ``None``.
 
         Args:
-            program: The circuit to sample from.
+            program: The circuit to execute.
             params: Arguments to the program.
             repetitions: The number of times to sample (execute) the circuit.
 
@@ -93,17 +93,17 @@ class IQMSampler(cirq.work.Sampler):
             circuit: cirq.Circuit,
             repetitions: int = 1,
     ) -> cirq.study.Result:
-        """Sends the circuit to be executed by the remote IQM device.
+        """Sends the circuit to be executed on the IQM quantum computer.
 
         Args:
-            circuit: quantum circuit to run
-            repetitions: number of times the circuit is sampled/run
+            circuit: quantum circuit to execute
+            repetitions: number of times the circuit is sampled
 
         Returns:
-            results of the run
+            results of the execution
 
         Raises:
-            CircuitExecutionError: something went wrong on the server side
+            CircuitExecutionError: something went wrong on the server
             APITimeoutError: server did not return the results in the allocated time
         """
         iqm_circuit = _serialize_iqm(circuit)
