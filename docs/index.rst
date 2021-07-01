@@ -6,7 +6,7 @@ Cirq on IQM
 
 
 .. include:: ../README.rst
-   :start-line: 3
+   :start-line: 7
 
 
 Contents

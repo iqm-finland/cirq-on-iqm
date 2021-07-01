@@ -1,3 +1,7 @@
+|CI badge|
+
+.. |CI badge| image:: https://github.com/iqm-finland/cirq-on-iqm/actions/workflows/ci.yml/badge.svg
+
 Cirq on IQM
 ###########
 
