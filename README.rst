@@ -18,8 +18,8 @@ Currently Cirq on IQM can
 See the `Jupyter Notebook with examples <docs/usage.ipynb>`_.
 
 
-How to use in another project
-=============================
+How to use
+==========
 
 The recommended way is to install the distribution package ``cirq-iqm`` directly from the
 Python Package Index (PyPI). You can either add ``cirq-iqm`` as a dependency to your project
