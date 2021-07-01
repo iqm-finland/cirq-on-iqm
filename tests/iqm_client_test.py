@@ -19,7 +19,7 @@ from uuid import UUID
 import pytest
 from requests import HTTPError
 
-from cirq_iqm.iqm_client import (CircuitDTO, IQMBackendClient, RunStatus,
+from cirq_iqm.iqm_client import (CircuitDTO, IQMClient, RunStatus,
                                  SingleQubitMappingDTO)
 
 existing_run = UUID("3c3fcda3-e860-46bf-92a4-bcc59fa76ce9")
@@ -30,7 +30,7 @@ def test_submit_circuit_returns_id(mock_backend, settings_dict, base_url):
     """
     Tests sending a circuit
     """
-    client = IQMBackendClient(base_url, settings_dict)
+    client = IQMClient(base_url, settings_dict)
     run_id = client.submit_circuit(
         qubit_mapping=[
             SingleQubitMappingDTO(logical_name="Qubit A", physical_name="qubit_1"),
@@ -82,7 +82,7 @@ def test_get_run_status_for_existing_run(mock_backend, base_url, settings_dict):
     """
     Tests getting the run status
     """
-    client = IQMBackendClient(base_url, settings_dict)
+    client = IQMClient(base_url, settings_dict)
     assert client.get_run(existing_run).status == RunStatus.PENDING
     assert client.get_run(existing_run).status == RunStatus.READY
 
@@ -91,7 +91,7 @@ def test_get_run_status_for_missing_run(mock_backend, base_url, settings_dict):
     """
     Tests getting a task that was not created
     """
-    client = IQMBackendClient(base_url, settings_dict)
+    client = IQMClient(base_url, settings_dict)
     with pytest.raises(HTTPError):
         assert client.get_run(missing_run)
 
@@ -100,5 +100,5 @@ def test_waiting_for_results(mock_backend, base_url, settings_dict):
     """
     Tests waiting for results for an existing task
     """
-    client = IQMBackendClient(base_url, settings_dict)
+    client = IQMClient(base_url, settings_dict)
     assert client.wait_for_results(existing_run).status == RunStatus.READY

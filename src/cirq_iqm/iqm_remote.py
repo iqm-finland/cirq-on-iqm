@@ -23,7 +23,7 @@ import cirq
 import numpy as np
 from cirq import study
 from cirq.study import resolver
-from cirq_iqm.iqm_client import CircuitDTO, IQMBackendClient, SingleQubitMappingDTO
+from cirq_iqm.iqm_client import CircuitDTO, IQMClient, SingleQubitMappingDTO
 from cirq_iqm.iqm_operation_mapping import map_operation
 
 
@@ -57,7 +57,7 @@ class IQMSampler(cirq.work.Sampler):
         qubit_mapping: A dict that maps logical qubit names to physical qubit names
     """
     def __init__(self, url: str, settings: str, qubit_mapping: dict[str, str]):
-        self._client = IQMBackendClient(url, settings=json.loads(settings))
+        self._client = IQMClient(url, settings=json.loads(settings))
         self._qubit_mapping = [SingleQubitMappingDTO(logical_name=k, physical_name=v) for k, v in qubit_mapping.items()]
 
     def run_sweep(

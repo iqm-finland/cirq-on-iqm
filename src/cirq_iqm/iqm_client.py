@@ -108,7 +108,7 @@ class RunResult(BaseModel):
         return RunResult(status=RunStatus(input_copy.pop("status")), **input_copy)
 
 
-class IQMBackendClient:
+class IQMClient:
     """Provides access to an IQM quantum computer.
 
     Args:
