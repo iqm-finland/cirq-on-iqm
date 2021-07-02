@@ -66,6 +66,20 @@ class IQMSampler(cirq.work.Sampler):
             params: cirq.Sweepable,
             repetitions: int = 1,
     ) -> list[cirq.Result]:
+        """Sweeping is not supported yet. Use the `run` method instead.
+
+        Args:
+            program: The circuit to sample from.
+            params: Arguments to the program.
+            repetitions: The number of times to sample (execute) the circuit.
+
+        Returns:
+            Result list for this run; one for each possible parameter
+            resolver.
+
+        Raises:
+            NotImplementedError: user tried to run a nontrivial sweep
+        """
         sweeps = study.to_sweeps(params or study.ParamResolver({}))
         if len(sweeps) > 1 or len(sweeps[0].keys) > 0:
             raise NotImplementedError('Sweeps are not supported')
