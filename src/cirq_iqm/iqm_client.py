@@ -125,7 +125,7 @@ class IQMClient:
             qubit_mapping: list[SingleQubitMappingDTO],
             shots: int = 1
     ) -> UUID:
-        """Submits a quantum circuit to be executed on the quantum computer.
+        """Submits a quantum circuit to be executed on a quantum computer.
 
         Args:
             circuit: circuit to be executed
