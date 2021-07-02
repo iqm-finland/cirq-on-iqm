@@ -63,7 +63,7 @@ Run code on a real quantum computer:
 
    $ export IQM_SERVER_URL="https://example.com"
    $ export IQM_SETTINGS_PATH="/path/to/settings.json"
-   $ python cirq-on-iqm/examples/demo_iqm_engine.py
+   $ python cirq-on-iqm/examples/demo_iqm_execution.py
 
 
 How to develop

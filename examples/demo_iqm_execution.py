@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Demonstrates executing a quantum circuit on an IQM device.
+Demonstrates executing a quantum circuit on an IQM quantum computer.
 """
 import os
 
