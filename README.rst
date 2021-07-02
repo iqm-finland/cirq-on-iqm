@@ -13,8 +13,8 @@ What is it good for?
 
 Currently Cirq on IQM can
 
-* load an arbitrary quantum circuit from an OpenQASM 2.0 file
-* map it into an equivalent circuit compatible with the chosen IQM architecture
+* take an arbitrary quantum circuit created in Cirq or load from an OpenQASM 2.0 file
+* map the circuit into an equivalent one compatible with the chosen IQM architecture
 * optimize the circuit by commuting and merging gates
 * simulate the circuit using one of Cirq's simulators
 * send circuits to the IQM backend to be run on a real quantum computer
