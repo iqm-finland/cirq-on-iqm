@@ -24,8 +24,8 @@ class OperationNotSupportedError(RuntimeError):
 def map_operation(operation: Operation) -> InstructionDTO:
     """Map a Cirq Operation to the IQM data transfer format.
 
-    Assumes that the circuit has been converted to a formt where it only contains operations natively supported by the
-    given IQM architecture.
+    Assumes the circuit has been transpiled so that it only contains operations natively supported by the
+    given IQM quantum architecture.
 
     Args:
         operation: a Cirq Operation

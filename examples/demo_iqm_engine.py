@@ -24,9 +24,9 @@ from cirq_iqm.iqm_device import IQMQubit
 from cirq_iqm.iqm_remote import IQMSampler
 
 
-def demo_adonis_backend():
+def demo_adonis_run():
     """
-    Run a circuit on the Adonis quantum computer.
+    Run a circuit on an Adonis quantum computer.
     """
     qubit = IQMQubit(1)
     circuit = cirq.Circuit(
@@ -43,7 +43,7 @@ def demo_adonis_backend():
     with open(os.environ['IQM_SETTINGS_PATH'], 'r') as f:
         sampler = IQMSampler(os.environ['IQM_SERVER_URL'], f.read(), qubit_mapping)
 
-    # This will send the circuit to the backend to be run, and return a cirq.study.Result
+    # This will send the circuit to the server to be run, and return a cirq.study.Result
     # containing the measurement results.
     results = sampler.run(circuit_adonis, repetitions=1000)
 
@@ -57,4 +57,4 @@ def demo_adonis_backend():
 
 
 if __name__ == '__main__':
-    demo_adonis_backend()
+    demo_adonis_run()

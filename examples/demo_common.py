@@ -36,7 +36,7 @@ def demo(device, circuit_original, do_measure, *, use_qsim=False):
     print(circuit_original)
     print()
 
-    # construct a new quantum circuit respecting Adonis' limitations
+    # construct a new quantum circuit respecting Adonis' properties
     circuit_transformed = device.map_circuit(circuit_original)
     print('Decomposed circuit:')
     print(circuit_transformed)

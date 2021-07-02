@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-Client for calling the IQM computation backend.
+Client for connecting to the IQM quantum computer server interface.
 """
 from __future__ import annotations
 
@@ -32,12 +32,12 @@ SECONDS_BETWEEN_CALLS = 1
 
 
 class CircuitExecutionError(RuntimeError):
-    """Something went wrong on the server side.
+    """Something went wrong on the server.
     """
 
 
 class APITimeoutError(CircuitExecutionError):
-    """Exception for when executing a task on the backend takes too long.
+    """Exception for when executing a task on the server takes too long.
     """
 
 
@@ -74,7 +74,7 @@ class SingleQubitMappingDTO(BaseModel):
 
 
 class RunRequestDTO(BaseModel):
-    """Request for IQM backend to execute a circuit.
+    """Request for an IQM quantum computer to execute a circuit.
     """
     qubit_mapping: list[SingleQubitMappingDTO]
     circuit: CircuitDTO
@@ -108,11 +108,11 @@ class RunResult(BaseModel):
         return RunResult(status=RunStatus(input_copy.pop("status")), **input_copy)
 
 
-class IQMBackendClient:
-    """Provides access to a remote IQM quantum device.
+class IQMClient:
+    """Provides access to IQM quantum computers.
 
     Args:
-        url: Endpoint for accessing the device. Has to start with http or https.
+        url: Endpoint for accessing the server. Has to start with http or https.
     """
 
     def __init__(self, url: str, settings: dict[str, Any]):
@@ -125,7 +125,7 @@ class IQMBackendClient:
             qubit_mapping: list[SingleQubitMappingDTO],
             shots: int = 1
     ) -> UUID:
-        """Submits a quantum circuit to be executed on the backend.
+        """Submits a quantum circuit to be executed on a quantum computer.
 
         Args:
             circuit: circuit to be executed
@@ -158,7 +158,7 @@ class IQMBackendClient:
 
         Raises:
             HTTPException: http exceptions
-            CircuitExecutionError: IQM backend specific exceptions
+            CircuitExecutionError: IQM server specific exceptions
 
         """
         result = requests.get(join(self._base_url, "circuit/run/", str(run_id)))

@@ -39,7 +39,7 @@ def test_transforms_qubit_mapping(qubit_mapping):
     ]
 
 
-def test_run_sweep_executes_circuit(mock_backend, settings_dict, base_url, qubit_mapping):
+def test_run_sweep_executes_circuit(mock_server, settings_dict, base_url, qubit_mapping):
     sampler = IQMSampler(base_url, json.dumps(settings_dict), qubit_mapping)
     qubit = IQMQubit(1)
     circuit = cirq.Circuit(

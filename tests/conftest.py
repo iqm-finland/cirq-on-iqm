@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Mocks backend calls for testing
+Mocks server calls for testing
 """
 
 import json
@@ -35,11 +35,11 @@ def base_url():
 
 
 @pytest.fixture(scope='function')
-def mock_backend(base_url):
+def mock_server(base_url):
     """
     Runs mocking separately for each test
     """
-    generate_backend_stubs(base_url)
+    generate_server_stubs(base_url)
     yield  # running test function
     unstub()
 
@@ -54,9 +54,9 @@ def settings_dict():
         return json.loads(f.read())
 
 
-def generate_backend_stubs(base_url):
+def generate_server_stubs(base_url):
     """
-    Mocking some calls to backend by mocking 'requests'
+    Mocking some of the calls to the server by mocking 'requests'
     """
     success_submit_response = mock({'status_code': 201, 'text': json.dumps({'id': str(existing_run)})})
     when(requests).post(f'{base_url}/circuit/run', ...).thenReturn(success_submit_response)

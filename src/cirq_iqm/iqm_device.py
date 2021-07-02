@@ -62,7 +62,7 @@ def _verify_unique_measurement_keys(operations: ca.Iterable[cirq.Operation]) -> 
 
 
 class IQMDevice(devices.Device):
-    """ABC for the hardware constraints of a specific IQM quantum architecture.
+    """ABC for the properties of a specific IQM quantum architecture.
 
     Adds extra functionality on top of the basic :class:`cirq.Device` class for decomposing gates,
     optimizing circuits and mapping qubits.
