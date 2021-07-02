@@ -74,7 +74,7 @@ class SingleQubitMappingDTO(BaseModel):
 
 
 class RunRequestDTO(BaseModel):
-    """Request for IQM quantum computer to execute a circuit.
+    """Request for an IQM quantum computer to execute a circuit.
     """
     qubit_mapping: list[SingleQubitMappingDTO]
     circuit: CircuitDTO
@@ -109,7 +109,7 @@ class RunResult(BaseModel):
 
 
 class IQMClient:
-    """Provides access to an IQM quantum computer.
+    """Provides access to IQM quantum computers.
 
     Args:
         url: Endpoint for accessing the server. Has to start with http or https.
