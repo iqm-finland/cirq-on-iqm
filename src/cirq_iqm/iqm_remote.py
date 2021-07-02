@@ -91,7 +91,7 @@ class IQMSampler(cirq.work.Sampler):
             circuit: cirq.Circuit,
             repetitions: int = 1,
     ) -> cirq.study.Result:
-        """Sends the circuit to be executed on the IQM quantum computer.
+        """Sends the circuit to be executed.
 
         Args:
             circuit: quantum circuit to execute
