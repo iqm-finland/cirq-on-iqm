@@ -16,4 +16,4 @@ test_report.xml
 /build/
 /dist/
 /sdist/
-docs/api/api/
+/docs/api/
