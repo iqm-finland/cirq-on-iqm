@@ -26,7 +26,7 @@ from cirq_iqm.iqm_remote import IQMSampler
 
 def demo_adonis_run():
     """
-    Run a circuit on the Adonis quantum computer.
+    Run a circuit on an Adonis quantum computer.
     """
     qubit = IQMQubit(1)
     circuit = cirq.Circuit(
