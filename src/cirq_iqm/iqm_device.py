@@ -135,7 +135,7 @@ class IQMDevice(devices.Device):
             """NamedQubits are mapped to device qubits, other types of qubits are passed through as is."""
             if isinstance(qubit, cirq.NamedQubit):
                 idx = int(re.search(r'\D*(\d+)?\D*', qubit.name).group(1))
-                return self.qubits[idx]
+                return self.qubits[idx - 1]
             return qubit
 
         def map_op(op: cirq.Operation) -> cirq.Operation:

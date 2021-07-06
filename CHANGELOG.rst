@@ -3,6 +3,15 @@ Changelog
 =========
 
 
+Version 0.7
+===========
+
+Bugfixes
+--------
+
+* Off-by-one error fixed in :meth:`IQMDevice.map_circuit`. :mr:`29`
+
+
 Version 0.6
 ===========
 
