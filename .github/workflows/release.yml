@@ -24,6 +24,7 @@ jobs:
       - name: Build and publish
         run: |
           tox -e build
+          python -m twine check dist/*
           python -m twine upload dist/*
         env:
           TWINE_USERNAME: ${{ secrets.PYPI_USER }}
