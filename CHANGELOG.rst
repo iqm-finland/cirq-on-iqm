@@ -9,7 +9,7 @@ Version 0.7
 Bugfixes
 --------
 
-* Off-by-one error fixed in :meth:`IQMDevice.map_circuit`. :mr:`29`
+* Off-by-one error fixed in `IQMDevice.map_circuit <https://github.com/iqm-finland/cirq-on-iqm/blob/a2d09dab583434c89f569e711ac35085ec371342/src/cirq_iqm/iqm_device.py#L120>`_. `#29 <https://github.com/iqm-finland/cirq-on-iqm/pull/29>`_
 
 
 Version 0.6
@@ -18,7 +18,7 @@ Version 0.6
 Features
 --------
 
-* Project setup updated. :mr:`22`
+* Project setup updated. `#22 <https://github.com/iqm-finland/cirq-on-iqm/pull/22>`_
 
   * ``pyproject.toml`` added.
   * ``PyScaffold`` dependency removed.
@@ -33,8 +33,8 @@ Version 0.5
 Features
 --------
 
-* Gate decomposition and circuit optimization procedure simplified. :mr:`21`
-* Cirq dependency bumped to 0.11. :mr:`23`
+* Gate decomposition and circuit optimization procedure simplified. `#21 <https://github.com/iqm-finland/cirq-on-iqm/pull/21>`_
+* Cirq dependency bumped to 0.11. `#23 <https://github.com/iqm-finland/cirq-on-iqm/pull/23>`_
 
 NOTE: Before installing this version, please manually uninstall Cirq 0.10. See Cirq 0.11
 release notes for more details: https://github.com/quantumlib/Cirq/releases/tag/v0.11.0
@@ -46,7 +46,7 @@ Version 0.4
 Features
 --------
 
-* Convert data to IQM internal format when running requests. :mr:`20`
+* Convert data to IQM internal format when running requests. `#20 <https://github.com/iqm-finland/cirq-on-iqm/pull/20>`_
 
 
 Version 0.3
@@ -55,7 +55,7 @@ Version 0.3
 Features
 --------
 
-* Settings file support. :mr:`17`
+* Settings file support. `#17 <https://github.com/iqm-finland/cirq-on-iqm/pull/17>`_
 
 
 Version 0.2
@@ -64,8 +64,8 @@ Version 0.2
 Features
 --------
 
-* Adonis native gate set updated, CZ-targeting decompositions added. :mr:`15`
-* Circuits can be sent to be executed remotely on IQM hardware. :mr:`13`
+* Adonis native gate set updated, CZ-targeting decompositions added. `#15 <https://github.com/iqm-finland/cirq-on-iqm/pull/15>`_
+* Circuits can be sent to be executed remotely on IQM hardware. `#13 <https://github.com/iqm-finland/cirq-on-iqm/pull/13>`_
 
 
 Version 0.1
