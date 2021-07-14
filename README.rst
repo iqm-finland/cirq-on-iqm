@@ -20,6 +20,7 @@ Currently Cirq on IQM can
 * run the circuit on an IQM quantum computer
 
 See the `Jupyter Notebook <https://jupyter.org/>`_ with examples: ``examples/usage.ipynb``.
+Documentation is available at `iqm-finland.github.io/cirq-on-iqm/ <https://iqm-finland.github.io/cirq-on-iqm/>`_.
 
 
 How to use
