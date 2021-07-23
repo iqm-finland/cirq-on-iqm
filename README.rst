@@ -1,9 +1,6 @@
-|CI badge|
+|CI badge| |Release badge|
 
 .. |CI badge| image:: https://github.com/iqm-finland/cirq-on-iqm/actions/workflows/ci.yml/badge.svg
-
-|Release badge|
-
 .. |Release badge| image:: https://img.shields.io/github/release/iqm-finland/cirq-on-iqm.svg
 
 
