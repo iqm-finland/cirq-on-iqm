@@ -1,12 +1,15 @@
+.. image:: images/IQM_Logo_RGB_frame.jpg
+    :width: 800
+
 Cirq on IQM
-###########
+===========
 
 :Release: |release|
 :Date: |today|
+:Source Code: `https://github.com/iqm-finland/cirq-on-iqm`
 
-
-.. include:: ../README.rst
-   :start-line: 7
+.. include:: intro.rst
+    :start-line: 3
 
 
 Contents
@@ -15,6 +18,7 @@ Contents
 .. toctree::
    :maxdepth: 2
 
+   getting_started
    API
    license
    authors
