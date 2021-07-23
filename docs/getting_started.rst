@@ -1,3 +1,5 @@
+.. _Getting started:
+
 Getting started with Cirq on IQM
 ================================
 
