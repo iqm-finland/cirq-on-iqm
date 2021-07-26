@@ -12,7 +12,7 @@ Cirq on IQM
     :start-line: 9
     :end-before: Documentation
 
-Take a look at our :ref:`Getting started` guide for an introduction on how to use Cirq on IQM.
+Take a look at our :ref:`Getting started` guide for an introduction on how to install and use Cirq on IQM.
 
 
 Contents
