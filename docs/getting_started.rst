@@ -88,32 +88,10 @@ Once you have these, you can use the :code:`IQMSampler` shipped with Cirq on IQM
         sampler = IQMSampler(os.environ['IQM_SERVER_URL'], f.read(), qubit_mapping)
 
 
-How to develop and contribute
------------------------------
+More examples
+-------------
 
-Cirq on IQM is an open source python project `in GitHub <https://github.com/iqm-finland/cirq-on-iqm>`_.
-To develop, clone the repository and install it in editable mode with all the extras:
-
-.. code-block:: bash
-
-   $ git clone git@github.com:iqm-finland/cirq-on-iqm.git
-   $ cd cirq-on-iqm
-   $ pip install -e ".[dev,docs,testing]"
+More examples are available in the `examples directory <https://github.com/iqm-finland/cirq-on-iqm/tree/main/examples>`_ of the github repository.
 
 
-Build and view the docs:
-
-.. code-block:: bash
-
-   $ tox -e docs
-   $ firefox build/sphinx/html/index.html
-
-
-Run the tests:
-
-.. code-block:: bash
-
-   $ tox
-
-
-Submit a GitHub issue or a pull request.
+.. include:: ../DEVELOPMENT.rst
