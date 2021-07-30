@@ -19,31 +19,68 @@ import pytest
 import cirq
 
 from cirq_iqm.iqm_client import SingleQubitMappingDTO
-from cirq_iqm.iqm_device import IQMQubit
-from cirq_iqm.iqm_remote import IQMSampler
+from cirq_iqm.iqm_remote import IQMSampler, _serialize_qubit_mapping
+from cirq_iqm import Adonis
+from cirq_iqm.valkmusa import Valkmusa
+
+
+@pytest.fixture()
+def circuit():
+    qubit_1 = cirq.NamedQubit('q1 log.')
+    qubit_2 = cirq.NamedQubit('q2 log.')
+    return cirq.Circuit(
+        cirq.measure(qubit_1, qubit_2, key='result')
+    )
 
 
 @pytest.fixture()
 def qubit_mapping():
     return {
-        'q1 log.': 'q1 phys.',
-        'q2 log.': 'q2 phys.'
+        'q1 log.': 'QB1',
+        'q2 log.': 'QB2'
     }
 
 
-def test_transforms_qubit_mapping(qubit_mapping):
-    sampler = IQMSampler('example.com', '{"stuff": "some settings"}', qubit_mapping)
-    assert sampler._qubit_mapping == [
-        SingleQubitMappingDTO(logical_name='q1 log.', physical_name='q1 phys.'),
-        SingleQubitMappingDTO(logical_name='q2 log.', physical_name='q2 phys.'),
+@pytest.fixture()
+def adonis_sampler(base_url, settings_dict, qubit_mapping):
+    return IQMSampler(base_url, json.dumps(settings_dict), Adonis(), qubit_mapping)
+
+
+def test_serialize_qubit_mapping(qubit_mapping):
+    assert _serialize_qubit_mapping(qubit_mapping) == [
+        SingleQubitMappingDTO(logical_name='q1 log.', physical_name='QB1'),
+        SingleQubitMappingDTO(logical_name='q2 log.', physical_name='QB2'),
     ]
 
 
-def test_run_sweep_executes_circuit(mock_server, settings_dict, base_url, qubit_mapping):
-    sampler = IQMSampler(base_url, json.dumps(settings_dict), qubit_mapping)
-    qubit = IQMQubit(1)
-    circuit = cirq.Circuit(
-        cirq.measure(qubit, key='result')
-    )
-    results = sampler.run_sweep(circuit, None, repetitions=2)
+def test_run_sweep_executes_circuit(mock_server, adonis_sampler, circuit):
+    results = adonis_sampler.run_sweep(circuit, None, repetitions=2)
     assert isinstance(results[0], cirq.Result)
+
+
+def test_circuit_with_incorrect_device(adonis_sampler, circuit):
+    valkmusa = Valkmusa()
+    circuit = valkmusa.map_circuit(circuit)
+    with pytest.raises(ValueError, match='devices .* not the same'):
+        adonis_sampler.run(circuit)
+
+
+def test_non_injective_qubit_mapping(base_url, settings_dict, qubit_mapping):
+    qubit_mapping['q2 log.'] = 'QB1'
+
+    with pytest.raises(ValueError, match='Multiple logical qubits map to the same physical qubit'):
+        IQMSampler(base_url, json.dumps(settings_dict), Adonis(), qubit_mapping)
+
+
+def test_qubits_not_in_settings(circuit, base_url, settings_dict, qubit_mapping):
+    del settings_dict['subtrees']['QB1']
+    with pytest.raises(ValueError, match='qubits do not have matching definition in the settings'):
+        IQMSampler(base_url, json.dumps(settings_dict), Adonis(), qubit_mapping)
+
+
+def test_incomplete_qubit_mapping(adonis_sampler, circuit):
+    new_qubit = cirq.NamedQubit('new qubit')
+    circuit.append(cirq.X(new_qubit))
+
+    with pytest.raises(ValueError, match='does not cover all qubits in the circuit'):
+        adonis_sampler.run(circuit)

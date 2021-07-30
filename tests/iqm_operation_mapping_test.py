@@ -11,22 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import cirq
 import pytest
 from cirq import ZPowGate, GateOperation, MeasurementGate, CZPowGate, XPowGate, YPowGate, PhasedXPowGate
 from cirq_iqm.iqm_client import InstructionDTO
-from cirq_iqm.iqm_device import IQMQubit
 from cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, map_operation
 
 
 @pytest.fixture()
-def qubit_1() -> IQMQubit:
-    return IQMQubit(1)
+def qubit_1() -> cirq.NamedQubit:
+    return cirq.NamedQubit('QB1')
 
 
 @pytest.fixture()
-def qubit_2() -> IQMQubit:
-    return IQMQubit(2)
+def qubit_2() -> cirq.NamedQubit:
+    return cirq.NamedQubit('QB2')
 
 
 def test_raises_error_for_unsupported_operation(qubit_1):

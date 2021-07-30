@@ -44,6 +44,8 @@ class Valkmusa(idev.IQMDevice):
     The qubits are always measured simultaneously at the end of the computation.
     """
 
+    QUBIT_COUNT = 2
+
     CONNECTIVITY = ({1, 2},)
 
     NATIVE_GATES = (

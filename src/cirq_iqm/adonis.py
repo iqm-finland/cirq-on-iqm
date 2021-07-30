@@ -54,6 +54,8 @@ class Adonis(idev.IQMDevice):
     The qubits can be measured simultaneously or separately once, at the end of the circuit.
     """
 
+    QUBIT_COUNT = 5
+
     CONNECTIVITY = ({1, 3}, {2, 3}, {4, 3}, {5, 3})
 
     # Subject to change

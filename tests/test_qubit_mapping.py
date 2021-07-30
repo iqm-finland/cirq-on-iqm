@@ -20,7 +20,6 @@ import cirq
 import pytest
 
 import cirq_iqm.adonis as ad
-from cirq_iqm.iqm_device import IQMQubit
 
 
 @pytest.fixture(scope='module')
@@ -63,7 +62,7 @@ class TestQubitMapping:
         # the mapped circuit is attached to the given device
         assert mapped.device is adonis
         # qubits have been mapped to device qubits
-        assert mapped[0].qubits == {IQMQubit(2)}
+        assert mapped[0].qubits == {cirq.NamedQubit('QB2')}
 
 
     def test_named_qubit_not_on_device(self, adonis):
