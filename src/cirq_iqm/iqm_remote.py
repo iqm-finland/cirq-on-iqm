@@ -49,8 +49,15 @@ def _serialize_circuit(circuit: cirq.Circuit) -> CircuitDTO:
     )
 
 
-def _serialize_qubit_mapping(qubit_mapping: dict[str, str]):
-    """Serializes a qubit mapping dict into the corresponding IQM data transfer format"""
+def _serialize_qubit_mapping(qubit_mapping: dict[str, str]) -> list[SingleQubitMappingDTO]:
+    """Serializes a qubit mapping dict into the corresponding IQM data transfer format.
+
+    Args:
+        qubit_mapping: mapping from logical to physical qubit names
+
+    Returns:
+        data transfer object representing the mapping
+    """
     return [SingleQubitMappingDTO(logical_name=k, physical_name=v) for k, v in qubit_mapping.items()]
 
 
@@ -60,22 +67,23 @@ class IQMSampler(cirq.work.Sampler):
     Args:
         url: Endpoint for accessing the server interface. Has to start with http or https.
         settings: Settings for the quantum computer.
-        qubit_mapping: A dict that maps logical qubit names to physical qubit names
+        qubit_mapping: Dict that maps logical qubit names to physical qubit names. Must be injective.
     """
     def __init__(self, url: str, settings: str, device: IQMDevice, qubit_mapping: dict[str, str] = None):
         settings_json = json.loads(settings)
 
-        if not qubit_mapping:
-            # If qubit_mapping empty or None create identity mapping
+        if qubit_mapping is None:
+            # If qubit_mapping is not given, create an identity mapping
             qubit_mapping = {qubit.name: qubit.name for qubit in device.qubits}
         else:
             # verify that the given qubit_mapping is injective
             if not len(set(qubit_mapping.values())) == len(qubit_mapping.values()):
-                raise ValueError('Multiple logical qubits map to the same physical qubit')
+                raise ValueError('Multiple logical qubits map to the same physical qubit.')
 
-        # verify that all target qubits in qubit_mapping are defined in the settings
-        if not all(qubit in settings_json['subtrees'] for qubit in qubit_mapping.values()):
-            raise ValueError('One or more qubits do not have matching definition in the settings')
+        # verify that all the physical qubit names in qubit_mapping are defined in the settings
+        diff = set(qubit_mapping.values()) - set(settings_json['subtrees'])
+        if diff:
+            raise ValueError(f'The physical qubits {diff} in the qubit mapping are not defined in the settings.')
 
         self._client = IQMClient(url, settings=settings_json)
         self._device = device
@@ -101,7 +109,6 @@ class IQMSampler(cirq.work.Sampler):
         Raises:
             NotImplementedError: user tried to run a nontrivial sweep
         """
-
         sweeps = study.to_sweeps(params or study.ParamResolver({}))
         if len(sweeps) > 1 or len(sweeps[0].keys) > 0:
             raise NotImplementedError('Sweeps are not supported')
@@ -109,10 +116,11 @@ class IQMSampler(cirq.work.Sampler):
         if program.device is cirq.UNCONSTRAINED_DEVICE:
             # verify that qubit_mapping covers all qubits in the circuit
             circuit_qubits = set(qubit.name for qubit in program.all_qubits())
-            if not circuit_qubits.issubset(set(self._qubit_mapping.keys())):
-                raise ValueError('Provided qubit_mapping does not cover all qubits in the circuit')
+            diff = circuit_qubits - set(self._qubit_mapping)
+            if diff:
+                raise ValueError(f'The qubits {diff} are not found in the provided qubit mapping.')
         elif program.device != self._device:
-            raise ValueError('The devices of the given circuit and of the sampler are not the same')
+            raise ValueError('The devices of the given circuit and of the sampler are not the same.')
 
         results = [self._send_circuit(program, repetitions=repetitions)]
         return results

@@ -74,13 +74,16 @@ def test_non_injective_qubit_mapping(base_url, settings_dict, qubit_mapping):
 
 def test_qubits_not_in_settings(circuit, base_url, settings_dict, qubit_mapping):
     del settings_dict['subtrees']['QB1']
-    with pytest.raises(ValueError, match='qubits do not have matching definition in the settings'):
+    with pytest.raises(
+            ValueError,
+            match="The physical qubits {'QB1'} in the qubit mapping are not defined in the settings"
+    ):
         IQMSampler(base_url, json.dumps(settings_dict), Adonis(), qubit_mapping)
 
 
 def test_incomplete_qubit_mapping(adonis_sampler, circuit):
-    new_qubit = cirq.NamedQubit('new qubit')
+    new_qubit = cirq.NamedQubit('Eve')
     circuit.append(cirq.X(new_qubit))
 
-    with pytest.raises(ValueError, match='does not cover all qubits in the circuit'):
+    with pytest.raises(ValueError, match="The qubits {'Eve'} are not found in the provided qubit mapping"):
         adonis_sampler.run(circuit)
