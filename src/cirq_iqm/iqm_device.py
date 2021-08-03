@@ -51,7 +51,7 @@ class IQMDevice(devices.Device):
     optimizing circuits and mapping qubits.
     """
     QUBIT_COUNT: int = None
-    """the number of qubits in the device"""
+    """number of qubits on the device"""
 
     QUBIT_NAME_PREFIX: str = 'QB'
     """prefix for naming qubits based on their numerical index"""
