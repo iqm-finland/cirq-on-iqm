@@ -115,7 +115,7 @@ class IQMDevice(devices.Device):
         # TODO permute circuit qubits to try to satisfy the device connectivity
         def map_qubit(qubit: cirq.ops.Qid) -> cirq.ops.Qid:
             if not isinstance(qubit, cirq.NamedQubit):
-                raise ValueError('Only qubits of type cirq.NamedQubit are supported')
+                raise ValueError('Only qubits of type cirq.NamedQubit are supported.')
             if qubit in self.qubits:
                 return qubit
 
