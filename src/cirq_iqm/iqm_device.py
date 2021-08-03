@@ -73,7 +73,7 @@ class IQMDevice(devices.Device):
         self.qubits = tuple(cirq.NamedQubit.range(1, self.QUBIT_COUNT + 1, prefix=self.QUBIT_NAME_PREFIX))
 
     @classmethod
-    def get_qubit_index(cls, qubit: cirq.NamedQubit):
+    def get_qubit_index(cls, qubit: cirq.NamedQubit) -> int:
         """return the numeric index of the given qubit on device"""
         return int(qubit.name[len(cls.QUBIT_NAME_PREFIX):])
 
