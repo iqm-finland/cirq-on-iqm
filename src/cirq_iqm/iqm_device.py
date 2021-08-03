@@ -122,7 +122,7 @@ class IQMDevice(devices.Device):
             # map based on numeric identifier in the qubit name
             idx = re.search(r'\D*(\d+)?\D*', qubit.name).group(1)
             if idx is None:
-                raise ValueError('Qubit names do not contain numbering')
+                raise ValueError('Qubit names must contain a number.')
             return self.qubits[int(idx) - 1]
 
         def map_op(op: cirq.Operation) -> cirq.Operation:
