@@ -74,7 +74,7 @@ class IQMDevice(devices.Device):
 
     @classmethod
     def get_qubit_index(cls, qubit: cirq.NamedQubit) -> int:
-        """return the numeric index of the given qubit on device"""
+        """The numeric index of the given qubit on the device."""
         return int(qubit.name[len(cls.QUBIT_NAME_PREFIX):])
 
     @classmethod
