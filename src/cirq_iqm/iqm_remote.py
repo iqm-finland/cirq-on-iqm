@@ -28,7 +28,7 @@ from cirq_iqm.iqm_client import CircuitDTO, IQMClient, SingleQubitMappingDTO
 from cirq_iqm.iqm_operation_mapping import map_operation
 
 
-def _serialize_circuit(circuit: cirq.Circuit) -> CircuitDTO:
+def serialize_circuit(circuit: cirq.Circuit) -> CircuitDTO:
     """Serializes a quantum circuit into the IQM data transfer format.
 
     Args:
@@ -49,7 +49,7 @@ def _serialize_circuit(circuit: cirq.Circuit) -> CircuitDTO:
     )
 
 
-def _serialize_qubit_mapping(qubit_mapping: dict[str, str]) -> list[SingleQubitMappingDTO]:
+def serialize_qubit_mapping(qubit_mapping: dict[str, str]) -> list[SingleQubitMappingDTO]:
     """Serializes a qubit mapping dict into the corresponding IQM data transfer format.
 
     Args:
@@ -143,8 +143,8 @@ class IQMSampler(cirq.work.Sampler):
             CircuitExecutionError: something went wrong on the server
             APITimeoutError: server did not return the results in the allocated time
         """
-        iqm_circuit = _serialize_circuit(circuit)
-        qubit_mapping = _serialize_qubit_mapping(self._qubit_mapping)
+        iqm_circuit = serialize_circuit(circuit)
+        qubit_mapping = serialize_qubit_mapping(self._qubit_mapping)
 
         job_id = self._client.submit_circuit(iqm_circuit, qubit_mapping, repetitions)
         results = self._client.wait_for_results(job_id)

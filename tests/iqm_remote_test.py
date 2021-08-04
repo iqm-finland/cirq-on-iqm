@@ -19,7 +19,7 @@ import pytest
 import cirq
 
 from cirq_iqm.iqm_client import SingleQubitMappingDTO
-from cirq_iqm.iqm_remote import IQMSampler, _serialize_qubit_mapping
+from cirq_iqm.iqm_remote import IQMSampler, serialize_qubit_mapping
 from cirq_iqm import Adonis
 from cirq_iqm.valkmusa import Valkmusa
 
@@ -47,7 +47,7 @@ def adonis_sampler(base_url, settings_dict, qubit_mapping):
 
 
 def test_serialize_qubit_mapping(qubit_mapping):
-    assert _serialize_qubit_mapping(qubit_mapping) == [
+    assert serialize_qubit_mapping(qubit_mapping) == [
         SingleQubitMappingDTO(logical_name='q1 log.', physical_name='QB1'),
         SingleQubitMappingDTO(logical_name='q2 log.', physical_name='QB2'),
     ]
