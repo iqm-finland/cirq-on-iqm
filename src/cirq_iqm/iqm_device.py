@@ -54,7 +54,7 @@ class IQMDevice(devices.Device):
     """number of qubits on the device"""
 
     QUBIT_NAME_PREFIX: str = 'QB'
-    """prefix for naming qubits based on their numerical index"""
+    """prefix for qubit names, to be followed by their numerical index"""
 
     CONNECTIVITY: tuple[set[int]] = ()
     """qubit connectivity graph of the device"""
