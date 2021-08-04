@@ -32,23 +32,6 @@ from cirq import circuits, devices, ops, optimizers, protocols
 
 GATE_MERGING_TOLERANCE = 1e-10
 
-
-class IQMQubit(cirq.NamedQubit):
-    """NamedQubit that also has a unique integer index.
-
-    Currently the name always depends on the index.
-
-    Args:
-        index: qubit index
-    """
-    def __init__(self, index: int):
-        super().__init__('QB{}'.format(index))
-        self.index = index
-
-    def __repr__(self):
-        return 'IQMQubit({})'.format(self.index)
-
-
 def _verify_unique_measurement_keys(operations: ca.Iterable[cirq.Operation]) -> None:
     """Raises an error if a measurement key is repeated in the given set of Operations.
     """
@@ -67,6 +50,11 @@ class IQMDevice(devices.Device):
     Adds extra functionality on top of the basic :class:`cirq.Device` class for decomposing gates,
     optimizing circuits and mapping qubits.
     """
+    QUBIT_COUNT: int = None
+    """number of qubits on the device"""
+
+    QUBIT_NAME_PREFIX: str = 'QB'
+    """prefix for qubit names, to be followed by their numerical index"""
 
     CONNECTIVITY: tuple[set[int]] = ()
     """qubit connectivity graph of the device"""
@@ -82,18 +70,12 @@ class IQMDevice(devices.Device):
     (we decompose them later, during the final circuit optimization stage)"""
 
     def __init__(self):
-        # qubit set (assumes no unconnected qubits)
-        qubits = {q for c in self.CONNECTIVITY for q in c}
-        bad = {q for q in qubits if q < 1}
-        if bad:
-            raise ValueError('{} connectivity map: the qubit numbers {} are < 1.'.format(self.__class__.__name__, bad))
+        self.qubits = tuple(cirq.NamedQubit.range(1, self.QUBIT_COUNT + 1, prefix=self.QUBIT_NAME_PREFIX))
 
-        expected = range(1, max(qubits) + 1)
-        missing = sorted(set(expected) - qubits)
-        if missing:
-            raise ValueError('{} connectivity map: the qubits {} are missing.'.format(self.__class__.__name__, missing))
-
-        self.qubits = tuple(IQMQubit(k) for k in expected)
+    @classmethod
+    def get_qubit_index(cls, qubit: cirq.NamedQubit) -> int:
+        """The numeric index of the given qubit on the device."""
+        return int(qubit.name[len(cls.QUBIT_NAME_PREFIX):])
 
     @classmethod
     def is_native_operation(cls, op: cirq.Operation) -> bool:
@@ -132,11 +114,16 @@ class IQMDevice(devices.Device):
         """
         # TODO permute circuit qubits to try to satisfy the device connectivity
         def map_qubit(qubit: cirq.ops.Qid) -> cirq.ops.Qid:
-            """NamedQubits are mapped to device qubits, other types of qubits are passed through as is."""
-            if isinstance(qubit, cirq.NamedQubit):
-                idx = int(re.search(r'\D*(\d+)?\D*', qubit.name).group(1))
-                return self.qubits[idx - 1]
-            return qubit
+            if not isinstance(qubit, cirq.NamedQubit):
+                raise ValueError('Only qubits of type cirq.NamedQubit are supported.')
+            if qubit in self.qubits:
+                return qubit
+
+            # map based on numeric identifier in the qubit name
+            idx = re.search(r'\D*(\d+)?\D*', qubit.name).group(1)
+            if idx is None:
+                raise ValueError('Qubit names must contain a number.')
+            return self.qubits[int(idx) - 1]
 
         def map_op(op: cirq.Operation) -> cirq.Operation:
             """Replaces the qubits the gate is acting on with corresponding device qubits."""
@@ -280,7 +267,7 @@ class IQMDevice(devices.Device):
         """Raises a ValueError if operation acts on qubits that are not connected.
         """
         if len(operation.qubits) >= 2 and not isinstance(operation.gate, ops.MeasurementGate):
-            connection = set(q.index for q in operation.qubits)
+            connection = set(cls.get_qubit_index(q) for q in operation.qubits)
             if connection not in cls.CONNECTIVITY:
                 raise ValueError('Unsupported qubit connectivity required for {!r}'.format(operation))
 

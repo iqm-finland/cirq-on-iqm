@@ -13,7 +13,7 @@ What is it good for?
 
 Currently Cirq on IQM can
 
-* take an arbitrary quantum circuit created in Cirq or load from an OpenQASM 2.0 file
+* take an arbitrary quantum circuit created using Cirq or imported from an OpenQASM 2.0 file
 * map the circuit into an equivalent one compatible with the chosen IQM quantum architecture
 * optimize the circuit by commuting and merging gates
 * simulate the circuit using one of Cirq's simulators
@@ -57,7 +57,7 @@ Run the demo:
    $ python cirq-on-iqm/examples/demo_adonis.py
 
 
-Run code on a real quantum computer:
+Execute a quantum circuit on an IQM quantum computer:
 
 .. code-block:: bash
 

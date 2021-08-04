@@ -134,7 +134,6 @@ class TestOperationValidation:
 
     @pytest.mark.parametrize('qubit', [
         cirq.NamedQubit('xxx'),
-        cirq.NamedQubit('QB1'),  # name ok, but not a device qubit
         cirq.GridQubit(0, 1),
     ])
     def test_qubits_not_on_device(self, adonis, qubit):
@@ -256,3 +255,51 @@ class TestCircuitValidation:
 
         with pytest.raises(ValueError, match='Measurement key a repeated'):
             adonis.validate_circuit(invalid_circuit)
+
+
+class TestCircuitMapping:
+
+    @pytest.fixture(scope='class')
+    def circuit(self):
+        qubits = [
+            cirq.NamedQubit('Alice'),
+            cirq.NamedQubit('Bob'),
+            cirq.NamedQubit('Charlie')
+        ]
+
+        return cirq.Circuit(
+            cirq.X(qubits[0]),
+            cirq.Y(qubits[1]),
+            cirq.measure(*qubits, key='mk')
+        )
+
+    @pytest.fixture(scope='function')
+    def qubit_mapping(self):
+        return {
+            'Alice': 'QB1',
+            'Bob': 'QB2',
+            'Charlie': 'QB3'
+        }
+
+    def test_arbitrary_names(self, adonis, circuit):
+        with pytest.raises(ValueError):
+            adonis.map_circuit(circuit)
+
+    def test_indexed_names(self, adonis):
+        qubits = cirq.NamedQubit.range(1, 3, prefix='qubit_')
+        circuit = cirq.Circuit(cirq.measure(*qubits))
+        mapped_circuit = adonis.map_circuit(circuit)
+
+        assert mapped_circuit.device == adonis
+        assert mapped_circuit.all_qubits() == frozenset(cirq.NamedQubit.range(1, 3, prefix=adonis.QUBIT_NAME_PREFIX))
+
+    @pytest.mark.parametrize('qubit', [
+        cirq.LineQubit(7),
+        cirq.GridQubit(0, 1),
+    ])
+    def test_other_types_of_qubits(self, adonis, qubit):
+        circuit = cirq.Circuit(
+            cirq.measure(qubit)
+        )
+        with pytest.raises(ValueError, match='Only qubits of type cirq.NamedQubit are supported'):
+            adonis.map_circuit(circuit)
