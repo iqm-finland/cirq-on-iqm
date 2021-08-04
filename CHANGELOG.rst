@@ -3,8 +3,26 @@ Changelog
 =========
 
 
-Version 0.7
-===========
+Version 1.0 (in progress)
+=========================
+
+Features
+--------
+
+* ``IQMDevice.decompose_circuit`` and ``IQMDevice.route_circuit`` methods added.
+  ``IQMSampler`` checks that the circuit respects the device connectivity.
+  `#??? <https://github.com/iqm-finland/cirq-on-iqm/pull/???>`_
+* Device qubit handling is simplified. ``IQMSampler`` can generate a trivial qubit mapping automatically.
+  `#34 <https://github.com/iqm-finland/cirq-on-iqm/pull/34>`_
+
+Bugfixes
+--------
+
+* The demos work again. `#??? <https://github.com/iqm-finland/cirq-on-iqm/pull/???>`_
+
+
+Version 0.7 (2021-07-07)
+========================
 
 Bugfixes
 --------
@@ -12,8 +30,8 @@ Bugfixes
 * Off-by-one error fixed in `IQMDevice.map_circuit <https://github.com/iqm-finland/cirq-on-iqm/blob/a2d09dab583434c89f569e711ac35085ec371342/src/cirq_iqm/iqm_device.py#L120>`_. `#29 <https://github.com/iqm-finland/cirq-on-iqm/pull/29>`_
 
 
-Version 0.6
-===========
+Version 0.6 (2021-07-02)
+========================
 
 Features
 --------
@@ -27,8 +45,8 @@ Features
   * ``tox`` scripts for building docs, dist packages.
 
 
-Version 0.5
-===========
+Version 0.5 (2021-06-24)
+========================
 
 Features
 --------
@@ -40,8 +58,8 @@ NOTE: Before installing this version, please manually uninstall Cirq 0.10. See C
 release notes for more details: https://github.com/quantumlib/Cirq/releases/tag/v0.11.0
 
 
-Version 0.4
-===========
+Version 0.4 (2021-06-23)
+========================
 
 Features
 --------
@@ -49,8 +67,8 @@ Features
 * Convert data to IQM internal format when running requests. `#20 <https://github.com/iqm-finland/cirq-on-iqm/pull/20>`_
 
 
-Version 0.3
-===========
+Version 0.3 (2021-06-09)
+========================
 
 Features
 --------
@@ -58,8 +76,8 @@ Features
 * Settings file support. `#17 <https://github.com/iqm-finland/cirq-on-iqm/pull/17>`_
 
 
-Version 0.2
-===========
+Version 0.2 (2021-04-23)
+========================
 
 Features
 --------
@@ -68,10 +86,8 @@ Features
 * Circuits can be sent to be executed remotely on IQM hardware. `#13 <https://github.com/iqm-finland/cirq-on-iqm/pull/13>`_
 
 
-Version 0.1
-===========
-
-Released 2021-04-21
+Version 0.1 (2021-04-22)
+========================
 
 Features
 --------

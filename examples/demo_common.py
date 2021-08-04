@@ -16,28 +16,48 @@
 Demonstrates transforming a quantum circuit into the native gateset and connectivity of a given
 IQM device, optimizing it, and then executing it on a simulator.
 """
+from __future__ import annotations
+
 import cirq
 import numpy as np
 
 np.set_printoptions(precision=3)
 
 
-def demo(device, circuit_original, do_measure, *, use_qsim=False):
+def demo(
+    device: IQMDevice,
+    circuit: cirq.Circuit,
+    do_measure: bool,
+    *,
+    qubit_mapping: Optional[dict[str, str]] = None,
+    use_qsim: bool = False
+):
     """Tranform the given circuit to a form the given device accepts, then simulate it.
 
     Args:
-        device (IQMDevice): device on which to execute the quantum circuit
-        circuit_original (cirq.Circuit): quantum circuit
-        do_measure (bool): Iff True, ``circuit_original`` contains measurements, in which case the
+        device: device on which to execute the quantum circuit
+        circuit: quantum circuit
+        do_measure: Iff True, ``circuit`` contains measurements, in which case the
             state after the circuit is not simulated, just the measurement results.
-        use_qsim (bool): Iff True, use the ``qsim`` circuit simulator instead of the Cirq builtin simulator.
+        qubit_mapping: Mapping from ``circuit`` qubit names to ``device`` qubit names.
+            If None, try routing ``circuit``.
+        use_qsim: Iff True, use the ``qsim`` circuit simulator instead of the Cirq builtin simulator.
     """
+    circuit_original = circuit
     print('Source circuit:')
     print(circuit_original)
     print()
 
-    # construct a new quantum circuit respecting Adonis' properties
-    circuit_transformed = device.map_circuit(circuit_original)
+    # decompose non-native gates
+    circuit = device.decompose_circuit(circuit)
+
+    # map the circuit qubits to device qubits
+    if qubit_mapping is None:
+        circuit_transformed = device.route_circuit(circuit)
+    else:
+        temp = {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in qubit_mapping.items()}
+        circuit_transformed = circuit.transform_qubits(temp)
+
     print('Decomposed circuit:')
     print(circuit_transformed)
     print()

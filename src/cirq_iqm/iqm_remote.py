@@ -122,6 +122,14 @@ class IQMSampler(cirq.work.Sampler):
         elif program.device != self._device:
             raise ValueError('The devices of the given circuit and of the sampler are not the same.')
 
+        # check that the circuit connectivity fits in the device connectivity
+        # apply qubit_mapping
+        temp = {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in self._qubit_mapping.items()}
+        mapped = program.transform_qubits(temp)
+        for m in mapped.moments:
+            for op in m.operations:
+                self._device.check_qubit_connectivity(op)
+
         results = [self._send_circuit(program, repetitions=repetitions)]
         return results
 

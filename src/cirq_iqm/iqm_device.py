@@ -28,6 +28,7 @@ from typing import Optional
 
 import cirq
 from cirq import circuits, devices, ops, optimizers, protocols
+from cirq.contrib.routing.router import route_circuit, nx
 
 
 GATE_MERGING_TOLERANCE = 1e-10
@@ -40,7 +41,7 @@ def _verify_unique_measurement_keys(operations: ca.Iterable[cirq.Operation]) -> 
         if protocols.is_measurement(op):
             key = protocols.measurement_key(op)
             if key in seen_keys:
-                raise ValueError('Measurement key {} repeated'.format(key))
+                raise ValueError(f'Measurement key {key} repeated')
             seen_keys.add(key)
 
 
@@ -77,6 +78,10 @@ class IQMDevice(devices.Device):
         """The numeric index of the given qubit on the device."""
         return int(qubit.name[len(cls.QUBIT_NAME_PREFIX):])
 
+    def get_qubit(self, index: int) -> cirq.NamedQubit:
+        """The device qubit corresponding to the given numeric index."""
+        return self.qubits[index - 1]  # 1-based indexing
+
     @classmethod
     def is_native_operation(cls, op: cirq.Operation) -> bool:
         """Predicate, True iff the given operation is considered native for the architecture."""
@@ -99,6 +104,40 @@ class IQMDevice(devices.Device):
             )
         )
 
+
+    def route_circuit(self, circuit: cirq.Circuit) -> tuple[cirq.Circuit, dict[str, str]]:
+        """Routes the given circuit to the device connectivity.
+
+        The routed circuit will use device qubits.
+
+        Args:
+            circuit: circuit to route
+
+        Returns:
+            routed circuit
+        """
+        device_graph = nx.Graph(tuple(map(self.get_qubit, edge)) for edge in self.CONNECTIVITY)
+        swap_network = route_circuit(circuit, device_graph, algo_name='greedy')
+        return swap_network.circuit
+
+
+    def decompose_circuit(self, circuit: cirq.Circuit) -> cirq.Circuit:
+        """Decomposes the given circuit to the native gate set of the device.
+
+        Args:
+            circuit: circuit to decompose
+
+        Returns:
+            decomposed circuit
+        """
+        moments = ops.transform_op_tree(
+            circuit.moments,
+            self.decompose_operation,
+            preserve_moments=False,
+        )
+        return cirq.Circuit(moments)
+
+
     def map_circuit(self, circuit: cirq.Circuit, *, map_qubits: bool = True) -> cirq.Circuit:
         """Map the given circuit into a form that can be executed on the device.
 
@@ -106,11 +145,11 @@ class IQMDevice(devices.Device):
         * Decomposes all the gates in the circuit into the native gateset.
 
         Args:
-            circuit (cirq.Circuit): circuit to map
-            map_qubits (bool): iff True, map the qubits to device qubits
+            circuit: circuit to map
+            map_qubits: iff True, map the qubits to device qubits
 
         Returns:
-            cirq.Circuit: mapped circuit
+            mapped circuit
         """
         # TODO permute circuit qubits to try to satisfy the device connectivity
         def map_qubit(qubit: cirq.ops.Qid) -> cirq.ops.Qid:
@@ -123,7 +162,7 @@ class IQMDevice(devices.Device):
             idx = re.search(r'\D*(\d+)?\D*', qubit.name).group(1)
             if idx is None:
                 raise ValueError('Qubit names must contain a number.')
-            return self.qubits[int(idx) - 1]
+            return self.get_qubit(int(idx))
 
         def map_op(op: cirq.Operation) -> cirq.Operation:
             """Replaces the qubits the gate is acting on with corresponding device qubits."""
@@ -169,7 +208,7 @@ class IQMDevice(devices.Device):
         Returns:
             decomposition (or just ``[op]``, if no decomposition is needed)
         """
-        raise NotImplementedError('Decomposition missing: {}'.format(op.gate))
+        raise NotImplementedError(f'Decomposition missing: {op.gate}')
 
     def decompose_operation_full(self, op: cirq.Operation) -> cirq.OP_TREE:
         """Decomposes an operation into the native operation set.
@@ -214,12 +253,11 @@ class IQMDevice(devices.Device):
             on_stuck_raise=None
         )
 
-    @staticmethod
-    def simplify_circuit(circuit: cirq.Circuit) -> None:
+    def simplify_circuit(self, circuit: cirq.Circuit) -> None:
         """Simplifies and optimizes the given circuit (in place).
 
         Args:
-            circuit (cirq.Circuit): Circuit to simplify. Modified.
+            circuit: Circuit to simplify. Modified.
 
         Currently it
 
@@ -228,6 +266,8 @@ class IQMDevice(devices.Device):
         * pushes the Z rotations towards the end of the circuit as far as possible
         * drops any empty Moments
         """
+        circuit.device = self
+
         # the optimizers cause the immediate decomposition of any gates they insert into the Circuit
         for _ in range(7):
             # FIXME This sucks, but it seems that Cirq optimizers have no way of communicating
@@ -251,14 +291,14 @@ class IQMDevice(devices.Device):
 
     def validate_operation(self, operation: cirq.Operation) -> None:
         if not isinstance(operation.untagged, cirq.GateOperation):
-            raise ValueError('Unsupported operation: {!r}'.format(operation))
+            raise ValueError(f'Unsupported operation: {operation!r}')
 
         if not self.is_native_or_final(operation):
-            raise ValueError('Unsupported gate type: {!r}'.format(operation.gate))
+            raise ValueError(f'Unsupported gate type: {operation.gate!r}')
 
         for qubit in operation.qubits:
             if qubit not in self.qubits:
-                raise ValueError('Qubit not on device: {!r}'.format(qubit))
+                raise ValueError(f'Qubit not on device: {qubit!r}')
 
         self.check_qubit_connectivity(operation)
 
@@ -269,7 +309,7 @@ class IQMDevice(devices.Device):
         if len(operation.qubits) >= 2 and not isinstance(operation.gate, ops.MeasurementGate):
             connection = set(cls.get_qubit_index(q) for q in operation.qubits)
             if connection not in cls.CONNECTIVITY:
-                raise ValueError('Unsupported qubit connectivity required for {!r}'.format(operation))
+                raise ValueError(f'Unsupported qubit connectivity required for {operation!r}')
 
 
 class MergeOneParameterGroupGates(circuits.PointOptimizer):
