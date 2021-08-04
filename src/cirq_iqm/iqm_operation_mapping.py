@@ -75,6 +75,6 @@ def map_operation(operation: Operation) -> InstructionDTO:
                 qubits=qubits,
                 args={}
             )
-        raise OperationNotSupportedError(f'CZPowGate exponent was {operation.gate.exponent}, can only be 1.')
+        raise OperationNotSupportedError(f'CZPowGate exponent {operation.gate.exponent}, only 1 is natively supported.')
 
-    raise OperationNotSupportedError(f'{type(operation)} not natively supported.')
+    raise OperationNotSupportedError(f'{type(operation.gate)} not natively supported.')
