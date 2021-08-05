@@ -9,16 +9,22 @@ Version 1.0 (in progress)
 Features
 --------
 
-* ``IQMDevice.decompose_circuit`` and ``IQMDevice.route_circuit`` methods added.
-  ``IQMSampler`` checks that the circuit respects the device connectivity.
-  `#??? <https://github.com/iqm-finland/cirq-on-iqm/pull/???>`_
+* ``IQMDevice`` updated. `#35 <https://github.com/iqm-finland/cirq-on-iqm/pull/35>`_
+
+  * ``IQMDevice.map_circuit`` removed.
+  * ``IQMDevice.decompose_circuit`` and ``IQMDevice.route_circuit`` methods added.
+  * ``IQMDevice.simplify_circuit`` now checks if it has hit a fixed point after each iteration.
+  * ``IQMSampler`` checks that the circuit respects the device connectivity.
+
 * Device qubit handling is simplified. ``IQMSampler`` can generate a trivial qubit mapping automatically.
   `#34 <https://github.com/iqm-finland/cirq-on-iqm/pull/34>`_
 
 Bugfixes
 --------
 
-* The demos work again. `#??? <https://github.com/iqm-finland/cirq-on-iqm/pull/???>`_
+* All the demos work again. `#35 <https://github.com/iqm-finland/cirq-on-iqm/pull/35>`_
+* ``DropRZBeforeMeasurement`` had a bug where it sometimes incorrectly eliminated a z rotation
+  followed by a multiqubit gate. `#35 <https://github.com/iqm-finland/cirq-on-iqm/pull/35>`_
 
 
 Version 0.7 (2021-07-07)
