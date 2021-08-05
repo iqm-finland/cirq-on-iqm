@@ -125,7 +125,6 @@ class TestOperationValidation:
 
     @pytest.mark.parametrize('qubit', [
         cirq.NamedQubit('xxx'),
-        cirq.NamedQubit('QB1'),  # name ok, but not a device qubit
     ])
     def test_qubits_not_on_device(self, valkmusa, qubit):
         """Gates operating on qubits not on device must not pass validation."""

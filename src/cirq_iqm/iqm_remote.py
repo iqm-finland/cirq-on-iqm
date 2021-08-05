@@ -23,11 +23,12 @@ import cirq
 import numpy as np
 from cirq import study
 from cirq.study import resolver
+from cirq_iqm import IQMDevice
 from cirq_iqm.iqm_client import CircuitDTO, IQMClient, SingleQubitMappingDTO
 from cirq_iqm.iqm_operation_mapping import map_operation
 
 
-def _serialize_iqm(circuit: cirq.Circuit) -> CircuitDTO:
+def serialize_circuit(circuit: cirq.Circuit) -> CircuitDTO:
     """Serializes a quantum circuit into the IQM data transfer format.
 
     Args:
@@ -48,17 +49,45 @@ def _serialize_iqm(circuit: cirq.Circuit) -> CircuitDTO:
     )
 
 
+def serialize_qubit_mapping(qubit_mapping: dict[str, str]) -> list[SingleQubitMappingDTO]:
+    """Serializes a qubit mapping dict into the corresponding IQM data transfer format.
+
+    Args:
+        qubit_mapping: mapping from logical to physical qubit names
+
+    Returns:
+        data transfer object representing the mapping
+    """
+    return [SingleQubitMappingDTO(logical_name=k, physical_name=v) for k, v in qubit_mapping.items()]
+
+
 class IQMSampler(cirq.work.Sampler):
     """Circuit sampler for executing quantum circuits on IQM quantum computers.
 
     Args:
         url: Endpoint for accessing the server interface. Has to start with http or https.
         settings: Settings for the quantum computer.
-        qubit_mapping: A dict that maps logical qubit names to physical qubit names
+        qubit_mapping: Dict that maps logical qubit names to physical qubit names. Must be injective.
     """
-    def __init__(self, url: str, settings: str, qubit_mapping: dict[str, str]):
-        self._client = IQMClient(url, settings=json.loads(settings))
-        self._qubit_mapping = [SingleQubitMappingDTO(logical_name=k, physical_name=v) for k, v in qubit_mapping.items()]
+    def __init__(self, url: str, settings: str, device: IQMDevice, qubit_mapping: dict[str, str] = None):
+        settings_json = json.loads(settings)
+
+        if qubit_mapping is None:
+            # If qubit_mapping is not given, create an identity mapping
+            qubit_mapping = {qubit.name: qubit.name for qubit in device.qubits}
+        else:
+            # verify that the given qubit_mapping is injective
+            if not len(set(qubit_mapping.values())) == len(qubit_mapping.values()):
+                raise ValueError('Multiple logical qubits map to the same physical qubit.')
+
+        # verify that all the physical qubit names in qubit_mapping are defined in the settings
+        diff = set(qubit_mapping.values()) - set(settings_json['subtrees'])
+        if diff:
+            raise ValueError(f'The physical qubits {diff} in the qubit mapping are not defined in the settings.')
+
+        self._client = IQMClient(url, settings=settings_json)
+        self._device = device
+        self._qubit_mapping = qubit_mapping
 
     def run_sweep(
             self,
@@ -83,6 +112,16 @@ class IQMSampler(cirq.work.Sampler):
         sweeps = study.to_sweeps(params or study.ParamResolver({}))
         if len(sweeps) > 1 or len(sweeps[0].keys) > 0:
             raise NotImplementedError('Sweeps are not supported')
+
+        if program.device is cirq.UNCONSTRAINED_DEVICE:
+            # verify that qubit_mapping covers all qubits in the circuit
+            circuit_qubits = set(qubit.name for qubit in program.all_qubits())
+            diff = circuit_qubits - set(self._qubit_mapping)
+            if diff:
+                raise ValueError(f'The qubits {diff} are not found in the provided qubit mapping.')
+        elif program.device != self._device:
+            raise ValueError('The devices of the given circuit and of the sampler are not the same.')
+
         results = [self._send_circuit(program, repetitions=repetitions)]
         return results
 
@@ -104,8 +143,10 @@ class IQMSampler(cirq.work.Sampler):
             CircuitExecutionError: something went wrong on the server
             APITimeoutError: server did not return the results in the allocated time
         """
-        iqm_circuit = _serialize_iqm(circuit)
-        job_id = self._client.submit_circuit(iqm_circuit, self._qubit_mapping, repetitions)
+        iqm_circuit = serialize_circuit(circuit)
+        qubit_mapping = serialize_qubit_mapping(self._qubit_mapping)
+
+        job_id = self._client.submit_circuit(iqm_circuit, qubit_mapping, repetitions)
         results = self._client.wait_for_results(job_id)
         measurements = {k: np.array(v) for k, v in results.measurements.items()}
         return study.Result(params=resolver.ParamResolver(), measurements=measurements)

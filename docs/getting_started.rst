@@ -70,7 +70,7 @@ Construct a quantum circuit against the adonis architecture
 Running on a real quantum computer
 ----------------------------------
 
-To run a quantum circuit against a real IQM quantum device you need to have access to IQM server. You will need
+To execute a quantum circuit on an IQM quantum computer you need to have access to IQM server. You will need
 to setup two environment variables: :code:`IQM_SERVER_URL`, which points to the respective IQM server; and
 :code:`IQM_SETTINGS_PATH` which points to a local file containing configuration settings for the device:
 
