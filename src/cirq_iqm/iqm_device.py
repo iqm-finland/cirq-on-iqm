@@ -183,10 +183,11 @@ class IQMDevice(devices.Device):
             on_stuck_raise=None
         )
 
-    def route_circuit(self, circuit: cirq.Circuit) -> tuple[cirq.Circuit, dict[str, str]]:
+    def route_circuit(self, circuit: cirq.Circuit) -> cirq.Circuit:
         """Routes the given circuit to the device connectivity.
 
-        The routed circuit will use device qubits.
+        The routed circuit uses the device qubits, and may have additional SWAP gates inserted
+        to perform the qubit routing.
 
         Args:
             circuit: circuit to route
