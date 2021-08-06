@@ -42,9 +42,10 @@ def demo_adonis_run():
 
     device = Adonis()
     circuit_decomposed = device.decompose_circuit(circuit)
+    print(circuit_decomposed)
 
-    with open(os.environ['IQM_SETTINGS_PATH'], 'r') as f:
-        sampler = IQMSampler(os.environ['IQM_SERVER_URL'], f.read(), device, qubit_mapping)
+    with open(os.environ['IQM_SETTINGS_PATH'], 'r') as settings:
+        sampler = IQMSampler(os.environ['IQM_SERVER_URL'], settings.read(), device, qubit_mapping)
 
     # This will send the circuit to the server to be run, and return a cirq.study.Result
     # containing the measurement results.

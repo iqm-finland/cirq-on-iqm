@@ -218,8 +218,7 @@ class IQMDevice(devices.Device):
         )
         return cirq.Circuit(moments)
 
-    @staticmethod
-    def simplify_circuit(circuit: cirq.Circuit, max_iterations: int = 20) -> None:
+    def simplify_circuit(self, circuit: cirq.Circuit, max_iterations: int = 20) -> None:
         """Simplifies and optimizes the given circuit.
 
         Currently it
@@ -231,6 +230,9 @@ class IQMDevice(devices.Device):
 
         This sequence of optimization passes is repeated until the circuit hits a fixed point,
         or ``max_iterations`` is exceeded.
+
+        Finally, it removes Z rotations that are immediately followed by a Z-basis measurement,
+        and runs :meth:`operation_final_decomposer` on the circuit.
 
         Args:
             circuit: circuit to simplify
@@ -262,7 +264,7 @@ class IQMDevice(devices.Device):
 
         DropRZBeforeMeasurement().optimize_circuit(c)
         optimizers.DropEmptyMoments().optimize_circuit(c)
-        #DecomposeGatesFinal().optimize_circuit(c)
+        DecomposeGatesFinal(self).optimize_circuit(c)
         return c
 
     def validate_circuit(self, circuit: cirq.Circuit) -> None:
@@ -404,7 +406,14 @@ class DropRZBeforeMeasurement(circuits.PointOptimizer):
 
 class DecomposeGatesFinal(circuits.PointOptimizer):
     """Decomposes gates during the final decomposition round.
+
+    Args:
+        device: device whose :meth:`.IQMDevice.operation_final_decomposer` to use
     """
+    def __init__(self, device: IQMDevice):
+        super().__init__()
+        self.device = device
+
     def optimization_at(
             self,
             circuit: cirq.Circuit,
@@ -414,10 +423,10 @@ class DecomposeGatesFinal(circuits.PointOptimizer):
         """TODO the parent class at Cirq has a broken docstring here, which we have to override.
         https://github.com/quantumlib/Cirq/issues/4276
         """
-        if not isinstance(op.gate, circuit.device.DECOMPOSE_FINALLY):
+        if not isinstance(op.gate, self.device.DECOMPOSE_FINALLY):
             return None  # no changes
 
-        rewritten = circuit.device.operation_final_decomposer(op)
+        rewritten = self.device.operation_final_decomposer(op)
         return circuits.PointOptimizationSummary(
             clear_span=1,
             clear_qubits=op.qubits,
