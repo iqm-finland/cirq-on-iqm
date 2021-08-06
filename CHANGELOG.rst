@@ -16,8 +16,9 @@ Features
   * ``IQMDevice.simplify_circuit`` now checks if it has hit a fixed point after each iteration.
   * ``IQMSampler`` checks that the circuit respects the device connectivity.
 
-* Device qubit handling is simplified. ``IQMSampler`` can generate a trivial qubit mapping automatically.
-  `#34 <https://github.com/iqm-finland/cirq-on-iqm/pull/34>`_
+* Device qubit handling is simplified. `#34 <https://github.com/iqm-finland/cirq-on-iqm/pull/34>`_
+  * ``IQMSampler`` can generate a trivial qubit mapping automatically.
+  * The class ``IQMQubit`` removed.
 
 Bugfixes
 --------

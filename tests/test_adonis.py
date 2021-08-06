@@ -343,7 +343,7 @@ class TestCircuitRouting:
 
         assert len(new.all_qubits()) == 3
         assert new.all_qubits() <= set(adonis.qubits)
-        #assert len(new) == len(circuit)  # TODO at the moment the routing algo may add unnecessary SWAPs
+        # assert len(new) == len(circuit)  # TODO at the moment the routing algo may add unnecessary SWAPs
 
     def test_routing_needs_SWAPs(self, adonis, qubits):
         # circuit has cyclic connectivity, Adonis doesn't

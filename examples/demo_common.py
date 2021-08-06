@@ -17,9 +17,12 @@ Demonstrates transforming a quantum circuit into the native gateset and connecti
 IQM device, optimizing it, and then executing it on a simulator.
 """
 from __future__ import annotations
+from typing import Optional
 
 import cirq
 import numpy as np
+
+from cirq_iqm import IQMDevice
 
 np.set_printoptions(precision=3)
 
@@ -32,7 +35,7 @@ def demo(
     qubit_mapping: Optional[dict[str, str]] = None,
     use_qsim: bool = False
 ):
-    """Tranform the given circuit to a form the given device accepts, then simulate it.
+    """Transform the given circuit to a form the given device accepts, then simulate it.
 
     Args:
         device: device on which to execute the quantum circuit
@@ -49,14 +52,14 @@ def demo(
     print()
 
     # decompose non-native gates
-    circuit = device.decompose_circuit(circuit)
+    circuit_decomposed = device.decompose_circuit(circuit)
 
     # map the circuit qubits to device qubits
     if qubit_mapping is None:
-        circuit_transformed = device.route_circuit(circuit)
+        circuit_transformed = device.route_circuit(circuit_decomposed)
     else:
         temp = {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in qubit_mapping.items()}
-        circuit_transformed = circuit.transform_qubits(temp)
+        circuit_transformed = circuit_decomposed.transform_qubits(temp)
 
     print('Decomposed circuit:')
     print(circuit_transformed)

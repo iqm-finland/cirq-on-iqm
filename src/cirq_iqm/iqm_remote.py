@@ -124,8 +124,8 @@ class IQMSampler(cirq.work.Sampler):
 
         # check that the circuit connectivity fits in the device connectivity
         # apply qubit_mapping
-        temp = {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in self._qubit_mapping.items()}
-        mapped = program.transform_qubits(temp)
+        qubit_map = {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in self._qubit_mapping.items()}
+        qubit_map = program.transform_qubits(temp)
         for m in mapped.moments:
             for op in m.operations:
                 self._device.check_qubit_connectivity(op)
