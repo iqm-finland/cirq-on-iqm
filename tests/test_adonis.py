@@ -334,7 +334,7 @@ class TestCircuitRouting:
             adonis.route_circuit(circuit)
 
     def test_routing_without_SWAPs(self, adonis, qubits):
-        # circuit graph can be embedded in the Adonis connectivity graph
+        # circuit graph can be embedded in the Adonis connectivity graph, no SWAPs needed
         circuit = cirq.Circuit(
             cirq.CZ(*qubits[0:2]),
             cirq.CZ(*qubits[1:3]),
@@ -346,7 +346,7 @@ class TestCircuitRouting:
         # assert len(new) == len(circuit)  # TODO at the moment the routing algo may add unnecessary SWAPs
 
     def test_routing_needs_SWAPs(self, adonis, qubits):
-        # circuit has cyclic connectivity, Adonis doesn't
+        # circuit has cyclic connectivity, Adonis doesn't, so SWAPs are needed
         circuit = cirq.Circuit(
             cirq.CZ(*qubits[0:2]),
             cirq.CZ(*qubits[1:3]),
@@ -357,3 +357,23 @@ class TestCircuitRouting:
         assert len(new.all_qubits()) == 3
         assert new.all_qubits() <= set(adonis.qubits)
         assert len(new) == 4  # SWAP gate was added
+
+    @pytest.mark.parametrize('qid', [
+        cirq.LineQubit(4),
+        cirq.GridQubit(5, 6),
+        cirq.NamedQid('Quentin', dimension=2),
+        cirq.LineQid(4, dimension=2),
+        cirq.GridQid(5, 6, dimension=2),
+    ])
+    def test_routing_with_qids(self, adonis, qubits, qid):
+        # routing can handle all kinds of Qid types
+        q = qubits[0]
+        circuit = cirq.Circuit(
+            cirq.X(q),
+            cirq.Y(qid),
+            cirq.CZ(q, qid),
+        )
+        new = adonis.route_circuit(circuit)
+
+        assert len(new.all_qubits()) == 2
+        assert new.all_qubits() <= set(adonis.qubits)
