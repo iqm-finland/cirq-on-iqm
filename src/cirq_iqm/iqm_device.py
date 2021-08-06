@@ -23,11 +23,11 @@ from __future__ import annotations
 import abc
 import collections.abc as ca
 import operator
-import re
-from typing import Optional
+from typing import Optional, Union
 
 import cirq
 from cirq import circuits, devices, ops, optimizers, protocols
+from cirq.contrib.routing.router import route_circuit, nx
 
 
 GATE_MERGING_TOLERANCE = 1e-10
@@ -40,7 +40,7 @@ def _verify_unique_measurement_keys(operations: ca.Iterable[cirq.Operation]) -> 
         if protocols.is_measurement(op):
             key = protocols.measurement_key(op)
             if key in seen_keys:
-                raise ValueError('Measurement key {} repeated'.format(key))
+                raise ValueError(f'Measurement key {key} repeated')
             seen_keys.add(key)
 
 
@@ -77,6 +77,19 @@ class IQMDevice(devices.Device):
         """The numeric index of the given qubit on the device."""
         return int(qubit.name[len(cls.QUBIT_NAME_PREFIX):])
 
+    def get_qubit(self, index: int) -> cirq.NamedQubit:
+        """The device qubit corresponding to the given numeric index."""
+        return self.qubits[index - 1]  # 1-based indexing
+
+    @classmethod
+    def check_qubit_connectivity(cls, operation: cirq.Operation) -> None:
+        """Raises a ValueError if operation acts on qubits that are not connected.
+        """
+        if len(operation.qubits) >= 2 and not isinstance(operation.gate, ops.MeasurementGate):
+            connection = set(cls.get_qubit_index(q) for q in operation.qubits)
+            if connection not in cls.CONNECTIVITY:
+                raise ValueError(f'Unsupported qubit connectivity required for {operation!r}')
+
     @classmethod
     def is_native_operation(cls, op: cirq.Operation) -> bool:
         """Predicate, True iff the given operation is considered native for the architecture."""
@@ -99,56 +112,12 @@ class IQMDevice(devices.Device):
             )
         )
 
-    def map_circuit(self, circuit: cirq.Circuit, *, map_qubits: bool = True) -> cirq.Circuit:
-        """Map the given circuit into a form that can be executed on the device.
-
-        * Maps qubits used in the circuit to qubits used by the device.
-        * Decomposes all the gates in the circuit into the native gateset.
-
-        Args:
-            circuit (cirq.Circuit): circuit to map
-            map_qubits (bool): iff True, map the qubits to device qubits
-
-        Returns:
-            cirq.Circuit: mapped circuit
-        """
-        # TODO permute circuit qubits to try to satisfy the device connectivity
-        def map_qubit(qubit: cirq.ops.Qid) -> cirq.ops.Qid:
-            if not isinstance(qubit, cirq.NamedQubit):
-                raise ValueError('Only qubits of type cirq.NamedQubit are supported.')
-            if qubit in self.qubits:
-                return qubit
-
-            # map based on numeric identifier in the qubit name
-            idx = re.search(r'\D*(\d+)?\D*', qubit.name).group(1)
-            if idx is None:
-                raise ValueError('Qubit names must contain a number.')
-            return self.qubits[int(idx) - 1]
-
-        def map_op(op: cirq.Operation) -> cirq.Operation:
-            """Replaces the qubits the gate is acting on with corresponding device qubits."""
-            qubits = map(map_qubit, op.qubits)
-            return op.gate.on(*qubits)
-
-        # map the qubits in the circuit to device qubits
-        mapping = map_op if map_qubits else lambda x: x
-        operations = [mapping(op) for moment in circuit.moments for op in moment.operations]
-
-        # we need to append individual Operations (instead of Moments) to the new Circuit,
-        # otherwise no decomposition is done!
-        circuit = cirq.Circuit(operations, device=self)
-        # The operations are immediately validated as they are appended,
-        # and non-native operations decomposed by :meth:`IQMDevice.decompose_operation`.
-        # There is no separate validation pass once the circuit is complete.
-        return circuit
-
     @abc.abstractmethod
     def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
         """Decomposes operations into the native operation set.
 
-        Operations are decomposed immediately when they are inserted into the Circuit.
-        This happens both during the Circuit creation step in :meth:`IQMDevice.map_circuit`,
-        and the various point optimization rounds in :meth:`IQMDevice.simplify_circuit`.
+        Operations are decomposed immediately when they are inserted into a Circuit associated with an IQMDevice.
+        This happens at various points during the optimization rounds in :meth:`IQMDevice.simplify_circuit`.
 
         Args:
             op: operation to decompose
@@ -169,7 +138,7 @@ class IQMDevice(devices.Device):
         Returns:
             decomposition (or just ``[op]``, if no decomposition is needed)
         """
-        raise NotImplementedError('Decomposition missing: {}'.format(op.gate))
+        raise NotImplementedError(f'Decomposition missing: {op.gate}')
 
     def decompose_operation_full(self, op: cirq.Operation) -> cirq.OP_TREE:
         """Decomposes an operation into the native operation set.
@@ -214,12 +183,51 @@ class IQMDevice(devices.Device):
             on_stuck_raise=None
         )
 
-    @staticmethod
-    def simplify_circuit(circuit: cirq.Circuit) -> None:
-        """Simplifies and optimizes the given circuit (in place).
+    def route_circuit(
+            self,
+            circuit: cirq.Circuit,
+            *,
+            return_swap_network: bool = False
+    ) -> Union[cirq.Circuit, cirq.contrib.routing.SwapNetwork]:
+        """Routes the given circuit to the device connectivity.
+
+        The routed circuit uses the device qubits, and may have additional SWAP gates inserted
+        to perform the qubit routing.
 
         Args:
-            circuit (cirq.Circuit): Circuit to simplify. Modified.
+            circuit: circuit to route
+            return_swap_network: iff True, return the full swap network instead of the routed circuit
+
+        Returns:
+            routed circuit, or the swap network if requested
+
+        Raises:
+            ValueError: routing is impossible
+        """
+        device_graph = nx.Graph(tuple(map(self.get_qubit, edge)) for edge in self.CONNECTIVITY)
+        swap_network = route_circuit(circuit, device_graph, algo_name='greedy')
+        if return_swap_network:
+            return swap_network
+        return swap_network.circuit
+
+    def decompose_circuit(self, circuit: cirq.Circuit) -> cirq.Circuit:
+        """Decomposes the given circuit to the native gate set of the device.
+
+        Args:
+            circuit: circuit to decompose
+
+        Returns:
+            decomposed circuit
+        """
+        moments = ops.transform_op_tree(
+            circuit.moments,
+            self.decompose_operation,
+            preserve_moments=False,
+        )
+        return cirq.Circuit(moments)
+
+    def simplify_circuit(self, circuit: cirq.Circuit, max_iterations: int = 20) -> None:
+        """Simplifies and optimizes the given circuit.
 
         Currently it
 
@@ -227,23 +235,45 @@ class IQMDevice(devices.Device):
         * merges all one-qubit rotations into phased X rotations followed by Z rotations
         * pushes the Z rotations towards the end of the circuit as far as possible
         * drops any empty Moments
-        """
-        # the optimizers cause the immediate decomposition of any gates they insert into the Circuit
-        for _ in range(7):
-            # FIXME This sucks, but it seems that Cirq optimizers have no way of communicating
-            # if they actually made any changes to the Circuit, so we run a fixed number of iterations.
-            # Ideally we would keep doing this until the circuit hits a fixed point and no further changes are made.
-            # See https://github.com/quantumlib/Cirq/issues/3761
-            # all mergeable 2-qubit gates are merged
-            MergeOneParameterGroupGates().optimize_circuit(circuit)
-            optimizers.merge_single_qubit_gates_into_phased_x_z(circuit)
-            # all z rotations are pushed past the first two-qubit gate following them
-            optimizers.EjectZ(eject_parameterized=True).optimize_circuit(circuit)
-            optimizers.DropEmptyMoments().optimize_circuit(circuit)
 
-        DropRZBeforeMeasurement().optimize_circuit(circuit)
-        optimizers.DropEmptyMoments().optimize_circuit(circuit)
-        DecomposeGatesFinal().optimize_circuit(circuit)
+        This sequence of optimization passes is repeated until the circuit hits a fixed point,
+        or ``max_iterations`` is exceeded.
+
+        Finally, it removes Z rotations that are immediately followed by a Z-basis measurement,
+        and runs :meth:`operation_final_decomposer` on the circuit.
+
+        Args:
+            circuit: circuit to simplify
+            max_iterations: maximum number of simplification rounds
+
+        Returns:
+            simplified circuit
+        """
+        c = circuit.copy()
+
+        # the optimizers cause the immediate decomposition of any gates they insert into the Circuit
+        for _ in range(max_iterations):
+            # It seems that Cirq optimizers have no way of communicating
+            # if they actually made any changes to the Circuit.
+            # See https://github.com/quantumlib/Cirq/issues/3761
+
+            before = c.copy()
+
+            # all mergeable 2-qubit gates are merged
+            MergeOneParameterGroupGates().optimize_circuit(c)
+            optimizers.merge_single_qubit_gates_into_phased_x_z(c)
+            # all z rotations are pushed past the first two-qubit gate following them
+            optimizers.EjectZ(eject_parameterized=True).optimize_circuit(c)
+            optimizers.DropEmptyMoments().optimize_circuit(c)
+
+            if c == before:
+                # the optimization hit a fixed point
+                break
+
+        DropRZBeforeMeasurement().optimize_circuit(c)
+        optimizers.DropEmptyMoments().optimize_circuit(c)
+        DecomposeGatesFinal(self).optimize_circuit(c)
+        return c
 
     def validate_circuit(self, circuit: cirq.Circuit) -> None:
         super().validate_circuit(circuit)
@@ -251,25 +281,16 @@ class IQMDevice(devices.Device):
 
     def validate_operation(self, operation: cirq.Operation) -> None:
         if not isinstance(operation.untagged, cirq.GateOperation):
-            raise ValueError('Unsupported operation: {!r}'.format(operation))
+            raise ValueError(f'Unsupported operation: {operation!r}')
 
         if not self.is_native_or_final(operation):
-            raise ValueError('Unsupported gate type: {!r}'.format(operation.gate))
+            raise ValueError(f'Unsupported gate type: {operation.gate!r}')
 
         for qubit in operation.qubits:
             if qubit not in self.qubits:
-                raise ValueError('Qubit not on device: {!r}'.format(qubit))
+                raise ValueError(f'Qubit not on device: {qubit!r}')
 
         self.check_qubit_connectivity(operation)
-
-    @classmethod
-    def check_qubit_connectivity(cls, operation: cirq.Operation) -> None:
-        """Raises a ValueError if operation acts on qubits that are not connected.
-        """
-        if len(operation.qubits) >= 2 and not isinstance(operation.gate, ops.MeasurementGate):
-            connection = set(cls.get_qubit_index(q) for q in operation.qubits)
-            if connection not in cls.CONNECTIVITY:
-                raise ValueError('Unsupported qubit connectivity required for {!r}'.format(operation))
 
 
 class MergeOneParameterGroupGates(circuits.PointOptimizer):
@@ -369,15 +390,18 @@ class DropRZBeforeMeasurement(circuits.PointOptimizer):
             remove_indices = []
             for idx, moment in enumerate(circuit[index:], start=index):
                 for x in moment.operations:
-                    if x.qubits == op.qubits:
-                        if isinstance(x.gate, cirq.ZPowGate):  # add idx to the list, keep looking for more
-                            remove_indices.append(idx)
-                            break
-                        if isinstance(x.gate, cirq.MeasurementGate):  # remove the accumulated indices
-                            return remove_indices
-                        return []  # other operations: do not remove anything
+                    if isinstance(x.gate, cirq.ZPowGate) and x.qubits == op.qubits:
+                        # add idx to the list, keep looking for more
+                        remove_indices.append(idx)
+                        break  # to next moment
+                    if isinstance(x.gate, cirq.MeasurementGate) and op.qubits[0] in x.qubits:
+                        # follows the ZPowGates, remove the accumulated indices
+                        return remove_indices
+                    return []  # other operations: do not remove anything
             return []  # circuit ends here: do not remove anything
 
+        if not isinstance(op.gate, cirq.ZPowGate):
+            return None  # shortcut
         indices = find_removable_rz()
         if not indices:
             return None
@@ -390,7 +414,14 @@ class DropRZBeforeMeasurement(circuits.PointOptimizer):
 
 class DecomposeGatesFinal(circuits.PointOptimizer):
     """Decomposes gates during the final decomposition round.
+
+    Args:
+        device: device whose :meth:`.IQMDevice.operation_final_decomposer` to use
     """
+    def __init__(self, device: IQMDevice):
+        super().__init__()
+        self.device = device
+
     def optimization_at(
             self,
             circuit: cirq.Circuit,
@@ -400,10 +431,10 @@ class DecomposeGatesFinal(circuits.PointOptimizer):
         """TODO the parent class at Cirq has a broken docstring here, which we have to override.
         https://github.com/quantumlib/Cirq/issues/4276
         """
-        if not isinstance(op.gate, circuit.device.DECOMPOSE_FINALLY):
+        if not isinstance(op.gate, self.device.DECOMPOSE_FINALLY):
             return None  # no changes
 
-        rewritten = circuit.device.operation_final_decomposer(op)
+        rewritten = self.device.operation_final_decomposer(op)
         return circuits.PointOptimizationSummary(
             clear_span=1,
             clear_qubits=op.qubits,

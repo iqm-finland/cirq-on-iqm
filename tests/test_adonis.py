@@ -257,49 +257,117 @@ class TestCircuitValidation:
             adonis.validate_circuit(invalid_circuit)
 
 
-class TestCircuitMapping:
+class TestCircuitDecomposition:
+    def test_decompose_circuit_native_only(self, adonis):
+        """Circuit containing only native ops decomposes trivially.
+        """
+        q0, q1 = cirq.NamedQubit.range(0, 2, prefix='qubit_')
+        circuit = cirq.Circuit(
+            cirq.CZ(q0, q1),
+        )
+        new = adonis.decompose_circuit(circuit)
 
+        # same circuit
+        assert new == circuit
+
+    def test_decompose_circuit(self, adonis):
+        """Any gates should be decomposable to native gates.
+        """
+        q0, q1 = cirq.NamedQubit.range(0, 2, prefix='qubit_')
+        circuit = cirq.Circuit(
+            cirq.CNOT(q0, q1),
+        )
+        new = adonis.decompose_circuit(circuit)
+
+        # still uses the original qubits, not device qubits
+        assert circuit.all_qubits() == new.all_qubits()
+        assert len(new) == 3
+        assert new[1].operations[0].gate == cirq.CZ  # CNOT decomposes into CZ plus Ry:s
+
+    def test_decompose_complicated_circuit(self, adonis):
+        """Can handle even 3-qubit gates.
+        """
+        q0, q1, q2 = cirq.NamedQubit.range(0, 3, prefix='qubit_')
+        circuit = cirq.Circuit(
+            cirq.H(q0),
+            cirq.X(q1),
+            cirq.TOFFOLI(q0, q2, q1),
+            cirq.measure(q0, q1, q2, key='mk')
+        )
+        new = adonis.decompose_circuit(circuit)
+
+        # still uses the original qubits, not device qubits
+        assert circuit.all_qubits() == new.all_qubits()
+        assert len(new) == 23
+
+
+class TestCircuitRouting:
     @pytest.fixture(scope='class')
-    def circuit(self):
-        qubits = [
+    def qubits(self):
+        return [
             cirq.NamedQubit('Alice'),
             cirq.NamedQubit('Bob'),
             cirq.NamedQubit('Charlie')
         ]
 
-        return cirq.Circuit(
-            cirq.X(qubits[0]),
-            cirq.Y(qubits[1]),
-            cirq.measure(*qubits, key='mk')
-        )
+    def test_routing_circuit_too_large(self, adonis):
+        """The circuit must fit on the device.
+        """
+        qubits = cirq.NamedQubit.range(0, 6, prefix='qubit_')
+        circuit = cirq.Circuit([cirq.X(q) for q in qubits])
+        with pytest.raises(ValueError, match='Number of logical qubits is greater than number of physical qubits'):
+            adonis.route_circuit(circuit)
 
-    @pytest.fixture(scope='function')
-    def qubit_mapping(self):
-        return {
-            'Alice': 'QB1',
-            'Bob': 'QB2',
-            'Charlie': 'QB3'
-        }
-
-    def test_arbitrary_names(self, adonis, circuit):
-        with pytest.raises(ValueError):
-            adonis.map_circuit(circuit)
-
-    def test_indexed_names(self, adonis):
-        qubits = cirq.NamedQubit.range(1, 3, prefix='qubit_')
-        circuit = cirq.Circuit(cirq.measure(*qubits))
-        mapped_circuit = adonis.map_circuit(circuit)
-
-        assert mapped_circuit.device == adonis
-        assert mapped_circuit.all_qubits() == frozenset(cirq.NamedQubit.range(1, 3, prefix=adonis.QUBIT_NAME_PREFIX))
-
-    @pytest.mark.parametrize('qubit', [
-        cirq.LineQubit(7),
-        cirq.GridQubit(0, 1),
-    ])
-    def test_other_types_of_qubits(self, adonis, qubit):
+    def test_routing_without_SWAPs(self, adonis, qubits):
+        """Circuit graph can be embedded in the Adonis connectivity graph, no SWAPs needed.
+        """
         circuit = cirq.Circuit(
-            cirq.measure(qubit)
+            cirq.CZ(*qubits[0:2]),
+            cirq.CZ(*qubits[1:3]),
         )
-        with pytest.raises(ValueError, match='Only qubits of type cirq.NamedQubit are supported'):
-            adonis.map_circuit(circuit)
+        new = adonis.route_circuit(circuit)
+
+        assert len(new.all_qubits()) == 3
+        assert new.all_qubits() <= set(adonis.qubits)
+        # assert len(new) == len(circuit)  # TODO at the moment the routing algo may add unnecessary SWAPs
+
+    def test_routing_needs_SWAPs(self, adonis, qubits):
+        """Circuit has cyclic connectivity, Adonis doesn't, so SWAPs are needed.
+        """
+        circuit = cirq.Circuit(
+            cirq.CZ(*qubits[0:2]),
+            cirq.CZ(*qubits[1:3]),
+            cirq.CZ(qubits[0], qubits[2]),
+        )
+        new = adonis.route_circuit(circuit)
+
+        assert len(new.all_qubits()) == 3
+        assert new.all_qubits() <= set(adonis.qubits)
+        assert len(new) == 4  # a SWAP gate was added
+
+        # SWAPs added by routing can be decomposed
+        with pytest.raises(ValueError, match='Unsupported gate type: cirq.contrib.acquaintance.SwapPermutationGate()'):
+            adonis.validate_circuit(new)
+        decomposed = adonis.decompose_circuit(new)
+        adonis.validate_circuit(decomposed)
+
+    @pytest.mark.parametrize('qid', [
+        cirq.LineQubit(4),
+        cirq.GridQubit(5, 6),
+        cirq.NamedQid('Quentin', dimension=2),
+        cirq.LineQid(4, dimension=2),
+        cirq.GridQid(5, 6, dimension=2),
+    ])
+    def test_routing_with_qids(self, adonis, qid):
+        """Routing can handle all kinds of Qid types, not just NamedQubit.
+        """
+        q = cirq.NamedQubit('Alice')
+        circuit = cirq.Circuit(
+            cirq.X(q),
+            cirq.Y(qid),
+            cirq.CZ(q, qid),
+        )
+        new = adonis.route_circuit(circuit)
+
+        assert len(new.all_qubits()) == 2
+        assert new.all_qubits() <= set(adonis.qubits)

@@ -14,38 +14,42 @@
 
 """
 Demonstrates executing a quantum circuit on an IQM quantum computer.
+
+Set the IQM_SERVER_URL and IQM_SETTINGS_PATH environment variables before running this script.
+E.g. export IQM_SERVER_URL="https://example.com"; export IQM_SETTINGS_PATH="/path/to/file"
 """
 import os
 
 import cirq
 
 from cirq_iqm.adonis import Adonis
-from cirq_iqm.iqm_device import IQMQubit
 from cirq_iqm.iqm_remote import IQMSampler
 
 
 def demo_adonis_run():
     """
-    Run a circuit on an Adonis quantum computer.
+    Run a quantum circuit on an Adonis quantum computer.
     """
-    qubit = IQMQubit(1)
+    a = cirq.NamedQubit('Alice')
+    b = cirq.NamedQubit('Bob')
     circuit = cirq.Circuit(
-        cirq.X(qubit) ** 0.5,  # Square root of NOT.
-        cirq.measure(qubit, key='result')  # Measurement.
+        cirq.X(a) ** 0.5,
+        cirq.measure(a, b, key='result')
     )
 
-    device = Adonis()
-    circuit_adonis = device.map_circuit(circuit, map_qubits=False)
-    qubit_mapping = {qubit.name: 'qubit_1'}
+    # map the logical qubits used in the circuit to the device qubits
+    qubit_mapping = {a.name: 'QB1', b.name: 'QB2'}
 
-    # Set IQM_SERVER_URL environment variable with 'export IQM_SERVER_URL="https://example.com"'
-    # Set IQM_SETTINGS_PATH environment variable with 'export IQM_SETTINGS_PATH="/path/to/file"'
-    with open(os.environ['IQM_SETTINGS_PATH'], 'r') as f:
-        sampler = IQMSampler(os.environ['IQM_SERVER_URL'], f.read(), qubit_mapping)
+    device = Adonis()
+    circuit_decomposed = device.decompose_circuit(circuit)
+    print(circuit_decomposed)
+
+    with open(os.environ['IQM_SETTINGS_PATH'], 'r') as settings:
+        sampler = IQMSampler(os.environ['IQM_SERVER_URL'], settings.read(), device, qubit_mapping)
 
     # This will send the circuit to the server to be run, and return a cirq.study.Result
     # containing the measurement results.
-    results = sampler.run(circuit_adonis, repetitions=1000)
+    results = sampler.run(circuit_decomposed, repetitions=1000)
 
     # Sampler results can be accessed several ways
 

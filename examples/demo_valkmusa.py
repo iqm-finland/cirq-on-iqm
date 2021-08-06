@@ -49,7 +49,8 @@ def demo_valkmusa(do_measure=False, use_qsim=False):
     q1 = cirq.NamedQubit('q_1')
     circuit.insert(len(circuit) - 1, cirq.ISwapPowGate(exponent=0.4)(q0, q1))
 
-    demo(device, circuit, do_measure, use_qsim=use_qsim)
+    qubit_mapping = {'q_0': 'QB1', 'q_1': 'QB2'}
+    demo(device, circuit, do_measure, use_qsim=use_qsim, qubit_mapping=qubit_mapping)
 
 
 if __name__ == '__main__':
