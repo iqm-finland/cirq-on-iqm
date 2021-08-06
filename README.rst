@@ -28,7 +28,7 @@ Documentation
 Cirq on IQM documentation is available `here <https://iqm-finland.github.io/cirq-on-iqm/index.html>`_.
 
 Jump to our `User guide <https://iqm-finland.github.io/cirq-on-iqm/user_guide.html>`_
-guide for a quick introduction on how to install and use Cirq on IQM.
+for a quick introduction on how to install and use Cirq on IQM.
 
 See the `Jupyter Notebook <https://jupyter.org/>`_ with examples: ``examples/usage.ipynb``.
 
