@@ -37,23 +37,24 @@ IQM's quantum devices
 
 Cirq on IQM provides descriptions of IQM's quantum architectures by providing various subclasses of
 Cirq's :code:`cirq.devices.Device` class. As an example, let us import the class :code:`Adonis`,
-which describes IQM's five-qubit architecture and view the native gates and the qubit connectivity:
+which describes IQM's five-qubit architecture and view some of its properties contained in the class variables:
 
 .. code-block:: python
 
     from cirq_iqm import Adonis
 
+    print(Adonis.QUBIT_COUNT)
     print(Adonis.NATIVE_GATES)
     print(Adonis.CONNECTIVITY)
 
 
-Note that the qubits in the Adonis architecture are numbered from 1 to 5.
+Note that the qubits are indexed starting from 1.
 
 
-Constructing circuits with Cirq
--------------------------------
+Constructing circuits
+---------------------
 
-Construct a quantum circuit against the adonis architecture
+Construct a quantum circuit against the Adonis architecture
 
 .. code-block:: python
 
@@ -64,7 +65,20 @@ Construct a quantum circuit against the adonis architecture
     circuit = cirq.Circuit(device=adonis)
     circuit.append(cirq.X(qb_1))
     circuit.append(cirq.H(qb_2))
-    circuit.append(cirq.measurement(qb_1, qb_2, key='mk'))
+    circuit.append(cirq.measure(qb_1, qb_2, key='mk'))
+
+
+An arbitrary cirq circuit
+
+.. code-block:: python
+
+    import cirq
+
+    qb_1, qb_2 = cirq.NamedQubit('Alice'), cirq.NamedQuibt('Bob')
+    circuit = cirq.Circuit()
+    circuit.append(cirq.X(qb_1))
+    circuit.append(cirq.H(qb_2))
+    circuit.append(cirq.measure(qb_1, qb_2, key='mk'))
 
 
 Running on a real quantum computer
