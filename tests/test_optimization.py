@@ -21,8 +21,16 @@ from cirq import ops, optimizers
 import pytest
 
 from cirq_iqm.iqm_device import MergeOneParameterGroupGates
+from cirq_iqm.adonis import Adonis
 
-tol = 1e-10  # numerical tolerance
+
+TOLERANCE = 1e-10  # numerical tolerance
+
+
+@pytest.fixture(scope='module')
+def adonis():
+    """Adonis device fixture."""
+    return Adonis()
 
 
 class TestGateOptimization:
@@ -54,7 +62,7 @@ class TestGateOptimization:
             # the gates have been merged
             assert len(c) == 1
             expected = MergeOneParameterGroupGates._normalize_par(a + b)
-            assert c[0].operations[0].gate.exponent == pytest.approx(expected, abs=tol)
+            assert c[0].operations[0].gate.exponent == pytest.approx(expected, abs=TOLERANCE)
 
 
     @pytest.mark.parametrize('family, ex', [
@@ -94,3 +102,66 @@ class TestGateOptimization:
 
         # the ZPowGates have been commuted and canceled
         assert len(c) == 2
+
+
+class TestSimplifyCircuit:
+
+    @pytest.mark.xfail(strict=True, reason='ZZPowGate does not yet implement the _phase_by_ protocol in Cirq.')
+    def test_simplify_circuit_eject_z(self, adonis):
+
+        q0, q1 = adonis.qubits[:2]
+        c = cirq.Circuit()
+        c.append([
+            cirq.ZPowGate(exponent=0.55)(q0),
+            cirq.ZZPowGate(exponent=0.1)(q0, q1),
+            cirq.MeasurementGate(2)(q0, q1),
+        ])
+        new = adonis.simplify_circuit(c)
+
+        # TODO ZPowGate should have been ejected and dropped
+        assert len(new) == 2
+
+    def test_simplify_circuit_merge_one_parameter_gates(self, adonis):
+
+        q0, q1 = adonis.qubits[:2]
+        c = cirq.Circuit()
+        c.append([
+            cirq.ZZPowGate(exponent=0.3)(q0, q1),
+            cirq.ZZPowGate(exponent=0.1)(q0, q1),
+        ])
+        new = adonis.simplify_circuit(c)
+
+        # ZZPowGates have been merged
+        assert len(new) == 1
+
+    def test_simplify_circuit_drop_z_before_measurement(self, adonis):
+
+        q0, q1 = adonis.qubits[:2]
+        c = cirq.Circuit()
+        c.append([
+            cirq.ZPowGate(exponent=0.1)(q0),
+            cirq.ZPowGate(exponent=0.2)(q1),
+            cirq.MeasurementGate(1)(q0),
+        ])
+        new = adonis.simplify_circuit(c)
+
+        # the ZPowGate preceding the measurement has been dropped
+        assert len(new) == 2
+        assert isinstance(new[0].operations[0].gate, cirq.ZPowGate)
+        assert new[0].operations[0].qubits == (q1,)
+
+    def test_simplify_circuit_merge_one_qubit_gates(self, adonis):
+
+        q0 = adonis.qubits[0]
+        c = cirq.Circuit()
+        c.append([
+            cirq.XPowGate(exponent=0.1)(q0),
+            cirq.YPowGate(exponent=0.2)(q0),
+            cirq.ZPowGate(exponent=0.3)(q0),
+        ])
+        new = adonis.simplify_circuit(c)
+
+        # the one-qubit gates have been merged
+        assert len(new) == 2
+        assert isinstance(new[0].operations[0].gate, cirq.PhasedXPowGate)
+        assert isinstance(new[1].operations[0].gate, cirq.ZPowGate)

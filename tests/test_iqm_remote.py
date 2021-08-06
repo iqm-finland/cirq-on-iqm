@@ -58,9 +58,8 @@ def test_run_sweep_executes_circuit(mock_server, adonis_sampler, circuit):
     assert isinstance(results[0], cirq.Result)
 
 
-def test_circuit_with_incorrect_device(adonis_sampler, circuit):
-    valkmusa = Valkmusa()
-    circuit = valkmusa.map_circuit(circuit)
+def test_circuit_with_incorrect_device(adonis_sampler):
+    circuit = cirq.Circuit(device=Valkmusa())
     with pytest.raises(ValueError, match='devices .* not the same'):
         adonis_sampler.run(circuit)
 

@@ -12,7 +12,7 @@ Cirq on IQM
     :start-line: 9
     :end-before: Documentation
 
-Take a look at our :ref:`Getting started` guide for an introduction on how to install and use Cirq on IQM.
+Take a look at our :ref:`User guide` for an introduction on how to install and use Cirq on IQM.
 
 
 Contents
@@ -21,7 +21,7 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   getting_started
+   user_guide
    API
    license
    authors

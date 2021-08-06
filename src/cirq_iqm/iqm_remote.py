@@ -37,11 +37,7 @@ def serialize_circuit(circuit: cirq.Circuit) -> CircuitDTO:
     Returns:
         data transfer object representing the circuit
     """
-    instructions = []
-    for moment in circuit.moments:
-        for operation in moment.operations:
-            instructions.append(map_operation(operation))
-
+    instructions = list(map(map_operation, circuit.all_operations()))
     return CircuitDTO(
         name='Serialized from Cirq',
         instructions=instructions,
@@ -121,6 +117,13 @@ class IQMSampler(cirq.work.Sampler):
                 raise ValueError(f'The qubits {diff} are not found in the provided qubit mapping.')
         elif program.device != self._device:
             raise ValueError('The devices of the given circuit and of the sampler are not the same.')
+
+        # check that the circuit connectivity fits in the device connectivity
+        # apply qubit_mapping
+        qubit_map = {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in self._qubit_mapping.items()}
+        mapped = program.transform_qubits(qubit_map)
+        for op in mapped.all_operations():
+            self._device.check_qubit_connectivity(op)
 
         results = [self._send_circuit(program, repetitions=repetitions)]
         return results

@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """
 Demonstrates importing a quantum circuit from an OpenQASM 2.0 file, transforming it into
 the Adonis native gateset and connectivity, and then executing it on a simulator.
@@ -50,7 +49,8 @@ def demo_adonis(do_measure=False, use_qsim=False):
     q2 = cirq.NamedQubit('q_2')
     circuit.insert(len(circuit) - 1, cirq.CXPowGate(exponent=0.723)(q2, q0))
 
-    demo(device, circuit, do_measure, use_qsim=use_qsim)
+    qubit_mapping = {'q_0': 'QB1', 'q_1': 'QB2', 'q_2': 'QB3'}
+    demo(device, circuit, do_measure, use_qsim=use_qsim, qubit_mapping=qubit_mapping)
 
 
 if __name__ == '__main__':
