@@ -23,7 +23,7 @@ from __future__ import annotations
 import abc
 import collections.abc as ca
 import operator
-from typing import Optional
+from typing import Optional, Union
 
 import cirq
 from cirq import circuits, devices, ops, optimizers, protocols
@@ -183,7 +183,12 @@ class IQMDevice(devices.Device):
             on_stuck_raise=None
         )
 
-    def route_circuit(self, circuit: cirq.Circuit) -> cirq.Circuit:
+    def route_circuit(
+            self,
+            circuit: cirq.Circuit,
+            *,
+            return_swap_network: bool = False
+    ) -> Union[cirq.Circuit, cirq.contrib.routing.SwapNetwork]:
         """Routes the given circuit to the device connectivity.
 
         The routed circuit uses the device qubits, and may have additional SWAP gates inserted
@@ -191,15 +196,18 @@ class IQMDevice(devices.Device):
 
         Args:
             circuit: circuit to route
+            return_swap_network: iff True, return the full swap network instead of the routed circuit
 
         Returns:
-            routed circuit
+            routed circuit, or the swap network if requested
 
         Raises:
             ValueError: routing is impossible
         """
         device_graph = nx.Graph(tuple(map(self.get_qubit, edge)) for edge in self.CONNECTIVITY)
         swap_network = route_circuit(circuit, device_graph, algo_name='greedy')
+        if return_swap_network:
+            return swap_network
         return swap_network.circuit
 
     def decompose_circuit(self, circuit: cirq.Circuit) -> cirq.Circuit:
