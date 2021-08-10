@@ -3,7 +3,7 @@ Changelog
 =========
 
 
-Version 1.0 (in progress)
+Version 1.0 (2021-08-11)
 =========================
 
 Features
@@ -20,6 +20,11 @@ Features
 
   * ``IQMSampler`` can generate a trivial qubit mapping automatically.
   * The class ``IQMQubit`` was removed.
+
+* Documentation updated. `#36 <https://github.com/iqm-finland/cirq-on-iqm/pull/36>`_
+
+  * The documentation now contains a concise user guide.
+  * Documentation published online.
 
 Bugfixes
 --------
