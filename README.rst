@@ -22,15 +22,27 @@ Currently Cirq on IQM can
 * run the circuit on an IQM quantum computer
 
 
+Installation
+============
+
+The recommended way is to install the distribution package ``cirq-iqm`` directly from the
+Python Package Index (PyPI):
+
+.. code-block:: bash
+
+   $ pip install cirq-iqm
+
+
 Documentation
 =============
 
-Cirq on IQM documentation is available `here <https://iqm-finland.github.io/cirq-on-iqm/index.html>`_.
+The documentation of the latest Cirq on IQM release is available
+`here <https://iqm-finland.github.io/cirq-on-iqm/index.html>`_.
 
 Jump to our `User guide <https://iqm-finland.github.io/cirq-on-iqm/user_guide.html>`_
-for a quick introduction on how to install and use Cirq on IQM.
+for a quick introduction on how to use Cirq on IQM.
 
-See the `Jupyter Notebook <https://jupyter.org/>`_ with examples: ``examples/usage.ipynb``.
+Take a look at the `Jupyter Notebook <https://jupyter.org/>`_ with examples: ``examples/usage.ipynb``.
 
 
 Copyright

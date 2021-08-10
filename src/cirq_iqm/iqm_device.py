@@ -318,8 +318,16 @@ class MergeOneParameterGroupGates(circuits.PointOptimizer):
             index: int,
             op: cirq.Operation,
     ) -> Optional[cirq.PointOptimizationSummary]:
-        """TODO the parent class at Cirq has a broken docstring here, which we have to override.
-        https://github.com/quantumlib/Cirq/issues/4276
+        """Describes how to change operations near the given location.
+
+        Args:
+            circuit: The circuit to improve.
+            index: The index of the moment with the operation to focus on.
+            op: The operation to focus improvements upon.
+
+        Returns:
+            A description of the optimization to perform, or else None if no
+            change should be made.
         """
         if not isinstance(op.gate, self.ONE_PARAMETER_FAMILIES):
             return None
@@ -375,8 +383,16 @@ class DropRZBeforeMeasurement(circuits.PointOptimizer):
             index: int,
             op: cirq.Operation,
     ) -> Optional[cirq.PointOptimizationSummary]:
-        """TODO the parent class at Cirq has a broken docstring here, which we have to override.
-        https://github.com/quantumlib/Cirq/issues/4276
+        """Describes how to change operations near the given location.
+
+        Args:
+            circuit: The circuit to improve.
+            index: The index of the moment with the operation to focus on.
+            op: The operation to focus improvements upon.
+
+        Returns:
+            A description of the optimization to perform, or else None if no
+            change should be made.
         """
 
         def find_removable_rz() -> list[int]:
@@ -429,8 +445,16 @@ class DecomposeGatesFinal(circuits.PointOptimizer):
             index: int,
             op: cirq.Operation,
     ) -> Optional[cirq.PointOptimizationSummary]:
-        """TODO the parent class at Cirq has a broken docstring here, which we have to override.
-        https://github.com/quantumlib/Cirq/issues/4276
+        """Describes how to change operations near the given location.
+
+        Args:
+            circuit: The circuit to improve.
+            index: The index of the moment with the operation to focus on.
+            op: The operation to focus improvements upon.
+
+        Returns:
+            A description of the optimization to perform, or else None if no
+            change should be made.
         """
         if not isinstance(op.gate, self.device.DECOMPOSE_FINALLY):
             return None  # no changes

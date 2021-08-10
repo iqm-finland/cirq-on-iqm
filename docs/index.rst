@@ -10,7 +10,7 @@ Cirq on IQM
 
 .. include:: ../README.rst
     :start-line: 9
-    :end-before: Documentation
+    :end-before: Installation
 
 Take a look at our :ref:`User guide` for an introduction on how to install and use Cirq on IQM.
 
