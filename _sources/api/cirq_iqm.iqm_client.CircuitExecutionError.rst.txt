@@ -1,0 +1,6 @@
+cirq\_iqm.iqm\_client.CircuitExecutionError
+===========================================
+
+.. currentmodule:: cirq_iqm.iqm_client
+
+.. autoexception:: CircuitExecutionError

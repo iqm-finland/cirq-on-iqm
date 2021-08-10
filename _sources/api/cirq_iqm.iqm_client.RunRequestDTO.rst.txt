@@ -1,0 +1,23 @@
+cirq\_iqm.iqm\_client.RunRequestDTO
+===================================
+
+.. currentmodule:: cirq_iqm.iqm_client
+
+.. autoclass:: RunRequestDTO
+   :members:
+   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RunRequestDTO.__json_encoder__
+   
+   

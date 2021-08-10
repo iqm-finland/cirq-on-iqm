@@ -1,0 +1,6 @@
+cirq\_iqm.iqm\_gates.IsingGate
+==============================
+
+.. currentmodule:: cirq_iqm.iqm_gates
+
+.. autofunction:: IsingGate

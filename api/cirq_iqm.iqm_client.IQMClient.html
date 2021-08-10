@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>cirq_iqm.iqm_client.IQMClient &#8212; Cirq on IQM 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cirq_iqm.iqm_client.InstructionDTO" href="cirq_iqm.iqm_client.InstructionDTO.html" />
+    <link rel="prev" title="cirq_iqm.iqm_client.CircuitDTO" href="cirq_iqm.iqm_client.CircuitDTO.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cirq_iqm.iqm_client.InstructionDTO.html" title="cirq_iqm.iqm_client.InstructionDTO"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cirq_iqm.iqm_client.CircuitDTO.html" title="cirq_iqm.iqm_client.CircuitDTO"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../API.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="cirq_iqm.html" >cirq_iqm</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="cirq_iqm.iqm_client.html" accesskey="U">cirq_iqm.iqm_client</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cirq_iqm.iqm_client.IQMClient</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="cirq-iqm-iqm-client-iqmclient">
+<h1>cirq_iqm.iqm_client.IQMClient<a class="headerlink" href="#cirq-iqm-iqm-client-iqmclient" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="cirq_iqm.iqm_client.IQMClient">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cirq_iqm.iqm_client.</span></span><span class="sig-name descname"><span class="pre">IQMClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_client.IQMClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.9/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Provides access to IQM quantum computers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Endpoint for accessing the server. Has to start with http or https.</p></li>
+<li><p><strong>settings</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.iqm_client.IQMClient.get_run" title="cirq_iqm.iqm_client.IQMClient.get_run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_run</span></code></a>(run_id)</p></td>
+<td><p>Query the status of the running task.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cirq_iqm.iqm_client.IQMClient.submit_circuit" title="cirq_iqm.iqm_client.IQMClient.submit_circuit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_circuit</span></code></a>(circuit, qubit_mapping[, shots])</p></td>
+<td><p>Submits a quantum circuit to be executed on a quantum computer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.iqm_client.IQMClient.wait_for_results" title="cirq_iqm.iqm_client.IQMClient.wait_for_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wait_for_results</span></code></a>(run_id[, timeout_secs])</p></td>
+<td><p>Poll results until run is ready, failed, or timed out.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="cirq_iqm.iqm_client.IQMClient.submit_circuit">
+<span class="sig-name descname"><span class="pre">submit_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qubit_mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_client.IQMClient.submit_circuit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submits a quantum circuit to be executed on a quantum computer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>circuit</strong> (<a class="reference internal" href="cirq_iqm.iqm_client.CircuitDTO.html#cirq_iqm.iqm_client.CircuitDTO" title="cirq_iqm.iqm_client.CircuitDTO"><em>cirq_iqm.iqm_client.CircuitDTO</em></a>) – circuit to be executed</p></li>
+<li><p><strong>qubit_mapping</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a>) – mapping of human-readable qubit names to physical qubit names</p></li>
+<li><p><strong>shots</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – number of times the circuit is sampled</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ID for the created task. This ID is needed to query the status and the execution results.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.9/library/uuid.html#uuid.UUID" title="(in Python v3.9)">uuid.UUID</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cirq_iqm.iqm_client.IQMClient.get_run">
+<span class="sig-name descname"><span class="pre">get_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_client.IQMClient.get_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query the status of the running task.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>run_id</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/uuid.html#uuid.UUID" title="(in Python v3.9)"><em>uuid.UUID</em></a>) – id of the taks</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result of the run (can be pending)</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>HTTPException</strong> – http exceptions</p></li>
+<li><p><a class="reference internal" href="cirq_iqm.iqm_client.CircuitExecutionError.html#cirq_iqm.iqm_client.CircuitExecutionError" title="cirq_iqm.iqm_client.CircuitExecutionError"><strong>CircuitExecutionError</strong></a> – IQM server specific exceptions</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="cirq_iqm.iqm_client.RunResult.html#cirq_iqm.iqm_client.RunResult" title="cirq_iqm.iqm_client.RunResult">cirq_iqm.iqm_client.RunResult</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cirq_iqm.iqm_client.IQMClient.wait_for_results">
+<span class="sig-name descname"><span class="pre">wait_for_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout_secs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">120</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_client.IQMClient.wait_for_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Poll results until run is ready, failed, or timed out.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>run_id</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/uuid.html#uuid.UUID" title="(in Python v3.9)"><em>uuid.UUID</em></a>) – id of the task to wait</p></li>
+<li><p><strong>timeout_secs</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – how long to wait for a response before raising an APITimeoutError</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>run result</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="cirq_iqm.iqm_client.APITimeoutError.html#cirq_iqm.iqm_client.APITimeoutError" title="cirq_iqm.iqm_client.APITimeoutError"><strong>APITimeoutError</strong></a> – time exceeded the set timeout</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="cirq_iqm.iqm_client.RunResult.html#cirq_iqm.iqm_client.RunResult" title="cirq_iqm.iqm_client.RunResult">cirq_iqm.iqm_client.RunResult</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cirq_iqm.iqm_client.CircuitDTO.html"
+                        title="previous chapter">cirq_iqm.iqm_client.CircuitDTO</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="cirq_iqm.iqm_client.InstructionDTO.html"
+                        title="next chapter">cirq_iqm.iqm_client.InstructionDTO</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/cirq_iqm.iqm_client.IQMClient.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cirq_iqm.iqm_client.InstructionDTO.html" title="cirq_iqm.iqm_client.InstructionDTO"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cirq_iqm.iqm_client.CircuitDTO.html" title="cirq_iqm.iqm_client.CircuitDTO"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../API.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="cirq_iqm.html" >cirq_iqm</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="cirq_iqm.iqm_client.html" >cirq_iqm.iqm_client</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cirq_iqm.iqm_client.IQMClient</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020–2021, Cirq on IQM developers.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.2.
+    </div>
+  </body>
+</html>

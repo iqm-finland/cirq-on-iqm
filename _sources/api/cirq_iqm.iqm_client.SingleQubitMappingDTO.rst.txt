@@ -1,0 +1,23 @@
+cirq\_iqm.iqm\_client.SingleQubitMappingDTO
+===========================================
+
+.. currentmodule:: cirq_iqm.iqm_client
+
+.. autoclass:: SingleQubitMappingDTO
+   :members:
+   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SingleQubitMappingDTO.__json_encoder__
+   
+   

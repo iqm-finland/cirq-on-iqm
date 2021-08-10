@@ -1,0 +1,6 @@
+cirq\_iqm.iqm\_remote.serialize\_qubit\_mapping
+===============================================
+
+.. currentmodule:: cirq_iqm.iqm_remote
+
+.. autofunction:: serialize_qubit_mapping

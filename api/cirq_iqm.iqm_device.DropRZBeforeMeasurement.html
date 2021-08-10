@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>cirq_iqm.iqm_device.DropRZBeforeMeasurement &#8212; Cirq on IQM 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cirq_iqm.iqm_device.IQMDevice" href="cirq_iqm.iqm_device.IQMDevice.html" />
+    <link rel="prev" title="cirq_iqm.iqm_device.DecomposeGatesFinal" href="cirq_iqm.iqm_device.DecomposeGatesFinal.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cirq_iqm.iqm_device.IQMDevice.html" title="cirq_iqm.iqm_device.IQMDevice"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cirq_iqm.iqm_device.DecomposeGatesFinal.html" title="cirq_iqm.iqm_device.DecomposeGatesFinal"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../API.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="cirq_iqm.html" >cirq_iqm</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="cirq_iqm.iqm_device.html" accesskey="U">cirq_iqm.iqm_device</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cirq_iqm.iqm_device.DropRZBeforeMeasurement</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="cirq-iqm-iqm-device-droprzbeforemeasurement">
+<h1>cirq_iqm.iqm_device.DropRZBeforeMeasurement<a class="headerlink" href="#cirq-iqm-iqm-device-droprzbeforemeasurement" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="cirq_iqm.iqm_device.DropRZBeforeMeasurement">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cirq_iqm.iqm_device.</span></span><span class="sig-name descname"><span class="pre">DropRZBeforeMeasurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">post_clean_up=&lt;function</span> <span class="pre">PointOptimizer.&lt;lambda&gt;&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_device.DropRZBeforeMeasurement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.circuits.optimization_pass.PointOptimizer</span></code></p>
+<p>Drops z rotations that happen right before a z-basis measurement.</p>
+<p>These z rotations do not affect the result of the measurement, so we may ignore them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>post_clean_up</strong> (<em>Callable</em><em>[</em><em>[</em><em>Sequence</em><em>[</em><em>cirq.Operation</em><em>]</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>cirq.ops.raw_types.Operation</em><em>, </em><em>cirq.ops.op_tree.OpTree</em><em>]</em><em>]</em>) – This function is called on each set of optimized
+operations before they are put into the circuit to replace the
+old operations.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.iqm_device.DropRZBeforeMeasurement.optimization_at" title="cirq_iqm.iqm_device.DropRZBeforeMeasurement.optimization_at"><code class="xref py py-obj docutils literal notranslate"><span class="pre">optimization_at</span></code></a>(circuit, index, op)</p></td>
+<td><p>Describes how to change operations near the given location.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="cirq_iqm.iqm_device.DropRZBeforeMeasurement.optimization_at">
+<span class="sig-name descname"><span class="pre">optimization_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_device.DropRZBeforeMeasurement.optimization_at" title="Permalink to this definition">¶</a></dt>
+<dd><p>Describes how to change operations near the given location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>circuit</strong> (<em>cirq.circuits.circuit.Circuit</em>) – The circuit to improve.</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The index of the moment with the operation to focus on.</p></li>
+<li><p><strong>op</strong> (<em>cirq.ops.raw_types.Operation</em>) – The operation to focus improvements upon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A description of the optimization to perform, or else None if no
+change should be made.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Optional[cirq.circuits.optimization_pass.PointOptimizationSummary]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cirq_iqm.iqm_device.DecomposeGatesFinal.html"
+                        title="previous chapter">cirq_iqm.iqm_device.DecomposeGatesFinal</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="cirq_iqm.iqm_device.IQMDevice.html"
+                        title="next chapter">cirq_iqm.iqm_device.IQMDevice</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/cirq_iqm.iqm_device.DropRZBeforeMeasurement.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cirq_iqm.iqm_device.IQMDevice.html" title="cirq_iqm.iqm_device.IQMDevice"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cirq_iqm.iqm_device.DecomposeGatesFinal.html" title="cirq_iqm.iqm_device.DecomposeGatesFinal"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../API.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="cirq_iqm.html" >cirq_iqm</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="cirq_iqm.iqm_device.html" >cirq_iqm.iqm_device</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cirq_iqm.iqm_device.DropRZBeforeMeasurement</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020–2021, Cirq on IQM developers.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.2.
+    </div>
+  </body>
+</html>

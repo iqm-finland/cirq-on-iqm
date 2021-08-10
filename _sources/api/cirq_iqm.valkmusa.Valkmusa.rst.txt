@@ -1,0 +1,33 @@
+cirq\_iqm.valkmusa.Valkmusa
+===========================
+
+.. currentmodule:: cirq_iqm.valkmusa
+
+.. autoclass:: Valkmusa
+   :members:
+   :show-inheritance:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Valkmusa.CONNECTIVITY
+      ~Valkmusa.DECOMPOSE_FINALLY
+      ~Valkmusa.NATIVE_GATES
+      ~Valkmusa.QUBIT_COUNT
+   
+   
+
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Valkmusa.operation_decomposer
+      ~Valkmusa.operation_final_decomposer
+   
+   

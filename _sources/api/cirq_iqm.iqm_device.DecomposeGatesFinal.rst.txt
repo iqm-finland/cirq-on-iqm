@@ -1,0 +1,23 @@
+cirq\_iqm.iqm\_device.DecomposeGatesFinal
+=========================================
+
+.. currentmodule:: cirq_iqm.iqm_device
+
+.. autoclass:: DecomposeGatesFinal
+   :members:
+   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DecomposeGatesFinal.optimization_at
+   
+   

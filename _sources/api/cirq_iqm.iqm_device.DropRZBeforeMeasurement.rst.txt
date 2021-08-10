@@ -1,0 +1,23 @@
+cirq\_iqm.iqm\_device.DropRZBeforeMeasurement
+=============================================
+
+.. currentmodule:: cirq_iqm.iqm_device
+
+.. autoclass:: DropRZBeforeMeasurement
+   :members:
+   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DropRZBeforeMeasurement.optimization_at
+   
+   

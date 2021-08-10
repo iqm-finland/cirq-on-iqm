@@ -1,0 +1,47 @@
+cirq\_iqm.iqm\_device.IQMDevice
+===============================
+
+.. currentmodule:: cirq_iqm.iqm_device
+
+.. autoclass:: IQMDevice
+   :members:
+   :show-inheritance:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~IQMDevice.CONNECTIVITY
+      ~IQMDevice.DECOMPOSE_FINALLY
+      ~IQMDevice.NATIVE_GATES
+      ~IQMDevice.NATIVE_GATE_INSTANCES
+      ~IQMDevice.QUBIT_COUNT
+      ~IQMDevice.QUBIT_NAME_PREFIX
+   
+   
+
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~IQMDevice.check_qubit_connectivity
+      ~IQMDevice.decompose_circuit
+      ~IQMDevice.decompose_operation
+      ~IQMDevice.decompose_operation_full
+      ~IQMDevice.get_qubit
+      ~IQMDevice.get_qubit_index
+      ~IQMDevice.is_native_operation
+      ~IQMDevice.is_native_or_final
+      ~IQMDevice.operation_decomposer
+      ~IQMDevice.operation_final_decomposer
+      ~IQMDevice.route_circuit
+      ~IQMDevice.simplify_circuit
+      ~IQMDevice.validate_circuit
+      ~IQMDevice.validate_operation
+   
+   
