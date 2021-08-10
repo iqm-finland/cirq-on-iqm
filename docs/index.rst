@@ -2,7 +2,7 @@
     :width: 700
 
 Cirq on IQM
-===========
+###########
 
 :Release: |release|
 :Date: |today|

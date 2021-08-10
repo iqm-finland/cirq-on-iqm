@@ -153,7 +153,7 @@ Running on a real quantum computer
 ----------------------------------
 
 At this stage you can use your favorite Cirq simulator to simulate the circuits constructed above.
-In this subsection we demonstrate how to run them against a real IQM quantum chip.
+In this subsection we demonstrate how to run them against a real IQM quantum computer.
 
 Cirq on IQM implements :class:`.iqm_remote.IQMSampler` as a subclass of :code:`cirq.work.Sampler` which should be used
 for this purpose. You need to have access to an IQM server and obtain a settings file for the quantum hardware of
@@ -201,7 +201,7 @@ More examples
 
 More examples are available in the
 `examples directory <https://github.com/iqm-finland/cirq-on-iqm/tree/main/examples>`_
-of the Cirq on IQM github repository.
+of the Cirq on IQM repository.
 
 
 .. include:: ../DEVELOPMENT.rst

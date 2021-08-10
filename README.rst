@@ -5,7 +5,7 @@
 
 
 Cirq on IQM
-===========
+###########
 
 `Google Cirq <https://quantumai.google/cirq>`_ adapter for `IQM's <https://www.meetiqm.com>`_ quantum architectures.
 
@@ -42,7 +42,7 @@ The documentation of the latest Cirq on IQM release is available
 Jump to our `User guide <https://iqm-finland.github.io/cirq-on-iqm/user_guide.html>`_
 for a quick introduction on how to use Cirq on IQM.
 
-Take a look at the `Jupyter Notebook <https://jupyter.org/>`_ with examples: ``examples/usage.ipynb``.
+Take a look at the `Jupyter notebook <https://jupyter.org/>`_ with examples: ``examples/usage.ipynb``.
 
 
 Copyright
