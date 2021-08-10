@@ -7,7 +7,7 @@
 Cirq on IQM
 ===========
 
-`Google Cirq <https://github.com/quantumlib/Cirq>`_ adapter for IQM's quantum architectures.
+`Google Cirq <https://quantumai.google/cirq>`_ adapter for `IQM's <https://www.meetiqm.com>`_ quantum architectures.
 
 
 What is it good for?
