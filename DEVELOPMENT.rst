@@ -2,7 +2,7 @@ How to develop and contribute
 -----------------------------
 
 Cirq on IQM is an open source Python project.
-You can contribute by opening a GitHub issue to report bugs or request new features,
+You can contribute by creating GitHub issues to report bugs or request new features,
 or by opening a pull request to submit your own improvements to the codebase.
 
 To start developing the project, clone the

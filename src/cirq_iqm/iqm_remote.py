@@ -62,8 +62,9 @@ class IQMSampler(cirq.work.Sampler):
 
     Args:
         url: Endpoint for accessing the server interface. Has to start with http or https.
-        settings: Settings for the quantum computer.
-        qubit_mapping: Dict that maps logical qubit names to physical qubit names. Must be injective.
+        settings: settings for the quantum computer
+        device: quantum architecture to execute the circuit on
+        qubit_mapping: injective dict that maps logical qubit names to physical qubit names
     """
     def __init__(self, url: str, settings: str, device: IQMDevice, qubit_mapping: dict[str, str] = None):
         settings_json = json.loads(settings)
