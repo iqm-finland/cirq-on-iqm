@@ -1,8 +1,13 @@
 How to develop and contribute
 -----------------------------
 
-Cirq on IQM is an open source python project. To develop, clone the
-`GitHub repository <https://github.com/iqm-finland/cirq-on-iqm>`_ and install it in editable mode with all the extras:
+Cirq on IQM is an open source Python project.
+You can contribute by opening a GitHub issue to report bugs or request new features,
+or by opening a pull request to submit your own improvements to the codebase.
+
+To start developing the project, clone the
+`GitHub repository <https://github.com/iqm-finland/cirq-on-iqm>`_
+and install it in editable mode with all the extras:
 
 .. code-block:: bash
 
@@ -24,6 +29,3 @@ Run the tests:
 .. code-block:: bash
 
    $ tox
-
-
-Submit a GitHub issue or a pull request.
