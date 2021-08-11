@@ -61,8 +61,8 @@ code snippets and check the output yourself.</p>
 </section>
 <section id="iqm-s-quantum-devices">
 <h2>IQM’s quantum devices<a class="headerlink" href="#iqm-s-quantum-devices" title="Permalink to this headline">¶</a></h2>
-<p>Cirq on IQM provides descriptions of IQM’s quantum architectures by providing various subclasses of <a class="reference internal" href="api/cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice" title="cirq_iqm.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a>.
-The abstract class <a class="reference internal" href="api/cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice" title="cirq_iqm.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a> itself is a direct subclass of <code class="code docutils literal notranslate"><span class="pre">cirq.devices.Device</span></code> and implements general
+<p>Cirq on IQM provides descriptions of IQM’s quantum architectures as subclasses of <a class="reference internal" href="api/cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice" title="cirq_iqm.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a>.
+The abstract class <a class="reference internal" href="api/cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice" title="cirq_iqm.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a> itself is a subclass of <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.devices.Device</span></code> and implements general
 functionality relevant to all IQM devices. Each device subclass describes the native gates and the connectivity of a particular architecture
 and the relevant functionality. As an example, let us import the class <a class="reference internal" href="api/cirq_iqm.adonis.Adonis.html#cirq_iqm.adonis.Adonis" title="cirq_iqm.adonis.Adonis"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adonis</span></code></a>, which describes IQM’s
 five-qubit architecture and view some of its properties contained in the class variables:</p>
@@ -73,10 +73,10 @@ five-qubit architecture and view some of its properties contained in the class v
 <span class="nb">print</span><span class="p">(</span><span class="n">Adonis</span><span class="o">.</span><span class="n">CONNECTIVITY</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>IQM devices use <code class="code docutils literal notranslate"><span class="pre">cirq.NamedQubits</span></code> to represent their qubits. The names of the qubits consist of a prefix
-followed by a numeric index, so we have qubit names like <code class="code docutils literal notranslate"><span class="pre">QB1</span></code>, <code class="code docutils literal notranslate"><span class="pre">QB2</span></code>, etc. Note that we use 1-based
+<p>IQM devices use <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.NamedQubit</span></code> to represent their qubits. The names of the qubits consist of a prefix
+followed by a numeric index, so we have qubit names like <code class="docutils literal notranslate"><span class="pre">QB1</span></code>, <code class="docutils literal notranslate"><span class="pre">QB2</span></code>, etc. Note that we use 1-based
 indexing. The qubit connectivity information is stored using the qubit indices only. You can get the list of the qubits
-in a particular device by accessing the <code class="code docutils literal notranslate"><span class="pre">qubits</span></code> attribute of a corresponding <code class="code docutils literal notranslate"><span class="pre">IQMDevice</span></code> instance:</p>
+in a particular device by accessing the <code class="docutils literal notranslate"><span class="pre">qubits</span></code> attribute of a corresponding <a class="reference internal" href="api/cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice" title="cirq_iqm.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a> instance:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">adonis</span> <span class="o">=</span> <span class="n">Adonis</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">adonis</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span>
 </pre></div>
@@ -84,17 +84,17 @@ in a particular device by accessing the <code class="code docutils literal notra
 </section>
 <section id="constructing-circuits">
 <h2>Constructing circuits<a class="headerlink" href="#constructing-circuits" title="Permalink to this headline">¶</a></h2>
-<p>There are three main ways (workflows) of using <code class="code docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> with IQM devices</p>
+<p>There are three main workflows of using <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> instances with IQM devices:</p>
 <ol class="arabic simple">
-<li><p>Create a Circuit instance associated with an IQMDevice, and use only the device qubits.
-Each <code class="code docutils literal notranslate"><span class="pre">cirq.Operation</span></code> is validated (i.e. checked that qubits are on the device, and properly connected) and
-decomposed as soon as it is appended to the circuit.</p></li>
-<li><p>Create a Circuit instance with no associated device. Use arbitrary qubit names. There is no
-validation of the ops when appended. At any point the user can apply <a class="reference internal" href="api/cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice.decompose_circuit" title="cirq_iqm.iqm_device.IQMDevice.decompose_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.decompose_circuit()</span></code></a>
-to decompose the Circuit contents into the native set of the device, or <a class="reference internal" href="api/cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.iqm_device.IQMDevice.route_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.route_circuit()</span></code></a>
-to route the circuit to the device connectivity.</p></li>
-<li><p>Create a Circuit from an OpenQASM 2.0 program, qubits will have names like <code class="docutils literal notranslate"><span class="pre">q_0</span></code> with zero-based
-indexing. Proceed as in workflow 2.</p></li>
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">Circuit</span></code> instance associated with an <code class="docutils literal notranslate"><span class="pre">IQMDevice</span></code>, and use only the device qubits.
+Each <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.Operation</span></code> is validated (i.e. checked that qubits are on the device, and properly connected) and
+decomposed into native operations as soon as it is appended to the circuit.</p></li>
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">Circuit</span></code> instance with no associated device, use arbitrary qubit names and types. There is no
+validation of the operations when appended. At any point the user can apply <a class="reference internal" href="api/cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice.decompose_circuit" title="cirq_iqm.iqm_device.IQMDevice.decompose_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.decompose_circuit()</span></code></a>
+to decompose the circuit contents into the native operation set of the device, or <a class="reference internal" href="api/cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.iqm_device.IQMDevice.route_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.route_circuit()</span></code></a>
+to route the circuit to the device connectivity and device qubits.</p></li>
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">Circuit</span></code> from an OpenQASM 2.0 program. The qubit names are determined by the OpenQASM <code class="docutils literal notranslate"><span class="pre">qreg</span></code> names,
+appended with zero-based indices. Proceed as in workflow 2.</p></li>
 </ol>
 <p>Below we demonstrate examples of creating circuits in each of the three workflows.</p>
 <section id="workflow-1">
@@ -102,110 +102,161 @@ indexing. Proceed as in workflow 2.</p></li>
 <p>Construct a circuit associated with the Adonis architecture. You have to use the qubits of the corresponding
 device and respect the connectivity of the device when appending gates to the circuit.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cirq</span>
+<span class="kn">from</span> <span class="nn">cirq_iqm</span> <span class="kn">import</span> <span class="n">Adonis</span>
 
 <span class="n">adonis</span> <span class="o">=</span> <span class="n">Adonis</span><span class="p">()</span>
-<span class="n">qb_1</span><span class="p">,</span> <span class="n">qb_2</span> <span class="o">=</span> <span class="n">adonis</span><span class="o">.</span><span class="n">qubits</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">q1</span><span class="p">,</span> <span class="n">q2</span><span class="p">,</span> <span class="n">q3</span> <span class="o">=</span> <span class="n">adonis</span><span class="o">.</span><span class="n">qubits</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
 <span class="n">circuit_1</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">adonis</span><span class="p">)</span>
-<span class="n">circuit_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="n">qb_1</span><span class="p">))</span>
-<span class="n">circuit_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">H</span><span class="p">(</span><span class="n">qb_2</span><span class="p">))</span>
-<span class="n">circuit_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">qb_1</span><span class="p">,</span> <span class="n">qb_2</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;mk&#39;</span><span class="p">))</span>
+<span class="n">circuit_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="n">q1</span><span class="p">))</span>
+<span class="n">circuit_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">H</span><span class="p">(</span><span class="n">q3</span><span class="p">))</span>
+<span class="n">circuit_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">CNOT</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span> <span class="n">q3</span><span class="p">))</span>
+<span class="n">circuit_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span> <span class="n">q3</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">circuit_1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If you draw the circuit at this point, you will see that instead of the gates we have appended in the code it
-contains their decompositions in terms of the native gate set of the Adonis device. This is because in this way of creating a circuit the gates are decomposed right away
-when they are appended to the cirucit.</p>
+<p>If you print the circuit at this point, you will see that instead of the gates we have appended, it
+contains their decompositions in terms of the native gate set of the <code class="docutils literal notranslate"><span class="pre">Adonis</span></code> device.
+This is because in this way of creating a circuit the gates are decomposed right away
+when they are appended to the circuit:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QB1: ───X────────────────────@───────────M(&#39;m&#39;)───
+                             │           │
+QB3: ───Y^0.5───X───Y^-0.5───@───Y^0.5───M────────
+</pre></div>
+</div>
 </section>
 <section id="workflow-2">
-<h3>Workflow 2<a class="headerlink" href="#workflow-2" title="Permalink to this headline">¶</a></h3>
-<p>Construct a circuit with no associated device and use arbitrary qubit names:</p>
+<span id="id2"></span><h3>Workflow 2<a class="headerlink" href="#workflow-2" title="Permalink to this headline">¶</a></h3>
+<p>Construct a circuit with no associated device and use arbitrary qubits:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cirq</span>
+<span class="kn">from</span> <span class="nn">cirq_iqm</span> <span class="kn">import</span> <span class="n">Adonis</span>
 
-<span class="n">qb_1</span><span class="p">,</span> <span class="n">qb_2</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">NamedQubit</span><span class="p">(</span><span class="s1">&#39;Alice&#39;</span><span class="p">),</span> <span class="n">cirq</span><span class="o">.</span><span class="n">NamedQubit</span><span class="p">(</span><span class="s1">&#39;Bob&#39;</span><span class="p">)</span>
+<span class="n">q1</span><span class="p">,</span> <span class="n">q2</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">NamedQubit</span><span class="p">(</span><span class="s1">&#39;Alice&#39;</span><span class="p">),</span> <span class="n">cirq</span><span class="o">.</span><span class="n">NamedQubit</span><span class="p">(</span><span class="s1">&#39;Bob&#39;</span><span class="p">)</span>
 <span class="n">circuit_2</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">()</span>
-<span class="n">circuit_2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="n">qb_1</span><span class="p">))</span>
-<span class="n">circuit_2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">H</span><span class="p">(</span><span class="n">qb_2</span><span class="p">))</span>
-<span class="n">circuit_2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">qb_1</span><span class="p">,</span> <span class="n">qb_2</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;mk&#39;</span><span class="p">))</span>
+<span class="n">circuit_2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="n">q1</span><span class="p">))</span>
+<span class="n">circuit_2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">H</span><span class="p">(</span><span class="n">q2</span><span class="p">))</span>
+<span class="n">circuit_2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">CNOT</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span> <span class="n">q2</span><span class="p">))</span>
+<span class="n">circuit_2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span> <span class="n">q2</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">circuit_2</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>After the circuit has been constructed, it can be decomposed and routed against a particular IQM device.
-The method <a class="reference internal" href="api/cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice.decompose_circuit" title="cirq_iqm.iqm_device.IQMDevice.decompose_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.decompose_circuit()</span></code></a> accepts a <code class="code docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> object as an argument and
+<p>This will result in the circuit</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Alice: ───X───@───M(&#39;m&#39;)───
+              │   │
+Bob: ─────H───X───M────────
+</pre></div>
+</div>
+<p>After the circuit has been constructed, it can be decomposed and routed against a particular <code class="docutils literal notranslate"><span class="pre">IQMDevice</span></code>.
+The method <a class="reference internal" href="api/cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice.decompose_circuit" title="cirq_iqm.iqm_device.IQMDevice.decompose_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.decompose_circuit()</span></code></a> accepts a <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> object as an argument and
 returns the decomposed circuit containing only native gates for the corresponding device:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">decomposed_circuit_2</span> <span class="o">=</span> <span class="n">adonis</span><span class="o">.</span><span class="n">decompose_circuit</span><span class="p">(</span><span class="n">circuit_2</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The method <a class="reference internal" href="api/cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.iqm_device.IQMDevice.route_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.route_circuit()</span></code></a> accepts a <code class="code docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> object as an argument and returns
-the circuit routed against the corresponding device:</p>
+<p>The method <a class="reference internal" href="api/cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.iqm_device.IQMDevice.route_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.route_circuit()</span></code></a> accepts a <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> object as an argument,
+and returns the circuit routed against the device, acting on the device qubits instead of the
+arbitrary qubits we had originally.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">routed_circuit_2</span> <span class="o">=</span> <span class="n">adonis</span><span class="o">.</span><span class="n">route_circuit</span><span class="p">(</span><span class="n">circuit_2</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The routed circuit contains the qubits of the device instead of arbitrary named qubits we had originally.
-By default <code class="code docutils literal notranslate"><span class="pre">route_circuit</span></code> returns only the routed circuit. However if you set its keyword argument
-<code class="code docutils literal notranslate"><span class="pre">return_swap_network</span></code> to <code class="code docutils literal notranslate"><span class="pre">True</span></code>, it will return the full swap network object which contains the routed
+<p>By default <a class="reference internal" href="api/cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.iqm_device.IQMDevice.route_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">route_circuit()</span></code></a> returns only the routed circuit. However if you set its keyword
+argument <code class="docutils literal notranslate"><span class="pre">return_swap_network</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code>, it will return the full
+<code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.contrib.routing.swap_network.SwapNetwork</span></code> object which contains the routed
 circuit itself and the mapping between the used device qubits and the original ones.</p>
-<p>Under the hood, the method <code class="code docutils literal notranslate"><span class="pre">route_circuit</span></code> leverages the router available in <code class="code docutils literal notranslate"><span class="pre">cirq.contrib.routing.router</span></code>.
-Note, that this function works with circuits containing single- and two- qubit gates only. If you have gates involving
+<p>Under the hood, <a class="reference internal" href="api/cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.iqm_device.IQMDevice.route_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">route_circuit()</span></code></a> leverages the routing algorithm in <code class="xref py py-mod docutils literal notranslate"><span class="pre">cirq.contrib.routing.router</span></code>.
+Note that this function works with circuits containing single- and two-qubit gates only. If you have gates involving
 more than two qubits you need to decompose the circuit before routing. Since routing may add some swap gates to the
-circuit you may need to decompose the circuit after routing once again if the swap gate is not a native gate for the
+circuit you may need to decompose the circuit again after routing if the SWAP gate is not a native gate for the
 target device.</p>
 </section>
 <section id="workflow-3">
 <h3>Workflow 3<a class="headerlink" href="#workflow-3" title="Permalink to this headline">¶</a></h3>
-<p>You can use your favorite tool to read an OpenQASM 2.0 program from a file or a string and convert it into a
-<code class="code docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> object. Once you have done this, you can follow the decomposition and routing steps described in
-the previous workflow to prepare the circuit for execution against an IQM device.</p>
-<p>You can also take a look at the function <a class="reference internal" href="api/cirq_iqm.extended_qasm_parser.circuit_from_qasm.html#cirq_iqm.extended_qasm_parser.circuit_from_qasm" title="cirq_iqm.extended_qasm_parser.circuit_from_qasm"><code class="xref py py-func docutils literal notranslate"><span class="pre">extended_qasm_parser.circuit_from_qasm()</span></code></a> which encompasses an
-OpenQASM 2.0 parser shipped with Cirq on IQM and supports an extended set of gate names.</p>
+<p>You can read an OpenQASM 2.0 program from a file (or a string), e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OPENQASM</span> <span class="mf">2.0</span><span class="p">;</span>
+<span class="n">include</span> <span class="s2">&quot;qelib1.inc&quot;</span><span class="p">;</span>
+
+<span class="n">qreg</span> <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="n">creg</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+
+<span class="n">x</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="n">h</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">cx</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">measure</span> <span class="n">q</span> <span class="o">-&gt;</span> <span class="n">m</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>and convert it into a <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> object using <a class="reference internal" href="api/cirq_iqm.extended_qasm_parser.circuit_from_qasm.html#cirq_iqm.extended_qasm_parser.circuit_from_qasm" title="cirq_iqm.extended_qasm_parser.circuit_from_qasm"><code class="xref py py-func docutils literal notranslate"><span class="pre">circuit_from_qasm()</span></code></a>.
+Once you have done this, you can perform the decomposition and routing steps as in
+the previous workflow to prepare the circuit for execution on an IQM device.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cirq_iqm</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;circuit.qasm&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">circuit_3</span> <span class="o">=</span> <span class="n">cirq_iqm</span><span class="o">.</span><span class="n">circuit_from_qasm</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">circuit_3</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>q_0: ───X───@───M(&#39;m_0&#39;)───
+            │
+q_1: ───H───X───M(&#39;m_1&#39;)───
+</pre></div>
+</div>
+<p><a class="reference internal" href="api/cirq_iqm.extended_qasm_parser.circuit_from_qasm.html#cirq_iqm.extended_qasm_parser.circuit_from_qasm" title="cirq_iqm.extended_qasm_parser.circuit_from_qasm"><code class="xref py py-func docutils literal notranslate"><span class="pre">circuit_from_qasm()</span></code></a> uses the OpenQASM 2.0 parser in <code class="xref py py-mod docutils literal notranslate"><span class="pre">cirq.contrib.qasm_import</span></code>, extended by
+a few additional gate types.</p>
 </section>
 </section>
 <section id="running-on-a-real-quantum-computer">
 <h2>Running on a real quantum computer<a class="headerlink" href="#running-on-a-real-quantum-computer" title="Permalink to this headline">¶</a></h2>
-<p>At this stage you can use your favorite Cirq simulator to simulate the circuits constructed above.
-In this subsection we demonstrate how to run them against a real IQM quantum chip.</p>
-<p>Cirq on IQM implements <a class="reference internal" href="api/cirq_iqm.iqm_remote.IQMSampler.html#cirq_iqm.iqm_remote.IQMSampler" title="cirq_iqm.iqm_remote.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">iqm_remote.IQMSampler</span></code></a> as a subclass of <code class="code docutils literal notranslate"><span class="pre">cirq.work.Sampler</span></code> which should be used
-for this purpose. You need to have access to an IQM server and obtain a settings file for the quantum hardware of
-interest. Once these resources are in place, you can create an <code class="code docutils literal notranslate"><span class="pre">IQMSampler</span></code> instance and use its <code class="code docutils literal notranslate"><span class="pre">run</span></code>
-method to send a circuit for execution and retrieve the results:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>At the moment IQM does not provide a quantum computing service open to the general public.
+Please contact our <a class="reference external" href="https://www.meetiqm.com/contact/">sales team</a> to set up your access to an IQM quantum computer.</p>
+</div>
+<p>Cirq contains various simulators which you can use to simulate the circuits constructed above.
+In this subsection we demonstrate how to run them on an IQM quantum computer.</p>
+<p>Cirq on IQM implements <a class="reference internal" href="api/cirq_iqm.iqm_remote.IQMSampler.html#cirq_iqm.iqm_remote.IQMSampler" title="cirq_iqm.iqm_remote.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a>, a subclass of <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.work.Sampler</span></code>, which is used
+to execute quantum circuits. You need to have access to an IQM server and have a settings file for
+the quantum hardware of interest. Once these resources are in place, you can create an
+<a class="reference internal" href="api/cirq_iqm.iqm_remote.IQMSampler.html#cirq_iqm.iqm_remote.IQMSampler" title="cirq_iqm.iqm_remote.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a> instance and use its <code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code> method to send a circuit for execution
+and retrieve the results:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cirq_iqm.iqm_remote</span> <span class="kn">import</span> <span class="n">IQMSampler</span>
 
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">iqm_settings_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">sampler</span> <span class="o">=</span> <span class="n">IQMSampler</span><span class="p">(</span><span class="n">iqm_server_url</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">adonis</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit_1</span><span class="p">,</span> <span class="n">repetitions</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-    <span class="n">measurements</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">measurements</span><span class="p">[</span><span class="s1">&#39;mk&#39;</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">measurements</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit_1</span><span class="p">,</span> <span class="n">repetitions</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">measurements</span><span class="p">[</span><span class="s1">&#39;m&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>Note that the code snippet above assumes that you have variables called <code class="code docutils literal notranslate"><span class="pre">iqm_server_url</span></code> and
-<code class="code docutils literal notranslate"><span class="pre">iqm_settings_path</span></code>.</p>
-<p>Among other things, the settings file contains the definitions of the names of the qubits on the chip. We refer to
-them as the physical names of the qubits, as opposed to the qubit names which appear in the circuit (‘Alice’ and ‘Bob’
-in our example). You need to specify how to make a correspondence between the qubits used in the circuit and the qubits
-on the chip. The initializer of <code class="code docutils literal notranslate"><span class="pre">IQMSampler</span></code> accepts an optional argument called <code class="code docutils literal notranslate"><span class="pre">qubit_mapping</span></code> which
-can be used to specify this correspondence. It is a dict mapping the circuit qubit names to physical names. Usually
-the physical names of the qubits defined in the settings file coincide with the names of the qubits in an
-<code class="code docutils literal notranslate"><span class="pre">IQMDevice</span></code> class, so if you have circuit which is already using the device qubits, then you don’t need to specify
-qubit mapping (as we did above for <code class="code docutils literal notranslate"><span class="pre">circuit_1</span></code> from the 1st workflow). However if the circuit is using other
-qubits or the the physical names in the settings file do not coincide with the names in <code class="code docutils literal notranslate"><span class="pre">IQMDevice</span></code> for some
-reason, you have to provide the qubit mapping:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">qubit_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Alice&#39;</span><span class="p">:</span> <span class="s1">&#39;QB1&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">:</span> <span class="s1">&#39;QB2&#39;</span><span class="p">}</span>
+<p>Note that the code snippet above assumes that you have set the variables <code class="docutils literal notranslate"><span class="pre">iqm_server_url</span></code> and
+<code class="docutils literal notranslate"><span class="pre">iqm_settings_path</span></code>.</p>
+<p>When executing a circuit that uses something other than the device qubits, you need to either route it first
+as explained in <a class="reference internal" href="#workflow-2"><span class="std std-ref">workflow 2</span></a> above,
+or provide the mapping from the <em>logical</em> qubits in the circuit to the <em>physical</em> qubits on the device yourself.
+The initializer of <a class="reference internal" href="api/cirq_iqm.iqm_remote.IQMSampler.html#cirq_iqm.iqm_remote.IQMSampler" title="cirq_iqm.iqm_remote.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a> accepts an optional argument called <code class="docutils literal notranslate"><span class="pre">qubit_mapping</span></code> which
+can be used to specify this correspondence.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">qubit_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Alice&#39;</span><span class="p">:</span> <span class="s1">&#39;QB1&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">:</span> <span class="s1">&#39;QB3&#39;</span><span class="p">}</span>
 
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">iqm_settings_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">sampler</span> <span class="o">=</span> <span class="n">IQMSampler</span><span class="p">(</span><span class="n">iqm_server_url</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">adonis</span><span class="p">,</span> <span class="n">qubit_mapping</span><span class="o">=</span><span class="n">qubit_mapping</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">decomposed_circuit_2</span><span class="p">,</span> <span class="n">repetitions</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-    <span class="n">measurements</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">measurements</span><span class="p">[</span><span class="s1">&#39;mk&#39;</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">measurements</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">decomposed_circuit_2</span><span class="p">,</span> <span class="n">repetitions</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">measurements</span><span class="p">[</span><span class="s1">&#39;m&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
+<p>If you have a circuit which already uses the device qubits, you don’t need to specify
+the qubit mapping (as we did above for <code class="docutils literal notranslate"><span class="pre">circuit_1</span></code>).</p>
 </section>
 <section id="more-examples">
 <h2>More examples<a class="headerlink" href="#more-examples" title="Permalink to this headline">¶</a></h2>
 <p>More examples are available in the
 <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/tree/main/examples">examples directory</a>
-of the Cirq on IQM github repository.</p>
+of the Cirq on IQM repository.</p>
 </section>
 <section id="how-to-develop-and-contribute">
 <h2>How to develop and contribute<a class="headerlink" href="#how-to-develop-and-contribute" title="Permalink to this headline">¶</a></h2>
-<p>Cirq on IQM is an open source python project. To develop, clone the
-<a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm">GitHub repository</a> and install it in editable mode with all the extras:</p>
+<p>Cirq on IQM is an open source Python project.
+You can contribute by creating GitHub issues to report bugs or request new features,
+or by opening a pull request to submit your own improvements to the codebase.</p>
+<p>To start developing the project, clone the
+<a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm">GitHub repository</a>
+and install it in editable mode with all the extras:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone git@github.com:iqm-finland/cirq-on-iqm.git
 $ <span class="nb">cd</span> cirq-on-iqm
 $ pip install -e <span class="s2">&quot;.[dev,docs,testing]&quot;</span>
@@ -220,7 +271,6 @@ $ firefox build/sphinx/html/index.html
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tox
 </pre></div>
 </div>
-<p>Submit a GitHub issue or a pull request.</p>
 </section>
 </section>
 

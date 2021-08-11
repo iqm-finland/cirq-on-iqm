@@ -1,5 +1,5 @@
 <map id="inheritancebbf2b26b64" name="inheritancebbf2b26b64">
 <area shape="rect" id="node1" title="Hardware constraints for validating circuits." alt="" coords="5,5,77,31"/>
-<area shape="rect" id="node2" href="cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice" target="_top" title="ABC for the properties of a specific IQM quantum architecture." alt="" coords="125,5,209,31"/>
-<area shape="rect" id="node3" href="cirq_iqm.valkmusa.Valkmusa.html#cirq_iqm.valkmusa.Valkmusa" target="_top" title="IQM&#39;s two&#45;qubit transmon device." alt="" coords="257,5,337,31"/>
+<area shape="rect" id="node2" href="cirq_iqm.iqm_device.IQMDevice.html#cirq_iqm.iqm_device.IQMDevice" target="_top" title="ABC for the properties of a specific IQM quantum architecture." alt="" coords="125,5,219,31"/>
+<area shape="rect" id="node3" href="cirq_iqm.valkmusa.Valkmusa.html#cirq_iqm.valkmusa.Valkmusa" target="_top" title="IQM&#39;s two&#45;qubit transmon device." alt="" coords="267,5,353,31"/>
 </map>

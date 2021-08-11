@@ -27,8 +27,8 @@ After installation Cirq on IQM can be imported in your Python code as follows:
 IQM's quantum devices
 ---------------------
 
-Cirq on IQM provides descriptions of IQM's quantum architectures by providing various subclasses of :class:`.IQMDevice`.
-The abstract class :class:`.IQMDevice` itself is a direct subclass of :code:`cirq.devices.Device` and implements general
+Cirq on IQM provides descriptions of IQM's quantum architectures as subclasses of :class:`.IQMDevice`.
+The abstract class :class:`.IQMDevice` itself is a subclass of :class:`cirq.devices.Device` and implements general
 functionality relevant to all IQM devices. Each device subclass describes the native gates and the connectivity of a particular architecture
 and the relevant functionality. As an example, let us import the class :class:`.Adonis`, which describes IQM's
 five-qubit architecture and view some of its properties contained in the class variables:
@@ -42,10 +42,10 @@ five-qubit architecture and view some of its properties contained in the class v
     print(Adonis.CONNECTIVITY)
 
 
-IQM devices use :code:`cirq.NamedQubits` to represent their qubits. The names of the qubits consist of a prefix
-followed by a numeric index, so we have qubit names like :code:`QB1`, :code:`QB2`, etc. Note that we use 1-based
+IQM devices use :class:`cirq.NamedQubit` to represent their qubits. The names of the qubits consist of a prefix
+followed by a numeric index, so we have qubit names like ``QB1``, ``QB2``, etc. Note that we use 1-based
 indexing. The qubit connectivity information is stored using the qubit indices only. You can get the list of the qubits
-in a particular device by accessing the :code:`qubits` attribute of a corresponding :code:`IQMDevice` instance:
+in a particular device by accessing the ``qubits`` attribute of a corresponding :class:`.IQMDevice` instance:
 
 .. code-block:: python
 
@@ -56,17 +56,17 @@ in a particular device by accessing the :code:`qubits` attribute of a correspond
 Constructing circuits
 ---------------------
 
-There are three main ways (workflows) of using :code:`cirq.Circuit` with IQM devices
+There are three main workflows of using :class:`cirq.Circuit` instances with IQM devices:
 
-1. Create a Circuit instance associated with an IQMDevice, and use only the device qubits.
-   Each :code:`cirq.Operation` is validated (i.e. checked that qubits are on the device, and properly connected) and
-   decomposed as soon as it is appended to the circuit.
-2. Create a Circuit instance with no associated device. Use arbitrary qubit names. There is no
-   validation of the ops when appended. At any point the user can apply :meth:`.IQMDevice.decompose_circuit`
-   to decompose the Circuit contents into the native set of the device, or :meth:`.IQMDevice.route_circuit`
-   to route the circuit to the device connectivity.
-3. Create a Circuit from an OpenQASM 2.0 program, qubits will have names like ``q_0`` with zero-based
-   indexing. Proceed as in workflow 2.
+1. Create a ``Circuit`` instance associated with an ``IQMDevice``, and use only the device qubits.
+   Each :class:`cirq.Operation` is validated (i.e. checked that qubits are on the device, and properly connected) and
+   decomposed into native operations as soon as it is appended to the circuit.
+2. Create a ``Circuit`` instance with no associated device, use arbitrary qubit names and types. There is no
+   validation of the operations when appended. At any point the user can apply :meth:`.IQMDevice.decompose_circuit`
+   to decompose the circuit contents into the native operation set of the device, or :meth:`.IQMDevice.route_circuit`
+   to route the circuit to the device connectivity and device qubits.
+3. Create a ``Circuit`` from an OpenQASM 2.0 program. The qubit names are determined by the OpenQASM ``qreg`` names,
+   appended with zero-based indices. Proceed as in workflow 2.
 
 Below we demonstrate examples of creating circuits in each of the three workflows.
 
@@ -80,38 +80,55 @@ device and respect the connectivity of the device when appending gates to the ci
 .. code-block:: python
 
     import cirq
+    from cirq_iqm import Adonis
 
     adonis = Adonis()
-    qb_1, qb_2 = adonis.qubits[:2]
+    q1, q2, q3 = adonis.qubits[:3]
     circuit_1 = cirq.Circuit(device=adonis)
-    circuit_1.append(cirq.X(qb_1))
-    circuit_1.append(cirq.H(qb_2))
-    circuit_1.append(cirq.measure(qb_1, qb_2, key='mk'))
+    circuit_1.append(cirq.X(q1))
+    circuit_1.append(cirq.H(q3))
+    circuit_1.append(cirq.CNOT(q1, q3))
+    circuit_1.append(cirq.measure(q1, q3, key='m'))
+    print(circuit_1)
 
+If you print the circuit at this point, you will see that instead of the gates we have appended, it
+contains their decompositions in terms of the native gate set of the ``Adonis`` device.
+This is because in this way of creating a circuit the gates are decomposed right away
+when they are appended to the circuit::
 
-If you draw the circuit at this point, you will see that instead of the gates we have appended in the code it
-contains their decompositions in terms of the native gate set of the Adonis device. This is because in this way of creating a circuit the gates are decomposed right away
-when they are appended to the cirucit.
+   QB1: ───X────────────────────@───────────M('m')───
+                                │           │
+   QB3: ───Y^0.5───X───Y^-0.5───@───Y^0.5───M────────
 
+.. _workflow_2:
 
 Workflow 2
 ^^^^^^^^^^
 
-Construct a circuit with no associated device and use arbitrary qubit names:
+Construct a circuit with no associated device and use arbitrary qubits:
 
 .. code-block:: python
 
     import cirq
+    from cirq_iqm import Adonis
 
-    qb_1, qb_2 = cirq.NamedQubit('Alice'), cirq.NamedQubit('Bob')
+    q1, q2 = cirq.NamedQubit('Alice'), cirq.NamedQubit('Bob')
     circuit_2 = cirq.Circuit()
-    circuit_2.append(cirq.X(qb_1))
-    circuit_2.append(cirq.H(qb_2))
-    circuit_2.append(cirq.measure(qb_1, qb_2, key='mk'))
+    circuit_2.append(cirq.X(q1))
+    circuit_2.append(cirq.H(q2))
+    circuit_2.append(cirq.CNOT(q1, q2))
+    circuit_2.append(cirq.measure(q1, q2, key='m'))
+    print(circuit_2)
 
+This will result in the circuit
+::
 
-After the circuit has been constructed, it can be decomposed and routed against a particular IQM device.
-The method :meth:`.IQMDevice.decompose_circuit` accepts a :code:`cirq.Circuit` object as an argument and
+   Alice: ───X───@───M('m')───
+                 │   │
+   Bob: ─────H───X───M────────
+
+After the circuit has been constructed, it can be decomposed and routed against a particular ``IQMDevice``.
+The method :meth:`.IQMDevice.decompose_circuit` accepts a :class:`cirq.Circuit` object as an argument and
 returns the decomposed circuit containing only native gates for the corresponding device:
 
 .. code-block:: python
@@ -119,81 +136,115 @@ returns the decomposed circuit containing only native gates for the correspondin
     decomposed_circuit_2 = adonis.decompose_circuit(circuit_2)
 
 
-The method :meth:`.IQMDevice.route_circuit` accepts a :code:`cirq.Circuit` object as an argument and returns
-the circuit routed against the corresponding device:
+The method :meth:`.IQMDevice.route_circuit` accepts a :class:`cirq.Circuit` object as an argument,
+and returns the circuit routed against the device, acting on the device qubits instead of the
+arbitrary qubits we had originally.
 
 .. code-block:: python
 
     routed_circuit_2 = adonis.route_circuit(circuit_2)
 
-The routed circuit contains the qubits of the device instead of arbitrary named qubits we had originally.
-By default :code:`route_circuit` returns only the routed circuit. However if you set its keyword argument
-:code:`return_swap_network` to :code:`True`, it will return the full swap network object which contains the routed
+By default :meth:`.route_circuit` returns only the routed circuit. However if you set its keyword
+argument ``return_swap_network`` to ``True``, it will return the full
+:class:`cirq.contrib.routing.swap_network.SwapNetwork` object which contains the routed
 circuit itself and the mapping between the used device qubits and the original ones.
 
-Under the hood, the method :code:`route_circuit` leverages the router available in :code:`cirq.contrib.routing.router`.
-Note, that this function works with circuits containing single- and two- qubit gates only. If you have gates involving
+Under the hood, :meth:`.route_circuit` leverages the routing algorithm in :mod:`cirq.contrib.routing.router`.
+Note that this function works with circuits containing single- and two-qubit gates only. If you have gates involving
 more than two qubits you need to decompose the circuit before routing. Since routing may add some swap gates to the
-circuit you may need to decompose the circuit after routing once again if the swap gate is not a native gate for the
+circuit you may need to decompose the circuit again after routing if the SWAP gate is not a native gate for the
 target device.
 
 
 Workflow 3
 ^^^^^^^^^^
 
-You can use your favorite tool to read an OpenQASM 2.0 program from a file or a string and convert it into a
-:code:`cirq.Circuit` object. Once you have done this, you can follow the decomposition and routing steps described in
-the previous workflow to prepare the circuit for execution against an IQM device.
+You can read an OpenQASM 2.0 program from a file (or a string), e.g.
 
-You can also take a look at the function :func:`.extended_qasm_parser.circuit_from_qasm` which encompasses an
-OpenQASM 2.0 parser shipped with Cirq on IQM and supports an extended set of gate names.
+::
+
+   OPENQASM 2.0;
+   include "qelib1.inc";
+
+   qreg q[2];
+   creg m[2];
+
+   x q[0];
+   h q[1];
+   cx q[0], q[1];
+   measure q -> m;
+
+and convert it into a :class:`cirq.Circuit` object using :func:`.circuit_from_qasm`.
+Once you have done this, you can perform the decomposition and routing steps as in
+the previous workflow to prepare the circuit for execution on an IQM device.
+
+.. code-block:: python
+
+    import cirq_iqm
+
+    with open('circuit.qasm', 'r') as f:
+        circuit_3 = cirq_iqm.circuit_from_qasm(f.read())
+    print(circuit_3)
+
+::
+
+   q_0: ───X───@───M('m_0')───
+               │
+   q_1: ───H───X───M('m_1')───
+
+:func:`.circuit_from_qasm` uses the OpenQASM 2.0 parser in :mod:`cirq.contrib.qasm_import`, extended by
+a few additional gate types.
 
 
 Running on a real quantum computer
 ----------------------------------
 
-At this stage you can use your favorite Cirq simulator to simulate the circuits constructed above.
-In this subsection we demonstrate how to run them against a real IQM quantum chip.
+.. note::
 
-Cirq on IQM implements :class:`.iqm_remote.IQMSampler` as a subclass of :code:`cirq.work.Sampler` which should be used
-for this purpose. You need to have access to an IQM server and obtain a settings file for the quantum hardware of
-interest. Once these resources are in place, you can create an :code:`IQMSampler` instance and use its :code:`run`
-method to send a circuit for execution and retrieve the results:
+   At the moment IQM does not provide a quantum computing service open to the general public.
+   Please contact our `sales team <https://www.meetiqm.com/contact/>`_ to set up your access to an IQM quantum computer.
 
-.. code-block:: python
+Cirq contains various simulators which you can use to simulate the circuits constructed above.
+In this subsection we demonstrate how to run them on an IQM quantum computer.
 
-    from cirq_iqm.iqm_remote import IQMSampler
-
-    with open(iqm_settings_path, 'r') as f:
-        sampler = IQMSampler(iqm_server_url, f.read(), adonis)
-        result = sampler.run(circuit_1, repetitions=10)
-        measurements = result.measurements['mk']
-        print(measurements)
-
-
-Note that the code snippet above assumes that you have variables called :code:`iqm_server_url` and
-:code:`iqm_settings_path`.
-
-Among other things, the settings file contains the definitions of the names of the qubits on the chip. We refer to
-them as the physical names of the qubits, as opposed to the qubit names which appear in the circuit ('Alice' and 'Bob'
-in our example). You need to specify how to make a correspondence between the qubits used in the circuit and the qubits
-on the chip. The initializer of :code:`IQMSampler` accepts an optional argument called :code:`qubit_mapping` which
-can be used to specify this correspondence. It is a dict mapping the circuit qubit names to physical names. Usually
-the physical names of the qubits defined in the settings file coincide with the names of the qubits in an
-:code:`IQMDevice` class, so if you have circuit which is already using the device qubits, then you don't need to specify
-qubit mapping (as we did above for :code:`circuit_1` from the 1st workflow). However if the circuit is using other
-qubits or the the physical names in the settings file do not coincide with the names in :code:`IQMDevice` for some
-reason, you have to provide the qubit mapping:
+Cirq on IQM implements :class:`.IQMSampler`, a subclass of :class:`cirq.work.Sampler`, which is used
+to execute quantum circuits. You need to have access to an IQM server and have a settings file for
+the quantum hardware of interest. Once these resources are in place, you can create an
+:class:`.IQMSampler` instance and use its :meth:`~.IQMSampler.run` method to send a circuit for execution
+and retrieve the results:
 
 .. code-block:: python
 
-    qubit_mapping = {'Alice': 'QB1', 'Bob': 'QB2'}
+   from cirq_iqm.iqm_remote import IQMSampler
+
+   with open(iqm_settings_path, 'r') as f:
+       sampler = IQMSampler(iqm_server_url, f.read(), adonis)
+
+   result = sampler.run(circuit_1, repetitions=10)
+   print(result.measurements['m'])
+
+
+Note that the code snippet above assumes that you have set the variables ``iqm_server_url`` and
+``iqm_settings_path``.
+
+When executing a circuit that uses something other than the device qubits, you need to either route it first
+as explained in :ref:`workflow 2 <workflow_2>` above,
+or provide the mapping from the *logical* qubits in the circuit to the *physical* qubits on the device yourself.
+The initializer of :class:`.IQMSampler` accepts an optional argument called ``qubit_mapping`` which
+can be used to specify this correspondence.
+
+.. code-block:: python
+
+    qubit_mapping = {'Alice': 'QB1', 'Bob': 'QB3'}
 
     with open(iqm_settings_path, 'r') as f:
         sampler = IQMSampler(iqm_server_url, f.read(), adonis, qubit_mapping=qubit_mapping)
-        result = sampler.run(decomposed_circuit_2, repetitions=10)
-        measurements = result.measurements['mk']
-        print(measurements)
+
+    result = sampler.run(decomposed_circuit_2, repetitions=10)
+    print(result.measurements['m'])
+
+If you have a circuit which already uses the device qubits, you don't need to specify
+the qubit mapping (as we did above for ``circuit_1``).
 
 
 More examples
@@ -201,7 +252,7 @@ More examples
 
 More examples are available in the
 `examples directory <https://github.com/iqm-finland/cirq-on-iqm/tree/main/examples>`_
-of the Cirq on IQM github repository.
+of the Cirq on IQM repository.
 
 
 .. include:: ../DEVELOPMENT.rst
