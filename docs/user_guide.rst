@@ -243,8 +243,8 @@ can be used to specify this correspondence.
     result = sampler.run(decomposed_circuit_2, repetitions=10)
     print(result.measurements['m'])
 
-If you have circuit which already uses the device qubits, you don't need to specify
-qubit mapping (as we did above for ``circuit_1``).
+If you have a circuit which already uses the device qubits, you don't need to specify
+the qubit mapping (as we did above for ``circuit_1``).
 
 
 More examples
