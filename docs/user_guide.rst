@@ -201,8 +201,8 @@ Running on a real quantum computer
 
 .. note::
 
-   At the moment IQM does not provide a quantum computing service open to the general public,
-   so the instructions in this section are useful only to IQM customers.
+   At the moment IQM does not provide a quantum computing service open to the general public.
+   Please contact our `sales team <https://www.meetiqm.com/contact/>`_ to set up your access to an IQM quantum computer.
 
 Cirq contains various simulators which you can use to simulate the circuits constructed above.
 In this subsection we demonstrate how to run them on an IQM quantum computer.
