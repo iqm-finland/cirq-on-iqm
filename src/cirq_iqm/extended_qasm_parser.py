@@ -23,7 +23,8 @@ from cirq_iqm.iqm_gates import IsingGate, XYGate
 def circuit_from_qasm(qasm: str) -> cirq.circuits.Circuit:
     """Parses an OpenQASM 2.0 program to a Cirq circuit.
 
-    The OpenQASM language has been extended by the ``ising``, ``xy``, ``iswap`` and ``sqrt_iswap`` gates.
+    The OpenQASM language has been extended by the ``iswap``, ``sqrt_iswap``,
+    :func:`ising <.iqm_gates.IsingGate>` and :func:`xy <.iqm_gates.XYGate>` gates.
 
     Args:
         qasm: OpenQASM string

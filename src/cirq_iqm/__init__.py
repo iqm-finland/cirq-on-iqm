@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Types for representing and methods for manipulating operations on IQM's quantum computers.
-
-IQM builds quantum computers based on superconducting transmon technology.
 """
 from importlib.metadata import PackageNotFoundError, version
 
