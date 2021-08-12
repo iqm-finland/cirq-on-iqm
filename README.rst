@@ -23,7 +23,7 @@ Currently Cirq on IQM can
 
 
 Installation
-============
+------------
 
 The recommended way is to install the distribution package ``cirq-iqm`` directly from the
 Python Package Index (PyPI):
@@ -34,7 +34,7 @@ Python Package Index (PyPI):
 
 
 Documentation
-=============
+-------------
 
 The documentation of the latest Cirq on IQM release is available
 `here <https://iqm-finland.github.io/cirq-on-iqm/index.html>`_.
@@ -46,7 +46,7 @@ Take a look at the `Jupyter notebook <https://jupyter.org/>`_ with examples: ``e
 
 
 Copyright
-=========
+---------
 
 Cirq on IQM is free software, released under the Apache License, version 2.0.
 
