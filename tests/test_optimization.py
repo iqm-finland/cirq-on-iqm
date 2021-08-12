@@ -93,8 +93,8 @@ class TestGateOptimization:
             cirq.ZPowGate(exponent=0.3)(q0),
             cirq.ZPowGate(exponent=0.8)(q1),
             family(exponent=ex)(q0, q1),
-            cirq.MeasurementGate(1)(q0),
-            cirq.MeasurementGate(1)(q1),
+            cirq.MeasurementGate(1, key='q0')(q0),
+            cirq.MeasurementGate(1, key='q1')(q1),
         ])
 
         optimizers.EjectZ().optimize_circuit(c)
@@ -141,7 +141,7 @@ class TestSimplifyCircuit:
         c.append([
             cirq.ZPowGate(exponent=0.1)(q0),
             cirq.ZPowGate(exponent=0.2)(q1),
-            cirq.MeasurementGate(1)(q0),
+            cirq.MeasurementGate(1, key='measurement')(q0),
         ])
         new = adonis.simplify_circuit(c)
 
