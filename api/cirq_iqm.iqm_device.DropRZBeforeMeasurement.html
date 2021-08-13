@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>cirq_iqm.iqm_device.DropRZBeforeMeasurement &#8212; Cirq on IQM 1.0 documentation</title>
+    <title>cirq_iqm.iqm_device.DropRZBeforeMeasurement &#8212; Cirq on IQM 1.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -34,7 +34,7 @@
         <li class="right" >
           <a href="cirq_iqm.iqm_device.DecomposeGatesFinal.html" title="cirq_iqm.iqm_device.DecomposeGatesFinal"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../API.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="cirq_iqm.html" >cirq_iqm</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="cirq_iqm.iqm_device.html" accesskey="U">cirq_iqm.iqm_device</a> &#187;</li>
@@ -55,6 +55,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.circuits.optimization_pass.PointOptimizer</span></code></p>
 <p>Drops z rotations that happen right before a z-basis measurement.</p>
 <p>These z rotations do not affect the result of the measurement, so we may ignore them.</p>
+<p>Inits PointOptimizer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>post_clean_up</strong> (<em>Callable</em><em>[</em><em>[</em><em>Sequence</em><em>[</em><em>cirq.Operation</em><em>]</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>cirq.ops.raw_types.Operation</em><em>, </em><em>cirq.ops.op_tree.OpTree</em><em>]</em><em>]</em>) – This function is called on each set of optimized
@@ -152,7 +153,7 @@ change should be made.</p>
         <li class="right" >
           <a href="cirq_iqm.iqm_device.DecomposeGatesFinal.html" title="cirq_iqm.iqm_device.DecomposeGatesFinal"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../API.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="cirq_iqm.html" >cirq_iqm</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="cirq_iqm.iqm_device.html" >cirq_iqm.iqm_device</a> &#187;</li>
