@@ -3,6 +3,13 @@ Changelog
 =========
 
 
+Version 1.1 (2021-08-13)
+=========================
+
+* The version of ``requests`` dependency is relaxed.
+* Minor aesthetic changes in the documentation.
+
+
 Version 1.0 (2021-08-11)
 =========================
 
