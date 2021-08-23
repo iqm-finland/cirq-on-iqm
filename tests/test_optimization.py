@@ -20,7 +20,7 @@ import cirq
 from cirq import ops, optimizers
 import pytest
 
-from cirq_iqm.iqm_device import MergeOneParameterGroupGates
+from cirq_iqm.iqm_device import MergeOneParameterGroupGates, DropRZBeforeMeasurement
 from cirq_iqm.adonis import Adonis
 
 
@@ -134,7 +134,7 @@ class TestSimplifyCircuit:
         # ZZPowGates have been merged
         assert len(new) == 1
 
-    def test_simplify_circuit_drop_z_before_measurement(self, adonis):
+    def test_simplify_circuit_drop_rz_before_measurement(self, adonis):
 
         q0, q1 = adonis.qubits[:2]
         c = cirq.Circuit()
@@ -143,12 +143,35 @@ class TestSimplifyCircuit:
             cirq.ZPowGate(exponent=0.2)(q1),
             cirq.MeasurementGate(1, key='measurement')(q0),
         ])
-        new = adonis.simplify_circuit(c)
+        new = adonis.simplify_circuit(c, use_final_decomposition=False)
 
         # the ZPowGate preceding the measurement has been dropped
         assert len(new) == 2
         assert isinstance(new[0].operations[0].gate, cirq.ZPowGate)
         assert new[0].operations[0].qubits == (q1,)
+
+    def test_drop_rz_before_measurement(self, adonis):
+
+        q0, q1, q2 = adonis.qubits[:3]
+        c = cirq.Circuit()
+        c.append([
+            (cirq.X ** 0.4)(q0),
+            cirq.ZPowGate(exponent=0.1)(q1),
+            cirq.MeasurementGate(1, key='measurement')(q1),
+            cirq.ZPowGate(exponent=0.2)(q2),
+        ])
+        new = c.copy()
+        DropRZBeforeMeasurement().optimize_circuit(new)
+
+        assert len(new) == 2  # still 2 Moments
+        # the ZPowGate preceding the measurement has been dropped
+        assert len(tuple(new.all_operations())) == 3
+        op = new[0].operations[0]
+        assert isinstance(op.gate, cirq.XPowGate)
+        assert op.qubits == (q0,)
+        op = new[0].operations[1]
+        assert isinstance(op.gate, cirq.ZPowGate)
+        assert op.qubits == (q2,)
 
     def test_simplify_circuit_merge_one_qubit_gates(self, adonis):
 
@@ -159,7 +182,7 @@ class TestSimplifyCircuit:
             cirq.YPowGate(exponent=0.2)(q0),
             cirq.ZPowGate(exponent=0.3)(q0),
         ])
-        new = adonis.simplify_circuit(c)
+        new = adonis.simplify_circuit(c, use_final_decomposition=False)
 
         # the one-qubit gates have been merged
         assert len(new) == 2
