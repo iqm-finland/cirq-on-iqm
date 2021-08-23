@@ -226,7 +226,7 @@ class IQMDevice(devices.Device):
         )
         return cirq.Circuit(moments)
 
-    def simplify_circuit(self, circuit: cirq.Circuit, max_iterations: int = 20) -> None:
+    def simplify_circuit(self, circuit: cirq.Circuit, max_iterations: int = 20) -> cirq.Circuit:
         """Simplifies and optimizes the given circuit.
 
         Currently it
