@@ -232,6 +232,7 @@ class IQMDevice(devices.Device):
             *,
             max_iterations: int = 20,
             use_final_decomposition: bool = True,
+            drop_final_rz: bool = False,
     ) -> cirq.Circuit:
         """Simplifies and optimizes the given circuit.
 
@@ -252,6 +253,7 @@ class IQMDevice(devices.Device):
             circuit: circuit to simplify
             max_iterations: maximum number of simplification rounds
             use_final_decomposition: iff True, run :meth:`operation_final_decomposer`
+            drop_final_rz: iff True, drop z rotations that have no successor operations
 
         Returns:
             simplified circuit
@@ -277,7 +279,7 @@ class IQMDevice(devices.Device):
                 # the optimization hit a fixed point
                 break
 
-        DropRZBeforeMeasurement().optimize_circuit(c)
+        DropRZBeforeMeasurement(drop_final=drop_final_rz).optimize_circuit(c)
         optimizers.DropEmptyMoments().optimize_circuit(c)
         if use_final_decomposition:
             DecomposeGatesFinal(self).optimize_circuit(c)
@@ -384,7 +386,15 @@ class DropRZBeforeMeasurement(circuits.PointOptimizer):
     """Drops z rotations that happen right before a z-basis measurement.
 
     These z rotations do not affect the result of the measurement, so we may ignore them.
+
+    Args:
+        drop_final: iff True, drop also any z rotation at the end of the circuit (since it's not
+            followed by a measurement, it cannot affect them)
     """
+    def __init__(self, drop_final: bool = False):
+        super().__init__()
+        self.drop_final = drop_final
+
     def optimization_at(
             self,
             circuit: cirq.Circuit,
@@ -425,7 +435,10 @@ class DropRZBeforeMeasurement(circuits.PointOptimizer):
                             # follows the ZPowGates, remove the accumulated indices
                             return remove_indices
                         return []  # other operations: do not remove anything
-            return []  # circuit ends here: do not remove anything
+            # circuit ends here
+            if self.drop_final:
+                return remove_indices
+            return []
 
         if not isinstance(op.gate, cirq.ZPowGate):
             return None  # shortcut

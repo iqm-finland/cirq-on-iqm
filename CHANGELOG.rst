@@ -3,15 +3,31 @@ Changelog
 =========
 
 
-Version 1.1 (2021-08-13)
+Version 1.2 (in progress)
 =========================
+
+Features
+--------
+
+* Adonis native gate set updated, Rz is not native.
+  `#41 <https://github.com/iqm-finland/cirq-on-iqm/pull/41>`_
+
+Bugfixes
+--------
+
+* DropRZMeasurements sometimes did not remove z rotations it should have.
+  `#41 <https://github.com/iqm-finland/cirq-on-iqm/pull/41>`_
+
+
+Version 1.1 (2021-08-13)
+========================
 
 * The version of ``requests`` dependency is relaxed.
 * Minor aesthetic changes in the documentation.
 
 
 Version 1.0 (2021-08-11)
-=========================
+========================
 
 Features
 --------

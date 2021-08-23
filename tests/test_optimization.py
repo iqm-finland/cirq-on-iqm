@@ -173,6 +173,26 @@ class TestSimplifyCircuit:
         assert isinstance(op.gate, cirq.ZPowGate)
         assert op.qubits == (q2,)
 
+    def test_drop_rz_before_measurement_drop_final(self, adonis):
+
+        q0, q1, q2 = adonis.qubits[:3]
+        c = cirq.Circuit()
+        c.append([
+            (cirq.X ** 0.4)(q0),
+            cirq.ZPowGate(exponent=0.1)(q1),  # Rz followed by measurement
+            cirq.MeasurementGate(1, key='measurement')(q1),
+            cirq.ZPowGate(exponent=0.2)(q2),  # final Rz
+        ])
+        new = c.copy()
+        DropRZBeforeMeasurement(drop_final=True).optimize_circuit(new)
+
+        assert len(new) == 2  # still 2 Moments
+        # both ZPowGates were dropped
+        assert len(tuple(new.all_operations())) == 2
+        op = new[0].operations[0]
+        assert isinstance(op.gate, cirq.XPowGate)
+        assert op.qubits == (q0,)
+
     def test_simplify_circuit_merge_one_qubit_gates(self, adonis):
 
         q0 = adonis.qubits[0]
