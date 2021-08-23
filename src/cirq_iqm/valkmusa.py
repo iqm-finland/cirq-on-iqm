@@ -15,6 +15,7 @@
 IQM's Valkmusa quantum architecture.
 """
 from math import pi as PI
+from typing import Optional
 
 from cirq import ops
 
@@ -61,7 +62,7 @@ class Valkmusa(idev.IQMDevice):
     # we postpone the decomposition of the z rotations until the final stage of optimization
     DECOMPOSE_FINALLY = (ops.ZPowGate,)
 
-    def operation_final_decomposer(self, op: ops.Operation):
+    def operation_final_decomposer(self, op: ops.Operation) -> Optional[list[ops.Operation]]:
         # Decomposes z rotations using x and y rotations.
         if isinstance(op.gate, ops.ZPowGate):
             # Rz using Rx, Ry
@@ -71,9 +72,9 @@ class Valkmusa(idev.IQMDevice):
                 ops.YPowGate(exponent=op.gate.exponent).on(q),
                 ops.XPowGate(exponent=0.5).on(q),
             ]
-        raise NotImplementedError('Decomposition missing: {}'.format(op.gate))
+        raise NotImplementedError(f'Decomposition missing: {op.gate}')
 
-    def operation_decomposer(self, op: ops.Operation):
+    def operation_decomposer(self, op: ops.Operation) -> Optional[list[ops.Operation]]:
         # Decomposes CNOT and the CZPowGate family to Valkmusa native gates.
         # All the decompositions below keep track of global phase (required for decomposing controlled gates).
 
