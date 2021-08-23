@@ -50,7 +50,7 @@ def settings_dict():
     Reads and parses settings file into a dictionary
     """
     settings_path = os.path.dirname(os.path.realpath(__file__)) + '/settings.json'
-    with open(settings_path, 'r') as f:
+    with open(settings_path, 'r', encoding='utf-8') as f:
         return json.loads(f.read())
 
 
