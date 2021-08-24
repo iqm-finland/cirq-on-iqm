@@ -226,7 +226,14 @@ class IQMDevice(devices.Device):
         )
         return cirq.Circuit(moments)
 
-    def simplify_circuit(self, circuit: cirq.Circuit, max_iterations: int = 20) -> None:
+    def simplify_circuit(
+            self,
+            circuit: cirq.Circuit,
+            *,
+            max_iterations: int = 20,
+            use_final_decomposition: bool = True,
+            drop_final_rz: bool = False,
+    ) -> cirq.Circuit:
         """Simplifies and optimizes the given circuit.
 
         Currently it
@@ -245,6 +252,8 @@ class IQMDevice(devices.Device):
         Args:
             circuit: circuit to simplify
             max_iterations: maximum number of simplification rounds
+            use_final_decomposition: iff True, run :meth:`operation_final_decomposer`
+            drop_final_rz: iff True, drop z rotations that have no successor operations
 
         Returns:
             simplified circuit
@@ -270,9 +279,10 @@ class IQMDevice(devices.Device):
                 # the optimization hit a fixed point
                 break
 
-        DropRZBeforeMeasurement().optimize_circuit(c)
+        DropRZBeforeMeasurement(drop_final=drop_final_rz).optimize_circuit(c)
         optimizers.DropEmptyMoments().optimize_circuit(c)
-        DecomposeGatesFinal(self).optimize_circuit(c)
+        if use_final_decomposition:
+            DecomposeGatesFinal(self).optimize_circuit(c)
         return c
 
     def validate_circuit(self, circuit: cirq.Circuit) -> None:
@@ -376,7 +386,15 @@ class DropRZBeforeMeasurement(circuits.PointOptimizer):
     """Drops z rotations that happen right before a z-basis measurement.
 
     These z rotations do not affect the result of the measurement, so we may ignore them.
+
+    Args:
+        drop_final: iff True, drop also any z rotation at the end of the circuit (since it's not
+            followed by a measurement, it cannot affect them)
     """
+    def __init__(self, drop_final: bool = False):
+        super().__init__()
+        self.drop_final = drop_final
+
     def optimization_at(
             self,
             circuit: cirq.Circuit,
@@ -403,18 +421,24 @@ class DropRZBeforeMeasurement(circuits.PointOptimizer):
             Returns:
                 moment indices of the z rotations to be removed
             """
+            # op is a ZPowGate
             remove_indices = []
             for idx, moment in enumerate(circuit[index:], start=index):
                 for x in moment.operations:
-                    if isinstance(x.gate, cirq.ZPowGate) and x.qubits == op.qubits:
-                        # add idx to the list, keep looking for more
-                        remove_indices.append(idx)
-                        break  # to next moment
-                    if isinstance(x.gate, cirq.MeasurementGate) and op.qubits[0] in x.qubits:
-                        # follows the ZPowGates, remove the accumulated indices
-                        return remove_indices
-                    return []  # other operations: do not remove anything
-            return []  # circuit ends here: do not remove anything
+                    if op.qubits[0] in x.qubits:
+                        # x acts on the same qubit as op
+                        if isinstance(x.gate, cirq.ZPowGate):
+                            # add idx to the list, keep looking for more
+                            remove_indices.append(idx)
+                            break  # to next moment
+                        if isinstance(x.gate, cirq.MeasurementGate):
+                            # follows the ZPowGates, remove the accumulated indices
+                            return remove_indices
+                        return []  # other operations: do not remove anything
+            # circuit ends here
+            if self.drop_final:
+                return remove_indices
+            return []
 
         if not isinstance(op.gate, cirq.ZPowGate):
             return None  # shortcut

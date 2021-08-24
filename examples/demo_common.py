@@ -66,7 +66,7 @@ def demo(
     print()
 
     # clean up the circuit (in place)
-    device.simplify_circuit(circuit_transformed)
+    circuit_transformed = device.simplify_circuit(circuit_transformed)
     print('Simplified circuit:')
     print(circuit_transformed)
     print()

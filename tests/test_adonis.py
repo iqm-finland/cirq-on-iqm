@@ -52,11 +52,12 @@ native_1q_gates = [
     cirq.XPowGate(exponent=0.23),
     cirq.YPowGate(exponent=0.71),
     cirq.PhasedXPowGate(phase_exponent=1.7, exponent=-0.58),
+]
+
+finally_decomposed_1q_gates = [
     cirq.Z,
     cirq.ZPowGate(exponent=-0.23),
 ]
-
-finally_decomposed_1q_gates = []
 
 native_2q_gates = [
     cirq.CZ,
@@ -89,6 +90,14 @@ class TestOperationValidation:
 
         adonis.validate_operation(gate(adonis.qubits[q]))
         adonis.validate_operation(gate(adonis.qubits[q]).with_tags('tag_foo'))
+
+    @pytest.mark.parametrize('gate', finally_decomposed_1q_gates)
+    def test_finally_decomposed_single_qubit_gates(self, adonis, gate):
+        """Finally decomposed operations must pass validation."""
+
+        q0, q1 = adonis.qubits[:2]
+        adonis.validate_operation(gate(q0))
+        adonis.validate_operation(gate(q1).with_tags('tag_foo'))
 
     @pytest.mark.parametrize('gate', native_2q_gates)
     def test_native_two_qubit_gates(self, adonis, gate):
