@@ -32,8 +32,10 @@ def demo_adonis_run():
     """
     a = cirq.NamedQubit('Alice')
     b = cirq.NamedQubit('Bob')
+
     circuit = cirq.Circuit(
         cirq.X(a) ** 0.5,
+        cirq.Z(a),
         cirq.measure(a, b, key='result')
     )
 

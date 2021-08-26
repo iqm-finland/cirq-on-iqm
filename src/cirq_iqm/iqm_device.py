@@ -64,10 +64,6 @@ class IQMDevice(devices.Device):
     NATIVE_GATE_INSTANCES: tuple[cirq.Gate] = ()
     """native gate set of the device (individual gates)"""
 
-    DECOMPOSE_FINALLY: tuple[type[cirq.Gate]] = ()
-    """non-native gates that should not be decomposed when inserted into the circuit
-    (we decompose them later, during the final circuit optimization stage)"""
-
     def __init__(self):
         self.qubits = tuple(cirq.NamedQubit.range(1, self.QUBIT_COUNT + 1, prefix=self.QUBIT_NAME_PREFIX))
 
@@ -100,17 +96,6 @@ class IQMDevice(devices.Device):
             )
         )
 
-    @classmethod
-    def is_native_or_final(cls, op: cirq.Operation) -> bool:
-        """Predicate, True iff the given operation should not be decomposed when inserted into the circuit."""
-        return (
-            isinstance(op, (ops.GateOperation, ops.TaggedOperation))
-            and (
-                isinstance(op.gate, (cls.NATIVE_GATES, cls.DECOMPOSE_FINALLY))
-                or op.gate in cls.NATIVE_GATE_INSTANCES
-            )
-        )
-
     @abc.abstractmethod
     def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
         """Decomposes operations into the native operation set.
@@ -125,60 +110,14 @@ class IQMDevice(devices.Device):
             decomposition, or None to pass ``op`` to the Cirq native decomposition machinery instead
         """
 
-    def operation_final_decomposer(self, op: cirq.Operation) -> list[cirq.Operation]:
-        """Decomposes all the DECOMPOSE_FINALLY operations into the native operation set.
-
-        Called at the end of the :meth:`IQMDevice.simplify_circuit` by :class:`DecomposeGatesFinal`,
-        to optionally perform one more round of decompositions.
-
-        Args:
-            op: operation to decompose
-
-        Returns:
-            decomposition (or just ``[op]``, if no decomposition is needed)
-        """
-        raise NotImplementedError(f'Decomposition missing: {op.gate}')
-
-    def decompose_operation_full(self, op: cirq.Operation) -> cirq.OP_TREE:
-        """Decomposes an operation into the native operation set.
-
-        Args:
-            op: operation to decompose
-
-        Returns:
-            decomposition (or just ``[op]``, if no decomposition is needed)
-
-        :meth:`decompose_operation` is called automatically by Cirq whenever new gates are appended
-        into the circuit. It will not decompose "final" gates, i.e. nonnative gates that should
-        only be decomposed at the end of the optimization process.
-
-        This method is like :meth:`decompose_operation`, except it additionally uses
-        :meth:`operation_final_decomposer` to decompose "final" gates.
-        It should be used if a full decomposition is required.
-        """
-        # first do the circuit insertion decomposition
-        insert_dec = self.decompose_operation(op)
-        if not isinstance(insert_dec, ca.Sequence):
-            # the Cirq decomposition machinery may return just a naked Operation
-            insert_dec = [insert_dec]
-
-        # and then the final decomposition
-        full_dec = []
-        for k in insert_dec:
-            if isinstance(k.gate, self.DECOMPOSE_FINALLY):
-                full_dec.extend(self.operation_final_decomposer(k))
-            else:
-                full_dec.append(k)
-        return full_dec
-
     def decompose_operation(self, operation: cirq.Operation) -> cirq.OP_TREE:
-        if self.is_native_or_final(operation):
+        if self.is_native_operation(operation):
             return operation
 
         return protocols.decompose(
             operation,
             intercepting_decomposer=self.operation_decomposer,
-            keep=self.is_native_or_final,
+            keep=self.is_native_operation,
             on_stuck_raise=None
         )
 
@@ -281,7 +220,9 @@ class IQMDevice(devices.Device):
         DropRZBeforeMeasurement(drop_final=drop_final_rz).optimize_circuit(c)
         optimizers.DropEmptyMoments().optimize_circuit(c)
         if use_final_decomposition:
-            DecomposeGatesFinal(self).optimize_circuit(c)
+            # We postpone the decomposition of the z rotations until the final stage of optimization,
+            # since usually they are eliminated by the EjectZ/DropRZBeforeMeasurement optimization stages.
+            return self.decompose_circuit(c)
         return c
 
     def validate_circuit(self, circuit: cirq.Circuit) -> None:
@@ -292,7 +233,7 @@ class IQMDevice(devices.Device):
         if not isinstance(operation.untagged, cirq.GateOperation):
             raise ValueError(f'Unsupported operation: {operation!r}')
 
-        if not self.is_native_or_final(operation):
+        if not self.is_native_operation(operation):
             raise ValueError(f'Unsupported gate type: {operation.gate!r}')
 
         for qubit in operation.qubits:
@@ -448,43 +389,4 @@ class DropRZBeforeMeasurement(circuits.PointOptimizer):
             clear_span=max(indices) + 1 - index,
             clear_qubits=op.qubits,
             new_operations=[]
-        )
-
-
-class DecomposeGatesFinal(circuits.PointOptimizer):
-    """Decomposes gates during the final decomposition round.
-    """
-    def __init__(self, device: IQMDevice):
-        """
-        Args:
-            device: device whose :meth:`.IQMDevice.operation_final_decomposer` to use
-        """
-        super().__init__()
-        self.device = device
-
-    def optimization_at(
-            self,
-            circuit: cirq.Circuit,
-            index: int,
-            op: cirq.Operation,
-    ) -> Optional[cirq.PointOptimizationSummary]:
-        """Describes how to change operations near the given location.
-
-        Args:
-            circuit: The circuit to improve.
-            index: The index of the moment with the operation to focus on.
-            op: The operation to focus improvements upon.
-
-        Returns:
-            A description of the optimization to perform, or else None if no
-            change should be made.
-        """
-        if not isinstance(op.gate, self.device.DECOMPOSE_FINALLY):
-            return None  # no changes
-
-        rewritten = self.device.operation_final_decomposer(op)
-        return circuits.PointOptimizationSummary(
-            clear_span=1,
-            clear_qubits=op.qubits,
-            new_operations=rewritten
         )

@@ -68,22 +68,6 @@ class Adonis(idev.IQMDevice):
         ops.CZPowGate(),
     )
 
-    # We postpone the decomposition of the z rotations until the final stage of optimization,
-    # since usually they are eliminated by the EjectZ/DropRZBeforeMeasurement optimization stages.
-    DECOMPOSE_FINALLY = (ops.ZPowGate,)
-
-    def operation_final_decomposer(self, op: ops.Operation) -> Optional[list[cirq.Operation]]:
-        # Decomposes z rotations using x and y rotations.
-        if isinstance(op.gate, ops.ZPowGate):
-            # Rz using Rx, Ry
-            q = op.qubits[0]
-            return [
-                ops.XPowGate(exponent=-0.5).on(q),
-                ops.YPowGate(exponent=op.gate.exponent).on(q),
-                ops.XPowGate(exponent=0.5).on(q),
-            ]
-        raise NotImplementedError(f'Decomposition missing: {op.gate}')
-
     def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
         # Decomposes gates into the native Adonis gate set.
         # All the decompositions below keep track of global phase (required for decomposing controlled gates).
@@ -126,5 +110,13 @@ class Adonis(idev.IQMDevice):
                 Ly.on(op.qubits[1]),
                 Lx.on(op.qubits[0]),
                 Lx.on(op.qubits[1]),
+            ]
+        if isinstance(op.gate, ops.ZPowGate):
+            # Rz using Rx, Ry
+            q = op.qubits[0]
+            return [
+                ops.XPowGate(exponent=-0.5).on(q),
+                ops.YPowGate(exponent=op.gate.exponent).on(q),
+                ops.XPowGate(exponent=0.5).on(q),
             ]
         return None
