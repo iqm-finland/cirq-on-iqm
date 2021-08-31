@@ -14,7 +14,7 @@
 """Logic for mapping Cirq Operations to the IQM transfer format.
 """
 from cirq.ops import Operation, PhasedXPowGate, XPowGate, YPowGate, MeasurementGate, CZPowGate
-from cirq_iqm.iqm_client import InstructionDTO
+from iqm_client.iqm_client import InstructionDTO
 
 
 class OperationNotSupportedError(RuntimeError):

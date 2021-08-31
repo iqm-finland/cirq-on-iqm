@@ -14,7 +14,7 @@
 import cirq
 import pytest
 from cirq import ZPowGate, GateOperation, MeasurementGate, CZPowGate, XPowGate, YPowGate, PhasedXPowGate
-from cirq_iqm.iqm_client import InstructionDTO
+from iqm_client.iqm_client import InstructionDTO
 from cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, map_operation
 
 

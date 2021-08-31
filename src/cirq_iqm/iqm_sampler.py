@@ -21,10 +21,11 @@ import json
 
 import cirq
 import numpy as np
+from iqm_client.iqm_client import CircuitDTO, IQMClient, SingleQubitMappingDTO
+
 from cirq import study
 from cirq.study import resolver
 from cirq_iqm import IQMDevice
-from cirq_iqm.iqm_client import CircuitDTO, IQMClient, SingleQubitMappingDTO
 from cirq_iqm.iqm_operation_mapping import map_operation
 
 
