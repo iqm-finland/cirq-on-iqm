@@ -21,15 +21,15 @@ import json
 
 import cirq
 import numpy as np
-from iqm_client.iqm_client import CircuitDTO, IQMClient, SingleQubitMappingDTO
-
 from cirq import study
 from cirq.study import resolver
+from iqm_client.iqm_client import Circuit, IQMClient, SingleQubitMapping
+
 from cirq_iqm import IQMDevice
 from cirq_iqm.iqm_operation_mapping import map_operation
 
 
-def serialize_circuit(circuit: cirq.Circuit) -> CircuitDTO:
+def serialize_circuit(circuit: cirq.Circuit) -> Circuit:
     """Serializes a quantum circuit into the IQM data transfer format.
 
     Args:
@@ -39,14 +39,14 @@ def serialize_circuit(circuit: cirq.Circuit) -> CircuitDTO:
         data transfer object representing the circuit
     """
     instructions = list(map(map_operation, circuit.all_operations()))
-    return CircuitDTO(
+    return Circuit(
         name='Serialized from Cirq',
         instructions=instructions,
         args={}  # todo: implement arguments
     )
 
 
-def serialize_qubit_mapping(qubit_mapping: dict[str, str]) -> list[SingleQubitMappingDTO]:
+def serialize_qubit_mapping(qubit_mapping: dict[str, str]) -> list[SingleQubitMapping]:
     """Serializes a qubit mapping dict into the corresponding IQM data transfer format.
 
     Args:
@@ -55,7 +55,7 @@ def serialize_qubit_mapping(qubit_mapping: dict[str, str]) -> list[SingleQubitMa
     Returns:
         data transfer object representing the mapping
     """
-    return [SingleQubitMappingDTO(logical_name=k, physical_name=v) for k, v in qubit_mapping.items()]
+    return [SingleQubitMapping(logical_name=k, physical_name=v) for k, v in qubit_mapping.items()]
 
 
 class IQMSampler(cirq.work.Sampler):

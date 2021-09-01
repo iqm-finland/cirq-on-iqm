@@ -13,13 +13,12 @@
 # limitations under the License.
 """Test IQM parameterizations of certain two-qubit gate families.
 """
-# pylint: disable=no-self-use
-from cirq import ops
 import numpy as np
 import pytest
+# pylint: disable=no-self-use
+from cirq import ops
 
 from cirq_iqm.iqm_gates import IsingGate, XYGate
-
 
 R = ops.ZPowGate(exponent=0.5, global_shift=-0.5)._unitary_()  # == Rz(pi / 2)
 L = np.kron(R, R)

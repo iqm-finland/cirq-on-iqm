@@ -19,7 +19,6 @@ import cirq
 from cirq import ops
 
 
-
 def IsingGate(p: cirq.value.TParamVal) -> cirq.ops.ZZPowGate:
     r"""Rotation around the ZZ axis of the two-qubit Hilbert space.
 

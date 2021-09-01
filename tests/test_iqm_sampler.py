@@ -15,13 +15,14 @@
 import json
 import uuid
 
-import pytest
 import cirq
-from mockito import mock, when, ANY
-from iqm_client.iqm_client import SingleQubitMappingDTO, IQMClient, RunResult, RunStatus
+import pytest
+from iqm_client.iqm_client import (IQMClient, RunResult, RunStatus,
+                                   SingleQubitMapping)
+from mockito import ANY, mock, when
 
-from cirq_iqm.iqm_sampler import IQMSampler, serialize_qubit_mapping
 from cirq_iqm import Adonis
+from cirq_iqm.iqm_sampler import IQMSampler, serialize_qubit_mapping
 from cirq_iqm.valkmusa import Valkmusa
 
 
@@ -49,8 +50,8 @@ def adonis_sampler(base_url, settings_dict, qubit_mapping):
 
 def test_serialize_qubit_mapping(qubit_mapping):
     assert serialize_qubit_mapping(qubit_mapping) == [
-        SingleQubitMappingDTO(logical_name='q1 log.', physical_name='QB1'),
-        SingleQubitMappingDTO(logical_name='q2 log.', physical_name='QB2'),
+        SingleQubitMapping(logical_name='q1 log.', physical_name='QB1'),
+        SingleQubitMapping(logical_name='q2 log.', physical_name='QB2'),
     ]
 
 
