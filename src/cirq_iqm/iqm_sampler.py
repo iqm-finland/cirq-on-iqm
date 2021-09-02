@@ -23,13 +23,14 @@ import cirq
 import numpy as np
 from cirq import study
 from cirq.study import resolver
-from iqm_client.iqm_client import Circuit, IQMClient, SingleQubitMapping
+import iqm_client.iqm_client as iqm_client
+from iqm_client.iqm_client import IQMClient, SingleQubitMapping
 
 from cirq_iqm import IQMDevice
 from cirq_iqm.iqm_operation_mapping import map_operation
 
 
-def serialize_circuit(circuit: cirq.Circuit) -> Circuit:
+def serialize_circuit(circuit: cirq.Circuit) -> iqm_client.Circuit:
     """Serializes a quantum circuit into the IQM data transfer format.
 
     Args:
@@ -39,7 +40,7 @@ def serialize_circuit(circuit: cirq.Circuit) -> Circuit:
         data transfer object representing the circuit
     """
     instructions = list(map(map_operation, circuit.all_operations()))
-    return Circuit(
+    return iqm_client.Circuit(
         name='Serialized from Cirq',
         instructions=instructions,
         args={}  # todo: implement arguments
