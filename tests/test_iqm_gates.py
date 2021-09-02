@@ -15,7 +15,6 @@
 """
 import numpy as np
 import pytest
-# pylint: disable=no-self-use
 from cirq import ops
 
 from cirq_iqm.iqm_gates import IsingGate, XYGate
@@ -34,6 +33,7 @@ I = np.eye(4)
 def test_isinggate(p, expected):
     """IsingGate should return the correct Cirq gate instance."""
     assert IsingGate(p)._unitary_() == pytest.approx(expected)
+
 
 @pytest.mark.parametrize('p, expected', [
     (0.5, ops.ISWAP._unitary_().T.conj()),
