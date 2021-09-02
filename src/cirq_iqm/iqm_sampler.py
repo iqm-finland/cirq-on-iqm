@@ -23,7 +23,7 @@ import cirq
 import numpy as np
 from cirq import study
 from cirq.study import resolver
-import iqm_client.iqm_client as iqm_client
+from iqm_client import iqm_client
 from iqm_client.iqm_client import IQMClient, SingleQubitMapping
 
 from cirq_iqm import IQMDevice
