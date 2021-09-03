@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>User guide &#8212; Cirq on IQM 1.1 documentation</title>
+    <title>User guide &#8212; Cirq on IQM 1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/nature.css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -34,7 +34,7 @@
         <li class="right" >
           <a href="index.html" title="Cirq on IQM"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 1.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">User guide</a></li> 
       </ul>
     </div>  
@@ -210,12 +210,12 @@ Please contact our <a class="reference external" href="https://www.meetiqm.com/c
 </div>
 <p>Cirq contains various simulators which you can use to simulate the circuits constructed above.
 In this subsection we demonstrate how to run them on an IQM quantum computer.</p>
-<p>Cirq on IQM implements <a class="reference internal" href="api/cirq_iqm.iqm_remote.IQMSampler.html#cirq_iqm.iqm_remote.IQMSampler" title="cirq_iqm.iqm_remote.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a>, a subclass of <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.work.Sampler</span></code>, which is used
+<p>Cirq on IQM implements <a class="reference internal" href="api/cirq_iqm.iqm_sampler.IQMSampler.html#cirq_iqm.iqm_sampler.IQMSampler" title="cirq_iqm.iqm_sampler.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a>, a subclass of <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.work.Sampler</span></code>, which is used
 to execute quantum circuits. You need to have access to an IQM server and have a settings file for
 the quantum hardware of interest. Once these resources are in place, you can create an
-<a class="reference internal" href="api/cirq_iqm.iqm_remote.IQMSampler.html#cirq_iqm.iqm_remote.IQMSampler" title="cirq_iqm.iqm_remote.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a> instance and use its <code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code> method to send a circuit for execution
+<a class="reference internal" href="api/cirq_iqm.iqm_sampler.IQMSampler.html#cirq_iqm.iqm_sampler.IQMSampler" title="cirq_iqm.iqm_sampler.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a> instance and use its <code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code> method to send a circuit for execution
 and retrieve the results:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cirq_iqm.iqm_remote</span> <span class="kn">import</span> <span class="n">IQMSampler</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cirq_iqm.iqm_sampler</span> <span class="kn">import</span> <span class="n">IQMSampler</span>
 
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">iqm_settings_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">sampler</span> <span class="o">=</span> <span class="n">IQMSampler</span><span class="p">(</span><span class="n">iqm_server_url</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">adonis</span><span class="p">)</span>
@@ -229,7 +229,7 @@ and retrieve the results:</p>
 <p>When executing a circuit that uses something other than the device qubits, you need to either route it first
 as explained in <a class="reference internal" href="#workflow-2"><span class="std std-ref">workflow 2</span></a> above,
 or provide the mapping from the <em>logical</em> qubits in the circuit to the <em>physical</em> qubits on the device yourself.
-The initializer of <a class="reference internal" href="api/cirq_iqm.iqm_remote.IQMSampler.html#cirq_iqm.iqm_remote.IQMSampler" title="cirq_iqm.iqm_remote.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a> accepts an optional argument called <code class="docutils literal notranslate"><span class="pre">qubit_mapping</span></code> which
+The initializer of <a class="reference internal" href="api/cirq_iqm.iqm_sampler.IQMSampler.html#cirq_iqm.iqm_sampler.IQMSampler" title="cirq_iqm.iqm_sampler.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a> accepts an optional argument called <code class="docutils literal notranslate"><span class="pre">qubit_mapping</span></code> which
 can be used to specify this correspondence.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">qubit_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Alice&#39;</span><span class="p">:</span> <span class="s1">&#39;QB1&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">:</span> <span class="s1">&#39;QB3&#39;</span><span class="p">}</span>
 
@@ -341,7 +341,7 @@ $ firefox build/sphinx/html/index.html
         <li class="right" >
           <a href="index.html" title="Cirq on IQM"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 1.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">User guide</a></li> 
       </ul>
     </div>

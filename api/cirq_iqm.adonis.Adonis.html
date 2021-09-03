@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>cirq_iqm.adonis.Adonis &#8212; Cirq on IQM 1.1 documentation</title>
+    <title>cirq_iqm.adonis.Adonis &#8212; Cirq on IQM 1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -34,7 +34,7 @@
         <li class="right" >
           <a href="cirq_iqm.adonis.html" title="cirq_iqm.adonis"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../API.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="cirq_iqm.html" >cirq_iqm</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="cirq_iqm.adonis.html" accesskey="U">cirq_iqm.adonis</a> &#187;</li>
@@ -63,10 +63,10 @@
 </pre></div>
 </div>
 <p>where the lines denote which qubit pairs can be subject to two-qubit gates.</p>
-<p>Each qubit can be rotated about any axis in the xy plane, or the z axis, by an arbitrary angle.
-Adonis thus has native PhasedXPowGate, XPowGate, YPowGate, and ZPowGate gates.
-The only native two qubit gate is CZ.
-The qubits can be measured simultaneously or separately once, at the end of the circuit.</p>
+<p>Each qubit can be rotated about any axis in the xy plane by an arbitrary angle.
+Adonis thus has native PhasedXPowGate, XPowGate, and YPowGate gates. The two-qubit gate CZ is
+native, as well. The qubits can be measured simultaneously or separately once, at the end of
+the circuit.</p>
 <p class="rubric">Attributes</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -77,13 +77,16 @@ The qubits can be measured simultaneously or separately once, at the end of the 
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">CONNECTIVITY</span></code></p></td>
 <td><p>qubit connectivity graph of the device</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NATIVE_GATES</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DECOMPOSE_FINALLY</span></code></p></td>
+<td><p>non-native gates that should not be decomposed when inserted into the circuit (we decompose them later, during the final circuit optimization stage)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NATIVE_GATES</span></code></p></td>
 <td><p>native gate set of the device (gate families)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NATIVE_GATE_INSTANCES</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NATIVE_GATE_INSTANCES</span></code></p></td>
 <td><p>native gate set of the device (individual gates)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">QUBIT_COUNT</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">QUBIT_COUNT</span></code></p></td>
 <td><p>number of qubits on the device</p></td>
 </tr>
 </tbody>
@@ -98,8 +101,30 @@ The qubits can be measured simultaneously or separately once, at the end of the 
 <tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.adonis.Adonis.operation_decomposer" title="cirq_iqm.adonis.Adonis.operation_decomposer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">operation_decomposer</span></code></a>(op)</p></td>
 <td><p>Decomposes operations into the native operation set.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cirq_iqm.adonis.Adonis.operation_final_decomposer" title="cirq_iqm.adonis.Adonis.operation_final_decomposer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">operation_final_decomposer</span></code></a>(op)</p></td>
+<td><p>Decomposes all the DECOMPOSE_FINALLY operations into the native operation set.</p></td>
+</tr>
 </tbody>
 </table>
+<dl class="py method">
+<dt class="sig sig-object py" id="cirq_iqm.adonis.Adonis.operation_final_decomposer">
+<span class="sig-name descname"><span class="pre">operation_final_decomposer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.adonis.Adonis.operation_final_decomposer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decomposes all the DECOMPOSE_FINALLY operations into the native operation set.</p>
+<p>Called at the end of the <code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.simplify_circuit()</span></code> by <code class="xref py py-class docutils literal notranslate"><span class="pre">DecomposeGatesFinal</span></code>,
+to optionally perform one more round of decompositions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>op</strong> (<em>cirq.ops.raw_types.Operation</em>) – operation to decompose</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>decomposition (or just <code class="docutils literal notranslate"><span class="pre">[op]</span></code>, if no decomposition is needed)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Optional[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)">list</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="cirq_iqm.adonis.Adonis.operation_decomposer">
 <span class="sig-name descname"><span class="pre">operation_decomposer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.adonis.Adonis.operation_decomposer" title="Permalink to this definition">¶</a></dt>
@@ -172,7 +197,7 @@ This happens at various points during the optimization rounds in <code class="xr
         <li class="right" >
           <a href="cirq_iqm.adonis.html" title="cirq_iqm.adonis"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../API.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="cirq_iqm.html" >cirq_iqm</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="cirq_iqm.adonis.html" >cirq_iqm.adonis</a> &#187;</li>

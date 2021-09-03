@@ -14,6 +14,7 @@ cirq\_iqm.adonis.Adonis
    .. autosummary::
    
       ~Adonis.CONNECTIVITY
+      ~Adonis.DECOMPOSE_FINALLY
       ~Adonis.NATIVE_GATES
       ~Adonis.NATIVE_GATE_INSTANCES
       ~Adonis.QUBIT_COUNT
@@ -28,5 +29,6 @@ cirq\_iqm.adonis.Adonis
    .. autosummary::
    
       ~Adonis.operation_decomposer
+      ~Adonis.operation_final_decomposer
    
    

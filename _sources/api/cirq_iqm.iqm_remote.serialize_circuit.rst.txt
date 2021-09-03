@@ -1,6 +1,0 @@
-cirq\_iqm.iqm\_remote.serialize\_circuit
-========================================
-
-.. currentmodule:: cirq_iqm.iqm_remote
-
-.. autofunction:: serialize_circuit
