@@ -3,12 +3,13 @@ Changelog
 =========
 
 
-Version 1.2 (in progress)
+Version 1.2 (2021-09-03)
 =========================
 
 Features
 --------
 
+* Move IQM client to a `separate library <https://pypi.org/project/iqm-client/>`_
 * Adonis native gate set updated, Rz is not native.
   `#41 <https://github.com/iqm-finland/cirq-on-iqm/pull/41>`_
 
