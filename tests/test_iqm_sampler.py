@@ -12,15 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# pylint: disable=unused-argument
 import json
-import pytest
+import uuid
 
 import cirq
+import pytest
+from iqm_client.iqm_client import (IQMClient, RunResult, RunStatus,
+                                   SingleQubitMapping)
+from mockito import ANY, mock, when
 
-from cirq_iqm.iqm_client import SingleQubitMappingDTO
-from cirq_iqm.iqm_remote import IQMSampler, serialize_qubit_mapping
 from cirq_iqm import Adonis
+from cirq_iqm.iqm_sampler import IQMSampler, serialize_qubit_mapping
 from cirq_iqm.valkmusa import Valkmusa
 
 
@@ -48,12 +50,20 @@ def adonis_sampler(base_url, settings_dict, qubit_mapping):
 
 def test_serialize_qubit_mapping(qubit_mapping):
     assert serialize_qubit_mapping(qubit_mapping) == [
-        SingleQubitMappingDTO(logical_name='q1 log.', physical_name='QB1'),
-        SingleQubitMappingDTO(logical_name='q2 log.', physical_name='QB2'),
+        SingleQubitMapping(logical_name='q1 log.', physical_name='QB1'),
+        SingleQubitMapping(logical_name='q2 log.', physical_name='QB2'),
     ]
 
 
-def test_run_sweep_executes_circuit(mock_server, adonis_sampler, circuit):
+@pytest.mark.usefixtures('unstub')
+def test_run_sweep_executes_circuit(adonis_sampler, circuit):
+    client = mock(IQMClient)
+    run_id = uuid.uuid4()
+    run_result = RunResult(status=RunStatus.READY, measurements={'some stuff': [[0], [1]]}, message=None)
+    when(client).submit_circuit(ANY, ANY, ANY).thenReturn(run_id)
+    when(client).wait_for_results(run_id).thenReturn(run_result)
+
+    adonis_sampler._client = client
     results = adonis_sampler.run_sweep(circuit, None, repetitions=2)
     assert isinstance(results[0], cirq.Result)
 
@@ -71,7 +81,7 @@ def test_non_injective_qubit_mapping(base_url, settings_dict, qubit_mapping):
         IQMSampler(base_url, json.dumps(settings_dict), Adonis(), qubit_mapping)
 
 
-def test_qubits_not_in_settings(circuit, base_url, settings_dict, qubit_mapping):
+def test_qubits_not_in_settings(base_url, settings_dict, qubit_mapping):
     del settings_dict['subtrees']['QB1']
     with pytest.raises(
             ValueError,

@@ -24,7 +24,6 @@ from cirq import ops
 
 import cirq_iqm.iqm_device as idev
 
-
 PI_2 = PI / 2
 
 # common gates used in gate decompositions

@@ -17,6 +17,7 @@ Demonstrates transforming a quantum circuit into the native gateset and connecti
 IQM device, optimizing it, and then executing it on a simulator.
 """
 from __future__ import annotations
+
 from typing import Optional
 
 import cirq

@@ -13,9 +13,12 @@
 # limitations under the License.
 import cirq
 import pytest
-from cirq import ZPowGate, GateOperation, MeasurementGate, CZPowGate, XPowGate, YPowGate, PhasedXPowGate
-from cirq_iqm.iqm_client import InstructionDTO
-from cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, map_operation
+from cirq import (CZPowGate, GateOperation, MeasurementGate, PhasedXPowGate,
+                  XPowGate, YPowGate, ZPowGate)
+from iqm_client.iqm_client import Instruction
+
+from cirq_iqm.iqm_operation_mapping import (OperationNotSupportedError,
+                                            map_operation)
 
 
 @pytest.fixture()
@@ -38,7 +41,7 @@ def test_maps_measurement_gate(qubit_1):
     key = 'test measurement'
     operation = GateOperation(MeasurementGate(1, key), [qubit_1])
     mapped = map_operation(operation)
-    expected = InstructionDTO(
+    expected = Instruction(
         name='measurement',
         qubits=[str(qubit_1)],
         args={'key': key}
@@ -63,7 +66,7 @@ def test_maps_to_phased_rx(qubit_1, gate, expected_angle, expected_phase):
 def test_maps_cz_gate(qubit_1, qubit_2):
     operation = GateOperation(CZPowGate(), [qubit_1, qubit_2])
     mapped = map_operation(operation)
-    expected = InstructionDTO(
+    expected = Instruction(
         name='cz',
         qubits=[str(qubit_1), str(qubit_2)],
         args={}

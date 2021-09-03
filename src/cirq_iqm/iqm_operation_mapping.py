@@ -13,15 +13,16 @@
 # limitations under the License.
 """Logic for mapping Cirq Operations to the IQM transfer format.
 """
-from cirq.ops import Operation, PhasedXPowGate, XPowGate, YPowGate, MeasurementGate, CZPowGate
-from cirq_iqm.iqm_client import InstructionDTO
+from cirq.ops import (CZPowGate, MeasurementGate, Operation, PhasedXPowGate,
+                      XPowGate, YPowGate)
+from iqm_client.iqm_client import Instruction
 
 
 class OperationNotSupportedError(RuntimeError):
     """Raised when a given operation is not supported by the data transfer format."""
 
 
-def map_operation(operation: Operation) -> InstructionDTO:
+def map_operation(operation: Operation) -> Instruction:
     """Map a Cirq Operation to the IQM data transfer format.
 
     Assumes the circuit has been transpiled so that it only contains operations natively supported by the
@@ -31,7 +32,7 @@ def map_operation(operation: Operation) -> InstructionDTO:
         operation: a Cirq Operation
 
     Returns:
-        InstructionDTO: the converted operation
+        Instruction: the converted operation
 
     Raises:
         OperationNotSupportedError When the circuit contains an unsupported operation.
@@ -40,7 +41,7 @@ def map_operation(operation: Operation) -> InstructionDTO:
     phased_rx_name = 'phased_rx'
     qubits = [str(qubit) for qubit in operation.qubits]
     if isinstance(operation.gate, PhasedXPowGate):
-        return InstructionDTO(
+        return Instruction(
             name=phased_rx_name,
             qubits=qubits,
             args={
@@ -49,28 +50,28 @@ def map_operation(operation: Operation) -> InstructionDTO:
             }
         )
     if isinstance(operation.gate, XPowGate):
-        return InstructionDTO(
+        return Instruction(
             name=phased_rx_name,
             qubits=qubits,
             args={'angle_t': operation.gate.exponent / 2,
                   'phase_t': 0}
         )
     if isinstance(operation.gate, YPowGate):
-        return InstructionDTO(
+        return Instruction(
             name=phased_rx_name,
             qubits=qubits,
             args={'angle_t': operation.gate.exponent / 2,
                   'phase_t': 0.25}
         )
     if isinstance(operation.gate, MeasurementGate):
-        return InstructionDTO(
+        return Instruction(
             name='measurement',
             qubits=qubits,
             args={'key': operation.gate.key}
         )
     if isinstance(operation.gate, CZPowGate):
         if operation.gate.exponent == 1.0:
-            return InstructionDTO(
+            return Instruction(
                 name='cz',
                 qubits=qubits,
                 args={}

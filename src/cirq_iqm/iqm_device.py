@@ -27,8 +27,7 @@ from typing import Optional, Union
 
 import cirq
 from cirq import circuits, devices, ops, optimizers, protocols
-from cirq.contrib.routing.router import route_circuit, nx
-
+from cirq.contrib.routing.router import nx, route_circuit
 
 GATE_MERGING_TOLERANCE = 1e-10
 

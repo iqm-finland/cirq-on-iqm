@@ -17,12 +17,12 @@
 # pylint: disable=no-self-use
 
 import cirq
-from cirq import ops, optimizers
 import pytest
+from cirq import ops, optimizers
 
-from cirq_iqm.iqm_device import MergeOneParameterGroupGates, DropRZBeforeMeasurement
 from cirq_iqm.adonis import Adonis
-
+from cirq_iqm.iqm_device import (DropRZBeforeMeasurement,
+                                 MergeOneParameterGroupGates)
 
 TOLERANCE = 1e-10  # numerical tolerance
 

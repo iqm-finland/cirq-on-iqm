@@ -23,7 +23,7 @@ import os
 import cirq
 
 from cirq_iqm.adonis import Adonis
-from cirq_iqm.iqm_remote import IQMSampler
+from cirq_iqm.iqm_sampler import IQMSampler
 
 
 def demo_adonis_run():
