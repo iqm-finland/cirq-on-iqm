@@ -215,7 +215,7 @@ and retrieve the results:
 
 .. code-block:: python
 
-   from cirq_iqm.iqm_remote import IQMSampler
+   from cirq_iqm.iqm_sampler import IQMSampler
 
    with open(iqm_settings_path, 'r') as f:
        sampler = IQMSampler(iqm_server_url, f.read(), adonis)
