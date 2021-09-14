@@ -37,7 +37,6 @@ def demo_valkmusa(do_measure=False, use_qsim=False):
         h q[0];
         rx(1.1) q[0];
         cx q[0], q[1];
-        xy(0.7) q[1], q[0];  // QASM extension
     """
     if do_measure:
         qasm_program += '\nmeasure q -> meas;'
