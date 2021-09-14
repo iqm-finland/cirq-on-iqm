@@ -192,8 +192,7 @@ the previous workflow to prepare the circuit for execution on an IQM device.
                │
    q_1: ───H───X───M('m_1')───
 
-:func:`.circuit_from_qasm` uses the OpenQASM 2.0 parser in :mod:`cirq.contrib.qasm_import`, extended by
-a few additional gate types.
+:func:`.circuit_from_qasm` uses the OpenQASM 2.0 parser in :mod:`cirq.contrib.qasm_import`.
 
 
 Running on a real quantum computer
