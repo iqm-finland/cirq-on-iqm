@@ -36,8 +36,6 @@ def demo_adonis(do_measure=False, use_qsim=False):
         h q[0];
         h q[2];
         cx q[2], q[1];
-        ising(-0.6) q[0], q[2];  // QASM extension
-        xy(0.32) q[2], q[1];  // QASM extension
     """
     if do_measure:
         qasm_program += '\nmeasure q -> meas;'

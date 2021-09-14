@@ -2,6 +2,9 @@
 Changelog
 =========
 
+Version 1.3 (in progress)
+
+* Remove support for obsolete IQM OpenQASM extension
 
 Version 1.2 (2021-09-03)
 =========================
