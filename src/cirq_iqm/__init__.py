@@ -15,7 +15,7 @@
 """
 from importlib.metadata import PackageNotFoundError, version
 
-from .devices import Adonis, IQMDevice, Valkmusa
+from .devices import *
 from .extended_qasm_parser import circuit_from_qasm
 
 try:

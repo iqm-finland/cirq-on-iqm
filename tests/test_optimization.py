@@ -108,19 +108,26 @@ class TestGateOptimization:
 
 class TestSimplifyCircuit:
 
-    @pytest.mark.xfail(strict=True, reason='ZZPowGate does not yet implement the _phase_by_ protocol in Cirq.')
-    def test_simplify_circuit_eject_z(self, qubits):
+    @pytest.mark.parametrize('two_qubit_gate', [
+        cirq.CZPowGate(exponent=1),
+        pytest.param(cirq.ZZPowGate(exponent=0.1),
+                     marks=pytest.mark.xfail(strict=True,
+                                             reason='ZZPowGate does not yet implement the _phase_by_ protocol in Cirq.',
+                                             raises=AssertionError
+                                             )
+                     )
+    ])
+    def test_simplify_circuit_eject_z(self, two_qubit_gate, qubits):
 
         q0, q1 = qubits[:2]
         c = cirq.Circuit()
         c.append([
             cirq.ZPowGate(exponent=0.55)(q0),
-            cirq.ZZPowGate(exponent=0.1)(q0, q1),
-            cirq.MeasurementGate(2)(q0, q1),
+            two_qubit_gate(q0, q1),
+            cirq.MeasurementGate(2, key='mk')(q0, q1),
         ])
         new = simplify_circuit(c)
 
-        # TODO ZPowGate should have been ejected and dropped
         assert len(new) == 2
 
     def test_simplify_circuit_merge_one_parameter_gates(self, qubits):

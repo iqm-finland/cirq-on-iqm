@@ -24,6 +24,7 @@ import cirq
 import numpy as np
 
 from cirq_iqm import IQMDevice
+from cirq_iqm.optimizers import simplify_circuit
 
 np.set_printoptions(precision=3)
 
@@ -52,25 +53,27 @@ def demo(
     print(circuit_original)
     print()
 
-    # decompose non-native gates
+    # decompose non-native gates and simplify the circuit
     circuit_decomposed = device.decompose_circuit(circuit)
+    circuit_simplified = simplify_circuit(circuit_decomposed)
+    print('Simplified circuit:')
+    print(circuit_simplified)
+    print()
 
     # map the circuit qubits to device qubits
     if qubit_mapping is None:
-        circuit_transformed = device.route_circuit(circuit_decomposed)
+        circuit_mapped = device.route_circuit(circuit_simplified)
     else:
         temp = {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in qubit_mapping.items()}
-        circuit_transformed = circuit_decomposed.transform_qubits(temp)
+        circuit_mapped = circuit_simplified.transform_qubits(temp)
 
-    print('Decomposed circuit:')
-    print(circuit_transformed)
+    print('Mapped simplified circuit:')
+    print(circuit_mapped)
     print()
 
-    # clean up the circuit (in place)
-    circuit_transformed = device.simplify_circuit(circuit_transformed)
-    print('Simplified circuit:')
-    print(circuit_transformed)
-    print()
+    # Decompose any non-native gates which might have been
+    # introduced since the last decomposition.
+    circuit_transformed = device.decompose_circuit(circuit_mapped)
 
     # Initialize a ket-based simulator for evaluating the circuit
     if use_qsim:
