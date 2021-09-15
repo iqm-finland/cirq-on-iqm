@@ -12,67 +12,71 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-IQM's Adonis quantum architecture.
+IQM's Valkmusa quantum architecture.
 """
-from __future__ import annotations
-
 from math import pi as PI
 from typing import Optional
 
-import cirq
 from cirq import ops
 
-import cirq_iqm.iqm_device as idev
+from .iqm_device import IQMDevice
 
 PI_2 = PI / 2
 
 # common gates used in gate decompositions
-CZ = ops.CZPowGate()
 Lx = ops.rx(PI_2)
 Lxi = ops.rx(-PI_2)
 Ly = ops.ry(PI_2)
 Lyi = ops.ry(-PI_2)
+Lz = ops.rz(PI_2)
+Lzi = ops.rz(-PI_2)
 
 
-class Adonis(idev.IQMDevice):
-    """IQM's five-qubit transmon device.
+class Valkmusa(IQMDevice):
+    """IQM's two-qubit transmon device.
 
-    The qubits are connected thus::
+    ::
 
-            QB1
-             |
-      QB2 - QB3 - QB4
-             |
-            QB5
-
-    where the lines denote which qubit pairs can be subject to two-qubit gates.
+      QB1 - QB2
 
     Each qubit can be rotated about any axis in the xy plane by an arbitrary angle.
-    Adonis thus has native PhasedXPowGate, XPowGate, and YPowGate gates. The two-qubit gate CZ is
-    native, as well. The qubits can be measured simultaneously or separately once, at the end of
-    the circuit.
+    The native two qubit-gate is ISwapPowGate.
+    The qubits are always measured simultaneously at the end of the computation.
     """
 
-    QUBIT_COUNT = 5
+    QUBIT_COUNT = 2
 
-    CONNECTIVITY = ({1, 3}, {2, 3}, {4, 3}, {5, 3})
+    CONNECTIVITY = ({1, 2},)
 
     NATIVE_GATES = (
         ops.PhasedXPowGate,
+        # XPow and YPow kept for convenience, Cirq does not know how to decompose them into PhasedX
+        # so we would have to add those rules...
         ops.XPowGate,
         ops.YPowGate,
+        ops.ISwapPowGate,
         ops.MeasurementGate
     )
 
-    NATIVE_GATE_INSTANCES = (
-        ops.CZPowGate(),
-    )
-
-    def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
-        # Decomposes gates into the native Adonis gate set.
+    def operation_decomposer(self, op: ops.Operation) -> Optional[list[ops.Operation]]:
+        # Decomposes CNOT and the CZPowGate family to Valkmusa native gates.
         # All the decompositions below keep track of global phase (required for decomposing controlled gates).
-        # It seems that Cirq native decompositions ignore global phase entirely?
 
+        if isinstance(op.gate, ops.CXPowGate) and op.gate.exponent == 1.0:
+            # CNOT is a special case, we decompose it using iSWAPs to be able to commute Z rotations through
+            control_qubit = op.qubits[0]
+            target_qubit = op.qubits[1]
+            s = op.gate.global_shift
+            iSWAP = ops.ISwapPowGate(exponent=1, global_shift=(s + 0.25) / 2)
+            return [
+                Lx.on(target_qubit),
+                Lzi.on(control_qubit),
+                Lz.on(target_qubit),
+                iSWAP.on(*op.qubits),
+                Lx.on(control_qubit),
+                iSWAP.on(*op.qubits),
+                Lz.on(target_qubit),
+            ]
         if isinstance(op.gate, ops.CZPowGate):
             # decompose CZPowGate using ZZPowGate
             t = op.gate.exponent
@@ -84,32 +88,19 @@ class Adonis(idev.IQMDevice):
                 L.on(op.qubits[1]),
             ]
         if isinstance(op.gate, ops.ZZPowGate):
-            # decompose ZZPowGate using two CZs
+            # ZZPowGate is decomposed using two applications of the XY interaction
             t = op.gate.exponent
             s = op.gate.global_shift
+            XY = ops.ISwapPowGate(exponent=-t, global_shift=-(s + 0.5) / 2)
             return [
+                Lyi.on(op.qubits[0]),
                 Lyi.on(op.qubits[1]),
-                CZ.on(*op.qubits),
-                ops.XPowGate(exponent=-t, global_shift=-1 - s).on(op.qubits[1]),
-                CZ.on(*op.qubits),
+                XY.on(*op.qubits),
+                ops.XPowGate(exponent=-1, global_shift=-0.5).on(op.qubits[0]),
+                XY.on(*op.qubits),
+                ops.XPowGate(exponent=1, global_shift=-0.5).on(op.qubits[0]),
+                Ly.on(op.qubits[0]),
                 Ly.on(op.qubits[1]),
-            ]
-        if isinstance(op.gate, ops.ISwapPowGate):
-            # decompose ISwapPowGate using two CZs
-            t = op.gate.exponent
-            s = op.gate.global_shift
-            x = -0.5 * t
-            return [
-                Lxi.on(op.qubits[0]),
-                Lxi.on(op.qubits[1]),
-                Lyi.on(op.qubits[1]),
-                CZ.on(*op.qubits),
-                ops.XPowGate(exponent=x, global_shift=-0.5 -2 * s).on(op.qubits[0]),
-                ops.XPowGate(exponent=-x, global_shift=-0.5).on(op.qubits[1]),
-                CZ.on(*op.qubits),
-                Ly.on(op.qubits[1]),
-                Lx.on(op.qubits[0]),
-                Lx.on(op.qubits[1]),
             ]
         if isinstance(op.gate, ops.ZPowGate):
             # Rz using Rx, Ry
