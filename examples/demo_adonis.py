@@ -32,24 +32,28 @@ def demo_adonis(do_measure=False, use_qsim=False):
         include "qelib1.inc";
         qreg q[3];
         creg meas[3];
-        U(0.2, 0.5, 1.7) q[1];
         h q[0];
         h q[2];
         cx q[2], q[1];
+        U(0.29, 1.33, -0.29) q[0];
     """
     if do_measure:
         qasm_program += '\nmeasure q -> meas;'
 
     circuit = circuit_from_qasm(qasm_program)
 
+    print(circuit)
+    print('---------------------')
+
     # add some more gates
     q0 = cirq.NamedQubit('q_0')
     q2 = cirq.NamedQubit('q_2')
     circuit.insert(len(circuit) - 1, cirq.CXPowGate(exponent=0.723)(q2, q0))
 
-    qubit_mapping = {'q_0': 'QB1', 'q_1': 'QB2', 'q_2': 'QB3'}
-    demo(device, circuit, do_measure, use_qsim=use_qsim, qubit_mapping=qubit_mapping)
+    print(circuit)
+
+    # qubit_mapping = {'q_0': 'QB1', 'q_1': 'QB2', 'q_2': 'QB3'}
+    # demo(device, circuit, do_measure, use_qsim=use_qsim, qubit_mapping=qubit_mapping)
 
 
-if __name__ == '__main__':
-    demo_adonis()
+demo_adonis()
