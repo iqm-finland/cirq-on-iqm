@@ -35,9 +35,9 @@ def circuit_from_qasm(qasm: str) -> cirq.circuits.Circuit:
         """Maps the OpenQASM builtin one-qubit gate ``U`` to :class:`cirq.QasmUGate`,
         or :class:`cirq.PhasedXPowGate` if possible.
         """
-        theta, phi, lambd = args
+        theta, phi, lmda = args
         scale = np.pi
-        if phi == -lambd:
+        if phi == -lmda:
             return cirq.PhasedXPowGate(exponent=theta / scale, phase_exponent=phi / scale + 0.5, global_shift=-0.5)
         return QasmUGate(*(p / np.pi for p in args))
 
