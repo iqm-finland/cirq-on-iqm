@@ -4,11 +4,11 @@ Changelog
 
 Version 1.3 (in progress)
 
-* The codebase has been reorganized.
+* The codebase is reorganized.
   `#46 <https://github.com/iqm-finland/cirq-on-iqm/pull/46>`_
-* Redundant functionality for final decompositions has been removed.
+* Redundant functionality for final decompositions is removed.
   `#46 <https://github.com/iqm-finland/cirq-on-iqm/pull/46>`_
-* Support for obsolete IQM OpenQASM extension has been removed.
+* Support for obsolete IQM OpenQASM extension is removed.
   `#45 <https://github.com/iqm-finland/cirq-on-iqm/pull/45>`_
 
 Version 1.2 (2021-09-03)
