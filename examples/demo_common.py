@@ -74,6 +74,9 @@ def demo(
     # Decompose any non-native gates which might have been
     # introduced since the last decomposition.
     circuit_transformed = device.decompose_circuit(circuit_mapped)
+    print('Final transformed circuit:')
+    print(circuit_transformed)
+    print()
 
     # Initialize a ket-based simulator for evaluating the circuit
     if use_qsim:
