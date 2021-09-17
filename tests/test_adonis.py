@@ -163,7 +163,7 @@ class TestGateDecomposition:
             return True
         for op in op_or_op_list:
             if not Adonis.is_native_operation(op):
-                raise TypeError('Non-native operation: {}'.format(op))
+                raise TypeError(f'Non-native operation: {op}')
         return True
 
     @pytest.mark.parametrize('gate', native_1q_gates)
