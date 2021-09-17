@@ -19,7 +19,7 @@ from typing import Optional
 
 from cirq import ops
 
-import cirq_iqm.iqm_device as idev
+from .iqm_device import IQMDevice
 
 PI_2 = PI / 2
 
@@ -32,7 +32,7 @@ Lz = ops.rz(PI_2)
 Lzi = ops.rz(-PI_2)
 
 
-class Valkmusa(idev.IQMDevice):
+class Valkmusa(IQMDevice):
     """IQM's two-qubit transmon device.
 
     ::
@@ -57,21 +57,6 @@ class Valkmusa(idev.IQMDevice):
         ops.ISwapPowGate,
         ops.MeasurementGate
     )
-
-    # we postpone the decomposition of the z rotations until the final stage of optimization
-    DECOMPOSE_FINALLY = (ops.ZPowGate,)
-
-    def operation_final_decomposer(self, op: ops.Operation) -> Optional[list[ops.Operation]]:
-        # Decomposes z rotations using x and y rotations.
-        if isinstance(op.gate, ops.ZPowGate):
-            # Rz using Rx, Ry
-            q = op.qubits[0]
-            return [
-                ops.XPowGate(exponent=-0.5).on(q),
-                ops.YPowGate(exponent=op.gate.exponent).on(q),
-                ops.XPowGate(exponent=0.5).on(q),
-            ]
-        raise NotImplementedError(f'Decomposition missing: {op.gate}')
 
     def operation_decomposer(self, op: ops.Operation) -> Optional[list[ops.Operation]]:
         # Decomposes CNOT and the CZPowGate family to Valkmusa native gates.
@@ -116,5 +101,13 @@ class Valkmusa(idev.IQMDevice):
                 ops.XPowGate(exponent=1, global_shift=-0.5).on(op.qubits[0]),
                 Ly.on(op.qubits[0]),
                 Ly.on(op.qubits[1]),
+            ]
+        if isinstance(op.gate, ops.ZPowGate):
+            # Rz using Rx, Ry
+            q = op.qubits[0]
+            return [
+                ops.XPowGate(exponent=-0.5).on(q),
+                ops.YPowGate(exponent=op.gate.exponent).on(q),
+                ops.XPowGate(exponent=0.5).on(q),
             ]
         return None

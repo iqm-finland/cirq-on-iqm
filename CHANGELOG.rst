@@ -2,20 +2,30 @@
 Changelog
 =========
 
-Version 1.3 (in progress)
+
+Version 2.1 (in progress)
 =========================
 
 Features
 --------
 
-* Remove support for obsolete IQM OpenQASM extension.
-  `#45 <https://github.com/iqm-finland/cirq-on-iqm/pull/45>`_
 * ``circuit_from_qasm`` imports OpenQASM 2.0 gates ``U`` and ``u3`` of the form ``U(a, b, -b)``
   as ``cirq.PhasedXPowGate``. `#46 <https://github.com/iqm-finland/cirq-on-iqm/pull/46>`_
 
 
+Version 2.0 (2021-09-17)
+========================
+
+* The codebase is reorganized.
+  `#46 <https://github.com/iqm-finland/cirq-on-iqm/pull/46>`_
+* Redundant functionality for final decompositions is removed.
+  `#46 <https://github.com/iqm-finland/cirq-on-iqm/pull/46>`_
+* Support for obsolete IQM OpenQASM extension is removed.
+  `#45 <https://github.com/iqm-finland/cirq-on-iqm/pull/45>`_
+
+
 Version 1.2 (2021-09-03)
-=========================
+========================
 
 Features
 --------

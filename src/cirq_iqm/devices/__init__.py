@@ -11,17 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Types for representing and methods for manipulating operations on IQM's quantum computers.
+"""Definitions for varios IQM quantum devices for the Cirq framework.
 """
-from importlib.metadata import PackageNotFoundError, version
 
-from .devices import *
-from .extended_qasm_parser import circuit_from_qasm
-
-try:
-    DIST_NAME = 'cirq-iqm'
-    __version__ = version(DIST_NAME)
-except PackageNotFoundError:
-    __version__ = 'unknown'
-finally:
-    del version, PackageNotFoundError
+from .adonis import Adonis
+from .iqm_device import IQMDevice
+from .valkmusa import Valkmusa

@@ -22,7 +22,7 @@ import os
 
 import cirq
 
-from cirq_iqm.adonis import Adonis
+from cirq_iqm.devices import Adonis
 from cirq_iqm.iqm_sampler import IQMSampler
 
 
@@ -32,8 +32,10 @@ def demo_adonis_run():
     """
     a = cirq.NamedQubit('Alice')
     b = cirq.NamedQubit('Bob')
+
     circuit = cirq.Circuit(
         cirq.X(a) ** 0.5,
+        cirq.Z(a),
         cirq.measure(a, b, key='result')
     )
 

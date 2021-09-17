@@ -18,13 +18,13 @@ import cirq
 # pylint: disable=redefined-outer-name,no-self-use,duplicate-code
 import pytest
 
-import cirq_iqm.valkmusa as valk
+from cirq_iqm import Valkmusa
 
 
 @pytest.fixture(scope='module')
 def valkmusa():
     """Valkmusa device fixture."""
-    return valk.Valkmusa()
+    return Valkmusa()
 
 
 # define various groups of gates to test
@@ -37,11 +37,6 @@ native_1q_gates = [
     cirq.PhasedXPowGate(phase_exponent=1.7, exponent=-0.58),
 ]
 
-finally_decomposed_1q_gates = [
-    cirq.Z,
-    cirq.ZPowGate(exponent=-0.23),
-]
-
 native_2q_gates = [
     cirq.ISWAP,
     cirq.ISwapPowGate(exponent=0.27),
@@ -49,6 +44,8 @@ native_2q_gates = [
 
 non_native_1q_gates = [
     cirq.H,
+    cirq.Z,
+    cirq.ZPowGate(exponent=-0.23),
     cirq.HPowGate(exponent=-0.55),
     cirq.PhasedXZGate(x_exponent=0.2, z_exponent=-0.5, axis_phase_exponent=0.75),
 ]
@@ -69,14 +66,6 @@ class TestOperationValidation:
     @pytest.mark.parametrize('gate', native_1q_gates)
     def test_native_single_qubit_gates(self, valkmusa, gate):
         """Native operations must pass validation."""
-
-        QB1, QB2 = valkmusa.qubits
-        valkmusa.validate_operation(gate(QB2))
-        valkmusa.validate_operation(gate(QB1).with_tags('tag_foo'))
-
-    @pytest.mark.parametrize('gate', finally_decomposed_1q_gates)
-    def test_finally_decomposed_single_qubit_gates(self, valkmusa, gate):
-        """Finally decomposed operations must pass validation."""
 
         QB1, QB2 = valkmusa.qubits
         valkmusa.validate_operation(gate(QB2))
@@ -139,11 +128,11 @@ class TestGateDecomposition:
     @staticmethod
     def is_native(op_or_op_list) -> bool:
         """True iff the op_list consists of native operations only."""
-        if valk.Valkmusa.is_native_operation(op_or_op_list):
+        if Valkmusa.is_native_operation(op_or_op_list):
             return True
         for op in op_or_op_list:
-            if not valk.Valkmusa.is_native_operation(op):
-                raise TypeError('Non-native operation: {}'.format(op))
+            if not Valkmusa.is_native_operation(op):
+                raise TypeError(f'Non-native operation: {op}')
         return True
 
     @pytest.mark.parametrize('gate', native_1q_gates)
@@ -156,11 +145,11 @@ class TestGateDecomposition:
                 gate.on(QB1),
                 gate.on(QB2).with_tags('tag_baz'),
         ):
-            decomposition = valkmusa.decompose_operation_full(op)
-            assert decomposition == [op]
+            decomposition = valkmusa.decompose_operation(op)
+            assert decomposition == op
             assert TestGateDecomposition.is_native(decomposition)
 
-    @pytest.mark.parametrize('gate', non_native_1q_gates + finally_decomposed_1q_gates)
+    @pytest.mark.parametrize('gate', non_native_1q_gates)
     def test_non_native_single_qubit_gates(self, valkmusa, gate):
         """Non-native single qubit gates should decompose into native gates."""
 
@@ -169,7 +158,7 @@ class TestGateDecomposition:
                 gate.on(QB1),
                 gate.on(QB2).with_tags('tag_baz'),
         ):
-            decomposition = valkmusa.decompose_operation_full(op)
+            decomposition = valkmusa.decompose_operation(op)
             assert TestGateDecomposition.is_native(decomposition)
 
     @pytest.mark.parametrize('gate', native_2q_gates)
@@ -179,8 +168,8 @@ class TestGateDecomposition:
         QB1, QB2 = valkmusa.qubits
 
         op = gate(QB1, QB2)
-        decomposition = valkmusa.decompose_operation_full(op)
-        assert decomposition == [op]
+        decomposition = valkmusa.decompose_operation(op)
+        assert decomposition == op
         assert TestGateDecomposition.is_native(decomposition)
 
     @pytest.mark.parametrize('gate', non_native_2q_gates)
@@ -193,5 +182,5 @@ class TestGateDecomposition:
                 gate(QB1, QB2),
                 gate(QB2, QB1).with_tags('tag_baz'),
         ):
-            decomposition = valkmusa.decompose_operation_full(op)
+            decomposition = valkmusa.decompose_operation(op)
             assert TestGateDecomposition.is_native(decomposition)

@@ -20,7 +20,7 @@ import cirq
 from demo_common import demo
 
 from cirq_iqm.extended_qasm_parser import circuit_from_qasm
-from cirq_iqm.valkmusa import Valkmusa
+from cirq_iqm.devices import Valkmusa
 
 
 def demo_valkmusa(do_measure=False, use_qsim=False):
