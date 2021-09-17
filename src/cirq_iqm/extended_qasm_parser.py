@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-Extends the OpenQASM 2.0 language by gates native to the IQM architectures.
+Imports OpenQASM 2.0 programs in a way that preserves gates native to the IQM architectures.
 """
 import cirq
 import numpy as np
@@ -49,5 +49,11 @@ def circuit_from_qasm(qasm: str) -> cirq.circuits.Circuit:
     )
     parser.basic_gates['U'] = rule
     parser.all_gates['U'] = rule
-
+    # u3 is not a basic OpenQASM gate
+    parser.all_gates['u3'] = QasmGateStatement(
+        qasm_gate='u3',
+        num_params=3,
+        num_args=1,
+        cirq_gate=convert_U,
+    )
     return parser.parse(qasm).circuit
