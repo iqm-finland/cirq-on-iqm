@@ -22,7 +22,7 @@ import cirq
 import numpy as np
 import pytest
 
-import cirq_iqm.adonis as ad
+from cirq_iqm import Adonis
 
 
 def dist(U: np.ndarray, W: np.ndarray) -> float:
@@ -41,7 +41,7 @@ def dist(U: np.ndarray, W: np.ndarray) -> float:
 @pytest.fixture(scope='module')
 def adonis():
     """Adonis device fixture."""
-    return ad.Adonis()
+    return Adonis()
 
 
 # define various groups of gates to test
@@ -54,17 +54,14 @@ native_1q_gates = [
     cirq.PhasedXPowGate(phase_exponent=1.7, exponent=-0.58),
 ]
 
-finally_decomposed_1q_gates = [
-    cirq.Z,
-    cirq.ZPowGate(exponent=-0.23),
-]
-
 native_2q_gates = [
     cirq.CZ,
 ]
 
 non_native_1q_gates = [
     cirq.H,
+    cirq.Z,
+    cirq.ZPowGate(exponent=-0.23),
     cirq.HPowGate(exponent=-0.55),
     cirq.PhasedXZGate(x_exponent=0.2, z_exponent=-0.5, axis_phase_exponent=0.75),
 ]
@@ -90,14 +87,6 @@ class TestOperationValidation:
 
         adonis.validate_operation(gate(adonis.qubits[q]))
         adonis.validate_operation(gate(adonis.qubits[q]).with_tags('tag_foo'))
-
-    @pytest.mark.parametrize('gate', finally_decomposed_1q_gates)
-    def test_finally_decomposed_single_qubit_gates(self, adonis, gate):
-        """Finally decomposed operations must pass validation."""
-
-        q0, q1 = adonis.qubits[:2]
-        adonis.validate_operation(gate(q0))
-        adonis.validate_operation(gate(q1).with_tags('tag_foo'))
 
     @pytest.mark.parametrize('gate', native_2q_gates)
     def test_native_two_qubit_gates(self, adonis, gate):
@@ -170,10 +159,10 @@ class TestGateDecomposition:
     @staticmethod
     def is_native(op_or_op_list) -> bool:
         """True iff the op_list consists of native operations only."""
-        if ad.Adonis.is_native_operation(op_or_op_list):
+        if Adonis.is_native_operation(op_or_op_list):
             return True
         for op in op_or_op_list:
-            if not ad.Adonis.is_native_operation(op):
+            if not Adonis.is_native_operation(op):
                 raise TypeError('Non-native operation: {}'.format(op))
         return True
 
@@ -187,8 +176,8 @@ class TestGateDecomposition:
                 gate.on(q0),
                 gate.on(q0).with_tags('tag_baz'),
         ):
-            decomposition = adonis.decompose_operation_full(op)
-            assert decomposition == [op]
+            decomposition = adonis.decompose_operation(op)
+            assert decomposition == op
             assert TestGateDecomposition.is_native(decomposition)
 
     @pytest.mark.parametrize('gate', non_native_1q_gates)
@@ -201,7 +190,7 @@ class TestGateDecomposition:
                 gate.on(q1),
                 gate.on(q1).with_tags('tag_baz'),
         ):
-            decomposition = adonis.decompose_operation_full(op)
+            decomposition = adonis.decompose_operation(op)
             assert TestGateDecomposition.is_native(decomposition)
 
     @pytest.mark.parametrize('gate', native_2q_gates)
@@ -214,8 +203,8 @@ class TestGateDecomposition:
                 gate.on(q0, q2),
                 gate.on(q2, q0).with_tags('tag_baz'),
         ):
-            decomposition = adonis.decompose_operation_full(op)
-            assert decomposition == [op]
+            decomposition = adonis.decompose_operation(op)
+            assert decomposition == op
             assert TestGateDecomposition.is_native(decomposition)
 
     @pytest.mark.parametrize('gate', non_native_2q_gates)
@@ -229,7 +218,7 @@ class TestGateDecomposition:
                 gate.on(q2, q0).with_tags('tag_baz'),
                 gate.on(q2, q1),
         ):
-            decomposition = adonis.decompose_operation_full(op)
+            decomposition = adonis.decompose_operation(op)
             assert TestGateDecomposition.is_native(decomposition)
 
             # matrix representations must match up to global phase
@@ -307,7 +296,7 @@ class TestCircuitDecomposition:
 
         # still uses the original qubits, not device qubits
         assert circuit.all_qubits() == new.all_qubits()
-        assert len(new) == 23
+        assert len(new) == 31
 
 
 class TestCircuitRouting:

@@ -21,9 +21,8 @@ from iqm_client.iqm_client import (IQMClient, RunResult, RunStatus,
                                    SingleQubitMapping)
 from mockito import ANY, mock, when
 
-from cirq_iqm import Adonis
+from cirq_iqm import Adonis, Valkmusa
 from cirq_iqm.iqm_sampler import IQMSampler, serialize_qubit_mapping
-from cirq_iqm.valkmusa import Valkmusa
 
 
 @pytest.fixture()
