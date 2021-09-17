@@ -142,7 +142,15 @@ arbitrary qubits we had originally.
 
 .. code-block:: python
 
-    routed_circuit_2 = adonis.route_circuit(circuit_2)
+    routed_circuit_2 = adonis.route_circuit(decomposed_circuit_2)
+    print(routed_circuit_2)
+
+
+::
+
+    QB3: ───X────────────────────@───────────M('m')───
+                                 │           │
+    QB4: ───Y^0.5───X───Y^-0.5───@───Y^0.5───M────────
 
 By default :meth:`.route_circuit` returns only the routed circuit. However if you set its keyword
 argument ``return_swap_network`` to ``True``, it will return the full
@@ -151,9 +159,35 @@ circuit itself and the mapping between the used device qubits and the original o
 
 Under the hood, :meth:`.route_circuit` leverages the routing algorithm in :mod:`cirq.contrib.routing.router`.
 Note that this function works with circuits containing single- and two-qubit gates only. If you have gates involving
-more than two qubits you need to decompose the circuit before routing. Since routing may add some swap gates to the
+more than two qubits you need to decompose the circuit before routing. Since routing may add some SWAP gates to the
 circuit you may need to decompose the circuit again after routing if the SWAP gate is not a native gate for the
 target device.
+
+Yet another important topic is circuit optimization. In addition to the optimizers available in Cirq you can also
+benefit from Cirq on IQM's :mod:`.optimizers` module which contains some optimization tools geared towards IQM devices.
+The function :func:`.optimizers.simplify_circuit` is a convenience method encapsulating a particular sequence of
+optimizations. Let us try it out on our decomposed and routed circuit above:
+
+.. code-block:: python
+
+    from cirq_iqm.optimizers import simplify_circuit
+
+    simplified_circuit_2 = simplify_circuit(routed_circuit_2)
+    print(simplified_circuit_2)
+
+
+::
+
+    QB3: ───PhX(1)───@───────────────────M('m')───
+                     │                   │
+    QB5: ────────────@───PhX(-0.5)^0.5───M────────
+
+
+.. note::
+
+    The funtion :func:`.simplify_circuit` is not associated with any IQM device, so its result may contain non-native
+    gates for a particular device. In the example above we don't have them, however it is generally a good idea to run
+    decomposition once again after the simplification.
 
 
 Workflow 3
@@ -192,8 +226,7 @@ the previous workflow to prepare the circuit for execution on an IQM device.
                │
    q_1: ───H───X───M('m_1')───
 
-:func:`.circuit_from_qasm` uses the OpenQASM 2.0 parser in :mod:`cirq.contrib.qasm_import`, extended by
-a few additional gate types.
+:func:`.circuit_from_qasm` uses the OpenQASM 2.0 parser in :mod:`cirq.contrib.qasm_import`.
 
 
 Running on a real quantum computer

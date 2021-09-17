@@ -1,6 +1,0 @@
-cirq\_iqm.iqm\_gates.XYGate
-===========================
-
-.. currentmodule:: cirq_iqm.iqm_gates
-
-.. autofunction:: XYGate
