@@ -12,23 +12,48 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-Extends the OpenQASM 2.0 language by gates native to the IQM architectures.
+Imports OpenQASM 2.0 programs in a way that preserves gates native to the IQM architectures.
 """
 import cirq
-from cirq.contrib.qasm_import._parser import QasmParser
+import numpy as np
+from cirq.contrib.qasm_import._parser import (QasmGateStatement, QasmParser,
+                                              QasmUGate)
 
 
 def circuit_from_qasm(qasm: str) -> cirq.circuits.Circuit:
     """Parses an OpenQASM 2.0 program to a Cirq circuit.
 
-   TODO The previous functionality that contained additional 2-qubit gates has now been removed as obsolete.
-        This function remains because new parsing logic will be introduced in a future PR.
-
     Args:
-        qasm: OpenQASM string
+        qasm: OpenQASM program
 
     Returns:
         parsed circuit
     """
     parser = QasmParser()
+
+    def convert_U(args: tuple) -> cirq.Gate:
+        """Maps the OpenQASM builtin one-qubit gate ``U`` to :class:`cirq.QasmUGate`,
+        or :class:`cirq.PhasedXPowGate` if possible.
+        """
+        theta, phi, lmda = args
+        scale = np.pi
+        if phi == -lmda:
+            return cirq.PhasedXPowGate(exponent=theta / scale, phase_exponent=phi / scale + 0.5, global_shift=-0.5)
+        return QasmUGate(*(p / np.pi for p in args))
+
+    rule = QasmGateStatement(
+        qasm_gate='U',
+        num_params=3,
+        num_args=1,
+        cirq_gate=convert_U,
+    )
+    parser.basic_gates['U'] = rule
+    parser.all_gates['U'] = rule
+    # u3 is not a basic OpenQASM gate
+    parser.all_gates['u3'] = QasmGateStatement(
+        qasm_gate='u3',
+        num_params=3,
+        num_args=1,
+        cirq_gate=convert_U,
+    )
     return parser.parse(qasm).circuit
