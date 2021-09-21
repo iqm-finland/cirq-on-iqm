@@ -28,6 +28,7 @@ cirq\_iqm.devices.iqm\_device.IQMDevice
 
    .. autosummary::
    
+      ~IQMDevice.__eq__
       ~IQMDevice.check_qubit_connectivity
       ~IQMDevice.decompose_circuit
       ~IQMDevice.decompose_operation
