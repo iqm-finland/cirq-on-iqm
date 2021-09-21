@@ -177,3 +177,6 @@ class IQMDevice(devices.Device):
                 raise ValueError(f'Qubit not on device: {qubit!r}')
 
         self.check_qubit_connectivity(operation)
+
+    def __eq__(self, other):
+        return self.__class__ == other.__class__

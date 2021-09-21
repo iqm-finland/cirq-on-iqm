@@ -11,6 +11,7 @@ Features
 
 * ``circuit_from_qasm`` imports OpenQASM 2.0 gates ``U`` and ``u3`` of the form ``U(a, b, -b)``
   as ``cirq.PhasedXPowGate``. `#46 <https://github.com/iqm-finland/cirq-on-iqm/pull/46>`_
+* Add an equals method to IQMDevice such that all instances of the same device architecture are considered equivalent.
 
 
 Version 2.0 (2021-09-17)
