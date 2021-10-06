@@ -19,7 +19,7 @@ from iqm_client.iqm_client import Instruction
 
 
 class OperationNotSupportedError(RuntimeError):
-    """Raised when a given operation is not supported by the data transfer format."""
+    """Raised when a given operation is not supported by the IQM server."""
 
 
 def map_operation(operation: Operation) -> Instruction:
@@ -64,6 +64,9 @@ def map_operation(operation: Operation) -> Instruction:
                   'phase_t': 0.25}
         )
     if isinstance(operation.gate, MeasurementGate):
+        if any(operation.gate.full_invert_mask()):
+            raise OperationNotSupportedError('Invert mask not supported')
+
         return Instruction(
             name='measurement',
             qubits=qubits,
@@ -76,6 +79,8 @@ def map_operation(operation: Operation) -> Instruction:
                 qubits=qubits,
                 args={}
             )
-        raise OperationNotSupportedError(f'CZPowGate exponent {operation.gate.exponent}, only 1 is natively supported.')
+        raise OperationNotSupportedError(
+            f'CZPowGate exponent was {operation.gate.exponent}, but only 1 is natively supported.'
+        )
 
     raise OperationNotSupportedError(f'{type(operation.gate)} not natively supported.')

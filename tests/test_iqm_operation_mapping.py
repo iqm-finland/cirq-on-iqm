@@ -78,3 +78,9 @@ def test_raises_error_for_general_cz_pow_gate(qubit_1, qubit_2):
     operation = GateOperation(CZPowGate(exponent=0.5), [qubit_1, qubit_2])
     with pytest.raises(OperationNotSupportedError):
         map_operation(operation)
+
+
+def test_raises_error_for_non_trivial_invert_mask(qubit_1, qubit_2):
+    operation = GateOperation(MeasurementGate(2, 'measurement key', invert_mask=(True, False)), [qubit_1, qubit_2])
+    with pytest.raises(OperationNotSupportedError):
+        map_operation(operation)
