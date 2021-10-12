@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 3.0 (2021-10-12)
+========================
+
+* Raise an error if MeasurementGate has an ``invert_mask``. `#53 <https://github.com/iqm-finland/cirq-on-iqm/pull/53>`_
+
 
 Version 2.1 (2021-09-21)
 =========================
