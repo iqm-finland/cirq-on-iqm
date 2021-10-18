@@ -42,8 +42,7 @@ def serialize_circuit(circuit: cirq.Circuit) -> iqm_client.Circuit:
     instructions = list(map(map_operation, circuit.all_operations()))
     return iqm_client.Circuit(
         name='Serialized from Cirq',
-        instructions=instructions,
-        args={}  # todo: implement arguments
+        instructions=instructions
     )
 
 
