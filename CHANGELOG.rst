@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 3.1 (2021-10-19)
+========================
+
+* Update the cirq dependency to version 0.13
+* Remove unused argument from Circuit
+
 Version 3.0 (2021-10-12)
 ========================
 

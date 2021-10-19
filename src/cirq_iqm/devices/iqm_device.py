@@ -35,7 +35,7 @@ def _verify_unique_measurement_keys(operations: ca.Iterable[cirq.Operation]) -> 
     seen_keys: set[str] = set()
     for op in operations:
         if protocols.is_measurement(op):
-            key = protocols.measurement_key(op)
+            key = protocols.measurement_key_name(op)
             if key in seen_keys:
                 raise ValueError(f'Measurement key {key} repeated')
             seen_keys.add(key)
