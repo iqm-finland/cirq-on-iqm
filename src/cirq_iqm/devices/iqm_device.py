@@ -22,10 +22,11 @@ from __future__ import annotations
 
 import abc
 import collections.abc as ca
+import uuid
 from typing import Optional, Union
 
 import cirq
-from cirq import devices, ops, protocols
+from cirq import InsertStrategy, MeasurementGate, devices, ops, protocols
 from cirq.contrib.routing.router import nx, route_circuit
 
 
@@ -39,6 +40,11 @@ def _verify_unique_measurement_keys(operations: ca.Iterable[cirq.Operation]) -> 
             if key in seen_keys:
                 raise ValueError(f'Measurement key {key} repeated')
             seen_keys.add(key)
+
+
+def _validate_for_routing(circuit: cirq.Circuit) -> None:
+    if not circuit.are_all_measurements_terminal():
+        raise ValueError('Non-terminal measurements are not supported')
 
 
 class IQMDevice(devices.Device):
@@ -126,8 +132,9 @@ class IQMDevice(devices.Device):
     ) -> Union[cirq.Circuit, cirq.contrib.routing.SwapNetwork]:
         """Routes the given circuit to the device connectivity.
 
-        The routed circuit uses the device qubits, and may have additional SWAP gates inserted
-        to perform the qubit routing.
+        The routed circuit uses the device qubits, and may have additional SWAP gates inserted to perform the qubit
+        routing. The function :func:`cirq.contrib.routing.router` is used for routing. Due to its limitations, this
+        method will only route gates of 1 and 2 qubits as well as measurement operations of arbitrary size.
 
         Args:
             circuit: circuit to route
@@ -139,8 +146,39 @@ class IQMDevice(devices.Device):
         Raises:
             ValueError: routing is impossible
         """
+        _validate_for_routing(circuit)
+
         device_graph = nx.Graph(tuple(map(self.get_qubit, edge)) for edge in self.CONNECTIVITY)
-        swap_network = route_circuit(circuit, device_graph, algo_name='greedy')
+
+        # Remove all such measurement gates and replace them with 1-qubit identity gates so they don't
+        # disappear from the final swap network if no other operations remain.
+        measurement_ops = list(circuit.findall_operations(
+            lambda op: isinstance(op.gate, MeasurementGate) and op.gate.num_qubits() > 2
+        ))
+        measurement_qubits = set().union(*[m[1].qubits for m in measurement_ops])
+
+        modified_circuit = circuit.copy()
+        modified_circuit.batch_remove(measurement_ops)
+        i_tag = uuid.uuid4()
+        for q in measurement_qubits:
+            modified_circuit.append(cirq.I(q).with_tags(i_tag))
+
+        # Route the modified circuit.
+        swap_network = route_circuit(modified_circuit, device_graph, algo_name='greedy')
+
+        # Return measurements to the circuit with potential qubit swaps.
+        final_qubit_mapping = {v: k for k, v in swap_network.final_mapping().items()}
+        for m in measurement_ops:
+            new_qubits = [final_qubit_mapping[q] for q in m[1].qubits]
+            new_measurement = cirq.measure(*new_qubits, key=m[1].gate.key)
+            swap_network.circuit.append(new_measurement, InsertStrategy.NEW)
+
+        # Remove additional identity gates.
+        identity_gates = swap_network.circuit.findall_operations(
+            lambda op: i_tag in op.tags
+        )
+        swap_network.circuit.batch_remove(identity_gates)
+
         if return_swap_network:
             return swap_network
         return swap_network.circuit
@@ -164,6 +202,7 @@ class IQMDevice(devices.Device):
     def validate_circuit(self, circuit: cirq.Circuit) -> None:
         super().validate_circuit(circuit)
         _verify_unique_measurement_keys(circuit.all_operations())
+        _validate_for_routing(circuit)
 
     def validate_operation(self, operation: cirq.Operation) -> None:
         if not isinstance(operation.untagged, cirq.GateOperation):
