@@ -133,8 +133,8 @@ class IQMDevice(devices.Device):
         """Routes the given circuit to the device connectivity.
 
         The routed circuit uses the device qubits, and may have additional SWAP gates inserted to perform the qubit
-        routing. The function :func:`cirq.contrib.routing.router` is used for routing. Due to its limitations, this
-        method will only route gates of 1 and 2 qubits as well as measurement operations of arbitrary size.
+        routing. The function :func:`cirq.contrib.routing.router` is used for routing. Note that only gates of 1 or 2
+        qubits or measurement operations of arbitrary size are supported.
 
         Args:
             circuit: circuit to route
@@ -150,11 +150,11 @@ class IQMDevice(devices.Device):
 
         device_graph = nx.Graph(tuple(map(self.get_qubit, edge)) for edge in self.CONNECTIVITY)
 
-        # Remove all such measurement gates and replace them with 1-qubit identity gates so they don't
-        # disappear from the final swap network if no other operations remain.
-        measurement_ops = list(circuit.findall_operations(
-            lambda op: isinstance(op.gate, MeasurementGate) and op.gate.num_qubits() > 2
-        ))
+        # Remove all measurement gates and replace them with 1-qubit identity gates so they don't
+        # disappear from the final swap network if no other operations remain. We will add them back after routing the
+        # rest of the network. This is done for two purposes: it allows the circuit to contain measurements of more than
+        # 2 qubits in the circuit and prevents measurements becoming non-terminal during routing.
+        measurement_ops = [(m[0], m[1]) for m in circuit.findall_operations_with_gate_type(MeasurementGate)]
         measurement_qubits = set().union(*[op.qubits for _, op in measurement_ops])
 
         modified_circuit = circuit.copy()
@@ -168,10 +168,13 @@ class IQMDevice(devices.Device):
 
         # Return measurements to the circuit with potential qubit swaps.
         final_qubit_mapping = {v: k for k, v in swap_network.final_mapping().items()}
+        new_measurements = []
         for _, op in measurement_ops:
             new_qubits = [final_qubit_mapping[q] for q in op.qubits]
             new_measurement = cirq.measure(*new_qubits, key=op.gate.key)
-            swap_network.circuit.append(new_measurement, InsertStrategy.NEW)
+            new_measurements.append(new_measurement)
+
+        swap_network.circuit.append(new_measurements, InsertStrategy.NEW_THEN_INLINE)
 
         # Remove additional identity gates.
         identity_gates = swap_network.circuit.findall_operations(
