@@ -155,7 +155,7 @@ class IQMDevice(devices.Device):
         measurement_ops = list(circuit.findall_operations(
             lambda op: isinstance(op.gate, MeasurementGate) and op.gate.num_qubits() > 2
         ))
-        measurement_qubits = set().union(*[m[1].qubits for m in measurement_ops])
+        measurement_qubits = set().union(*[op.qubits for _, op in measurement_ops])
 
         modified_circuit = circuit.copy()
         modified_circuit.batch_remove(measurement_ops)
