@@ -168,9 +168,9 @@ class IQMDevice(devices.Device):
 
         # Return measurements to the circuit with potential qubit swaps.
         final_qubit_mapping = {v: k for k, v in swap_network.final_mapping().items()}
-        for m in measurement_ops:
-            new_qubits = [final_qubit_mapping[q] for q in m[1].qubits]
-            new_measurement = cirq.measure(*new_qubits, key=m[1].gate.key)
+        for _, op in measurement_ops:
+            new_qubits = [final_qubit_mapping[q] for q in op.qubits]
+            new_measurement = cirq.measure(*new_qubits, key=op.gate.key)
             swap_network.circuit.append(new_measurement, InsertStrategy.NEW)
 
         # Remove additional identity gates.
