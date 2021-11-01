@@ -21,6 +21,7 @@ from __future__ import annotations
 import cirq
 import numpy as np
 import pytest
+from cirq import IdentityGate
 
 from cirq_iqm import Adonis
 
@@ -305,7 +306,9 @@ class TestCircuitRouting:
         return [
             cirq.NamedQubit('Alice'),
             cirq.NamedQubit('Bob'),
-            cirq.NamedQubit('Charlie')
+            cirq.NamedQubit('Charlie'),
+            cirq.NamedQubit('Dan'),
+            cirq.NamedQubit('Eve')
         ]
 
     def test_routing_circuit_too_large(self, adonis):
@@ -369,3 +372,28 @@ class TestCircuitRouting:
 
         assert len(new.all_qubits()) == 2
         assert new.all_qubits() <= set(adonis.qubits)
+
+    def test_routing_with_multi_qubit_measurements(self, adonis, qubits):
+        circuit = cirq.Circuit(
+            cirq.CZ(*qubits[0:2]),
+            cirq.CZ(*qubits[1:3]),
+            cirq.X(qubits[4]),
+            cirq.CZ(qubits[0], qubits[2]),
+            cirq.measure(*qubits[0:2], key='m1'),
+            cirq.measure(*qubits[2:5], key='m2')
+            )
+        new = adonis.route_circuit(circuit)
+        assert new.all_qubits() == set(adonis.qubits)
+        # Test that all measurements exist. Final qubit mapping is not checked here because it's random.
+        assert new.all_measurement_key_names() == {'m1', 'm2'}
+        # Test that temporary identity gates have been removed
+        assert not list(new.findall_operations_with_gate_type(IdentityGate))
+
+    def test_routing_with_nonterminal_measurements_raises_error(self, adonis):
+        q = cirq.NamedQubit('q1')
+        circuit = cirq.Circuit(
+            cirq.measure(q, key='m'),
+            cirq.Y(q)
+        )
+        with pytest.raises(ValueError, match='Non-terminal measurements are not supported'):
+            adonis.route_circuit(circuit)

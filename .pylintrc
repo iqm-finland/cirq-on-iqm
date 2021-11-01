@@ -5,7 +5,8 @@ disable=
     invalid-name,
     abstract-method,
     fixme,
-    duplicate-code
+    duplicate-code,
+    too-many-locals
 extension-pkg-whitelist=pydantic
 
 [FORMAT]

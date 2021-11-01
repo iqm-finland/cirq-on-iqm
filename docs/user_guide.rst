@@ -158,10 +158,10 @@ argument ``return_swap_network`` to ``True``, it will return the full
 circuit itself and the mapping between the used device qubits and the original ones.
 
 Under the hood, :meth:`.route_circuit` leverages the routing algorithm in :mod:`cirq.contrib.routing.router`.
-Note that this function works with circuits containing single- and two-qubit gates only. If you have gates involving
-more than two qubits you need to decompose the circuit before routing. Since routing may add some SWAP gates to the
-circuit you may need to decompose the circuit again after routing if the SWAP gate is not a native gate for the
-target device.
+It works on single- and two-qubit gates, and measurement operations of arbitrary size.
+If you have gates involving more than two qubits you need to decompose them before routing.
+Since routing may add some SWAP gates to the circuit, you will need to decompose the circuit
+again after the routing, unless SWAP is a native gate for the target device.
 
 Yet another important topic is circuit optimization. In addition to the optimizers available in Cirq you can also
 benefit from Cirq on IQM's :mod:`.optimizers` module which contains some optimization tools geared towards IQM devices.
