@@ -133,8 +133,8 @@ class IQMDevice(devices.Device):
         """Routes the given circuit to the device connectivity.
 
         The routed circuit uses the device qubits, and may have additional SWAP gates inserted to perform the qubit
-        routing. The function :func:`cirq.contrib.routing.router` is used for routing. Note that only gates of 1 or 2
-        qubits or measurement operations of arbitrary size are supported.
+        routing. The function :func:`cirq.contrib.routing.router` is used for routing.
+        Note that only gates of one or two qubits, and measurement operations of arbitrary size are supported.
 
         Args:
             circuit: circuit to route
