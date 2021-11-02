@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 3.2 (2021-11-02)
+========================
+
+* Add functionality for routing circuits with multi-qubit measurements. `#56 <https://github.com/iqm-finland/cirq-on-iqm/pull/56>`_
+
 Version 3.1 (2021-10-19)
 ========================
 
