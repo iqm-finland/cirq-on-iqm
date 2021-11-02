@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>User guide &#8212; Cirq on IQM 3.1 documentation</title>
+    <title>User guide &#8212; Cirq on IQM 3.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/nature.css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -34,7 +34,7 @@
         <li class="right" >
           <a href="index.html" title="Cirq on IQM"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 3.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 3.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">User guide</a></li> 
       </ul>
     </div>  
@@ -168,10 +168,10 @@ argument <code class="docutils literal notranslate"><span class="pre">return_swa
 <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.contrib.routing.swap_network.SwapNetwork</span></code> object which contains the routed
 circuit itself and the mapping between the used device qubits and the original ones.</p>
 <p>Under the hood, <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.devices.iqm_device.IQMDevice.route_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">route_circuit()</span></code></a> leverages the routing algorithm in <code class="xref py py-mod docutils literal notranslate"><span class="pre">cirq.contrib.routing.router</span></code>.
-Note that this function works with circuits containing single- and two-qubit gates only. If you have gates involving
-more than two qubits you need to decompose the circuit before routing. Since routing may add some SWAP gates to the
-circuit you may need to decompose the circuit again after routing if the SWAP gate is not a native gate for the
-target device.</p>
+It works on single- and two-qubit gates, and measurement operations of arbitrary size.
+If you have gates involving more than two qubits you need to decompose them before routing.
+Since routing may add some SWAP gates to the circuit, you will need to decompose the circuit
+again after the routing, unless SWAP is a native gate for the target device.</p>
 <p>Yet another important topic is circuit optimization. In addition to the optimizers available in Cirq you can also
 benefit from Cirq on IQM’s <a class="reference internal" href="api/cirq_iqm.optimizers.html#module-cirq_iqm.optimizers" title="cirq_iqm.optimizers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">optimizers</span></code></a> module which contains some optimization tools geared towards IQM devices.
 The function <a class="reference internal" href="api/cirq_iqm.optimizers.simplify_circuit.html#cirq_iqm.optimizers.simplify_circuit" title="cirq_iqm.optimizers.simplify_circuit"><code class="xref py py-func docutils literal notranslate"><span class="pre">optimizers.simplify_circuit()</span></code></a> is a convenience method encapsulating a particular sequence of
@@ -367,7 +367,7 @@ $ firefox build/sphinx/html/index.html
         <li class="right" >
           <a href="index.html" title="Cirq on IQM"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 3.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 3.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">User guide</a></li> 
       </ul>
     </div>
