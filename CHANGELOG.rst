@@ -2,16 +2,26 @@
 Changelog
 =========
 
+Version 3.3 (2021-11-15)
+========================
+
+* Bump the ``iqm-client`` dependency to 1.4, remove the strict pinning.
+  Bump ``build`` to 0.7.0.
+  `#58 <https://github.com/iqm-finland/cirq-on-iqm/pull/58>`_
+
+
 Version 3.2 (2021-11-02)
 ========================
 
 * Add functionality for routing circuits with multi-qubit measurements. `#56 <https://github.com/iqm-finland/cirq-on-iqm/pull/56>`_
+
 
 Version 3.1 (2021-10-19)
 ========================
 
 * Update the cirq dependency to version 0.13
 * Remove unused argument from Circuit
+
 
 Version 3.0 (2021-10-12)
 ========================
