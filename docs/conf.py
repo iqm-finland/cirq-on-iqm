@@ -108,6 +108,7 @@ html_theme = 'nature'
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'cirq_iqm-doc'
 
+html_favicon = 'images/favicon.ico'
 
 # -- MathJax options ----------------------------------------------------------
 
