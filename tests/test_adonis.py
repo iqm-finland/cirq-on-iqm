@@ -373,6 +373,31 @@ class TestCircuitRouting:
         assert len(new.all_qubits()) == 2
         assert new.all_qubits() <= set(adonis.qubits)
 
+    def test_routed_measurements(self, adonis, qubits):
+        circuit = cirq.Circuit(
+            cirq.CZ(qubits[0], qubits[2]),
+            cirq.CZ(*qubits[0:2]),
+            cirq.CZ(*qubits[1:3]),
+            cirq.measure(qubits[0], key='mk0'),
+            cirq.measure(qubits[1], key='mk1'),
+            cirq.measure(qubits[2], key='mk2'),
+        )
+
+        swap_network = adonis.route_circuit(circuit, return_swap_network=True)
+        circuit_routed = swap_network.circuit
+        mapping = {k.name: v.name for k, v in swap_network.final_mapping().items()}  # physical name to logical name
+
+        assert circuit_routed.are_all_measurements_terminal()
+        assert circuit_routed.all_measurement_key_names() == {'mk0', 'mk1', 'mk2'}
+
+        # Check that measurements in the routed circuit are mapped to correct qubits
+        measurements = [op for _, op, _ in circuit_routed.findall_operations_with_gate_type(cirq.MeasurementGate)]
+        mk_to_physical_name = {op.gate.key: op.qubits[0].name for op in measurements}
+        assert all(len(op.qubits) == 1 for op in measurements)
+        assert mapping[mk_to_physical_name['mk0']] == 'Alice'
+        assert mapping[mk_to_physical_name['mk1']] == 'Bob'
+        assert mapping[mk_to_physical_name['mk2']] == 'Charlie'
+
     def test_routing_with_multi_qubit_measurements(self, adonis, qubits):
         circuit = cirq.Circuit(
             cirq.CZ(*qubits[0:2]),
@@ -384,7 +409,7 @@ class TestCircuitRouting:
             )
         new = adonis.route_circuit(circuit)
         assert new.all_qubits() == set(adonis.qubits)
-        # Test that all measurements exist. Final qubit mapping is not checked here because it's random.
+        # Test that all measurements exist.
         assert new.all_measurement_key_names() == {'m1', 'm2'}
         # Test that temporary identity gates have been removed
         assert not list(new.findall_operations_with_gate_type(IdentityGate))
