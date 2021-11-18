@@ -409,7 +409,7 @@ class TestCircuitRouting:
             )
         new = adonis.route_circuit(circuit)
         assert new.all_qubits() == set(adonis.qubits)
-        # Test that all measurements exist. Final qubit mapping is not checked here because it's random.
+        # Test that all measurements exist.
         assert new.all_measurement_key_names() == {'m1', 'm2'}
         # Test that temporary identity gates have been removed
         assert not list(new.findall_operations_with_gate_type(IdentityGate))
