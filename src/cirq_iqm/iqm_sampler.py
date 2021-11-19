@@ -18,6 +18,7 @@ Circuit sampler that executes quantum circuits on an IQM quantum computer.
 from __future__ import annotations
 
 import json
+from typing import Optional
 
 import cirq
 import numpy as np
@@ -66,8 +67,13 @@ class IQMSampler(cirq.work.Sampler):
         settings: Settings for the quantum computer
         device: Quantum architecture to execute the circuit on
         qubit_mapping: Injective dictionary that maps logical qubit names to physical qubit names
+        username: username, if required by the IQM Cortex server. This can also be set in the CORTEX_USERNAME
+                  environment variable.
+        api_key: API key, if required by the IQM Cortex server. This can also be set in the CORTEX_API_KEY
+                 environment variable.
     """
-    def __init__(self, url: str, settings: str, device: IQMDevice, qubit_mapping: dict[str, str] = None):
+    def __init__(self, url: str, settings: str, device: IQMDevice, qubit_mapping: dict[str, str] = None, *,
+                 username: Optional[str], api_key: Optional[str]):
         settings_json = json.loads(settings)
 
         if qubit_mapping is None:
@@ -83,7 +89,7 @@ class IQMSampler(cirq.work.Sampler):
         if diff:
             raise ValueError(f'The physical qubits {diff} in the qubit mapping are not defined in the settings.')
 
-        self._client = IQMClient(url, settings=settings_json)
+        self._client = IQMClient(url, settings=settings_json, username=username, api_key=api_key)
         self._device = device
         self._qubit_mapping = qubit_mapping
 
