@@ -258,7 +258,8 @@ and retrieve the results:
 
 
 Note that the code snippet above assumes that you have set the variables ``iqm_server_url`` and
-``iqm_settings_path``.
+``iqm_settings_path``. If the IQM server you are connecting to requires authentication, you will also have to set
+the IQM_SERVER_USERNAME and IQM_SERVER_API_KEY environment variables.
 
 When executing a circuit that uses something other than the device qubits, you need to either route it first
 as explained in :ref:`workflow 2 <workflow_2>` above,

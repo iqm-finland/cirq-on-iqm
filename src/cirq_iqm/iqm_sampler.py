@@ -67,13 +67,13 @@ class IQMSampler(cirq.work.Sampler):
         settings: Settings for the quantum computer
         device: Quantum architecture to execute the circuit on
         qubit_mapping: Injective dictionary that maps logical qubit names to physical qubit names
-        username: username, if required by the IQM Cortex server. This can also be set in the CORTEX_USERNAME
+        username: Username, if required by the IQM Cortex server. This can also be set in the IQM_SERVER_USERNAME
                   environment variable.
-        api_key: API key, if required by the IQM Cortex server. This can also be set in the CORTEX_API_KEY
+        api_key: API key, if required by the IQM Cortex server. This can also be set in the IQM_SERVER_API_KEY
                  environment variable.
     """
     def __init__(self, url: str, settings: str, device: IQMDevice, qubit_mapping: dict[str, str] = None, *,
-                 username: Optional[str], api_key: Optional[str]):
+                 username: Optional[str] = None, api_key: Optional[str] = None):
         settings_json = json.loads(settings)
 
         if qubit_mapping is None:
