@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 3.4
+===========
+
+* Add HTTP Basic auth. `#62 <https://github.com/iqm-finland/cirq-on-iqm/pull/62>`_
+
 Version 3.3 (2021-11-15)
 ========================
 

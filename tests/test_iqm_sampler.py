@@ -67,6 +67,14 @@ def test_run_sweep_executes_circuit(adonis_sampler, circuit):
     assert isinstance(results[0], cirq.Result)
 
 
+def test_credentials_are_passed_to_client(settings_dict):
+    username = 'a fake username'
+    api_key = 'a fake api key'
+    sampler = IQMSampler('some url', json.dumps(settings_dict), Adonis(), None, username=username, api_key=api_key)
+    assert sampler._client._credentials[0] == username
+    assert sampler._client._credentials[1] == api_key
+
+
 def test_circuit_with_incorrect_device(adonis_sampler):
     circuit = cirq.Circuit(device=Valkmusa())
     with pytest.raises(ValueError, match='devices .* not the same'):
