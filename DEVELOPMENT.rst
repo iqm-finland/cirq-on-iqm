@@ -36,9 +36,11 @@ Tagging and releasing
 
 After implementing changes to Cirq on IQM one usually wants to release a new version. This means
 that after the changes are merged to the main branch -
- 1. the repository should have an updated CHANGELOG with information about the new changes,
- 2. the latest commit should be tagged with the new version number,
- 3. and a release should be created based on that tag.
+
+1. the repository should have an updated CHANGELOG with information about the new changes,
+2. the latest commit should be tagged with the new version number,
+3. and a release should be created based on that tag.
+
 The last two steps are automated, so one needs to worry only about properly updating the CHANGELOG.
 It should be done along with the pull request which is introducing the main changes. The new version
 must be added on top of all existing versions and the title must be "Version MAJOR.MINOR", where MAJOR.MINOR
