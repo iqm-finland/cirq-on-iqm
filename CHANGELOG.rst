@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 3.5
+===========
+
+* Configure automatic tagging and releasing. `#64 <https://github.com/iqm-finland/cirq-on-iqm/pull/64>`_
+
 Version 3.4
 ===========
 
