@@ -31,6 +31,7 @@ function verify_changelog_version() {
   fi
   if [ $(git tag -l "$version") ]; then
     printf "Version %s already exists.\n" "$version";
+    return 172
   fi
   printf "Current version is %s, new version is %s.\n" "$current_version" "$version";
 }

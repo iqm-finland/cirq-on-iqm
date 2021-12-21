@@ -1,9 +1,10 @@
-name: Release to PyPI
+name: Upload to PyPI and publish documentation
 
 on:
   release:
     types: [published]
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   push_to_pypi:
