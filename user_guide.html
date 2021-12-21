@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>User guide &#8212; Cirq on IQM 3.4 documentation</title>
+    <title>User guide &#8212; Cirq on IQM 0.0.post1.dev1+g3cd8004 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/nature.css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="index.html" title="Cirq on IQM"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 3.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 0.0.post1.dev1+g3cd8004 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">User guide</a></li> 
       </ul>
     </div>  
@@ -300,6 +300,22 @@ $ firefox build/sphinx/html/index.html
 </pre></div>
 </div>
 </section>
+<section id="tagging-and-releasing">
+<h2>Tagging and releasing<a class="headerlink" href="#tagging-and-releasing" title="Permalink to this headline">¶</a></h2>
+<p>After implementing changes to Cirq on IQM one usually wants to release a new version. This means
+that after the changes are merged to the main branch -</p>
+<ol class="arabic simple">
+<li><p>the repository should have an updated CHANGELOG with information about the new changes,</p></li>
+<li><p>the latest commit should be tagged with the new version number,</p></li>
+<li><p>and a release should be created based on that tag.</p></li>
+</ol>
+<p>The last two steps are automated, so one needs to worry only about properly updating the CHANGELOG.
+It should be done along with the pull request which is introducing the main changes. The new version
+must be added on top of all existing versions and the title must be “Version MAJOR.MINOR”, where MAJOR.MINOR
+represents the new version number. Please take a look at already existing versions and format the rest of
+your new CHANGELOG section similarly. Once the pull request is merged into main, a new tag and a release will
+be created automatically based on the latest version definition in the CHANGELOG.</p>
+</section>
 </section>
 
 
@@ -323,6 +339,7 @@ $ firefox build/sphinx/html/index.html
 <li><a class="reference internal" href="#running-on-a-real-quantum-computer">Running on a real quantum computer</a></li>
 <li><a class="reference internal" href="#more-examples">More examples</a></li>
 <li><a class="reference internal" href="#how-to-develop-and-contribute">How to develop and contribute</a></li>
+<li><a class="reference internal" href="#tagging-and-releasing">Tagging and releasing</a></li>
 </ul>
 </li>
 </ul>
@@ -369,7 +386,7 @@ $ firefox build/sphinx/html/index.html
         <li class="right" >
           <a href="index.html" title="Cirq on IQM"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 3.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 0.0.post1.dev1+g3cd8004 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">User guide</a></li> 
       </ul>
     </div>
