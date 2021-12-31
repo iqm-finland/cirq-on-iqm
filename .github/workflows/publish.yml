@@ -5,6 +5,11 @@ on:
     types: [published]
   workflow_dispatch:
   workflow_call:
+    secrets:
+      PYPI_USER:
+        required: true
+      PYPI_PASSWORD:
+        required: true
 
 jobs:
   push_to_pypi:
