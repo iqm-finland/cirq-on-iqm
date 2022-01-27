@@ -55,7 +55,6 @@ jobs:
       - name: Checkout latest tagged commit
         run: |
           git checkout $(git tag -l | tail -1)
-          tox -e build
       - name: Build docs
         run: |
           tox -e docs
