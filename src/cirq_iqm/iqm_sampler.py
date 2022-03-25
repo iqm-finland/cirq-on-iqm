@@ -161,4 +161,4 @@ class IQMSampler(cirq.work.Sampler):
         job_id = self._client.submit_circuit(iqm_circuit, qubit_mapping, repetitions)
         results = self._client.wait_for_results(job_id)
         measurements = {k: np.array(v) for k, v in results.measurements.items()}
-        return study.Result(params=resolver.ParamResolver(), measurements=measurements)
+        return study.ResultDict(params=resolver.ParamResolver(), measurements=measurements)
