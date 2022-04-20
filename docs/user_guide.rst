@@ -56,56 +56,23 @@ in a particular device by accessing the ``qubits`` attribute of a corresponding 
 Constructing circuits
 ---------------------
 
-There are three main workflows of using :class:`cirq.Circuit` instances with IQM devices:
+There are two main workflows of using :class:`cirq.Circuit` instances with IQM devices:
 
-1. Create a ``Circuit`` instance associated with an ``IQMDevice``, and use only the device qubits.
-   Each :class:`cirq.Operation` is validated (i.e. checked that qubits are on the device, and properly connected) and
-   decomposed into native operations as soon as it is appended to the circuit.
-2. Create a ``Circuit`` instance with no associated device, use arbitrary qubit names and types. There is no
-   validation of the operations when appended. At any point the user can apply :meth:`.IQMDevice.decompose_circuit`
+1. Create a ``Circuit`` instance, use arbitrary qubit names and types. There is no
+   validation of the operations when appending. At any point the user can apply :meth:`.IQMDevice.decompose_circuit`
    to decompose the circuit contents into the native operation set of the device, or :meth:`.IQMDevice.route_circuit`
    to route the circuit to the device connectivity and device qubits.
-3. Create a ``Circuit`` from an OpenQASM 2.0 program. The qubit names are determined by the OpenQASM ``qreg`` names,
-   appended with zero-based indices. Proceed as in workflow 2.
+2. Create a ``Circuit`` from an OpenQASM 2.0 program. The qubit names are determined by the OpenQASM ``qreg`` names,
+   appended with zero-based indices. Proceed as in workflow 1.
 
-Below we demonstrate examples of creating circuits in each of the three workflows.
+Below we demonstrate examples of creating circuits in each of the two workflows.
 
+.. _workflow_1:
 
 Workflow 1
 ^^^^^^^^^^
 
-Construct a circuit associated with the Adonis architecture. You have to use the qubits of the corresponding
-device and respect the connectivity of the device when appending gates to the circuit.
-
-.. code-block:: python
-
-    import cirq
-    from cirq_iqm import Adonis
-
-    adonis = Adonis()
-    q1, q2, q3 = adonis.qubits[:3]
-    circuit_1 = cirq.Circuit(device=adonis)
-    circuit_1.append(cirq.X(q1))
-    circuit_1.append(cirq.H(q3))
-    circuit_1.append(cirq.CNOT(q1, q3))
-    circuit_1.append(cirq.measure(q1, q3, key='m'))
-    print(circuit_1)
-
-If you print the circuit at this point, you will see that instead of the gates we have appended, it
-contains their decompositions in terms of the native gate set of the ``Adonis`` device.
-This is because in this way of creating a circuit the gates are decomposed right away
-when they are appended to the circuit::
-
-   QB1: ───X────────────────────@───────────M('m')───
-                                │           │
-   QB3: ───Y^0.5───X───Y^-0.5───@───Y^0.5───M────────
-
-.. _workflow_2:
-
-Workflow 2
-^^^^^^^^^^
-
-Construct a circuit with no associated device and use arbitrary qubits:
+Construct a circuit and use arbitrary qubits:
 
 .. code-block:: python
 
@@ -113,12 +80,12 @@ Construct a circuit with no associated device and use arbitrary qubits:
     from cirq_iqm import Adonis
 
     q1, q2 = cirq.NamedQubit('Alice'), cirq.NamedQubit('Bob')
-    circuit_2 = cirq.Circuit()
-    circuit_2.append(cirq.X(q1))
-    circuit_2.append(cirq.H(q2))
-    circuit_2.append(cirq.CNOT(q1, q2))
-    circuit_2.append(cirq.measure(q1, q2, key='m'))
-    print(circuit_2)
+    circuit_1 = cirq.Circuit()
+    circuit_1.append(cirq.X(q1))
+    circuit_1.append(cirq.H(q2))
+    circuit_1.append(cirq.CNOT(q1, q2))
+    circuit_1.append(cirq.measure(q1, q2, key='m'))
+    print(circuit_1)
 
 This will result in the circuit
 ::
@@ -133,7 +100,7 @@ returns the decomposed circuit containing only native gates for the correspondin
 
 .. code-block:: python
 
-    decomposed_circuit_2 = adonis.decompose_circuit(circuit_2)
+    decomposed_circuit_1 = adonis.decompose_circuit(circuit_1)
 
 
 The method :meth:`.IQMDevice.route_circuit` accepts a :class:`cirq.Circuit` object as an argument,
@@ -142,8 +109,8 @@ arbitrary qubits we had originally.
 
 .. code-block:: python
 
-    routed_circuit_2 = adonis.route_circuit(decomposed_circuit_2)
-    print(routed_circuit_2)
+    routed_circuit_1 = adonis.route_circuit(decomposed_circuit_1)
+    print(routed_circuit_1)
 
 
 ::
@@ -172,8 +139,8 @@ optimizations. Let us try it out on our decomposed and routed circuit above:
 
     from cirq_iqm.optimizers import simplify_circuit
 
-    simplified_circuit_2 = simplify_circuit(routed_circuit_2)
-    print(simplified_circuit_2)
+    simplified_circuit_1 = simplify_circuit(routed_circuit_1)
+    print(simplified_circuit_1)
 
 
 ::
@@ -190,7 +157,7 @@ optimizations. Let us try it out on our decomposed and routed circuit above:
     decomposition once again after the simplification.
 
 
-Workflow 3
+Workflow 2
 ^^^^^^^^^^
 
 You can read an OpenQASM 2.0 program from a file (or a string), e.g.
@@ -217,8 +184,8 @@ the previous workflow to prepare the circuit for execution on an IQM device.
     import cirq_iqm
 
     with open('circuit.qasm', 'r') as f:
-        circuit_3 = cirq_iqm.circuit_from_qasm(f.read())
-    print(circuit_3)
+        circuit_2 = cirq_iqm.circuit_from_qasm(f.read())
+    print(circuit_2)
 
 ::
 
@@ -262,7 +229,7 @@ Note that the code snippet above assumes that you have set the variables ``iqm_s
 the IQM_SERVER_USERNAME and IQM_SERVER_API_KEY environment variables.
 
 When executing a circuit that uses something other than the device qubits, you need to either route it first
-as explained in :ref:`workflow 2 <workflow_2>` above,
+as explained in :ref:`workflow 1 <workflow_1>` above,
 or provide the mapping from the *logical* qubits in the circuit to the *physical* qubits on the device yourself.
 The initializer of :class:`.IQMSampler` accepts an optional argument called ``qubit_mapping`` which
 can be used to specify this correspondence.
@@ -274,11 +241,9 @@ can be used to specify this correspondence.
     with open(iqm_settings_path, 'r') as f:
         sampler = IQMSampler(iqm_server_url, f.read(), adonis, qubit_mapping=qubit_mapping)
 
-    result = sampler.run(decomposed_circuit_2, repetitions=10)
+    result = sampler.run(decomposed_circuit_1, repetitions=10)
     print(result.measurements['m'])
 
-If you have a circuit which already uses the device qubits, you don't need to specify
-the qubit mapping (as we did above for ``circuit_1``).
 
 
 More examples
