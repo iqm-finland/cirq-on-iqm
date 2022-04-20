@@ -77,7 +77,6 @@ Construct a circuit and use arbitrary qubits:
 .. code-block:: python
 
     import cirq
-    from cirq_iqm import Adonis
 
     q1, q2 = cirq.NamedQubit('Alice'), cirq.NamedQubit('Bob')
     circuit_1 = cirq.Circuit()
