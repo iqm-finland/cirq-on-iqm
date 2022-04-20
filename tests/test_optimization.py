@@ -18,7 +18,7 @@
 
 import cirq
 import pytest
-from cirq import ops, optimizers
+from cirq import ops
 
 from cirq_iqm.optimizers import (DropRZBeforeMeasurement,
                                  MergeOneParameterGroupGates, simplify_circuit)
@@ -55,7 +55,7 @@ class TestGateOptimization:
         ])
 
         MergeOneParameterGroupGates().optimize_circuit(c)
-        cirq.optimizers.DropEmptyMoments().optimize_circuit(c)
+        c = cirq.drop_empty_moments(c)
 
         if abs((a + b) % MergeOneParameterGroupGates.PERIOD) < 1e-10:
             # the gates have canceled each other out
@@ -99,8 +99,8 @@ class TestGateOptimization:
             cirq.MeasurementGate(1, key='q1')(q1),
         ])
 
-        optimizers.EjectZ().optimize_circuit(c)
-        cirq.optimizers.DropEmptyMoments().optimize_circuit(c)
+        c = cirq.eject_z(c)
+        c = cirq.drop_empty_moments(c)
 
         # the ZPowGates have been commuted and canceled
         assert len(c) == 2

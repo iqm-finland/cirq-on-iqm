@@ -18,7 +18,7 @@ import operator
 from typing import Optional
 
 import cirq
-from cirq import circuits, ops, optimizers
+from cirq import circuits, ops
 
 
 def simplify_circuit(
@@ -61,17 +61,18 @@ def simplify_circuit(
 
         # all mergeable 2-qubit gates are merged
         MergeOneParameterGroupGates().optimize_circuit(c)
-        optimizers.merge_single_qubit_gates_into_phased_x_z(c)
+        c = cirq.merge_single_qubit_gates_to_phased_x_and_z(c)
         # all z rotations are pushed past the first two-qubit gate following them
-        optimizers.EjectZ(eject_parameterized=True).optimize_circuit(c)
-        optimizers.DropEmptyMoments().optimize_circuit(c)
+        c = cirq.eject_z(c, eject_parameterized=True)
+        c = cirq.drop_empty_moments(c)
 
         if c == before:
             # the optimization hit a fixed point
             break
 
     DropRZBeforeMeasurement(drop_final=drop_final_rz).optimize_circuit(c)
-    optimizers.DropEmptyMoments().optimize_circuit(c)
+    # optimizers.DropEmptyMoments().optimize_circuit(c)
+    c = cirq.drop_empty_moments(c)
 
     return c
 
