@@ -235,7 +235,7 @@ class TestCircuitValidation:
         """A valid circuit should pass validation."""
         q0, q1 = adonis.qubits[:2]
 
-        valid_circuit = cirq.Circuit(device=adonis)
+        valid_circuit = cirq.Circuit()
         valid_circuit.append(cirq.Y(q0))
         valid_circuit.append(cirq.measure(q0, key='a'))
         valid_circuit.append(cirq.measure(q1, key='b'))
@@ -247,7 +247,7 @@ class TestCircuitValidation:
 
         q0, q1 = adonis.qubits[:2]
 
-        invalid_circuit = cirq.Circuit(device=adonis)
+        invalid_circuit = cirq.Circuit()
         invalid_circuit.append(cirq.Y(q0))
         invalid_circuit.append(cirq.measure(q0, key='a'))
         invalid_circuit.append(cirq.measure(q1, key='a'))

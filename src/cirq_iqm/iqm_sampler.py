@@ -117,14 +117,11 @@ class IQMSampler(cirq.work.Sampler):
         if len(sweeps) > 1 or len(sweeps[0].keys) > 0:
             raise NotImplementedError('Sweeps are not supported')
 
-        if program.device is cirq.UNCONSTRAINED_DEVICE:
-            # verify that qubit_mapping covers all qubits in the circuit
-            circuit_qubits = set(qubit.name for qubit in program.all_qubits())
-            diff = circuit_qubits - set(self._qubit_mapping)
-            if diff:
-                raise ValueError(f'The qubits {diff} are not found in the provided qubit mapping.')
-        elif program.device != self._device:
-            raise ValueError('The devices of the given circuit and of the sampler are not the same.')
+        # verify that qubit_mapping covers all qubits in the circuit
+        circuit_qubits = set(qubit.name for qubit in program.all_qubits())
+        diff = circuit_qubits - set(self._qubit_mapping)
+        if diff:
+            raise ValueError(f'The qubits {diff} are not found in the provided qubit mapping.')
 
         # apply qubit_mapping
         qubit_map = {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in self._qubit_mapping.items()}
