@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 3.6
+===========
+
+* Update optimizers, tests and relevant Jupyter examples to fix deprecation warnings in preparation for cirq 0.15 and cirq 1.0. `#70 <https://github.com/iqm-finland/cirq-on-iqm/pull/70>`_
+
 Version 3.5
 ===========
 
