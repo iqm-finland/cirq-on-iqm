@@ -71,7 +71,6 @@ def simplify_circuit(
             break
 
     DropRZBeforeMeasurement(drop_final=drop_final_rz).optimize_circuit(c)
-    # optimizers.DropEmptyMoments().optimize_circuit(c)
     c = cirq.drop_empty_moments(c)
 
     return c
