@@ -39,8 +39,7 @@ def simplify_circuit(
     This sequence of optimization passes is repeated until the circuit hits a fixed point,
     or ``max_iterations`` is exceeded.
 
-    Finally, it removes Z rotations that are immediately followed by a Z-basis measurement,
-    and runs :meth:`operation_final_decomposer` on the circuit.
+    Finally, it removes Z rotations that are immediately followed by a Z-basis measurement.
 
     Args:
         circuit: circuit to simplify

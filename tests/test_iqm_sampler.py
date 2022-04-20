@@ -21,7 +21,7 @@ from iqm_client.iqm_client import (IQMClient, RunResult, RunStatus,
                                    SingleQubitMapping)
 from mockito import ANY, mock, when
 
-from cirq_iqm import Adonis, Valkmusa
+from cirq_iqm import Adonis
 from cirq_iqm.iqm_sampler import IQMSampler, serialize_qubit_mapping
 
 
@@ -73,13 +73,6 @@ def test_credentials_are_passed_to_client(settings_dict):
     sampler = IQMSampler('http://url', json.dumps(settings_dict), Adonis(), None, username=username, api_key=api_key)
     assert sampler._client._credentials[0] == username
     assert sampler._client._credentials[1] == api_key
-
-
-def test_circuit_with_incorrect_device(adonis_sampler):
-    circuit = cirq.Circuit(device=Valkmusa())
-    with pytest.raises(ValueError, match='devices .* not the same'):
-        adonis_sampler.run(circuit)
-
 
 def test_non_injective_qubit_mapping(base_url, settings_dict, qubit_mapping):
     qubit_mapping['q2 log.'] = 'QB1'
