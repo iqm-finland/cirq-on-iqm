@@ -18,7 +18,6 @@ Circuit sampler that executes quantum circuits on an IQM quantum computer.
 from __future__ import annotations
 
 import json
-from typing import Optional
 
 import cirq
 import numpy as np
@@ -67,13 +66,23 @@ class IQMSampler(cirq.work.Sampler):
         settings: Settings for the quantum computer
         device: Quantum architecture to execute the circuit on
         qubit_mapping: Injective dictionary that maps logical qubit names to physical qubit names
-        username: Username, if required by the IQM Cortex server. This can also be set in the IQM_SERVER_USERNAME
-                  environment variable.
-        api_key: API key, if required by the IQM Cortex server. This can also be set in the IQM_SERVER_API_KEY
-                 environment variable.
+
+    Keyword Args:
+        auth_server_url: URL of user authentication server, if required by the IQM Cortex server.
+            This can also be set in the IQM_AUTH_SERVER environment variable.
+        username: Username, if required by the IQM Cortex server.
+            This can also be set in the IQM_AUTH_USERNAME environment variable.
+        password: Password, if required by the IQM Cortex server.
+            This can also be set in the IQM_AUTH_PASSWORD environment variable.
     """
-    def __init__(self, url: str, settings: str, device: IQMDevice, qubit_mapping: dict[str, str] = None, *,
-                 username: Optional[str] = None, api_key: Optional[str] = None):
+    def __init__(
+            self,
+            url: str,
+            settings: str,
+            device: IQMDevice,
+            qubit_mapping: dict[str, str] = None,
+            **user_auth_args  # contains keyword args auth_server_url, username and password
+    ):
         settings_json = json.loads(settings)
 
         if qubit_mapping is None:
@@ -89,9 +98,14 @@ class IQMSampler(cirq.work.Sampler):
         if diff:
             raise ValueError(f'The physical qubits {diff} in the qubit mapping are not defined in the settings.')
 
-        self._client = IQMClient(url, settings=settings_json, username=username, api_key=api_key)
+        self._client = IQMClient(url, settings_json, **user_auth_args)
         self._device = device
         self._qubit_mapping = qubit_mapping
+
+    def close(self):
+        """Close IQMClient's session with the user authentication server. Discard the client."""
+        self._client.close()
+        self._client = None
 
     def run_sweep(
             self,

@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 4.0
+===========
+
+* Update user authentication to use access token.
+* Upgrade IQMClient to version >= 2.0
+
 Version 3.6
 ===========
 

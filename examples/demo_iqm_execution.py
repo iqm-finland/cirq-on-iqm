@@ -15,10 +15,13 @@
 """
 Demonstrates executing a quantum circuit on an IQM quantum computer.
 
-Set the IQM_SERVER_URL and IQM_SETTINGS_PATH environment variables before running this script. Also, if the server you
-are running against requires authentication, you will also have to set IQM_SERVER_USERNAME and IQM_SERVER_API_KEY.
-E.g. export IQM_SERVER_URL="https://example.com"; export IQM_SETTINGS_PATH="/path/to/file";
-export IQM_SERVER_USERNAME="my username"; export IQM_SERVER_API_KEY="my api key"
+Set the IQM_SERVER_URL and IQM_SETTINGS_PATH environment variables before running this script.
+Also, if the server you are running against requires authentication, you will also have to set IQM_AUTH_SERVER,
+IQM_AUTH_USERNAME and IQM_AUTH_PASSWORD.
+E.g.
+    export IQM_SERVER_URL="https://example.com"; export IQM_SETTINGS_PATH="/path/to/file";
+    export IQM_AUTH_SERVER="https://auth.example.com"; export IQM_AUTH_USERNAME="my username";
+    export IQM_AUTH_PASSWORD="my password"
 """
 import os
 

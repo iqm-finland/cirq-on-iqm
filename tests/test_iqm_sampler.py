@@ -68,11 +68,16 @@ def test_run_sweep_executes_circuit(adonis_sampler, circuit):
 
 
 def test_credentials_are_passed_to_client(settings_dict):
-    username = 'a fake username'
-    api_key = 'a fake api key'
-    sampler = IQMSampler('http://url', json.dumps(settings_dict), Adonis(), None, username=username, api_key=api_key)
-    assert sampler._client._credentials[0] == username
-    assert sampler._client._credentials[1] == api_key
+    user_auth_args = {
+        'auth_server_url': 'https://fake.auth.server.com',
+        'username': 'fake-username',
+        'password': 'fake-password',
+    }
+    with when(IQMClient)._update_tokens():
+        sampler = IQMSampler('http://url', json.dumps(settings_dict), Adonis(), None, **user_auth_args)
+    assert sampler._client._credentials.auth_server_url == user_auth_args['auth_server_url']
+    assert sampler._client._credentials.username == user_auth_args['username']
+    assert sampler._client._credentials.password == user_auth_args['password']
 
 def test_non_injective_qubit_mapping(base_url, settings_dict, qubit_mapping):
     qubit_mapping['q2 log.'] = 'QB1'
