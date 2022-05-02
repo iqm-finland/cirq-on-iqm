@@ -96,7 +96,7 @@ class Apollo(IQMDevice):
     )
 
     def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
-        # Decomposes gates into the native Adonis gate set.
+        # Decomposes gates into the native Apollo gate set.
         # All the decompositions below keep track of global phase (required for decomposing controlled gates).
         # It seems that Cirq native decompositions ignore global phase entirely?
 
