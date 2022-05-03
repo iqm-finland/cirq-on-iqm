@@ -37,8 +37,8 @@ def demo_apollo(do_measure=False, use_qsim=False):
         h q[2];
         h q[4];
         h q[5];
-        cx q[2], q[1];
-        cx q[3], q[5];
+        cx q[0], q[1];
+        cx q[3], q[4];
     """
     if do_measure:
         qasm_program += '\nmeasure q -> meas;'
@@ -46,9 +46,9 @@ def demo_apollo(do_measure=False, use_qsim=False):
     circuit = circuit_from_qasm(qasm_program)
 
     # add some more gates
-    q0 = cirq.NamedQubit('q_0')
-    q5 = cirq.NamedQubit('q_5')
-    circuit.insert(len(circuit) - 1, cirq.CXPowGate(exponent=0.723)(q5, q0))
+    q2 = cirq.NamedQubit('q_2')
+    q3 = cirq.NamedQubit('q_3')
+    circuit.insert(len(circuit) - 1, cirq.CXPowGate(exponent=0.723)(q2, q3))
 
     qubit_mapping = {'q_0': 'QB1', 'q_1': 'QB2', 'q_2': 'QB3', 'q_3': 'QB4', 'q_4': 'QB5', 'q_5': 'QB6'}
     demo(device, circuit, do_measure, use_qsim=use_qsim, qubit_mapping=qubit_mapping)
