@@ -102,7 +102,7 @@ class IQMSampler(cirq.work.Sampler):
         self._device = device
         self._qubit_mapping = qubit_mapping
 
-    def close(self):
+    def close_client(self):
         """Close IQMClient's session with the user authentication server. Discard the client."""
         self._client.close()
         self._client = None
