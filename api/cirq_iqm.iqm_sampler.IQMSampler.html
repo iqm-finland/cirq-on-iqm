@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>cirq_iqm.iqm_sampler.IQMSampler &#8212; Cirq on IQM 3.6 documentation</title>
+    <title>cirq_iqm.iqm_sampler.IQMSampler &#8212; Cirq on IQM 4.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="cirq_iqm.iqm_sampler.serialize_qubit_mapping.html" title="cirq_iqm.iqm_sampler.serialize_qubit_mapping"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 3.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 4.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../API.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="cirq_iqm.html" >cirq_iqm</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="cirq_iqm.iqm_sampler.html" accesskey="U">cirq_iqm.iqm_sampler</a> &#187;</li>
@@ -52,7 +52,7 @@
 <h1>cirq_iqm.iqm_sampler.IQMSampler<a class="headerlink" href="#cirq-iqm-iqm-sampler-iqmsampler" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="cirq_iqm.iqm_sampler.IQMSampler">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cirq_iqm.iqm_sampler.</span></span><span class="sig-name descname"><span class="pre">IQMSampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qubit_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_sampler.IQMSampler" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cirq_iqm.iqm_sampler.</span></span><span class="sig-name descname"><span class="pre">IQMSampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qubit_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">user_auth_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_sampler.IQMSampler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.work.sampler.Sampler</span></code></p>
 <p>Circuit sampler for executing quantum circuits on IQM quantum computers.</p>
 <dl class="field-list simple">
@@ -62,10 +62,16 @@
 <li><p><strong>settings</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Settings for the quantum computer</p></li>
 <li><p><strong>device</strong> (<a class="reference internal" href="cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice" title="cirq_iqm.devices.iqm_device.IQMDevice"><em>IQMDevice</em></a>) – Quantum architecture to execute the circuit on</p></li>
 <li><p><strong>qubit_mapping</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – Injective dictionary that maps logical qubit names to physical qubit names</p></li>
-<li><p><strong>username</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – Username, if required by the IQM Cortex server. This can also be set in the IQM_SERVER_USERNAME
-environment variable.</p></li>
-<li><p><strong>api_key</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – API key, if required by the IQM Cortex server. This can also be set in the IQM_SERVER_API_KEY
-environment variable.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>auth_server_url</strong> – URL of user authentication server, if required by the IQM Cortex server.
+This can also be set in the IQM_AUTH_SERVER environment variable.</p></li>
+<li><p><strong>username</strong> – Username, if required by the IQM Cortex server.
+This can also be set in the IQM_AUTH_USERNAME environment variable.</p></li>
+<li><p><strong>password</strong> – Password, if required by the IQM Cortex server.
+This can also be set in the IQM_AUTH_PASSWORD environment variable.</p></li>
 </ul>
 </dd>
 </dl>
@@ -79,11 +85,20 @@ environment variable.</p></li>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_send_circuit</span></code>(circuit[, repetitions])</p></td>
 <td><p>Sends the circuit to be executed.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cirq_iqm.iqm_sampler.IQMSampler.run_sweep" title="cirq_iqm.iqm_sampler.IQMSampler.run_sweep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_sweep</span></code></a>(program, params[, repetitions])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#cirq_iqm.iqm_sampler.IQMSampler.close_client" title="cirq_iqm.iqm_sampler.IQMSampler.close_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close_client</span></code></a>()</p></td>
+<td><p>Close IQMClient’s session with the user authentication server.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.iqm_sampler.IQMSampler.run_sweep" title="cirq_iqm.iqm_sampler.IQMSampler.run_sweep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_sweep</span></code></a>(program, params[, repetitions])</p></td>
 <td><p>Sweeping is not supported yet.</p></td>
 </tr>
 </tbody>
 </table>
+<dl class="py method">
+<dt class="sig sig-object py" id="cirq_iqm.iqm_sampler.IQMSampler.close_client">
+<span class="sig-name descname"><span class="pre">close_client</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_sampler.IQMSampler.close_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close IQMClient’s session with the user authentication server. Discard the client.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="cirq_iqm.iqm_sampler.IQMSampler.run_sweep">
 <span class="sig-name descname"><span class="pre">run_sweep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">program</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_sampler.IQMSampler.run_sweep" title="Permalink to this definition">¶</a></dt>
@@ -162,7 +177,7 @@ resolver.</p>
         <li class="right" >
           <a href="cirq_iqm.iqm_sampler.serialize_qubit_mapping.html" title="cirq_iqm.iqm_sampler.serialize_qubit_mapping"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 3.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 4.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../API.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="cirq_iqm.html" >cirq_iqm</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="cirq_iqm.iqm_sampler.html" >cirq_iqm.iqm_sampler</a> &#187;</li>
