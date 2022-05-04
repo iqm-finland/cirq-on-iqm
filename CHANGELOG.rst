@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 4.0
+===========
+
+* Update user authentication to use access token. `#71 <https://github.com/iqm-finland/cirq-on-iqm/pull/71>`_
+* Upgrade IQMClient to version >= 2.0 `#71 <https://github.com/iqm-finland/cirq-on-iqm/pull/71>`_
+
 Version 3.6
 ===========
 
