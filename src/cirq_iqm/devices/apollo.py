@@ -24,19 +24,19 @@ class Apollo(IQMDevice):
 
     The qubits are connected thus::
 
-          QB20  QB17
-          /  \  /  \
-       QB19  QB16  QB12
-       /  \  /  \  /  \
-    QB18  QB15  QB11  QB7
-       \  /  \  /  \  /
-       QB14  QB10  QB6
-       /  \  /  \  /
-    QB13  QB9   QB5
-       \  /  \  /  \
-       QB8   QB4   QB2
-          \  /  \  /
-          QB3   QB1
+            QB20  QB17
+            /  \  /  \
+         QB19  QB16  QB12
+         /  \  /  \  /  \
+      QB18  QB15  QB11  QB7
+         \  /  \  /  \  /
+         QB14  QB10  QB6
+         /  \  /  \  /
+      QB13  QB9   QB5
+         \  /  \  /  \
+         QB8   QB4   QB2
+            \  /  \  /
+            QB3   QB1
 
     where the lines denote which qubit pairs can be subject to two-qubit gates.
 
