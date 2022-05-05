@@ -1,4 +1,4 @@
-# Copyright 2020–2021 Cirq on IQM developers
+# Copyright 2020–2022 Cirq on IQM developers
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,13 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from cirq_iqm import Adonis, Valkmusa
+from cirq_iqm import Adonis, Apollo, Valkmusa
 
 
 def test_equality_method():
     adonis_1 = Adonis()
     adonis_2 = Adonis()
+    apollo_1 = Apollo()
+    apollo_2 = Apollo()
     valkmusa = Valkmusa()
 
     assert adonis_1 == adonis_2
     assert valkmusa != adonis_1
+    assert apollo_1 == apollo_2

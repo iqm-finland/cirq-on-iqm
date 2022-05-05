@@ -1,4 +1,4 @@
-# Copyright 2020–2021 Cirq on IQM developers
+# Copyright 2020–2022 Cirq on IQM developers
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@ Describes IQM quantum architectures in the Cirq framework.
 The description includes the qubit connectivity, the native gate set, and the gate decompositions
 to use with the architecture.
 """
-# pylint: disable=protected-access
+# pylint: disable=protected-access,no-self-use
 from __future__ import annotations
 
-import abc
 import collections.abc as ca
 import uuid
+from math import pi as PI
 from typing import Optional, Union
 
 import cirq
@@ -62,10 +62,17 @@ class IQMDevice(devices.Device):
     CONNECTIVITY: tuple[set[int]] = ()
     """qubit connectivity graph of the device"""
 
-    NATIVE_GATES: tuple[type[cirq.Gate]] = ()
+    NATIVE_GATES: tuple[type[cirq.Gate]] = (
+        ops.PhasedXPowGate,
+        ops.XPowGate,
+        ops.YPowGate,
+        ops.MeasurementGate
+    )
     """native gate set of the device (gate families)"""
 
-    NATIVE_GATE_INSTANCES: tuple[cirq.Gate] = ()
+    NATIVE_GATE_INSTANCES: tuple[cirq.Gate] = (
+        ops.CZPowGate(),
+    )
     """native gate set of the device (individual gates)"""
 
     def __init__(self):
@@ -100,11 +107,10 @@ class IQMDevice(devices.Device):
             )
         )
 
-    @abc.abstractmethod
     def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
         """Decomposes operations into the native operation set.
 
-        Operations are decomposed immediately when they are inserted into a Circuit associated with an IQMDevice.
+        All the decompositions below keep track of global phase (required for decomposing controlled gates).
 
         Args:
             op: operation to decompose
@@ -112,6 +118,66 @@ class IQMDevice(devices.Device):
         Returns:
             decomposition, or None to pass ``op`` to the Cirq native decomposition machinery instead
         """
+
+        # It seems that Cirq native decompositions ignore global phase entirely?
+
+        PI_2 = PI / 2
+
+        # common gates used in gate decompositions
+        CZ = ops.CZPowGate()
+        Lx = ops.rx(PI_2)
+        Lxi = ops.rx(-PI_2)
+        Ly = ops.ry(PI_2)
+        Lyi = ops.ry(-PI_2)
+
+        if isinstance(op.gate, ops.CZPowGate):
+            # decompose CZPowGate using ZZPowGate
+            t = op.gate.exponent
+            s = op.gate.global_shift
+            L = ops.rz(t / 2 * PI)
+            return [
+                ops.ZZPowGate(exponent=-0.5 * t, global_shift=-2 * s - 1).on(*op.qubits),
+                L.on(op.qubits[0]),
+                L.on(op.qubits[1]),
+            ]
+        if isinstance(op.gate, ops.ZZPowGate):
+            # decompose ZZPowGate using two CZs
+            t = op.gate.exponent
+            s = op.gate.global_shift
+            return [
+                Lyi.on(op.qubits[1]),
+                CZ.on(*op.qubits),
+                ops.XPowGate(exponent=-t, global_shift=-1 - s).on(op.qubits[1]),
+                CZ.on(*op.qubits),
+                Ly.on(op.qubits[1]),
+            ]
+        if isinstance(op.gate, ops.ISwapPowGate):
+            # decompose ISwapPowGate using two CZs
+            t = op.gate.exponent
+            s = op.gate.global_shift
+            x = -0.5 * t
+            return [
+                Lxi.on(op.qubits[0]),
+                Lxi.on(op.qubits[1]),
+                Lyi.on(op.qubits[1]),
+                CZ.on(*op.qubits),
+                ops.XPowGate(exponent=x, global_shift=-0.5 -2 * s).on(op.qubits[0]),
+                ops.XPowGate(exponent=-x, global_shift=-0.5).on(op.qubits[1]),
+                CZ.on(*op.qubits),
+                Ly.on(op.qubits[1]),
+                Lx.on(op.qubits[0]),
+                Lx.on(op.qubits[1]),
+            ]
+        if isinstance(op.gate, ops.ZPowGate):
+            # Rz using Rx, Ry
+            q = op.qubits[0]
+            return [
+                ops.XPowGate(exponent=-0.5).on(q),
+                ops.YPowGate(exponent=op.gate.exponent).on(q),
+                ops.XPowGate(exponent=0.5).on(q),
+            ]
+        return None
+
 
     def decompose_operation(self, operation: cirq.Operation) -> cirq.OP_TREE:
         if self.is_native_operation(operation):

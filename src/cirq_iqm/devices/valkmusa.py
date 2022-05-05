@@ -1,4 +1,4 @@
-# Copyright 2020–2021 Cirq on IQM developers
+# Copyright 2020–2022 Cirq on IQM developers
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ Lzi = ops.rz(-PI_2)
 class Valkmusa(IQMDevice):
     """IQM's two-qubit transmon device.
 
-    ::
+    The qubits are connected thus::
 
       QB1 - QB2
 
@@ -57,6 +57,8 @@ class Valkmusa(IQMDevice):
         ops.ISwapPowGate,
         ops.MeasurementGate
     )
+
+    NATIVE_GATE_INSTANCES = ()
 
     def operation_decomposer(self, op: ops.Operation) -> Optional[list[ops.Operation]]:
         # Decomposes CNOT and the CZPowGate family to Valkmusa native gates.
