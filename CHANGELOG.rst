@@ -2,10 +2,16 @@
 Changelog
 =========
 
-Version 3.7
+Version 4.1
 ===========
 
 * Add support for 20-qubit Apollo architecture. `#72 <https://github.com/iqm-finland/cirq-on-iqm/pull/72>`_
+
+Version 4.0
+===========
+
+* Update user authentication to use access token. `#71 <https://github.com/iqm-finland/cirq-on-iqm/pull/71>`_
+* Upgrade IQMClient to version >= 2.0 `#71 <https://github.com/iqm-finland/cirq-on-iqm/pull/71>`_
 
 Version 3.6
 ===========

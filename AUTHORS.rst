@@ -8,4 +8,5 @@ Contributors
 * Caspar Ockeloen-Korppi <caspar@meetiqm.com>
 * Maxim Smirnov <dc914337@gmail.com>
 * Maija Nevala <maija@meetiqm.com>
+* Olli Tyrkkö <otyrkko@meetiqm.com>
 * Rakhim Davletkaliyev <rakhim.davletkaliyev@meetiqm.com>
