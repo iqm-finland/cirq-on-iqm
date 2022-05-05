@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 4.1
+===========
+
+* Add support for 20-qubit Apollo architecture. `#72 <https://github.com/iqm-finland/cirq-on-iqm/pull/72>`_
+
 Version 4.0
 ===========
 

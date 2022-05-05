@@ -15,5 +15,6 @@
 """
 
 from .adonis import Adonis
+from .apollo import Apollo
 from .iqm_device import IQMDevice
 from .valkmusa import Valkmusa
