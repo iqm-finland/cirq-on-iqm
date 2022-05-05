@@ -29,6 +29,7 @@ cirq\_iqm.devices
    :recursive:
 
    ~cirq_iqm.devices.adonis
+   ~cirq_iqm.devices.apollo
    ~cirq_iqm.devices.iqm_device
    ~cirq_iqm.devices.valkmusa
 

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Changelog &#8212; Cirq on IQM 4.0 documentation</title>
+    <title>Changelog &#8212; Cirq on IQM 4.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/nature.css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="authors.html" title="Contributors"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 4.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 4.1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Changelog</a></li> 
       </ul>
     </div>  
@@ -43,6 +43,12 @@
             
   <section id="changelog">
 <span id="changes"></span><h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<section id="version-4-1">
+<h2>Version 4.1<a class="headerlink" href="#version-4-1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Add support for 20-qubit Apollo architecture. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/72">#72</a></p></li>
+</ul>
+</section>
 <section id="version-4-0">
 <h2>Version 4.0<a class="headerlink" href="#version-4-0" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -120,8 +126,8 @@ are considered equivalent. <a class="reference external" href="https://github.co
 </section>
 <section id="version-1-2-2021-09-03">
 <h2>Version 1.2 (2021-09-03)<a class="headerlink" href="#version-1-2-2021-09-03" title="Permalink to this headline">¶</a></h2>
-<section id="id14">
-<h3>Features<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<section id="id15">
+<h3>Features<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Move IQM client to a <a class="reference external" href="https://pypi.org/project/iqm-client/">separate library</a></p></li>
 <li><p>Adonis native gate set updated, Rz is not native.
@@ -145,8 +151,8 @@ are considered equivalent. <a class="reference external" href="https://github.co
 </section>
 <section id="version-1-0-2021-08-11">
 <h2>Version 1.0 (2021-08-11)<a class="headerlink" href="#version-1-0-2021-08-11" title="Permalink to this headline">¶</a></h2>
-<section id="id17">
-<h3>Features<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<section id="id18">
+<h3>Features<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">IQMDevice</span></code> updated. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/35">#35</a></p>
 <ul>
@@ -170,8 +176,8 @@ are considered equivalent. <a class="reference external" href="https://github.co
 </li>
 </ul>
 </section>
-<section id="id21">
-<h3>Bugfixes<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<section id="id22">
+<h3>Bugfixes<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>All the demos work again. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/35">#35</a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">DropRZBeforeMeasurement</span></code> had a bug where it sometimes incorrectly eliminated a z rotation
@@ -181,8 +187,8 @@ followed by a multiqubit gate. <a class="reference external" href="https://githu
 </section>
 <section id="version-0-7-2021-07-07">
 <h2>Version 0.7 (2021-07-07)<a class="headerlink" href="#version-0-7-2021-07-07" title="Permalink to this headline">¶</a></h2>
-<section id="id24">
-<h3>Bugfixes<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<section id="id25">
+<h3>Bugfixes<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Off-by-one error fixed in <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/blob/a2d09dab583434c89f569e711ac35085ec371342/src/cirq_iqm/iqm_device.py#L120">IQMDevice.map_circuit</a>. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/29">#29</a></p></li>
 </ul>
@@ -190,8 +196,8 @@ followed by a multiqubit gate. <a class="reference external" href="https://githu
 </section>
 <section id="version-0-6-2021-07-02">
 <h2>Version 0.6 (2021-07-02)<a class="headerlink" href="#version-0-6-2021-07-02" title="Permalink to this headline">¶</a></h2>
-<section id="id26">
-<h3>Features<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<section id="id27">
+<h3>Features<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Project setup updated. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/22">#22</a></p>
 <ul>
@@ -207,8 +213,8 @@ followed by a multiqubit gate. <a class="reference external" href="https://githu
 </section>
 <section id="version-0-5-2021-06-24">
 <h2>Version 0.5 (2021-06-24)<a class="headerlink" href="#version-0-5-2021-06-24" title="Permalink to this headline">¶</a></h2>
-<section id="id28">
-<h3>Features<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
+<section id="id29">
+<h3>Features<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Gate decomposition and circuit optimization procedure simplified. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/21">#21</a></p></li>
 <li><p>Cirq dependency bumped to 0.11. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/23">#23</a></p></li>
@@ -219,8 +225,8 @@ release notes for more details: <a class="reference external" href="https://gith
 </section>
 <section id="version-0-4-2021-06-23">
 <h2>Version 0.4 (2021-06-23)<a class="headerlink" href="#version-0-4-2021-06-23" title="Permalink to this headline">¶</a></h2>
-<section id="id31">
-<h3>Features<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
+<section id="id32">
+<h3>Features<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Convert data to IQM internal format when running requests. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/20">#20</a></p></li>
 </ul>
@@ -228,8 +234,8 @@ release notes for more details: <a class="reference external" href="https://gith
 </section>
 <section id="version-0-3-2021-06-09">
 <h2>Version 0.3 (2021-06-09)<a class="headerlink" href="#version-0-3-2021-06-09" title="Permalink to this headline">¶</a></h2>
-<section id="id33">
-<h3>Features<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
+<section id="id34">
+<h3>Features<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Settings file support. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/17">#17</a></p></li>
 </ul>
@@ -237,8 +243,8 @@ release notes for more details: <a class="reference external" href="https://gith
 </section>
 <section id="version-0-2-2021-04-23">
 <h2>Version 0.2 (2021-04-23)<a class="headerlink" href="#version-0-2-2021-04-23" title="Permalink to this headline">¶</a></h2>
-<section id="id35">
-<h3>Features<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
+<section id="id36">
+<h3>Features<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Adonis native gate set updated, CZ-targeting decompositions added. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/15">#15</a></p></li>
 <li><p>Circuits can be sent to be executed remotely on IQM hardware. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/13">#13</a></p></li>
@@ -247,8 +253,8 @@ release notes for more details: <a class="reference external" href="https://gith
 </section>
 <section id="version-0-1-2021-04-22">
 <h2>Version 0.1 (2021-04-22)<a class="headerlink" href="#version-0-1-2021-04-22" title="Permalink to this headline">¶</a></h2>
-<section id="id38">
-<h3>Features<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h3>
+<section id="id39">
+<h3>Features<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Supports the Adonis and Valkmusa architectures.</p></li>
 <li><p>Extends the OpenQASM language with gates native to the IQM architectures.</p></li>
@@ -272,6 +278,7 @@ release notes for more details: <a class="reference external" href="https://gith
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Changelog</a><ul>
+<li><a class="reference internal" href="#version-4-1">Version 4.1</a></li>
 <li><a class="reference internal" href="#version-4-0">Version 4.0</a></li>
 <li><a class="reference internal" href="#version-3-6">Version 3.6</a></li>
 <li><a class="reference internal" href="#version-3-5">Version 3.5</a></li>
@@ -286,42 +293,42 @@ release notes for more details: <a class="reference external" href="https://gith
 </li>
 <li><a class="reference internal" href="#version-2-0-2021-09-17">Version 2.0 (2021-09-17)</a></li>
 <li><a class="reference internal" href="#version-1-2-2021-09-03">Version 1.2 (2021-09-03)</a><ul>
-<li><a class="reference internal" href="#id14">Features</a></li>
+<li><a class="reference internal" href="#id15">Features</a></li>
 <li><a class="reference internal" href="#bugfixes">Bugfixes</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#version-1-1-2021-08-13">Version 1.1 (2021-08-13)</a></li>
 <li><a class="reference internal" href="#version-1-0-2021-08-11">Version 1.0 (2021-08-11)</a><ul>
-<li><a class="reference internal" href="#id17">Features</a></li>
-<li><a class="reference internal" href="#id21">Bugfixes</a></li>
+<li><a class="reference internal" href="#id18">Features</a></li>
+<li><a class="reference internal" href="#id22">Bugfixes</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#version-0-7-2021-07-07">Version 0.7 (2021-07-07)</a><ul>
-<li><a class="reference internal" href="#id24">Bugfixes</a></li>
+<li><a class="reference internal" href="#id25">Bugfixes</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#version-0-6-2021-07-02">Version 0.6 (2021-07-02)</a><ul>
-<li><a class="reference internal" href="#id26">Features</a></li>
+<li><a class="reference internal" href="#id27">Features</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#version-0-5-2021-06-24">Version 0.5 (2021-06-24)</a><ul>
-<li><a class="reference internal" href="#id28">Features</a></li>
+<li><a class="reference internal" href="#id29">Features</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#version-0-4-2021-06-23">Version 0.4 (2021-06-23)</a><ul>
-<li><a class="reference internal" href="#id31">Features</a></li>
+<li><a class="reference internal" href="#id32">Features</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#version-0-3-2021-06-09">Version 0.3 (2021-06-09)</a><ul>
-<li><a class="reference internal" href="#id33">Features</a></li>
+<li><a class="reference internal" href="#id34">Features</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#version-0-2-2021-04-23">Version 0.2 (2021-04-23)</a><ul>
-<li><a class="reference internal" href="#id35">Features</a></li>
+<li><a class="reference internal" href="#id36">Features</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#version-0-1-2021-04-22">Version 0.1 (2021-04-22)</a><ul>
-<li><a class="reference internal" href="#id38">Features</a></li>
+<li><a class="reference internal" href="#id39">Features</a></li>
 </ul>
 </li>
 </ul>
@@ -364,7 +371,7 @@ release notes for more details: <a class="reference external" href="https://gith
         <li class="right" >
           <a href="authors.html" title="Contributors"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 4.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cirq on IQM 4.1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Changelog</a></li> 
       </ul>
     </div>

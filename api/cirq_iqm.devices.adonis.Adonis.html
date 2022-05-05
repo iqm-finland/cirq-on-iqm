@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>cirq_iqm.devices.adonis.Adonis &#8212; Cirq on IQM 4.0 documentation</title>
+    <title>cirq_iqm.devices.adonis.Adonis &#8212; Cirq on IQM 4.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="cirq_iqm.devices.iqm_device" href="cirq_iqm.devices.iqm_device.html" />
+    <link rel="next" title="cirq_iqm.devices.apollo" href="cirq_iqm.devices.apollo.html" />
     <link rel="prev" title="cirq_iqm.devices.adonis" href="cirq_iqm.devices.adonis.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -30,12 +30,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="cirq_iqm.devices.iqm_device.html" title="cirq_iqm.devices.iqm_device"
+          <a href="cirq_iqm.devices.apollo.html" title="cirq_iqm.devices.apollo"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="cirq_iqm.devices.adonis.html" title="cirq_iqm.devices.adonis"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 4.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 4.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../API.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="cirq_iqm.html" >cirq_iqm</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="cirq_iqm.devices.html" >cirq_iqm.devices</a> &#187;</li>
@@ -79,12 +79,6 @@ the circuit.</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">CONNECTIVITY</span></code></p></td>
 <td><p>qubit connectivity graph of the device</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NATIVE_GATES</span></code></p></td>
-<td><p>native gate set of the device (gate families)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NATIVE_GATE_INSTANCES</span></code></p></td>
-<td><p>native gate set of the device (individual gates)</p></td>
-</tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">QUBIT_COUNT</span></code></p></td>
 <td><p>number of qubits on the device</p></td>
 </tr>
@@ -97,29 +91,8 @@ the circuit.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.devices.adonis.Adonis.operation_decomposer" title="cirq_iqm.devices.adonis.Adonis.operation_decomposer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">operation_decomposer</span></code></a>(op)</p></td>
-<td><p>Decomposes operations into the native operation set.</p></td>
-</tr>
 </tbody>
 </table>
-<dl class="py method">
-<dt class="sig sig-object py" id="cirq_iqm.devices.adonis.Adonis.operation_decomposer">
-<span class="sig-name descname"><span class="pre">operation_decomposer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.devices.adonis.Adonis.operation_decomposer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decomposes operations into the native operation set.</p>
-<p>Operations are decomposed immediately when they are inserted into a Circuit associated with an IQMDevice.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>op</strong> (<em>cirq.ops.raw_types.Operation</em>) – operation to decompose</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>decomposition, or None to pass <code class="docutils literal notranslate"><span class="pre">op</span></code> to the Cirq native decomposition machinery instead</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Optional[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)">list</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </section>
@@ -135,8 +108,8 @@ the circuit.</p>
   <p class="topless"><a href="cirq_iqm.devices.adonis.html"
                         title="previous chapter">cirq_iqm.devices.adonis</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="cirq_iqm.devices.iqm_device.html"
-                        title="next chapter">cirq_iqm.devices.iqm_device</a></p>
+  <p class="topless"><a href="cirq_iqm.devices.apollo.html"
+                        title="next chapter">cirq_iqm.devices.apollo</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -168,12 +141,12 @@ the circuit.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="cirq_iqm.devices.iqm_device.html" title="cirq_iqm.devices.iqm_device"
+          <a href="cirq_iqm.devices.apollo.html" title="cirq_iqm.devices.apollo"
              >next</a> |</li>
         <li class="right" >
           <a href="cirq_iqm.devices.adonis.html" title="cirq_iqm.devices.adonis"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 4.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 4.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../API.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="cirq_iqm.html" >cirq_iqm</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="cirq_iqm.devices.html" >cirq_iqm.devices</a> &#187;</li>
