@@ -2,7 +2,7 @@
 Changelog
 =========
 
-Version 4.2
+Version 5.0
 ===========
 
 * Make ``settings`` an optional parameter for ``IQMSampler``. Optional ``settings`` is now after non-optional ``device`` in arguments. `#73 <https://github.com/iqm-finland/cirq-on-iqm/pull/73>`_
