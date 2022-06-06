@@ -35,6 +35,15 @@ def circuit():
 
 
 @pytest.fixture()
+def circuit_with_physical_names():
+    qubit_1 = cirq.NamedQubit('QB1')
+    qubit_2 = cirq.NamedQubit('QB2')
+    return cirq.Circuit(
+        cirq.measure(qubit_1, qubit_2, key='result')
+    )
+
+
+@pytest.fixture()
 def qubit_mapping():
     return {
         'q1 log.': 'QB1',
@@ -44,7 +53,12 @@ def qubit_mapping():
 
 @pytest.fixture()
 def adonis_sampler(base_url, settings_dict, qubit_mapping):
-    return IQMSampler(base_url, json.dumps(settings_dict), Adonis(), qubit_mapping)
+    return IQMSampler(base_url, Adonis(), json.dumps(settings_dict), qubit_mapping)
+
+
+@pytest.fixture()
+def adonis_sampler_without_settings(base_url):
+    return IQMSampler(base_url, Adonis())
 
 
 def test_serialize_qubit_mapping(qubit_mapping):
@@ -67,6 +81,19 @@ def test_run_sweep_executes_circuit(adonis_sampler, circuit):
     assert isinstance(results[0], cirq.Result)
 
 
+@pytest.mark.usefixtures('unstub')
+def test_run_sweep_executes_circuit_without_settings(adonis_sampler_without_settings, circuit_with_physical_names):
+    client = mock(IQMClient)
+    run_id = uuid.uuid4()
+    run_result = RunResult(status=RunStatus.READY, measurements={'some stuff': [[0], [1]]}, message=None)
+    when(client).submit_circuit(ANY, ANY, ANY).thenReturn(run_id)
+    when(client).wait_for_results(run_id).thenReturn(run_result)
+
+    adonis_sampler_without_settings._client = client
+    results = adonis_sampler_without_settings.run_sweep(circuit_with_physical_names, None, repetitions=2)
+    assert isinstance(results[0], cirq.Result)
+
+
 def test_credentials_are_passed_to_client(settings_dict):
     user_auth_args = {
         'auth_server_url': 'https://fake.auth.server.com',
@@ -74,16 +101,17 @@ def test_credentials_are_passed_to_client(settings_dict):
         'password': 'fake-password',
     }
     with when(IQMClient)._update_tokens():
-        sampler = IQMSampler('http://url', json.dumps(settings_dict), Adonis(), None, **user_auth_args)
+        sampler = IQMSampler('http://url', Adonis(), json.dumps(settings_dict), None, **user_auth_args)
     assert sampler._client._credentials.auth_server_url == user_auth_args['auth_server_url']
     assert sampler._client._credentials.username == user_auth_args['username']
     assert sampler._client._credentials.password == user_auth_args['password']
+
 
 def test_non_injective_qubit_mapping(base_url, settings_dict, qubit_mapping):
     qubit_mapping['q2 log.'] = 'QB1'
 
     with pytest.raises(ValueError, match='Multiple logical qubits map to the same physical qubit'):
-        IQMSampler(base_url, json.dumps(settings_dict), Adonis(), qubit_mapping)
+        IQMSampler(base_url, Adonis(), json.dumps(settings_dict), qubit_mapping)
 
 
 def test_qubits_not_in_settings(base_url, settings_dict, qubit_mapping):
@@ -92,7 +120,7 @@ def test_qubits_not_in_settings(base_url, settings_dict, qubit_mapping):
             ValueError,
             match="The physical qubits {'QB1'} in the qubit mapping are not defined in the settings"
     ):
-        IQMSampler(base_url, json.dumps(settings_dict), Adonis(), qubit_mapping)
+        IQMSampler(base_url, Adonis(), json.dumps(settings_dict), qubit_mapping)
 
 
 def test_incomplete_qubit_mapping(adonis_sampler, circuit):

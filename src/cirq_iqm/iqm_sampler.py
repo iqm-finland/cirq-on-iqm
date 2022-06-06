@@ -63,8 +63,8 @@ class IQMSampler(cirq.work.Sampler):
 
     Args:
         url: Endpoint for accessing the server interface. Has to start with http or https.
-        settings: Settings for the quantum computer
         device: Quantum architecture to execute the circuit on
+        settings: Settings for the quantum computer
         qubit_mapping: Injective dictionary that maps logical qubit names to physical qubit names
 
     Keyword Args:
@@ -78,12 +78,12 @@ class IQMSampler(cirq.work.Sampler):
     def __init__(
             self,
             url: str,
-            settings: str,
             device: IQMDevice,
+            settings: str = None,
             qubit_mapping: dict[str, str] = None,
             **user_auth_args  # contains keyword args auth_server_url, username and password
     ):
-        settings_json = json.loads(settings)
+        settings_json = None if not settings else json.loads(settings)
 
         if qubit_mapping is None:
             # If qubit_mapping is not given, create an identity mapping
@@ -93,10 +93,15 @@ class IQMSampler(cirq.work.Sampler):
             if not len(set(qubit_mapping.values())) == len(qubit_mapping.values()):
                 raise ValueError('Multiple logical qubits map to the same physical qubit.')
 
-        # verify that all the physical qubit names in qubit_mapping are defined in the settings
-        diff = set(qubit_mapping.values()) - set(settings_json['subtrees'])
-        if diff:
-            raise ValueError(f'The physical qubits {diff} in the qubit mapping are not defined in the settings.')
+            # verify that all the physical qubit names in qubit_mapping are defined in the settings
+            target_qubits = set(qubit_mapping.values())
+            if settings_json is not None:
+                physical_qubits = set(settings_json['subtrees'])  # pylint: disable=unsubscriptable-object
+                diff = target_qubits - physical_qubits
+            else:
+                diff = set()  # with settings set to None qubit names can not be checked
+            if diff:
+                raise ValueError(f'The physical qubits {diff} in the qubit mapping are not defined in the settings.')
 
         self._client = IQMClient(url, settings_json, **user_auth_args)
         self._device = device

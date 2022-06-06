@@ -1,4 +1,5 @@
 [MASTER]
+load-plugins=pylint.extensions.no_self_use
 disable=
     arguments-differ,
     missing-module-docstring,
