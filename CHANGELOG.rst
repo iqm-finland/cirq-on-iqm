@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 5.1
+===========
+
+* Update ``IQMClient`` instantiations with the changes in iqm-client 4.0 `#75 <https://github.com/iqm-finland/cirq-on-iqm/pull/75>`_
+
 Version 5.0
 ===========
 

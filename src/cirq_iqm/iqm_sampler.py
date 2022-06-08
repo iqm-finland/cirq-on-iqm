@@ -174,7 +174,7 @@ class IQMSampler(cirq.work.Sampler):
         iqm_circuit = serialize_circuit(circuit)
         qubit_mapping = serialize_qubit_mapping(self._qubit_mapping)
 
-        job_id = self._client.submit_circuit(iqm_circuit, qubit_mapping, repetitions, self._settings_json)
+        job_id = self._client.submit_circuit(iqm_circuit, qubit_mapping, self._settings_json, repetitions)
         results = self._client.wait_for_results(job_id)
         measurements = {k: np.array(v) for k, v in results.measurements.items()}
         return study.ResultDict(params=resolver.ParamResolver(), measurements=measurements)
