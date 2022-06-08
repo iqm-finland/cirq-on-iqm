@@ -83,7 +83,7 @@ class IQMSampler(cirq.work.Sampler):
             qubit_mapping: dict[str, str] = None,
             **user_auth_args  # contains keyword args auth_server_url, username and password
     ):
-        settings_json = None if not settings else json.loads(settings)
+        self._settings_json = None if not settings else json.loads(settings)
 
         if qubit_mapping is None:
             # If qubit_mapping is not given, create an identity mapping
@@ -95,15 +95,15 @@ class IQMSampler(cirq.work.Sampler):
 
             # verify that all the physical qubit names in qubit_mapping are defined in the settings
             target_qubits = set(qubit_mapping.values())
-            if settings_json is not None:
-                physical_qubits = set(settings_json['subtrees'])  # pylint: disable=unsubscriptable-object
+            if self._settings_json is not None:
+                physical_qubits = set(self._settings_json['subtrees'])  # pylint: disable=unsubscriptable-object
                 diff = target_qubits - physical_qubits
             else:
                 diff = set()  # with settings set to None qubit names can not be checked
             if diff:
                 raise ValueError(f'The physical qubits {diff} in the qubit mapping are not defined in the settings.')
 
-        self._client = IQMClient(url, settings_json, **user_auth_args)
+        self._client = IQMClient(url, **user_auth_args)
         self._device = device
         self._qubit_mapping = qubit_mapping
 
@@ -174,7 +174,7 @@ class IQMSampler(cirq.work.Sampler):
         iqm_circuit = serialize_circuit(circuit)
         qubit_mapping = serialize_qubit_mapping(self._qubit_mapping)
 
-        job_id = self._client.submit_circuit(iqm_circuit, qubit_mapping, repetitions)
+        job_id = self._client.submit_circuit(iqm_circuit, qubit_mapping, repetitions, self._settings_json)
         results = self._client.wait_for_results(job_id)
         measurements = {k: np.array(v) for k, v in results.measurements.items()}
         return study.ResultDict(params=resolver.ParamResolver(), measurements=measurements)

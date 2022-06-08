@@ -73,7 +73,7 @@ def test_run_sweep_executes_circuit(adonis_sampler, circuit):
     client = mock(IQMClient)
     run_id = uuid.uuid4()
     run_result = RunResult(status=RunStatus.READY, measurements={'some stuff': [[0], [1]]}, message=None)
-    when(client).submit_circuit(ANY, ANY, ANY).thenReturn(run_id)
+    when(client).submit_circuit(ANY, ANY, ANY, ANY).thenReturn(run_id)
     when(client).wait_for_results(run_id).thenReturn(run_result)
 
     adonis_sampler._client = client
@@ -86,7 +86,7 @@ def test_run_sweep_executes_circuit_without_settings(adonis_sampler_without_sett
     client = mock(IQMClient)
     run_id = uuid.uuid4()
     run_result = RunResult(status=RunStatus.READY, measurements={'some stuff': [[0], [1]]}, message=None)
-    when(client).submit_circuit(ANY, ANY, ANY).thenReturn(run_id)
+    when(client).submit_circuit(ANY, ANY, ANY, ANY).thenReturn(run_id)
     when(client).wait_for_results(run_id).thenReturn(run_result)
 
     adonis_sampler_without_settings._client = client
