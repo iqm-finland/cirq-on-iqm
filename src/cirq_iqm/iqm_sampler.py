@@ -18,11 +18,11 @@ Circuit sampler that executes quantum circuits on an IQM quantum computer.
 from __future__ import annotations
 
 import json
+from typing import Optional
 
 import cirq
 import numpy as np
 from cirq import study
-from cirq.study import resolver
 from iqm_client import iqm_client
 from iqm_client.iqm_client import IQMClient, SingleQubitMapping
 
@@ -79,8 +79,8 @@ class IQMSampler(cirq.work.Sampler):
             self,
             url: str,
             device: IQMDevice,
-            settings: str = None,
-            qubit_mapping: dict[str, str] = None,
+            settings: Optional[str] = None,
+            qubit_mapping: Optional[dict[str, str]] = None,
             **user_auth_args  # contains keyword args auth_server_url, username and password
     ):
         settings_json = None if not settings else json.loads(settings)
@@ -109,6 +109,8 @@ class IQMSampler(cirq.work.Sampler):
 
     def close_client(self):
         """Close IQMClient's session with the user authentication server. Discard the client."""
+        if not self._client:
+            return
         self._client.close()
         self._client = None
 
@@ -118,24 +120,6 @@ class IQMSampler(cirq.work.Sampler):
             params: cirq.Sweepable,
             repetitions: int = 1,
     ) -> list[cirq.Result]:
-        """Sweeping is not supported yet. Use the `run` method instead.
-
-        Args:
-            program: The circuit to sample from.
-            params: Arguments to the program.
-            repetitions: The number of times to sample (execute) the circuit.
-
-        Returns:
-            Result list for this run; one for each possible parameter
-            resolver.
-
-        Raises:
-            NotImplementedError: user tried to run a nontrivial sweep
-        """
-        sweeps = study.to_sweeps(params or study.ParamResolver({}))
-        if len(sweeps) > 1 or len(sweeps[0].keys) > 0:
-            raise NotImplementedError('Sweeps are not supported')
-
         # verify that qubit_mapping covers all qubits in the circuit
         circuit_qubits = set(qubit.name for qubit in program.all_qubits())
         diff = circuit_qubits - set(self._qubit_mapping)
@@ -150,14 +134,23 @@ class IQMSampler(cirq.work.Sampler):
         # check that the circuit connectivity fits in the device connectivity
         self._device.validate_circuit(mapped)
 
-        results = [self._send_circuit(program, repetitions=repetitions)]
-        return results
+        resolvers = list(cirq.to_resolvers(params))
 
-    def _send_circuit(
+        circuits = [
+            cirq.protocols.resolve_parameters(program, res) for res in resolvers
+        ] if resolvers else [program]
+
+        measurements = self._send_circuits(circuits, repetitions=repetitions)
+        return [
+            study.ResultDict(params=res, measurements=mes)
+            for res, mes in zip(resolvers, measurements)
+        ]
+
+    def _send_circuits(
             self,
-            circuit: cirq.Circuit,
+            circuits: list[cirq.Circuit],
             repetitions: int = 1,
-    ) -> cirq.study.Result:
+    ) -> list[dict[str, np.ndarray]]:
         """Sends the circuit to be executed.
 
         Args:
@@ -171,10 +164,19 @@ class IQMSampler(cirq.work.Sampler):
             CircuitExecutionError: something went wrong on the server
             APITimeoutError: server did not return the results in the allocated time
         """
-        iqm_circuit = serialize_circuit(circuit)
+        if not self._client:
+            raise RuntimeError(
+                'Cannot submit circuits since session to IQM clienthas been closed.'
+        )
+        serialized_circuits = [serialize_circuit(circuit) for circuit in circuits]
         qubit_mapping = serialize_qubit_mapping(self._qubit_mapping)
 
-        job_id = self._client.submit_circuit(iqm_circuit, qubit_mapping, repetitions)
+        job_id = self._client.submit_circuits(serialized_circuits, qubit_mapping, repetitions)
         results = self._client.wait_for_results(job_id)
-        measurements = {k: np.array(v) for k, v in results.measurements.items()}
-        return study.ResultDict(params=resolver.ParamResolver(), measurements=measurements)
+        if results.measurements is None:
+            raise RuntimeError('No measurements returned from IQM quantum computer.')
+
+        return [
+            {k: np.array(v) for k, v in measurements.items()}
+            for measurements in results.measurements
+        ]
