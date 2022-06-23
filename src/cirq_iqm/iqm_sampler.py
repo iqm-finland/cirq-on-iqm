@@ -18,6 +18,7 @@ Circuit sampler that executes quantum circuits on an IQM quantum computer.
 from __future__ import annotations
 
 import json
+from typing import Optional
 
 import cirq
 import numpy as np
@@ -65,7 +66,6 @@ class IQMSampler(cirq.work.Sampler):
         url: Endpoint for accessing the server interface. Has to start with http or https.
         device: Quantum architecture to execute the circuit on
         settings: Settings for the quantum computer
-        qubit_mapping: Injective dictionary that maps logical qubit names to physical qubit names
 
     Keyword Args:
         auth_server_url: URL of user authentication server, if required by the IQM Cortex server.
@@ -88,6 +88,44 @@ class IQMSampler(cirq.work.Sampler):
         if qubit_mapping is None:
             # If qubit_mapping is not given, create an identity mapping
             qubit_mapping = {qubit.name: qubit.name for qubit in device.qubits}
+
+        self._client = IQMClient(url, **user_auth_args)
+        self._device = device
+
+    def close_client(self):
+        """Close IQMClient's session with the user authentication server. Discard the client."""
+        self._client.close()
+        self._client = None
+
+    def run_sweep(
+            self,
+            program: cirq.Circuit,
+            params: cirq.Sweepable,
+            repetitions: int = 1,
+            qubit_mapping: Optional[dict[str, str]] = None
+    ) -> list[cirq.Result]:
+        """Sweeping is not supported yet. Use the `run` method instead.
+
+        Args:
+            program: The circuit to sample from.
+            params: Arguments to the program.
+            repetitions: The number of times to sample (execute) the circuit.
+            qubit_mapping: Injective dictionary that maps logical qubit names to physical qubit names
+
+        Returns:
+            Result list for this run; one for each possible parameter
+            resolver.
+
+        Raises:
+            NotImplementedError: user tried to run a nontrivial sweep
+        """
+        sweeps = study.to_sweeps(params or study.ParamResolver({}))
+        if len(sweeps) > 1 or len(sweeps[0].keys) > 0:
+            raise NotImplementedError('Sweeps are not supported')
+
+        if qubit_mapping is None:
+            # If qubit_mapping is not given, create an identity mapping
+            qubit_mapping = {qubit.name: qubit.name for qubit in self._device.qubits}
         else:
             # verify that the given qubit_mapping is injective
             if not len(set(qubit_mapping.values())) == len(qubit_mapping.values()):
@@ -103,60 +141,28 @@ class IQMSampler(cirq.work.Sampler):
             if diff:
                 raise ValueError(f'The physical qubits {diff} in the qubit mapping are not defined in the settings.')
 
-        self._client = IQMClient(url, **user_auth_args)
-        self._device = device
-        self._qubit_mapping = qubit_mapping
-
-    def close_client(self):
-        """Close IQMClient's session with the user authentication server. Discard the client."""
-        self._client.close()
-        self._client = None
-
-    def run_sweep(
-            self,
-            program: cirq.Circuit,
-            params: cirq.Sweepable,
-            repetitions: int = 1,
-    ) -> list[cirq.Result]:
-        """Sweeping is not supported yet. Use the `run` method instead.
-
-        Args:
-            program: The circuit to sample from.
-            params: Arguments to the program.
-            repetitions: The number of times to sample (execute) the circuit.
-
-        Returns:
-            Result list for this run; one for each possible parameter
-            resolver.
-
-        Raises:
-            NotImplementedError: user tried to run a nontrivial sweep
-        """
-        sweeps = study.to_sweeps(params or study.ParamResolver({}))
-        if len(sweeps) > 1 or len(sweeps[0].keys) > 0:
-            raise NotImplementedError('Sweeps are not supported')
-
         # verify that qubit_mapping covers all qubits in the circuit
         circuit_qubits = set(qubit.name for qubit in program.all_qubits())
-        diff = circuit_qubits - set(self._qubit_mapping)
+        diff = circuit_qubits - set(qubit_mapping)
         if diff:
             raise ValueError(f'The qubits {diff} are not found in the provided qubit mapping.')
 
         # apply qubit_mapping
-        qubit_map = {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in self._qubit_mapping.items()}
+        qubit_map = {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in qubit_mapping.items()}
         mapped = program.transform_qubits(qubit_map)
 
         # validate the circuit for the device
         # check that the circuit connectivity fits in the device connectivity
         self._device.validate_circuit(mapped)
 
-        results = [self._send_circuit(program, repetitions=repetitions)]
+        results = [self._send_circuit(program, qubit_mapping, repetitions=repetitions)]
         return results
 
     def _send_circuit(
             self,
             circuit: cirq.Circuit,
-            repetitions: int = 1,
+            qubit_mapping: dict[str, str],
+            repetitions: int = 1
     ) -> cirq.study.Result:
         """Sends the circuit to be executed.
 
@@ -172,7 +178,7 @@ class IQMSampler(cirq.work.Sampler):
             APITimeoutError: server did not return the results in the allocated time
         """
         iqm_circuit = serialize_circuit(circuit)
-        qubit_mapping = serialize_qubit_mapping(self._qubit_mapping)
+        qubit_mapping = serialize_qubit_mapping(qubit_mapping)
 
         job_id = self._client.submit_circuit(iqm_circuit, qubit_mapping, self._settings_json, repetitions)
         results = self._client.wait_for_results(job_id)
