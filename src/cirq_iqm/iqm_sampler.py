@@ -63,7 +63,7 @@ class IQMSampler(cirq.work.Sampler):
 
     Args:
         url: Endpoint for accessing the server interface. Has to start with http or https.
-        device: Quantum architecture to execute the circuit on
+        device: Quantum architecture to execute the circuits on
         settings: Settings for the quantum computer
         qubit_mapping: Injective dictionary that maps logical qubit names to physical qubit names
 
@@ -154,8 +154,8 @@ class IQMSampler(cirq.work.Sampler):
         """Sends the circuit(s) to be executed.
 
         Args:
-            circuit: quantum circuit to execute
-            repetitions: number of times the circuit is sampled
+            circuits: quantum circuit(s) to execute
+            repetitions: number of times the circuit(s) are sampled
 
         Returns:
             results of the execution
@@ -163,11 +163,12 @@ class IQMSampler(cirq.work.Sampler):
         Raises:
             CircuitExecutionError: something went wrong on the server
             APITimeoutError: server did not return the results in the allocated time
+            RuntimeError: IQM client session has been closed
         """
         if not self._client:
             raise RuntimeError(
-                'Cannot submit circuits since session to IQM clienthas been closed.'
-        )
+                'Cannot submit circuits since session to IQM client has been closed.'
+            )
         serialized_circuits = [serialize_circuit(circuit) for circuit in circuits]
         qubit_mapping = serialize_qubit_mapping(self._qubit_mapping)
 
