@@ -151,7 +151,7 @@ class IQMSampler(cirq.work.Sampler):
             circuits: list[cirq.Circuit],
             repetitions: int = 1,
     ) -> list[dict[str, np.ndarray]]:
-        """Sends the circuit to be executed.
+        """Sends the circuit(s) to be executed.
 
         Args:
             circuit: quantum circuit to execute
