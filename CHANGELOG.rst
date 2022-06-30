@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 6.0
+===========
+
+* Allow running sweeps in ``IQMSampler.run_sweep`` . `#76 <https://github.com/iqm-finland/cirq-on-iqm/pull/76>`_
+
 Version 5.0
 ===========
 
