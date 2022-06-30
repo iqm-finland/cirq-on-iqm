@@ -126,34 +126,15 @@ class IQMSampler(cirq.work.Sampler):
         if qubit_mapping is None:
             # If qubit_mapping is not given, create an identity mapping
             qubit_mapping = {qubit.name: qubit.name for qubit in self._device.qubits}
-        else:
-            # verify that the given qubit_mapping is injective
-            if not len(set(qubit_mapping.values())) == len(qubit_mapping.values()):
-                raise ValueError('Multiple logical qubits map to the same physical qubit.')
 
-            # verify that all the physical qubit names in qubit_mapping are defined in the settings
-            target_qubits = set(qubit_mapping.values())
-            if self._settings_json is not None:
-                physical_qubits = set(self._settings_json['subtrees'])  # pylint: disable=unsubscriptable-object
-                diff = target_qubits - physical_qubits
-            else:
-                diff = set()  # with settings set to None qubit names can not be checked
-            if diff:
-                raise ValueError(f'The physical qubits {diff} in the qubit mapping are not defined in the settings.')
-
-        # verify that qubit_mapping covers all qubits in the circuit
-        circuit_qubits = set(qubit.name for qubit in program.all_qubits())
-        diff = circuit_qubits - set(qubit_mapping)
+        device_qubit_names = set(qubit.name for qubit in self._device.qubits)
+        diff = set(qubit_mapping.values()) - device_qubit_names
         if diff:
-            raise ValueError(f'The qubits {diff} are not found in the provided qubit mapping.')
-
-        # apply qubit_mapping
-        qubit_map = {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in qubit_mapping.items()}
-        mapped = program.transform_qubits(qubit_map)
+            raise ValueError(f'Qubit(s) not on device: {diff!r}')
 
         # validate the circuit for the device
         # check that the circuit connectivity fits in the device connectivity
-        self._device.validate_circuit(mapped)
+        self._device.validate_circuit(program)
 
         results = [self._send_circuit(program, qubit_mapping, repetitions=repetitions)]
         return results

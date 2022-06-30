@@ -100,11 +100,11 @@ class IQMDevice(devices.Device):
     def is_native_operation(cls, op: cirq.Operation) -> bool:
         """Predicate, True iff the given operation is considered native for the architecture."""
         return (
-            isinstance(op, (ops.GateOperation, ops.TaggedOperation))
-            and (
-                isinstance(op.gate, cls.NATIVE_GATES)
-                or op.gate in cls.NATIVE_GATE_INSTANCES
-            )
+                isinstance(op, (ops.GateOperation, ops.TaggedOperation))
+                and (
+                        isinstance(op.gate, cls.NATIVE_GATES)
+                        or op.gate in cls.NATIVE_GATE_INSTANCES
+                )
         )
 
     def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
@@ -161,7 +161,7 @@ class IQMDevice(devices.Device):
                 Lxi.on(op.qubits[1]),
                 Lyi.on(op.qubits[1]),
                 CZ.on(*op.qubits),
-                ops.XPowGate(exponent=x, global_shift=-0.5 -2 * s).on(op.qubits[0]),
+                ops.XPowGate(exponent=x, global_shift=-0.5 - 2 * s).on(op.qubits[0]),
                 ops.XPowGate(exponent=-x, global_shift=-0.5).on(op.qubits[1]),
                 CZ.on(*op.qubits),
                 Ly.on(op.qubits[1]),
@@ -177,7 +177,6 @@ class IQMDevice(devices.Device):
                 ops.XPowGate(exponent=0.5).on(q),
             ]
         return None
-
 
     def decompose_operation(self, operation: cirq.Operation) -> cirq.OP_TREE:
         if self.is_native_operation(operation):
@@ -279,10 +278,6 @@ class IQMDevice(devices.Device):
 
         if not self.is_native_operation(operation):
             raise ValueError(f'Unsupported gate type: {operation.gate!r}')
-
-        for qubit in operation.qubits:
-            if qubit not in self.qubits:
-                raise ValueError(f'Qubit not on device: {qubit!r}')
 
         self.check_qubit_connectivity(operation)
 
