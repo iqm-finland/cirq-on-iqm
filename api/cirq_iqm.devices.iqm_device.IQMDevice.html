@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>cirq_iqm.devices.iqm_device.IQMDevice &#8212; Cirq on IQM 5.0 documentation</title>
+    <title>cirq_iqm.devices.iqm_device.IQMDevice &#8212; Cirq on IQM 6.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="cirq_iqm.devices.iqm_device.html" title="cirq_iqm.devices.iqm_device"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 5.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 6.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../API.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="cirq_iqm.html" >cirq_iqm</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="cirq_iqm.devices.html" >cirq_iqm.devices</a> &#187;</li>
@@ -98,8 +98,8 @@ optimizing circuits and mapping qubits.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.devices.iqm_device.IQMDevice.decompose_circuit" title="cirq_iqm.devices.iqm_device.IQMDevice.decompose_circuit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decompose_circuit</span></code></a>(circuit)</p></td>
 <td><p>Decomposes the given circuit to the native gate set of the device.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cirq_iqm.devices.iqm_device.IQMDevice.decompose_operation" title="cirq_iqm.devices.iqm_device.IQMDevice.decompose_operation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decompose_operation</span></code></a>(operation)</p></td>
-<td><p>THIS FUNCTION IS DEPRECATED.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">decompose_operation</span></code>(operation)</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.devices.iqm_device.IQMDevice.get_qubit" title="cirq_iqm.devices.iqm_device.IQMDevice.get_qubit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_qubit</span></code></a>(index)</p></td>
 <td><p>The device qubit corresponding to the given numeric index.</p></td>
@@ -224,28 +224,6 @@ optimizing circuits and mapping qubits.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Optional[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)">list</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cirq_iqm.devices.iqm_device.IQMDevice.decompose_operation">
-<span class="sig-name descname"><span class="pre">decompose_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.decompose_operation" title="Permalink to this definition">¶</a></dt>
-<dd><p>THIS FUNCTION IS DEPRECATED.</p>
-<p>IT WILL BE REMOVED IN <cite>cirq v0.15</cite>.</p>
-<p>Devices will no longer decompose operations.</p>
-<p>Returns a device-valid decomposition for the given operation.</p>
-<blockquote>
-<div><p>This method is used when adding operations into circuits with a device
-specified, to avoid spurious failures due to e.g. using a Hadamard gate
-that must be decomposed into native gates.</p>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>operation</strong> (<em>cirq.ops.raw_types.Operation</em>) – </p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Union[cirq.ops.raw_types.Operation, cirq.ops.op_tree.OpTree]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -380,7 +358,7 @@ Note that only gates of one or two qubits, and measurement operations of arbitra
         <li class="right" >
           <a href="cirq_iqm.devices.iqm_device.html" title="cirq_iqm.devices.iqm_device"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 5.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cirq on IQM 6.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../API.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="cirq_iqm.html" >cirq_iqm</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="cirq_iqm.devices.html" >cirq_iqm.devices</a> &#187;</li>

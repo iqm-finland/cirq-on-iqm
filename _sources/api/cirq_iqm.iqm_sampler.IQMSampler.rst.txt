@@ -18,7 +18,7 @@ cirq\_iqm.iqm\_sampler.IQMSampler
 
    .. autosummary::
    
-      ~IQMSampler._send_circuit
+      ~IQMSampler._send_circuits
       ~IQMSampler.close_client
       ~IQMSampler.run_sweep
    
