@@ -1,6 +1,3 @@
-.. figure:: images/IQM-LOGO-BLACK.jpg
-    :width: 700
-
 Cirq on IQM
 ###########
 

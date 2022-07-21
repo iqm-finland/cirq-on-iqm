@@ -180,6 +180,8 @@ class IQMDevice(devices.Device):
 
 
     def decompose_operation(self, operation: cirq.Operation) -> cirq.OP_TREE:
+        """Decompose a single quantum operation into the native operation set.
+        """
         if self.is_native_operation(operation):
             return operation
 
