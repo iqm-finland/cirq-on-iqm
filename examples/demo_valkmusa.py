@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """
 Demonstrates importing a quantum circuit from an OpenQASM 2.0 file, transforming it into
 the Valkmusa native gateset and connectivity, and then executing it on a simulator.
@@ -23,7 +22,7 @@ from cirq_iqm.devices import Valkmusa
 from cirq_iqm.extended_qasm_parser import circuit_from_qasm
 
 
-def demo_valkmusa(use_qsim=False):
+def demo_valkmusa(use_qsim: bool = False) -> None:
     """Run the demo using the Valkmusa architecture."""
 
     print('\nValkmusa demo\n=============\n')

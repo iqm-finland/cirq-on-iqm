@@ -72,7 +72,7 @@ def get_qubit_order(circuit: cirq.Circuit) -> tuple[list[cirq.Qid], int]:
 def simulate_measurement_probabilities(
         sim: cirq.Simulator,
         circuit: cirq.Circuit,
-) -> tuple[dict[tuple, float], set[str]]:
+) -> tuple[dict[tuple, float], list[str]]:
     """Simulate the probabilities of obtaining different measurement results in the given circuit.
 
     Args:
@@ -110,7 +110,7 @@ def simulate_measurement_probabilities(
 
     probabilities = dict(zip(outcomes, probs))
     print('    ', probabilities)
-    return probabilities, measurement_arities.keys()
+    return probabilities, list(measurement_arities.keys())
 
 
 def simulate_without_measurements(
@@ -138,7 +138,7 @@ def simulate_without_measurements(
     return state
 
 
-def pause():
+def pause() -> None:
     input('\npress enter\n')
 
 
@@ -148,7 +148,7 @@ def demo(
     *,
     qubit_mapping: Optional[dict[str, str]] = None,
     use_qsim: bool = False
-):
+) -> None:
     """Transform the given circuit to a form the given device accepts, then simulate it.
 
     Args:
@@ -158,9 +158,8 @@ def demo(
             If None, try routing ``circuit``.
         use_qsim: Iff True, use the ``qsim`` circuit simulator instead of the Cirq builtin simulator.
     """
-    circuit_original = circuit
     print('Source circuit:')
-    print(circuit_original)
+    print(circuit)
     pause()
 
     # decompose non-native gates and simplify the circuit
@@ -201,45 +200,46 @@ def demo(
 
     print('\nState vector simulation')
     print('\n  Original circuit:')
-    state_0 = simulate_without_measurements(sim, circuit_original)
-    probs_0 = np.abs(state_0) ** 2
-
+    state_0 = simulate_without_measurements(sim, circuit)
     print('\n  Transformed circuit:')
     state_1 = simulate_without_measurements(sim, circuit_transformed)
-    probs_1 = np.abs(state_1) ** 2
 
     # Overlap won't be perfect due to use of simplify_circuit above, which may eliminate Rz gates
     #overlap = np.abs(np.vdot(state_0, state_1))
     #print('\noverlap = |<original|transformed>| =', overlap)
     #assert np.abs(overlap - 1.0) < 1e-6, 'Circuits are not equivalent!'
 
-    # Probabilities, however, are preserved.
+    # Basis state probabilities, however, are preserved.
+    probs_0 = np.abs(state_0) ** 2
+    probs_1 = np.abs(state_1) ** 2
     assert np.allclose(probs_0, probs_1), 'Circuits are not equivalent!'
 
     print('\nSimulated measurement probabilities:')
     print('\n  Original circuit:')
-    m_probs0, keys = simulate_measurement_probabilities(sim, circuit_original)
-
+    m_probs0, keys0 = simulate_measurement_probabilities(sim, circuit)
     print('\n  Transformed circuit:')
-    m_probs1, keys = simulate_measurement_probabilities(sim, circuit_transformed)
+    m_probs1, keys1 = simulate_measurement_probabilities(sim, circuit_transformed)
 
-    print(f'\nOrder of measurement keys: {keys}')
+    assert keys0 == keys1, 'Key order is not the same!'
+    print(f'\nOrder of measurement keys: {keys0}')
 
+    # Simulated measurement probabilities are also preserved,
     assert np.allclose(list(m_probs0.values()), list(m_probs1.values())), 'Circuits are not equivalent!'
-    assert np.allclose(list(m_probs0.values()), probs_0), 'Circuits are not equivalent!'
 
-    samples_0 = sim.run(circuit_original, repetitions=10000)
+    # and they are equivalent with the basis state probabilities when every qubit is measured.
+    if len(m_probs0) == len(probs_0):
+        assert np.allclose(list(m_probs0.values()), probs_0), 'Simulation methods are not equivalent!'
+
+    # Random sampling of the circuit returns data that follows the measurement probabilities.
+    samples_0 = sim.run(circuit, repetitions=10000)
     samples_1 = sim.run(circuit_transformed, repetitions=10000)
     # compute sorted histograms of the samples, where order of the bits in the bitstring is determined
     # by the order of the corresponding measurement keys
-    hist_0 = dict(sorted(samples_0.multi_measurement_histogram(keys=keys).items()))
-    hist_1 = dict(sorted(samples_1.multi_measurement_histogram(keys=keys).items()))
+    hist_0 = dict(sorted(samples_0.multi_measurement_histogram(keys=keys0).items()))
+    hist_1 = dict(sorted(samples_1.multi_measurement_histogram(keys=keys0).items()))
 
-    # Print a histogram of results
-    # the counter interprets a multiqubit measurement result as a bit string, and converts it into an integer
     print('\nRandom sampling:')
     print('\n  Original circuit:')
     print('    ', hist_0)
-
     print('\n  Transformed circuit:')
     print('    ', hist_1)

@@ -22,7 +22,7 @@ from cirq_iqm.devices import Adonis
 from cirq_iqm.extended_qasm_parser import circuit_from_qasm
 
 
-def demo_adonis(use_qsim=False):
+def demo_adonis(use_qsim: bool = False) -> None:
     """Run the demo using the Adonis architecture."""
 
     print('\nAdonis demo\n===========\n')
@@ -41,8 +41,7 @@ def demo_adonis(use_qsim=False):
         cx q[1], q[0];
         cx q[2], q[1];
         ry(0.3) q[0];
-        measure q[0] -> a[0];
-        measure q[2] -> a[1];
+        measure q[0] -> a[1];
         measure q[1] -> b[0];
     """
     circuit = circuit_from_qasm(qasm_program)
