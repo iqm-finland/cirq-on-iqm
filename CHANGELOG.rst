@@ -2,10 +2,15 @@
 Changelog
 =========
 
-Version 5.1
+Version 6.1
 ===========
 
 * Update ``IQMClient`` instantiations with the changes in iqm-client 4.0 `#75 <https://github.com/iqm-finland/cirq-on-iqm/pull/75>`_
+
+Version 6.0
+===========
+
+* Allow running sweeps in ``IQMSampler.run_sweep`` . `#76 <https://github.com/iqm-finland/cirq-on-iqm/pull/76>`_
 
 Version 5.0
 ===========
