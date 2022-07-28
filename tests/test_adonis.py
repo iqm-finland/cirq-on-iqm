@@ -131,16 +131,6 @@ class TestOperationValidation:
         with pytest.raises(ValueError, match='Unsupported gate type'):
             adonis.validate_operation(gate(q2, q0))
 
-    @pytest.mark.parametrize('qubit', [
-        cirq.NamedQubit('xxx'),
-        cirq.GridQubit(0, 1),
-    ])
-    def test_qubits_not_on_device(self, adonis, qubit):
-        """Gates operating on qubits not on device must not pass validation."""
-
-        with pytest.raises(ValueError, match='Qubit not on device'):
-            adonis.validate_operation(cirq.X(qubit))
-
     @pytest.mark.parametrize('gate', native_2q_gates)
     def test_qubits_not_connected(self, adonis, gate):
         """Native two-qubit gates operating on non-connected qubits must not pass validation."""
@@ -406,7 +396,7 @@ class TestCircuitRouting:
             cirq.CZ(qubits[0], qubits[2]),
             cirq.measure(*qubits[0:2], key='m1'),
             cirq.measure(*qubits[2:5], key='m2')
-            )
+        )
         new = adonis.route_circuit(circuit)
         assert new.all_qubits() == set(adonis.qubits)
         # Test that all measurements exist.
