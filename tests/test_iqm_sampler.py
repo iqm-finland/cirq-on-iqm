@@ -54,7 +54,7 @@ def qubit_mapping():
 
 @pytest.fixture()
 def adonis_sampler(base_url, settings_dict):
-    return IQMSampler(base_url, Adonis(), json.dumps(settings_dict))
+    return IQMSampler(base_url, Adonis())
 
 
 @pytest.fixture()
@@ -102,7 +102,7 @@ def test_run_sweep_with_parameter_sweep(adonis_sampler_without_settings):
     run_result = RunResult(
         status=RunStatus.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], message=None
     )
-    when(client).submit_circuits(ANY, ANY, ANY).thenReturn(run_id)
+    when(client).submit_circuits(ANY, ANY, ANY, ANY).thenReturn(run_id)
     when(client).wait_for_results(run_id).thenReturn(run_result)
     qubit_1 = cirq.NamedQubit('QB1')
     qubit_2 = cirq.NamedQubit('QB2')
@@ -125,7 +125,7 @@ def test_credentials_are_passed_to_client(settings_dict):
         'password': 'fake-password',
     }
     with when(IQMClient)._update_tokens():
-        sampler = IQMSampler('http://url', Adonis(), json.dumps(settings_dict), None, **user_auth_args)
+        sampler = IQMSampler('http://url', Adonis(), **user_auth_args)
     assert sampler._client._credentials.auth_server_url == user_auth_args['auth_server_url']
     assert sampler._client._credentials.username == user_auth_args['username']
     assert sampler._client._credentials.password == user_auth_args['password']
@@ -135,8 +135,8 @@ def test_non_injective_qubit_mapping(base_url, settings_dict, qubit_mapping, cir
     qubit_mapping['q2 log.'] = 'QB1'
 
     with pytest.raises(ValueError, match='Multiple logical qubits map to the same physical qubit'):
-        sampler = IQMSampler(base_url, Adonis(), json.dumps(settings_dict))
-        sampler.run_sweep(circuit, None, 2, qubit_mapping)
+        sampler = IQMSampler(base_url, Adonis())
+        sampler.run_sweep(circuit, None, settings=None, repetitions=2, qubit_mapping=qubit_mapping)
 
 
 def test_qubits_not_in_settings(base_url, settings_dict, qubit_mapping, circuit):
@@ -145,8 +145,8 @@ def test_qubits_not_in_settings(base_url, settings_dict, qubit_mapping, circuit)
             ValueError,
             match="The physical qubits {'QB1'} in the qubit mapping are not defined in the settings"
     ):
-        sampler = IQMSampler(base_url, Adonis(), json.dumps(settings_dict), qubit_mapping)
-        sampler.run_sweep(circuit, None, 2, qubit_mapping)
+        sampler = IQMSampler(base_url, Adonis())
+        sampler.run_sweep(circuit, None, qubit_mapping=qubit_mapping, settings=settings_dict, repetitions=2)
 
 
 def test_incomplete_qubit_mapping(adonis_sampler, circuit, qubit_mapping):
@@ -154,4 +154,4 @@ def test_incomplete_qubit_mapping(adonis_sampler, circuit, qubit_mapping):
     circuit.append(cirq.X(new_qubit))
 
     with pytest.raises(ValueError, match="The qubits {'Eve'} are not found in the provided qubit mapping"):
-        adonis_sampler.run_sweep(circuit, None, 1, qubit_mapping)
+        adonis_sampler.run_sweep(circuit, None, qubit_mapping=qubit_mapping, settings=None, repetitions=1)

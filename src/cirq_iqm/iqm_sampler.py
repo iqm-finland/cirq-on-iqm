@@ -18,7 +18,7 @@ Circuit sampler that executes quantum circuits on an IQM quantum computer.
 from __future__ import annotations
 
 import json
-from typing import Optional
+from typing import Optional, Any
 
 import cirq
 import numpy as np
@@ -79,14 +79,9 @@ class IQMSampler(cirq.work.Sampler):
             url: str,
             device: IQMDevice,
             settings: Optional[str] = None,
-            qubit_mapping: Optional[dict[str, str]] = None,
             **user_auth_args  # contains keyword args auth_server_url, username and password
     ):
         self._settings_json = None if not settings else json.loads(settings)
-
-        if qubit_mapping is None:
-            # If qubit_mapping is not given, create an identity mapping
-            qubit_mapping = {qubit.name: qubit.name for qubit in device.qubits}
 
         self._client = IQMClient(url, **user_auth_args)
         self._device = device
@@ -102,12 +97,18 @@ class IQMSampler(cirq.work.Sampler):
             self,
             program: cirq.Circuit,
             params: cirq.Sweepable,
-            repetitions: int = 1,
-            qubit_mapping: Optional[dict[str, str]] = None
+            qubit_mapping: Optional[dict[str, str]] = None,
+            settings: Optional[dict[str, Any]] = None,
+            repetitions: int = 1
     ) -> list[cirq.Result]:
+        if qubit_mapping is None:
+            # If qubit_mapping is not given, create an identity mapping
+            qubit_mapping = {qubit.name: qubit.name for qubit in self._device.qubits}
         # verify that qubit_mapping covers all qubits in the circuit
         circuit_qubits = set(qubit.name for qubit in program.all_qubits())
-        diff = circuit_qubits - set(self._qubit_mapping)
+        diff = circuit_qubits - set(qubit_mapping)
+        print(circuit_qubits)
+        print(qubit_mapping)
         if diff:
             raise ValueError(f'The qubits {diff} are not found in the provided qubit mapping.')
 
@@ -126,7 +127,10 @@ class IQMSampler(cirq.work.Sampler):
             cirq.protocols.resolve_parameters(program, res) for res in resolvers
         ] if resolvers else [program]
 
-        measurements = self._send_circuits(circuits, repetitions=repetitions)
+        measurements = self._send_circuits(circuits,
+                                           repetitions=repetitions,
+                                           qubit_mapping=qubit_mapping,
+                                           settings=settings)
         return [
             study.ResultDict(params=res, measurements=mes)
             for res, mes in zip(resolvers, measurements)
@@ -136,6 +140,7 @@ class IQMSampler(cirq.work.Sampler):
             self,
             circuits: list[cirq.Circuit],
             qubit_mapping: dict[str, str],
+            settings: Optional[dict[str, Any]],
             repetitions: int = 1
     ) -> list[dict[str, np.ndarray]]:
         """Sends the circuit(s) to be executed.
@@ -161,7 +166,7 @@ class IQMSampler(cirq.work.Sampler):
         serialized_circuits = [serialize_circuit(circuit) for circuit in circuits]
         qubit_mapping = serialize_qubit_mapping(qubit_mapping)
 
-        job_id = self._client.submit_circuits(serialized_circuits, qubit_mapping, repetitions)
+        job_id = self._client.submit_circuits(serialized_circuits, qubit_mapping, settings, repetitions)
         results = self._client.wait_for_results(job_id)
         if results.measurements is None:
             raise RuntimeError('No measurements returned from IQM quantum computer.')
