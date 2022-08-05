@@ -18,8 +18,8 @@ import uuid
 import cirq
 import pytest
 import sympy
-from iqm_client.iqm_client import (IQMClient, RunResult, RunStatus,
-                                   SingleQubitMapping)
+from iqm_client.iqm_client import (Circuit, IQMClient, Metadata, RunResult,
+                                   SingleQubitMapping, Status)
 from mockito import ANY, mock, when
 
 from cirq_iqm import Adonis
@@ -43,6 +43,10 @@ def circuit_with_physical_names():
         cirq.measure(qubit_1, qubit_2, key='result')
     )
 
+
+@pytest.fixture()
+def iqm_metadata():
+    return Metadata(shots=4, circuits=[Circuit(name='circuit_1', instructions=[])])
 
 @pytest.fixture()
 def qubit_mapping():
@@ -70,10 +74,10 @@ def test_serialize_qubit_mapping(qubit_mapping):
 
 
 @pytest.mark.usefixtures('unstub')
-def test_run_sweep_executes_circuit(adonis_sampler, circuit):
+def test_run_sweep_executes_circuit(adonis_sampler, circuit, iqm_metadata):
     client = mock(IQMClient)
     run_id = uuid.uuid4()
-    run_result = RunResult(status=RunStatus.READY, measurements=[{'some stuff': [[0], [1]]}], message=None)
+    run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     when(client).submit_circuits(ANY, ANY, ANY).thenReturn(run_id)
     when(client).wait_for_results(run_id).thenReturn(run_result)
 
@@ -83,10 +87,12 @@ def test_run_sweep_executes_circuit(adonis_sampler, circuit):
 
 
 @pytest.mark.usefixtures('unstub')
-def test_run_sweep_executes_circuit_without_settings(adonis_sampler_without_settings, circuit_with_physical_names):
+def test_run_sweep_executes_circuit_without_settings(adonis_sampler_without_settings,
+                                                     circuit_with_physical_names,
+                                                     iqm_metadata):
     client = mock(IQMClient)
     run_id = uuid.uuid4()
-    run_result = RunResult(status=RunStatus.READY, measurements=[{'some stuff': [[0], [1]]}], message=None)
+    run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     when(client).submit_circuits(ANY, ANY, ANY).thenReturn(run_id)
     when(client).wait_for_results(run_id).thenReturn(run_result)
 
@@ -95,12 +101,11 @@ def test_run_sweep_executes_circuit_without_settings(adonis_sampler_without_sett
     assert isinstance(results[0], cirq.Result)
 
 @pytest.mark.usefixtures('unstub')
-def test_run_sweep_with_parameter_sweep(adonis_sampler_without_settings):
+def test_run_sweep_with_parameter_sweep(adonis_sampler_without_settings, iqm_metadata):
     client = mock(IQMClient)
     run_id = uuid.uuid4()
     run_result = RunResult(
-        status=RunStatus.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], message=None
-    )
+        status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata)
     when(client).submit_circuits(ANY, ANY, ANY).thenReturn(run_id)
     when(client).wait_for_results(run_id).thenReturn(run_result)
     qubit_1 = cirq.NamedQubit('QB1')
