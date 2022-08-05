@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 6.1
+===========
+
+* Support iqm-client 4.3. `#78 <https://github.com/iqm-finland/cirq-on-iqm/pull/78>`_
+
 Version 6.0
 ===========
 
