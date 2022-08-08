@@ -101,22 +101,6 @@ class IQMSampler(cirq.work.Sampler):
             settings: Optional[dict[str, Any]] = None,
             repetitions: int = 1
     ) -> list[cirq.Result]:
-        if qubit_mapping is None:
-            # If qubit_mapping is not given, create an identity mapping
-            qubit_mapping = {qubit.name: qubit.name for qubit in self._device.qubits}
-        # verify that qubit_mapping covers all qubits in the circuit
-        circuit_qubits = set(qubit.name for qubit in program.all_qubits())
-        diff = circuit_qubits - set(qubit_mapping)
-        print(circuit_qubits)
-        print(qubit_mapping)
-        if diff:
-            raise ValueError(f'The qubits {diff} are not found in the provided qubit mapping.')
-
-        device_qubit_names = set(qubit.name for qubit in self._device.qubits)
-        diff = set(qubit_mapping.values()) - device_qubit_names
-        if diff:
-            raise ValueError(f'Qubit(s) not on device: {diff!r}')
-
         # validate the circuit for the device
         # check that the circuit connectivity fits in the device connectivity
         self._device.validate_circuit(program)
@@ -164,7 +148,8 @@ class IQMSampler(cirq.work.Sampler):
                 'Cannot submit circuits since session to IQM client has been closed.'
             )
         serialized_circuits = [serialize_circuit(circuit) for circuit in circuits]
-        qubit_mapping = serialize_qubit_mapping(qubit_mapping)
+        if qubit_mapping is not None:
+            qubit_mapping = serialize_qubit_mapping(qubit_mapping)
 
         job_id = self._client.submit_circuits(
             serialized_circuits,

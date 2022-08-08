@@ -135,29 +135,3 @@ def test_credentials_are_passed_to_client(settings_dict):
     assert sampler._client._credentials.auth_server_url == user_auth_args['auth_server_url']
     assert sampler._client._credentials.username == user_auth_args['username']
     assert sampler._client._credentials.password == user_auth_args['password']
-
-
-def test_non_injective_qubit_mapping(base_url, settings_dict, qubit_mapping, circuit):
-    qubit_mapping['q2 log.'] = 'QB1'
-
-    with pytest.raises(ValueError, match='Multiple logical qubits map to the same physical qubit'):
-        sampler = IQMSampler(base_url, Adonis())
-        sampler.run_sweep(circuit, None, settings=None, repetitions=2, qubit_mapping=qubit_mapping)
-
-
-def test_qubits_not_in_settings(base_url, settings_dict, qubit_mapping, circuit):
-    del settings_dict['subtrees']['QB1']
-    with pytest.raises(
-            ValueError,
-            match="The physical qubits {'QB1'} in the qubit mapping are not defined in the settings"
-    ):
-        sampler = IQMSampler(base_url, Adonis())
-        sampler.run_sweep(circuit, None, qubit_mapping=qubit_mapping, settings=settings_dict, repetitions=2)
-
-
-def test_incomplete_qubit_mapping(adonis_sampler, circuit, qubit_mapping):
-    new_qubit = cirq.NamedQubit('Eve')
-    circuit.append(cirq.X(new_qubit))
-
-    with pytest.raises(ValueError, match="The qubits {'Eve'} are not found in the provided qubit mapping"):
-        adonis_sampler.run_sweep(circuit, None, qubit_mapping=qubit_mapping, settings=None, repetitions=1)
