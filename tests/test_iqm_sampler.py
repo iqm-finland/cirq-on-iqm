@@ -48,6 +48,7 @@ def circuit_with_physical_names():
 def iqm_metadata():
     return Metadata(shots=4, circuits=[Circuit(name='circuit_1', instructions=[])])
 
+
 @pytest.fixture()
 def qubit_mapping():
     return {
@@ -78,7 +79,7 @@ def test_run_sweep_executes_circuit(adonis_sampler, circuit, qubit_mapping, iqm_
     client = mock(IQMClient)
     run_id = uuid.uuid4()
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
-    when(client).submit_circuits(ANY, ANY, ANY, ANY).thenReturn(run_id)
+    when(client).submit_circuits(ANY, qubit_mapping=ANY, settings=ANY, shots=ANY).thenReturn(run_id)
     when(client).wait_for_results(run_id).thenReturn(run_result)
 
     adonis_sampler._client = client
@@ -93,6 +94,7 @@ def test_run_sweep_executes_circuit_without_settings(adonis_sampler_without_sett
     client = mock(IQMClient)
     run_id = uuid.uuid4()
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
+    when(client).submit_circuits(ANY, qubit_mapping=ANY, settings=None, shots=ANY).thenReturn(run_id)
     when(client).wait_for_results(run_id).thenReturn(run_result)
 
     adonis_sampler_without_settings._client = client
@@ -106,7 +108,7 @@ def test_run_sweep_with_parameter_sweep(adonis_sampler_without_settings, iqm_met
     run_id = uuid.uuid4()
     run_result = RunResult(
         status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata)
-    when(client).submit_circuits(ANY, ANY, ANY, ANY).thenReturn(run_id)
+    when(client).submit_circuits(ANY, qubit_mapping=ANY, settings=ANY, shots=ANY).thenReturn(run_id)
     when(client).wait_for_results(run_id).thenReturn(run_result)
     qubit_1 = cirq.NamedQubit('QB1')
     qubit_2 = cirq.NamedQubit('QB2')

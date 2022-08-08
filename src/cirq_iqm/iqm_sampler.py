@@ -166,7 +166,12 @@ class IQMSampler(cirq.work.Sampler):
         serialized_circuits = [serialize_circuit(circuit) for circuit in circuits]
         qubit_mapping = serialize_qubit_mapping(qubit_mapping)
 
-        job_id = self._client.submit_circuits(serialized_circuits, qubit_mapping, settings, repetitions)
+        job_id = self._client.submit_circuits(
+            serialized_circuits,
+            qubit_mapping=qubit_mapping,
+            settings=settings,
+            shots=repetitions
+        )
         results = self._client.wait_for_results(job_id)
         if results.measurements is None:
             raise RuntimeError('No measurements returned from IQM quantum computer.')
