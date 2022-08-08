@@ -2,10 +2,15 @@
 Changelog
 =========
 
+Version 6.2
+===========
+
+* Update ``IQMClient`` instantiations with the changes in iqm-client 5.0 `#75 <https://github.com/iqm-finland/cirq-on-iqm/pull/75>`_
+
 Version 6.1
 ===========
 
-* Update ``IQMClient`` instantiations with the changes in iqm-client 4.0 `#75 <https://github.com/iqm-finland/cirq-on-iqm/pull/75>`_
+* Support iqm-client 4.3. `#78 <https://github.com/iqm-finland/cirq-on-iqm/pull/78>`_
 
 Version 6.0
 ===========
