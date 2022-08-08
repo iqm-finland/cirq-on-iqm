@@ -100,11 +100,11 @@ class IQMDevice(devices.Device):
     def is_native_operation(cls, op: cirq.Operation) -> bool:
         """Predicate, True iff the given operation is considered native for the architecture."""
         return (
-                isinstance(op, (ops.GateOperation, ops.TaggedOperation))
-                and (
-                        isinstance(op.gate, cls.NATIVE_GATES)
-                        or op.gate in cls.NATIVE_GATE_INSTANCES
-                )
+            isinstance(op, (ops.GateOperation, ops.TaggedOperation))
+            and (
+                isinstance(op.gate, cls.NATIVE_GATES)
+                or op.gate in cls.NATIVE_GATE_INSTANCES
+            )
         )
 
     def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
