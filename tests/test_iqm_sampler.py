@@ -23,7 +23,7 @@ from iqm_client.iqm_client import (Circuit, IQMClient, Metadata, RunResult,
 from mockito import ANY, mock, when
 
 from cirq_iqm import Adonis
-from cirq_iqm.iqm_sampler import IQMSampler, serialize_qubit_mapping
+from cirq_iqm.iqm_sampler import IQMSampler
 
 
 @pytest.fixture()
@@ -67,13 +67,6 @@ def adonis_sampler_without_settings(base_url):
     return IQMSampler(base_url, Adonis())
 
 
-def test_serialize_qubit_mapping(qubit_mapping):
-    assert serialize_qubit_mapping(qubit_mapping) == [
-        SingleQubitMapping(logical_name='q1 log.', physical_name='QB1'),
-        SingleQubitMapping(logical_name='q2 log.', physical_name='QB2'),
-    ]
-
-
 @pytest.mark.usefixtures('unstub')
 def test_run_sweep_executes_circuit(adonis_sampler, circuit, qubit_mapping, iqm_metadata):
     client = mock(IQMClient)
@@ -83,8 +76,19 @@ def test_run_sweep_executes_circuit(adonis_sampler, circuit, qubit_mapping, iqm_
     when(client).wait_for_results(run_id).thenReturn(run_result)
 
     adonis_sampler._client = client
-    results = adonis_sampler.run_sweep(circuit, None, repetitions=2, qubit_mapping=qubit_mapping)
+    results = adonis_sampler.run_sweep(circuit, None, repetitions=2)
     assert isinstance(results[0], cirq.Result)
+
+
+@pytest.mark.usefixtures('unstub')
+def test_run_sweep_with_bad_qubit_mapping(base_url, circuit, qubit_mapping, iqm_metadata):
+    qubit_mapping = {
+        'q1 log.': 'QB1',
+        'q2 log.': 'QB1'
+    }
+    sampler = IQMSampler(base_url, Adonis(), qubit_mapping=qubit_mapping)
+    with pytest.raises(ValueError, match="Failed applying qubit mapping."):
+        sampler.run_sweep(circuit, None, repetitions=2)
 
 
 @pytest.mark.usefixtures('unstub')

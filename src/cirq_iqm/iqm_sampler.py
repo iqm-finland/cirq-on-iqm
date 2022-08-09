@@ -24,7 +24,7 @@ import cirq
 import numpy as np
 from cirq import study
 from iqm_client import iqm_client
-from iqm_client.iqm_client import IQMClient, SingleQubitMapping
+from iqm_client.iqm_client import IQMClient
 
 from cirq_iqm import IQMDevice
 from cirq_iqm.iqm_operation_mapping import map_operation
@@ -44,18 +44,6 @@ def serialize_circuit(circuit: cirq.Circuit) -> iqm_client.Circuit:
         name='Serialized from Cirq',
         instructions=instructions
     )
-
-
-def serialize_qubit_mapping(qubit_mapping: dict[str, str]) -> list[SingleQubitMapping]:
-    """Serializes a qubit mapping dict into the corresponding IQM data transfer format.
-
-    Args:
-        qubit_mapping: mapping from logical to physical qubit names
-
-    Returns:
-        data transfer object representing the mapping
-    """
-    return [SingleQubitMapping(logical_name=k, physical_name=v) for k, v in qubit_mapping.items()]
 
 
 class IQMSampler(cirq.work.Sampler):
@@ -78,13 +66,14 @@ class IQMSampler(cirq.work.Sampler):
             self,
             url: str,
             device: IQMDevice,
+            qubit_mapping: Optional[dict[str, str]] = None,
             settings: Optional[str] = None,
             **user_auth_args  # contains keyword args auth_server_url, username and password
     ):
         self._settings_json = None if not settings else json.loads(settings)
-
         self._client = IQMClient(url, **user_auth_args)
         self._device = device
+        self._qubit_mapping = qubit_mapping
 
     def close_client(self):
         """Close IQMClient's session with the user authentication server. Discard the client."""
@@ -97,13 +86,20 @@ class IQMSampler(cirq.work.Sampler):
             self,
             program: cirq.Circuit,
             params: cirq.Sweepable,
-            qubit_mapping: Optional[dict[str, str]] = None,
-            settings: Optional[dict[str, Any]] = None,
             repetitions: int = 1
     ) -> list[cirq.Result]:
-        # validate the circuit for the device
-        # check that the circuit connectivity fits in the device connectivity
-        self._device.validate_circuit(program)
+        mapped = program
+        if self._qubit_mapping is not None:
+            # apply the qubit_mapping
+            qubit_map = {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in self._qubit_mapping.items()}
+            try:
+                mapped = program.transform_qubits(qubit_map)
+            except ValueError as e:
+                raise ValueError("Failed applying qubit mapping.") from e
+
+        # validate the circuit for the device. If qubit_mapping was  given then validation is done after applying it,
+        # otherwise it is assumed that the circuit already contains device qubits, and it is validated as is.
+        self._device.validate_circuit(mapped)
 
         resolvers = list(cirq.to_resolvers(params))
 
@@ -113,8 +109,8 @@ class IQMSampler(cirq.work.Sampler):
 
         measurements = self._send_circuits(circuits,
                                            repetitions=repetitions,
-                                           qubit_mapping=qubit_mapping,
-                                           settings=settings)
+                                           qubit_mapping=self._qubit_mapping,
+                                           settings=self._settings_json)
         return [
             study.ResultDict(params=res, measurements=mes)
             for res, mes in zip(resolvers, measurements)
