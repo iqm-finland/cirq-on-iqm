@@ -67,10 +67,10 @@ class IQMSampler(cirq.work.Sampler):
             url: str,
             device: IQMDevice,
             qubit_mapping: Optional[dict[str, str]] = None,
-            settings: Optional[str] = None,
+            settings: Optional[dict[str, Any]] = None,
             **user_auth_args  # contains keyword args auth_server_url, username and password
     ):
-        self._settings_json = None if not settings else json.loads(settings)
+        self._settings = settings
         self._client = IQMClient(url, **user_auth_args)
         self._device = device
         self._qubit_mapping = qubit_mapping
@@ -110,7 +110,7 @@ class IQMSampler(cirq.work.Sampler):
         measurements = self._send_circuits(circuits,
                                            repetitions=repetitions,
                                            qubit_mapping=self._qubit_mapping,
-                                           settings=self._settings_json)
+                                           settings=self._settings)
         return [
             study.ResultDict(params=res, measurements=mes)
             for res, mes in zip(resolvers, measurements)

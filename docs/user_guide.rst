@@ -235,10 +235,14 @@ can be used to specify this correspondence.
 
 .. code-block:: python
 
+    import json
+
+
     qubit_mapping = {'Alice': 'QB1', 'Bob': 'QB3'}
 
     with open(iqm_settings_path, 'r') as f:
-        sampler = IQMSampler(iqm_server_url, f.read(), adonis, qubit_mapping=qubit_mapping)
+        settings = json.loads(f.read())
+        sampler = IQMSampler(iqm_server_url, adonis, qubit_mapping=qubit_mapping, settings=settings)
 
     result = sampler.run(decomposed_circuit_1, repetitions=10)
     print(result.measurements['m'])

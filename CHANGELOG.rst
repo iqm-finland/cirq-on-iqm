@@ -2,10 +2,11 @@
 Changelog
 =========
 
-Version 6.2
+Version 7.0
 ===========
 
 * Update ``IQMClient`` instantiations with the changes in iqm-client 5.0 `#75 <https://github.com/iqm-finland/cirq-on-iqm/pull/75>`_
+* ``IQMSampler`` now accepts ``settings`` as dict instead of raw string file content `#75 <https://github.com/iqm-finland/cirq-on-iqm/pull/75>`_
 
 Version 6.1
 ===========
