@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>cirq_iqm.iqm_sampler &#8212; Cirq on IQM 6.1 documentation</title>
+    <title>cirq_iqm.iqm_sampler &#8212; Cirq on IQM 7.0 documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -196,11 +196,6 @@
        <li class="toctree-l4">
         <a class="reference internal" href="cirq_iqm.iqm_sampler.serialize_circuit.html">
          cirq_iqm.iqm_sampler.serialize_circuit
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="cirq_iqm.iqm_sampler.serialize_qubit_mapping.html">
-         cirq_iqm.iqm_sampler.serialize_qubit_mapping
         </a>
        </li>
        <li class="toctree-l4">
@@ -403,9 +398,6 @@ title="Print to PDF"
 <tr class="row-odd"><td><p><a class="reference internal" href="cirq_iqm.iqm_sampler.serialize_circuit.html#cirq_iqm.iqm_sampler.serialize_circuit" title="cirq_iqm.iqm_sampler.serialize_circuit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize_circuit</span></code></a>(circuit)</p></td>
 <td><p>Serializes a quantum circuit into the IQM data transfer format.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="cirq_iqm.iqm_sampler.serialize_qubit_mapping.html#cirq_iqm.iqm_sampler.serialize_qubit_mapping" title="cirq_iqm.iqm_sampler.serialize_qubit_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize_qubit_mapping</span></code></a>(qubit_mapping)</p></td>
-<td><p>Serializes a qubit mapping dict into the corresponding IQM data transfer format.</p></td>
-</tr>
 </tbody>
 </table>
 <p class="rubric">Classes</p>
@@ -415,7 +407,7 @@ title="Print to PDF"
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="cirq_iqm.iqm_sampler.IQMSampler.html#cirq_iqm.iqm_sampler.IQMSampler" title="cirq_iqm.iqm_sampler.IQMSampler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IQMSampler</span></code></a>(url, device[, settings, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="cirq_iqm.iqm_sampler.IQMSampler.html#cirq_iqm.iqm_sampler.IQMSampler" title="cirq_iqm.iqm_sampler.IQMSampler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IQMSampler</span></code></a>(url, device, *[, qubit_mapping, ...])</p></td>
 <td><p>Circuit sampler for executing quantum circuits on IQM quantum computers.</p></td>
 </tr>
 </tbody>
@@ -458,7 +450,7 @@ title="Print to PDF"
     By Cirq on IQM developers<br/>
   
       &copy; Copyright 2020–2022, Cirq on IQM developers.<br/>
-    Last updated on 2022-08-05.<br/>
+    Last updated on 2022-08-09.<br/>
 </p>
         </footer>
     </div>

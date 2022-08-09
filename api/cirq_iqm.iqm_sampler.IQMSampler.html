@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>cirq_iqm.iqm_sampler.IQMSampler &#8212; Cirq on IQM 6.1 documentation</title>
+    <title>cirq_iqm.iqm_sampler.IQMSampler &#8212; Cirq on IQM 7.0 documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="cirq_iqm.optimizers" href="cirq_iqm.optimizers.html" />
-    <link rel="prev" title="cirq_iqm.iqm_sampler.serialize_qubit_mapping" href="cirq_iqm.iqm_sampler.serialize_qubit_mapping.html" />
+    <link rel="prev" title="cirq_iqm.iqm_sampler.serialize_circuit" href="cirq_iqm.iqm_sampler.serialize_circuit.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -196,11 +196,6 @@
        <li class="toctree-l4">
         <a class="reference internal" href="cirq_iqm.iqm_sampler.serialize_circuit.html">
          cirq_iqm.iqm_sampler.serialize_circuit
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="cirq_iqm.iqm_sampler.serialize_qubit_mapping.html">
-         cirq_iqm.iqm_sampler.serialize_qubit_mapping
         </a>
        </li>
        <li class="toctree-l4 current active">
@@ -394,7 +389,7 @@ title="Print to PDF"
 <h1>cirq_iqm.iqm_sampler.IQMSampler<a class="headerlink" href="#cirq-iqm-iqm-sampler-iqmsampler" title="Permalink to this headline">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="cirq_iqm.iqm_sampler.IQMSampler">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cirq_iqm.iqm_sampler.</span></span><span class="sig-name descname"><span class="pre">IQMSampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qubit_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">user_auth_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_sampler.IQMSampler" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cirq_iqm.iqm_sampler.</span></span><span class="sig-name descname"><span class="pre">IQMSampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qubit_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">user_auth_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_sampler.IQMSampler" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.work.sampler.Sampler</span></code></p>
 <p>Circuit sampler for executing quantum circuits on IQM quantum computers.</p>
 <dl class="field-list simple">
@@ -402,8 +397,8 @@ title="Print to PDF"
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Endpoint for accessing the server interface. Has to start with http or https.</p></li>
 <li><p><strong>device</strong> (<a class="reference internal" href="cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice" title="cirq_iqm.devices.iqm_device.IQMDevice"><em>IQMDevice</em></a>) – Quantum architecture to execute the circuits on</p></li>
-<li><p><strong>settings</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – Settings for the quantum computer</p></li>
-<li><p><strong>qubit_mapping</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em><em>]</em>) – Injective dictionary that maps logical qubit names to physical qubit names</p></li>
+<li><p><strong>settings</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>Any</em><em>]</em><em>]</em>) – Settings for the quantum computer</p></li>
+<li><p><strong>qubit_mapping</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em><em>]</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -424,7 +419,7 @@ This can also be set in the IQM_AUTH_PASSWORD environment variable.</p></li>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_send_circuits</span></code>(circuits[, repetitions])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_send_circuits</span></code>(circuits, qubit_mapping, settings)</p></td>
 <td><p>Sends the circuit(s) to be executed.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cirq_iqm.iqm_sampler.IQMSampler.close_client" title="cirq_iqm.iqm_sampler.IQMSampler.close_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close_client</span></code></a>()</p></td>
@@ -481,11 +476,11 @@ related circuits efficiently.</p>
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="cirq_iqm.iqm_sampler.serialize_qubit_mapping.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="cirq_iqm.iqm_sampler.serialize_circuit.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">cirq_iqm.iqm_sampler.serialize_qubit_mapping</p>
+            <p class="prev-next-title">cirq_iqm.iqm_sampler.serialize_circuit</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="cirq_iqm.optimizers.html" title="next page">
@@ -505,7 +500,7 @@ related circuits efficiently.</p>
     By Cirq on IQM developers<br/>
   
       &copy; Copyright 2020–2022, Cirq on IQM developers.<br/>
-    Last updated on 2022-08-05.<br/>
+    Last updated on 2022-08-09.<br/>
 </p>
         </footer>
     </div>

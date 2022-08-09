@@ -15,7 +15,6 @@ cirq\_iqm.iqm\_sampler
       :toctree:
    
       serialize_circuit
-      serialize_qubit_mapping
    
    
 
