@@ -17,8 +17,7 @@ Circuit sampler that executes quantum circuits on an IQM quantum computer.
 """
 from __future__ import annotations
 
-import json
-from typing import Optional, Any
+from typing import Any, Optional
 
 import cirq
 import numpy as np
