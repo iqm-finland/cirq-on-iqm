@@ -65,6 +65,7 @@ class IQMSampler(cirq.work.Sampler):
             self,
             url: str,
             device: IQMDevice,
+            *,
             qubit_mapping: Optional[dict[str, str]] = None,
             settings: Optional[dict[str, Any]] = None,
             **user_auth_args  # contains keyword args auth_server_url, username and password

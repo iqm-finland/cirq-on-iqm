@@ -17,7 +17,7 @@ import cirq
 import pytest
 import sympy
 from iqm_client.iqm_client import (Circuit, IQMClient, Metadata, RunResult,
-                                   SingleQubitMapping, Status)
+                                   Status)
 from mockito import ANY, mock, when
 
 from cirq_iqm import Adonis
@@ -56,7 +56,7 @@ def qubit_mapping():
 
 
 @pytest.fixture()
-def adonis_sampler(base_url, settings_dict, qubit_mapping):
+def adonis_sampler(base_url, qubit_mapping):
     return IQMSampler(base_url, Adonis(), qubit_mapping=qubit_mapping)
 
 
@@ -79,13 +79,13 @@ def test_run_sweep_executes_circuit(adonis_sampler, circuit, iqm_metadata):
 
 
 @pytest.mark.usefixtures('unstub')
-def test_run_sweep_with_bad_qubit_mapping(base_url, circuit, iqm_metadata):
+def test_run_sweep_with_bad_qubit_mapping(base_url, circuit):
     qubit_mapping = {
         'q1 log.': 'QB1',
         'q2 log.': 'QB1'
     }
     sampler = IQMSampler(base_url, Adonis(), qubit_mapping=qubit_mapping)
-    with pytest.raises(ValueError, match="Failed applying qubit mapping."):
+    with pytest.raises(ValueError, match='Failed applying qubit mapping.'):
         sampler.run_sweep(circuit, None, repetitions=2)
 
 
@@ -126,7 +126,7 @@ def test_run_sweep_with_parameter_sweep(adonis_sampler_without_settings, iqm_met
     assert all(isinstance(result, cirq.Result) for result in results)
 
 
-def test_credentials_are_passed_to_client(settings_dict):
+def test_credentials_are_passed_to_client():
     user_auth_args = {
         'auth_server_url': 'https://fake.auth.server.com',
         'username': 'fake-username',
