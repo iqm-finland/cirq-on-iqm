@@ -119,7 +119,7 @@ class IQMSampler(cirq.work.Sampler):
     def _send_circuits(
             self,
             circuits: list[cirq.Circuit],
-            qubit_mapping: dict[str, str],
+            qubit_mapping: Optional[dict[str, str]],
             settings: Optional[dict[str, Any]],
             repetitions: int = 1
     ) -> list[dict[str, np.ndarray]]:
