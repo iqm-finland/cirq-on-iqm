@@ -94,7 +94,7 @@ class IQMSampler(cirq.work.Sampler):
             try:
                 mapped = program.transform_qubits(qubit_map)
             except ValueError as e:
-                raise ValueError("Failed applying qubit mapping.") from e
+                raise ValueError('Failed applying qubit mapping.') from e
 
         # validate the circuit for the device. If qubit_mapping was  given then validation is done after applying it,
         # otherwise it is assumed that the circuit already contains device qubits, and it is validated as is.
