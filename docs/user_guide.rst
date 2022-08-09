@@ -242,8 +242,8 @@ can be used to specify this correspondence.
 
     with open(iqm_settings_path, 'r') as f:
         settings = json.loads(f.read())
-        sampler = IQMSampler(iqm_server_url, adonis, qubit_mapping=qubit_mapping, settings=settings)
 
+    sampler = IQMSampler(iqm_server_url, adonis, qubit_mapping=qubit_mapping, settings=settings)
     result = sampler.run(decomposed_circuit_1, repetitions=10)
     print(result.measurements['m'])
 
