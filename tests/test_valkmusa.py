@@ -112,6 +112,15 @@ class TestOperationValidation:
         with pytest.raises(ValueError, match='Unsupported gate type'):
             valkmusa.validate_operation(gate(QB2, QB1))
 
+    @pytest.mark.parametrize('qubit', [
+        cirq.NamedQubit('xxx'),
+    ])
+    def test_qubits_not_on_device(self, valkmusa, qubit):
+        """Gates operating on qubits not on device must not pass validation."""
+
+        with pytest.raises(ValueError, match='Qubit not on device'):
+            valkmusa.validate_operation(cirq.X(qubit))
+
 
 class TestGateDecomposition:
     """Decomposing gates."""

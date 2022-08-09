@@ -281,6 +281,10 @@ class IQMDevice(devices.Device):
         if not self.is_native_operation(operation):
             raise ValueError(f'Unsupported gate type: {operation.gate!r}')
 
+        for qubit in operation.qubits:
+            if qubit not in self.qubits:
+                raise ValueError(f'Qubit not on device: {qubit!r}')
+
         self.check_qubit_connectivity(operation)
 
     def __eq__(self, other):

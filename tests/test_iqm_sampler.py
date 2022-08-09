@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-import json
 import uuid
 
 import cirq
@@ -58,8 +56,8 @@ def qubit_mapping():
 
 
 @pytest.fixture()
-def adonis_sampler(base_url, settings_dict):
-    return IQMSampler(base_url, Adonis())
+def adonis_sampler(base_url, settings_dict, qubit_mapping):
+    return IQMSampler(base_url, Adonis(), qubit_mapping=qubit_mapping)
 
 
 @pytest.fixture()
@@ -68,7 +66,7 @@ def adonis_sampler_without_settings(base_url):
 
 
 @pytest.mark.usefixtures('unstub')
-def test_run_sweep_executes_circuit(adonis_sampler, circuit, qubit_mapping, iqm_metadata):
+def test_run_sweep_executes_circuit(adonis_sampler, circuit, iqm_metadata):
     client = mock(IQMClient)
     run_id = uuid.uuid4()
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
@@ -81,7 +79,7 @@ def test_run_sweep_executes_circuit(adonis_sampler, circuit, qubit_mapping, iqm_
 
 
 @pytest.mark.usefixtures('unstub')
-def test_run_sweep_with_bad_qubit_mapping(base_url, circuit, qubit_mapping, iqm_metadata):
+def test_run_sweep_with_bad_qubit_mapping(base_url, circuit, iqm_metadata):
     qubit_mapping = {
         'q1 log.': 'QB1',
         'q2 log.': 'QB1'
