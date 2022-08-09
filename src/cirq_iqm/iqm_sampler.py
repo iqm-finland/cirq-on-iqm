@@ -144,8 +144,6 @@ class IQMSampler(cirq.work.Sampler):
                 'Cannot submit circuits since session to IQM client has been closed.'
             )
         serialized_circuits = [serialize_circuit(circuit) for circuit in circuits]
-        if qubit_mapping is not None:
-            qubit_mapping = serialize_qubit_mapping(qubit_mapping)
 
         job_id = self._client.submit_circuits(
             serialized_circuits,
