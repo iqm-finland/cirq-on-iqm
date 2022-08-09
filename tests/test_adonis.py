@@ -406,7 +406,7 @@ class TestCircuitRouting:
             cirq.CZ(qubits[0], qubits[2]),
             cirq.measure(*qubits[0:2], key='m1'),
             cirq.measure(*qubits[2:5], key='m2')
-            )
+        )
         new = adonis.route_circuit(circuit)
         assert new.all_qubits() == set(adonis.qubits)
         # Test that all measurements exist.

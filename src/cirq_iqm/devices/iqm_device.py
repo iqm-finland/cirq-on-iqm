@@ -161,7 +161,7 @@ class IQMDevice(devices.Device):
                 Lxi.on(op.qubits[1]),
                 Lyi.on(op.qubits[1]),
                 CZ.on(*op.qubits),
-                ops.XPowGate(exponent=x, global_shift=-0.5 -2 * s).on(op.qubits[0]),
+                ops.XPowGate(exponent=x, global_shift=-0.5 - 2 * s).on(op.qubits[0]),
                 ops.XPowGate(exponent=-x, global_shift=-0.5).on(op.qubits[1]),
                 CZ.on(*op.qubits),
                 Ly.on(op.qubits[1]),
@@ -177,7 +177,6 @@ class IQMDevice(devices.Device):
                 ops.XPowGate(exponent=0.5).on(q),
             ]
         return None
-
 
     def decompose_operation(self, operation: cirq.Operation) -> cirq.OP_TREE:
         """Decompose a single quantum operation into the native operation set.
