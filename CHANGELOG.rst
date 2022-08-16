@@ -2,11 +2,16 @@
 Changelog
 =========
 
-Version 7.1
+Version 7.2
 ===========
 
 * Update ``IQMClient`` instantiations with the changes in iqm-client 6.1. `#80 <https://github.com/iqm-finland/cirq-on-iqm/pull/80>`_
 * ``IQMSampler`` now accepts an optional ``calibration_set_id``. `#80 <https://github.com/iqm-finland/cirq-on-iqm/pull/80>`_
+
+Version 7.1
+===========
+
+* Support iqm-client 6.0. `#79 <https://github.com/iqm-finland/cirq-on-iqm/pull/79>`_
 
 Version 7.0
 ===========

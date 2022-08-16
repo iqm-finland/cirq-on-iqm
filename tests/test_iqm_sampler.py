@@ -149,3 +149,17 @@ def test_credentials_are_passed_to_client():
     assert sampler._client._credentials.auth_server_url == user_auth_args['auth_server_url']
     assert sampler._client._credentials.username == user_auth_args['username']
     assert sampler._client._credentials.password == user_auth_args['password']
+
+
+def test_client_close():
+    user_auth_args = {
+        'auth_server_url': 'https://fake.auth.server.com',
+        'username': 'fake-username',
+        'password': 'fake-password',
+    }
+    with when(IQMClient)._update_tokens():
+        sampler = IQMSampler('http://url', Adonis(), **user_auth_args)
+    try:
+        sampler.close_client()
+    except Exception as exc:  # pylint: disable=broad-except
+        assert False, f'sampler created with credentials raised an exception {exc} on .close_client()'
