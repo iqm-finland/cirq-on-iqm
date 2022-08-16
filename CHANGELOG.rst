@@ -7,6 +7,7 @@ Version 7.2
 
 * Update ``IQMClient`` instantiations with the changes in iqm-client 6.1. `#80 <https://github.com/iqm-finland/cirq-on-iqm/pull/80>`_
 * ``IQMSampler`` now accepts an optional ``calibration_set_id``. `#80 <https://github.com/iqm-finland/cirq-on-iqm/pull/80>`_
+* Update documentation regarding the use of Cortex CLI. `#80 <https://github.com/iqm-finland/cirq-on-iqm/pull/80>`_
 
 Version 7.1
 ===========
