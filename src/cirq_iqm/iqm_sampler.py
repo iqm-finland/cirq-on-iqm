@@ -79,7 +79,7 @@ class IQMSampler(cirq.work.Sampler):
         """Close IQMClient's session with the user authentication server. Discard the client."""
         if not self._client:
             return
-        self._client.close()
+        self._client.close_auth_session()
         self._client = None
 
     def run_sweep(
