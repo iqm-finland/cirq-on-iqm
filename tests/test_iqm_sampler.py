@@ -151,7 +151,7 @@ def test_credentials_are_passed_to_client():
     assert sampler._client._credentials.password == user_auth_args['password']
 
 
-def test_client_close():
+def test_close_client():
     user_auth_args = {
         'auth_server_url': 'https://fake.auth.server.com',
         'username': 'fake-username',
