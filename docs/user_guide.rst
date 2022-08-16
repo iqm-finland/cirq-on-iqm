@@ -217,7 +217,7 @@ and retrieve the results:
    from cirq_iqm.iqm_sampler import IQMSampler
 
    with open(iqm_settings_path, 'r') as f:
-       settings = json.loads(f.read())
+       settings = json.load(f)
 
    sampler = IQMSampler(iqm_server_url, adonis, settings=settings)
    result = sampler.run(circuit_1, repetitions=10)
