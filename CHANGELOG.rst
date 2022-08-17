@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 7.3
+===========
+
+* Use cirq 1.0. `#82 <https://github.com/iqm-finland/cirq-on-iqm/pull/82>`_
+
 Version 7.2
 ===========
 
