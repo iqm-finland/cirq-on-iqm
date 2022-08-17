@@ -228,14 +228,13 @@ Note that the code snippet above assumes that you have set the variables ``iqm_s
 ``iqm_settings_path``.
 If you want to use the latest calibration set, omit ``settings`` argument from the ``backend.run`` call.
 If you want to use a particular calibration set, provide a ``calibration_set_id`` integer argument. You cannot set both
-``settings`` and ``calibration_set_id`` simultaneously, as IQM server rejects such requests.
+``settings`` and ``calibration_set_id`` simultaneously, because IQM server rejects such requests.
 
 If the IQM server you are connecting to requires authentication, you will also have to set the IQM_AUTH_SERVER,
 IQM_AUTH_USERNAME and IQM_AUTH_PASSWORD environment variables or pass them as arguments to the constructor of
-:class:`.IQMProvider`. Alternatively, you can use `Cortex CLI <https://github.com/iqm-finland/cortex-cli>`_, which
-retrieves access tokens and refreshes them periodically in the background; set the ``IQM_TOKENS_FILE`` environment
-variable to use those tokens. See Cortex CLI's `documentation <https://iqm-finland.github.io/cortex-cli/readme.html>`_
-for details.
+:class:`.IQMProvider`. Alternatively, authorize with `Cortex CLI <https://github.com/iqm-finland/cortex-cli>`_ to
+retrieve and automatically refresh access tokens, then set the ``IQM_TOKENS_FILE`` environment variable to use those
+tokens. See Cortex CLI's `documentation <https://iqm-finland.github.io/cortex-cli/readme.html>`_ for details.
 
 When executing a circuit that uses something other than the device qubits, you need to either route it first
 as explained in :ref:`workflow 1 <workflow_1>` above,
