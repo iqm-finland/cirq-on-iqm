@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>cirq_iqm.iqm_sampler.IQMSampler &#8212; Cirq on IQM 7.2 documentation</title>
+    <title>cirq_iqm.iqm_sampler.IQMSampler &#8212; Cirq on IQM 7.3 documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -429,6 +429,9 @@ This can also be set in the IQM_AUTH_PASSWORD environment variable.</p></li>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.iqm_sampler.IQMSampler.run_sweep" title="cirq_iqm.iqm_sampler.IQMSampler.run_sweep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_sweep</span></code></a>(program, params[, repetitions])</p></td>
 <td><p>Samples from the given Circuit.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cirq_iqm.iqm_sampler.IQMSampler.run_sweep_async" title="cirq_iqm.iqm_sampler.IQMSampler.run_sweep_async"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_sweep_async</span></code></a>(program, params[, repetitions])</p></td>
+<td><p>Asynchronously samples from the given Circuit.</p></td>
+</tr>
 </tbody>
 </table>
 <dl class="py method">
@@ -461,6 +464,30 @@ related circuits efficiently.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[cirq.study.result.Result]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cirq_iqm.iqm_sampler.IQMSampler.run_sweep_async">
+<span class="sig-name descname"><span class="pre">run_sweep_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">program</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_sampler.IQMSampler.run_sweep_async" title="Permalink to this definition">#</a></dt>
+<dd><p>Asynchronously samples from the given Circuit.</p>
+<p>By default, this method invokes <cite>run_sweep</cite> synchronously and simply
+exposes its result is an awaitable. Child classes that are capable of
+true asynchronous sampling should override it to use other strategies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>program</strong> (<em>cirq.AbstractCircuit</em>) – The circuit to sample from.</p></li>
+<li><p><strong>params</strong> (<em>cirq.Sweepable</em>) – Parameters to run with the program.</p></li>
+<li><p><strong>repetitions</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The number of times to sample.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result list for this run; one for each possible parameter resolver.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><em>Sequence</em></a>[cirq.Result]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -501,7 +528,7 @@ related circuits efficiently.</p>
     By Cirq on IQM developers<br/>
   
       &copy; Copyright 2020–2022, Cirq on IQM developers.<br/>
-    Last updated on 2022-08-17.<br/>
+    Last updated on 2022-08-18.<br/>
 </p>
         </footer>
     </div>
