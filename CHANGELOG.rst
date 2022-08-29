@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 7.4
+===========
+
+* ``cortex-cli`` is now the preferred way of authentication.
+
 Version 7.3
 ===========
 
