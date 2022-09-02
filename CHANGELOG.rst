@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 7.5
+===========
+
+* Upgrade to IQMClient version 7.0.
+
 Version 7.4
 ===========
 
