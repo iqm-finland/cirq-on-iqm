@@ -145,7 +145,7 @@ class MergeOneParameterGroupGates(circuits.PointOptimizer):
         # considered close to zero so let's shift away from the troublesome point before taking the modulo
         par = self._normalize_par(par)
         if abs(par) <= self.GATE_MERGING_TOLERANCE:
-            rewritten = []
+            rewritten: 'cirq.OP_TREE' = []
         else:
             rewritten = op.gate.__class__(exponent=par).on(*op.qubits)
 

@@ -31,7 +31,7 @@ def circuit_from_qasm(qasm: str) -> cirq.circuits.Circuit:
     """
     parser = QasmParser()
 
-    def convert_U(args: tuple) -> cirq.Gate:
+    def convert_U(args: list[float]) -> cirq.Gate:
         """Maps the OpenQASM builtin one-qubit gate ``U`` to :class:`cirq.QasmUGate`,
         or :class:`cirq.PhasedXPowGate` if possible.
         """
