@@ -15,11 +15,11 @@
 """
 Demonstrates executing a quantum circuit on an IQM quantum computer.
 
-Set the IQM_SERVER_URL and IQM_SETTINGS_PATH environment variables before running this script.
+Set the IQM_SERVER_URL environment variable before running this script.
 Also, if the server you are running against requires authentication, you will also have to set IQM_AUTH_SERVER,
 IQM_AUTH_USERNAME and IQM_AUTH_PASSWORD.
 E.g.
-    export IQM_SERVER_URL="https://example.com"; export IQM_SETTINGS_PATH="/path/to/file";
+    export IQM_SERVER_URL="https://example.com"
     export IQM_AUTH_SERVER="https://auth.example.com"; export IQM_AUTH_USERNAME="my username";
     export IQM_AUTH_PASSWORD="my password"
 """
@@ -51,8 +51,7 @@ def demo_adonis_run():
     circuit_decomposed = device.decompose_circuit(circuit)
     print(circuit_decomposed)
 
-    with open(os.environ['IQM_SETTINGS_PATH'], 'r') as settings:
-        sampler = IQMSampler(os.environ['IQM_SERVER_URL'], settings.read(), device, qubit_mapping)
+    sampler = IQMSampler(os.environ['IQM_SERVER_URL'], device, qubit_mapping=qubit_mapping)
 
     # This will send the circuit to the server to be run, and return a cirq.study.Result
     # containing the measurement results.
