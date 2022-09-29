@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 7.6
+===========
+
+* Upgrade to IQMClient version 8.0.
+* Remove ``settings`` parameter from ``IQMSampler``.
+
 Version 7.5
 ===========
 
