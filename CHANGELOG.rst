@@ -2,11 +2,16 @@
 Changelog
 =========
 
-Version 7.6
+Version 7.7
 ===========
 
 * Enable mypy support. `#88 <https://github.com/iqm-finland/cirq-on-iqm/pull/88>`_
 
+Version 7.6
+===========
+
+* Upgrade to IQMClient version 8.0.
+* Remove ``settings`` parameter from ``IQMSampler``.
 
 Version 7.5
 ===========

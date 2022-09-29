@@ -17,7 +17,7 @@ Circuit sampler that executes quantum circuits on an IQM quantum computer.
 """
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Optional
 
 import cirq
 import numpy as np
@@ -51,10 +51,12 @@ class IQMSampler(cirq.work.Sampler):
     Args:
         url: Endpoint for accessing the server interface. Has to start with http or https.
         device: Quantum architecture to execute the circuits on
-        settings: Settings for the quantum computer
-        calibration_set_id: ID of the calibration set to use instead of ``settings``
 
     Keyword Args:
+        qubit_mapping:
+            Mapping of logical qubit names to physical qubits
+        calibration_set_id:
+            ID of the calibration set to use instead of the latest one
         auth_server_url: URL of user authentication server, if required by the IQM Cortex server.
             This can also be set in the IQM_AUTH_SERVER environment variable.
         username: Username, if required by the IQM Cortex server.
@@ -68,15 +70,13 @@ class IQMSampler(cirq.work.Sampler):
             device: IQMDevice,
             *,
             qubit_mapping: Optional[dict[str, str]] = None,
-            settings: Optional[dict[str, Any]] = None,
             calibration_set_id: Optional[int] = None,
             **user_auth_args  # contains keyword args auth_server_url, username and password
     ):
-        self._settings = settings
-        self._calibration_set_id = calibration_set_id
         self._client = IQMClient(url, **user_auth_args)
         self._device = device
         self._qubit_mapping = qubit_mapping
+        self._calibration_set_id = calibration_set_id
 
     def close_client(self):
         """Close IQMClient's session with the user authentication server. Discard the client."""
@@ -101,7 +101,7 @@ class IQMSampler(cirq.work.Sampler):
             except ValueError as e:
                 raise ValueError('Failed applying qubit mapping.') from e
 
-        # validate the circuit for the device. If qubit_mapping was  given then validation is done after applying it,
+        # validate the circuit for the device. If qubit_mapping was given then validation is done after applying it,
         # otherwise it is assumed that the circuit already contains device qubits, and it is validated as is.
         self._device.validate_circuit(mapped)
 
@@ -114,7 +114,6 @@ class IQMSampler(cirq.work.Sampler):
         measurements = self._send_circuits(circuits,
                                            repetitions=repetitions,
                                            qubit_mapping=self._qubit_mapping,
-                                           settings=self._settings,
                                            calibration_set_id=self._calibration_set_id)
         return [
             study.ResultDict(params=res, measurements=mes)
@@ -125,7 +124,6 @@ class IQMSampler(cirq.work.Sampler):
             self,
             circuits: list[cirq.Circuit],
             qubit_mapping: Optional[dict[str, str]],
-            settings: Optional[dict[str, Any]],
             calibration_set_id: Optional[int],
             repetitions: int = 1
     ) -> list[dict[str, np.ndarray]]:
@@ -133,7 +131,8 @@ class IQMSampler(cirq.work.Sampler):
 
         Args:
             circuits: quantum circuit(s) to execute
-            qubit_mapping: Mapping of qubit names.
+            qubit_mapping: Mapping of qubit names
+            calibration_set_id: ID of the calibration set to use instead of the latest one
             repetitions: number of times the circuit(s) are sampled
 
         Returns:
@@ -154,7 +153,6 @@ class IQMSampler(cirq.work.Sampler):
         job_id = self._client.submit_circuits(
             serialized_circuits,
             qubit_mapping=qubit_mapping,
-            settings=settings,
             calibration_set_id=calibration_set_id,
             shots=repetitions
         )
