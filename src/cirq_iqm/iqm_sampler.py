@@ -17,7 +17,7 @@ Circuit sampler that executes quantum circuits on an IQM quantum computer.
 """
 from __future__ import annotations
 
-from typing import Any, Callable, Optional, Union
+from typing import Any, Optional
 
 import cirq
 import numpy as np
@@ -94,7 +94,7 @@ class IQMSampler(cirq.work.Sampler):
         mapped = program
         if self._qubit_mapping is not None:
             # apply the qubit_mapping
-            qubit_map: Union[dict['cirq.Qid', 'cirq.Qid'], Callable[['cirq.Qid'], 'cirq.Qid']] = \
+            qubit_map: dict['cirq.Qid', 'cirq.Qid'] = \
                 {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in self._qubit_mapping.items()}
             try:
                 mapped = program.transform_qubits(qubit_map)
