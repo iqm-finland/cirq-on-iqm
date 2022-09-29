@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 7.6
+===========
+
+* Enable mypy support. `#88 <https://github.com/iqm-finland/cirq-on-iqm/pull/88>`_
+
+
 Version 7.5
 ===========
 
