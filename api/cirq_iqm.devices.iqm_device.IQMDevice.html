@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>cirq_iqm.devices.iqm_device.IQMDevice &#8212; Cirq on IQM 7.6 documentation</title>
+    <title>cirq_iqm.devices.iqm_device.IQMDevice &#8212; Cirq on IQM 7.7 documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -462,7 +462,7 @@ optimizing circuits and mapping qubits.</p>
 </table>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cirq_iqm.devices.iqm_device.IQMDevice.QUBIT_COUNT">
-<span class="sig-name descname"><span class="pre">QUBIT_COUNT</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.QUBIT_COUNT" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">QUBIT_COUNT</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.QUBIT_COUNT" title="Permalink to this definition">#</a></dt>
 <dd><p>number of qubits on the device</p>
 </dd></dl>
 
@@ -474,19 +474,19 @@ optimizing circuits and mapping qubits.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cirq_iqm.devices.iqm_device.IQMDevice.CONNECTIVITY">
-<span class="sig-name descname"><span class="pre">CONNECTIVITY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#tuple" title="(in Python v3.9)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#set" title="(in Python v3.9)"><span class="pre">set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.CONNECTIVITY" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">CONNECTIVITY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#tuple" title="(in Python v3.9)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#set" title="(in Python v3.9)"><span class="pre">set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.CONNECTIVITY" title="Permalink to this definition">#</a></dt>
 <dd><p>qubit connectivity graph of the device</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cirq_iqm.devices.iqm_device.IQMDevice.NATIVE_GATES">
-<span class="sig-name descname"><span class="pre">NATIVE_GATES</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#tuple" title="(in Python v3.9)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#type" title="(in Python v3.9)"><span class="pre">type</span></a><span class="p"><span class="pre">[</span></span><span class="pre">cirq.ops.raw_types.Gate</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'cirq.ops.phased_x_gate.PhasedXPowGate'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'cirq.ops.common_gates.XPowGate'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'cirq.ops.common_gates.YPowGate'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'cirq.ops.measurement_gate.MeasurementGate'&gt;)</span></em><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.NATIVE_GATES" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">NATIVE_GATES</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#tuple" title="(in Python v3.9)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#type" title="(in Python v3.9)"><span class="pre">type</span></a><span class="p"><span class="pre">[</span></span><span class="pre">cirq.ops.raw_types.Gate</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'cirq.ops.phased_x_gate.PhasedXPowGate'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'cirq.ops.common_gates.XPowGate'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'cirq.ops.common_gates.YPowGate'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'cirq.ops.measurement_gate.MeasurementGate'&gt;)</span></em><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.NATIVE_GATES" title="Permalink to this definition">#</a></dt>
 <dd><p>native gate set of the device (gate families)</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cirq_iqm.devices.iqm_device.IQMDevice.NATIVE_GATE_INSTANCES">
-<span class="sig-name descname"><span class="pre">NATIVE_GATE_INSTANCES</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#tuple" title="(in Python v3.9)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><span class="pre">cirq.ops.raw_types.Gate</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(cirq.CZ,)</span></em><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.NATIVE_GATE_INSTANCES" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">NATIVE_GATE_INSTANCES</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#tuple" title="(in Python v3.9)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><span class="pre">cirq.ops.raw_types.Gate</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(cirq.CZ,)</span></em><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.NATIVE_GATE_INSTANCES" title="Permalink to this definition">#</a></dt>
 <dd><p>native gate set of the device (individual gates)</p>
 </dd></dl>
 
@@ -627,7 +627,7 @@ Note that only gates of one or two qubits, and measurement operations of arbitra
 <dd><p>Raises an exception if a circuit is not valid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>circuit</strong> (<em>cirq.circuits.circuit.Circuit</em>) – The circuit to validate.</p>
+<dd class="field-odd"><p><strong>circuit</strong> (<em>cirq.circuits.circuit.AbstractCircuit</em>) – The circuit to validate.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – The circuit isn’t valid for this device.</p>
@@ -691,7 +691,7 @@ Note that only gates of one or two qubits, and measurement operations of arbitra
     By Cirq on IQM developers<br/>
   
       &copy; Copyright 2020–2022, Cirq on IQM developers.<br/>
-    Last updated on 2022-09-29.<br/>
+    Last updated on 2022-09-30.<br/>
 </p>
         </footer>
     </div>
