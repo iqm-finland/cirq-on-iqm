@@ -85,7 +85,7 @@ class IQMSampler(cirq.work.Sampler):
         self._client.close_auth_session()
         self._client = None
 
-    def run_sweep(
+    def run_sweep(  # type: ignore[override]
             self,
             program: cirq.Circuit,
             params: cirq.Sweepable,
@@ -94,7 +94,8 @@ class IQMSampler(cirq.work.Sampler):
         mapped = program
         if self._qubit_mapping is not None:
             # apply the qubit_mapping
-            qubit_map = {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in self._qubit_mapping.items()}
+            qubit_map: dict['cirq.Qid', 'cirq.Qid'] = \
+                {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in self._qubit_mapping.items()}
             try:
                 mapped = program.transform_qubits(qubit_map)
             except ValueError as e:

@@ -42,7 +42,7 @@ def _verify_unique_measurement_keys(operations: ca.Iterable[cirq.Operation]) -> 
             seen_keys.add(key)
 
 
-def _validate_for_routing(circuit: cirq.Circuit) -> None:
+def _validate_for_routing(circuit: cirq.AbstractCircuit) -> None:
     if not circuit.are_all_measurements_terminal():
         raise ValueError('Non-terminal measurements are not supported')
 
@@ -53,16 +53,16 @@ class IQMDevice(devices.Device):
     Adds extra functionality on top of the basic :class:`cirq.Device` class for decomposing gates,
     optimizing circuits and mapping qubits.
     """
-    QUBIT_COUNT: int = None
+    QUBIT_COUNT: Optional[int] = None
     """number of qubits on the device"""
 
     QUBIT_NAME_PREFIX: str = 'QB'
     """prefix for qubit names, to be followed by their numerical index"""
 
-    CONNECTIVITY: tuple[set[int]] = ()
+    CONNECTIVITY: tuple[set[int], ...] = ()
     """qubit connectivity graph of the device"""
 
-    NATIVE_GATES: tuple[type[cirq.Gate]] = (
+    NATIVE_GATES: tuple[type[cirq.Gate], ...] = (
         ops.PhasedXPowGate,
         ops.XPowGate,
         ops.YPowGate,
@@ -70,7 +70,7 @@ class IQMDevice(devices.Device):
     )
     """native gate set of the device (gate families)"""
 
-    NATIVE_GATE_INSTANCES: tuple[cirq.Gate] = (
+    NATIVE_GATE_INSTANCES: tuple[cirq.Gate, ...] = (
         ops.CZPowGate(),
     )
     """native gate set of the device (individual gates)"""
@@ -92,7 +92,7 @@ class IQMDevice(devices.Device):
         """Raises a ValueError if operation acts on qubits that are not connected.
         """
         if len(operation.qubits) >= 2 and not isinstance(operation.gate, ops.MeasurementGate):
-            connection = set(cls.get_qubit_index(q) for q in operation.qubits)
+            connection = set(cls.get_qubit_index(q) for q in operation.qubits)  # type: ignore
             if connection not in cls.CONNECTIVITY:
                 raise ValueError(f'Unsupported qubit connectivity required for {operation!r}')
 
@@ -221,11 +221,11 @@ class IQMDevice(devices.Device):
         # disappear from the final swap network if no other operations remain. We will add them back after routing the
         # rest of the network. This is done for two purposes: it allows the circuit to contain measurements of more than
         # 2 qubits in the circuit and prevents measurements becoming non-terminal during routing.
-        measurement_ops = [(m[0], m[1]) for m in circuit.findall_operations_with_gate_type(MeasurementGate)]
-        measurement_qubits = set().union(*[op.qubits for _, op in measurement_ops])
+        measurement_ops = list(circuit.findall_operations_with_gate_type(MeasurementGate))
+        measurement_qubits = set().union(*[op.qubits for _, op, _ in measurement_ops])
 
         modified_circuit = circuit.copy()
-        modified_circuit.batch_remove(measurement_ops)
+        modified_circuit.batch_remove([(ind, op) for ind, op, _ in measurement_ops])
         i_tag = uuid.uuid4()
         for q in measurement_qubits:
             modified_circuit.append(cirq.I(q).with_tags(i_tag))
@@ -236,9 +236,9 @@ class IQMDevice(devices.Device):
         # Return measurements to the circuit with potential qubit swaps.
         final_qubit_mapping = {v: k for k, v in swap_network.final_mapping().items()}
         new_measurements = []
-        for _, op in measurement_ops:
+        for _, op, gate in measurement_ops:
             new_qubits = [final_qubit_mapping[q] for q in op.qubits]
-            new_measurement = cirq.measure(*new_qubits, key=op.gate.key)
+            new_measurement = cirq.measure(*new_qubits, key=gate.key)
             new_measurements.append(new_measurement)
 
         swap_network.circuit.append(new_measurements, InsertStrategy.NEW_THEN_INLINE)
@@ -269,7 +269,7 @@ class IQMDevice(devices.Device):
         )
         return cirq.Circuit(moments)
 
-    def validate_circuit(self, circuit: cirq.Circuit) -> None:
+    def validate_circuit(self, circuit: cirq.AbstractCircuit) -> None:
         super().validate_circuit(circuit)
         _verify_unique_measurement_keys(circuit.all_operations())
         _validate_for_routing(circuit)
