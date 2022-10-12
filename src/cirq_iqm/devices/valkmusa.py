@@ -55,7 +55,7 @@ class Valkmusa(IQMDevice):
         ops.XPowGate,
         ops.YPowGate,
         ops.ISwapPowGate,
-        ops.MeasurementGate
+        ops.MeasurementGate,
     )
 
     NATIVE_GATE_INSTANCES = ()

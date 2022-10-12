@@ -22,10 +22,10 @@ from cirq import circuits, ops
 
 
 def simplify_circuit(
-        circuit: cirq.Circuit,
-        *,
-        max_iterations: int = 20,
-        drop_final_rz: bool = False,
+    circuit: cirq.Circuit,
+    *,
+    max_iterations: int = 20,
+    drop_final_rz: bool = False,
 ) -> cirq.Circuit:
     """Simplifies and optimizes the given circuit.
 
@@ -84,6 +84,7 @@ class MergeOneParameterGroupGates(circuits.PointOptimizer):
 
     For now, all the families are assumed to be periodic with a period of 4.
     """
+
     # TODO: ZZPowGate has a period of 2
     ONE_PARAMETER_FAMILIES = (ops.ISwapPowGate, ops.ZZPowGate)
     PERIOD = 4
@@ -91,16 +92,15 @@ class MergeOneParameterGroupGates(circuits.PointOptimizer):
 
     @classmethod
     def _normalize_par(cls, par):
-        """Normalizes the given parameter value to (-period/2, period/2].
-        """
+        """Normalizes the given parameter value to (-period/2, period/2]."""
         shift = cls.PERIOD / 2
         return operator.mod(par - shift, -cls.PERIOD) + shift
 
     def optimization_at(
-            self,
-            circuit: cirq.Circuit,
-            index: int,
-            op: cirq.Operation,
+        self,
+        circuit: cirq.Circuit,
+        index: int,
+        op: cirq.Operation,
     ) -> Optional[cirq.PointOptimizationSummary]:
         """Describes how to change operations near the given location.
 
@@ -150,9 +150,7 @@ class MergeOneParameterGroupGates(circuits.PointOptimizer):
             rewritten = op.gate.__class__(exponent=par).on(*op.qubits)
 
         return circuits.PointOptimizationSummary(
-            clear_span=max(indices) + 1 - index,
-            clear_qubits=op.qubits,
-            new_operations=rewritten
+            clear_span=max(indices) + 1 - index, clear_qubits=op.qubits, new_operations=rewritten
         )
 
 
@@ -165,15 +163,16 @@ class DropRZBeforeMeasurement(circuits.PointOptimizer):
         drop_final: iff True, drop also any z rotation at the end of the circuit (since it's not
             followed by a measurement, it cannot affect them)
     """
+
     def __init__(self, drop_final: bool = False):
         super().__init__()
         self.drop_final = drop_final
 
     def optimization_at(
-            self,
-            circuit: cirq.Circuit,
-            index: int,
-            op: cirq.Operation,
+        self,
+        circuit: cirq.Circuit,
+        index: int,
+        op: cirq.Operation,
     ) -> Optional[cirq.PointOptimizationSummary]:
         """Describes how to change operations near the given location.
 
@@ -220,7 +219,5 @@ class DropRZBeforeMeasurement(circuits.PointOptimizer):
         if not indices:
             return None
         return circuits.PointOptimizationSummary(
-            clear_span=max(indices) + 1 - index,
-            clear_qubits=op.qubits,
-            new_operations=[]
+            clear_span=max(indices) + 1 - index, clear_qubits=op.qubits, new_operations=[]
         )

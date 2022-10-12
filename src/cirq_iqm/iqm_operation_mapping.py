@@ -13,8 +13,7 @@
 # limitations under the License.
 """Logic for mapping Cirq Operations to the IQM transfer format.
 """
-from cirq.ops import (CZPowGate, MeasurementGate, Operation, PhasedXPowGate,
-                      XPowGate, YPowGate)
+from cirq.ops import CZPowGate, MeasurementGate, Operation, PhasedXPowGate, XPowGate, YPowGate
 from iqm_client.iqm_client import Instruction
 
 
@@ -44,41 +43,24 @@ def map_operation(operation: Operation) -> Instruction:
         return Instruction(
             name=phased_rx_name,
             qubits=qubits,
-            args={
-                'angle_t': operation.gate.exponent / 2,
-                'phase_t': operation.gate.phase_exponent / 2
-            }
+            args={'angle_t': operation.gate.exponent / 2, 'phase_t': operation.gate.phase_exponent / 2},
         )
     if isinstance(operation.gate, XPowGate):
         return Instruction(
-            name=phased_rx_name,
-            qubits=qubits,
-            args={'angle_t': operation.gate.exponent / 2,
-                  'phase_t': 0}
+            name=phased_rx_name, qubits=qubits, args={'angle_t': operation.gate.exponent / 2, 'phase_t': 0}
         )
     if isinstance(operation.gate, YPowGate):
         return Instruction(
-            name=phased_rx_name,
-            qubits=qubits,
-            args={'angle_t': operation.gate.exponent / 2,
-                  'phase_t': 0.25}
+            name=phased_rx_name, qubits=qubits, args={'angle_t': operation.gate.exponent / 2, 'phase_t': 0.25}
         )
     if isinstance(operation.gate, MeasurementGate):
         if any(operation.gate.full_invert_mask()):
             raise OperationNotSupportedError('Invert mask not supported')
 
-        return Instruction(
-            name='measurement',
-            qubits=qubits,
-            args={'key': operation.gate.key}
-        )
+        return Instruction(name='measurement', qubits=qubits, args={'key': operation.gate.key})
     if isinstance(operation.gate, CZPowGate):
         if operation.gate.exponent == 1.0:
-            return Instruction(
-                name='cz',
-                qubits=qubits,
-                args={}
-            )
+            return Instruction(name='cz', qubits=qubits, args={})
         raise OperationNotSupportedError(
             f'CZPowGate exponent was {operation.gate.exponent}, but only 1 is natively supported.'
         )
