@@ -42,25 +42,25 @@ def map_operation(operation: Operation) -> Instruction:
     if isinstance(operation.gate, PhasedXPowGate):
         return Instruction(
             name=phased_rx_name,
-            qubits=qubits,
+            qubits=tuple(qubits),
             args={'angle_t': operation.gate.exponent / 2, 'phase_t': operation.gate.phase_exponent / 2},
         )
     if isinstance(operation.gate, XPowGate):
         return Instruction(
-            name=phased_rx_name, qubits=qubits, args={'angle_t': operation.gate.exponent / 2, 'phase_t': 0}
+            name=phased_rx_name, qubits=tuple(qubits), args={'angle_t': operation.gate.exponent / 2, 'phase_t': 0}
         )
     if isinstance(operation.gate, YPowGate):
         return Instruction(
-            name=phased_rx_name, qubits=qubits, args={'angle_t': operation.gate.exponent / 2, 'phase_t': 0.25}
+            name=phased_rx_name, qubits=tuple(qubits), args={'angle_t': operation.gate.exponent / 2, 'phase_t': 0.25}
         )
     if isinstance(operation.gate, MeasurementGate):
         if any(operation.gate.full_invert_mask()):
             raise OperationNotSupportedError('Invert mask not supported')
 
-        return Instruction(name='measurement', qubits=qubits, args={'key': operation.gate.key})
+        return Instruction(name='measurement', qubits=tuple(qubits), args={'key': operation.gate.key})
     if isinstance(operation.gate, CZPowGate):
         if operation.gate.exponent == 1.0:
-            return Instruction(name='cz', qubits=qubits, args={})
+            return Instruction(name='cz', qubits=tuple(qubits), args={})
         raise OperationNotSupportedError(
             f'CZPowGate exponent was {operation.gate.exponent}, but only 1 is natively supported.'
         )

@@ -39,7 +39,7 @@ def test_maps_measurement_gate(qubit_1):
     key = 'test measurement'
     operation = GateOperation(MeasurementGate(1, key), [qubit_1])
     mapped = map_operation(operation)
-    expected = Instruction(name='measurement', qubits=[str(qubit_1)], args={'key': key})
+    expected = Instruction(name='measurement', qubits=(str(qubit_1),), args={'key': key})
     assert expected == mapped
 
 
@@ -55,7 +55,7 @@ def test_maps_to_phased_rx(qubit_1, gate, expected_angle, expected_phase):
     operation = GateOperation(gate, [qubit_1])
     mapped = map_operation(operation)
     assert mapped.name == 'phased_rx'
-    assert mapped.qubits == [str(qubit_1)]
+    assert mapped.qubits == (str(qubit_1),)
     # The unit for angle and phase is full turns
     assert mapped.args['angle_t'] == expected_angle
     assert mapped.args['phase_t'] == expected_phase
@@ -64,7 +64,7 @@ def test_maps_to_phased_rx(qubit_1, gate, expected_angle, expected_phase):
 def test_maps_cz_gate(qubit_1, qubit_2):
     operation = GateOperation(CZPowGate(), [qubit_1, qubit_2])
     mapped = map_operation(operation)
-    expected = Instruction(name='cz', qubits=[str(qubit_1), str(qubit_2)], args={})
+    expected = Instruction(name='cz', qubits=(str(qubit_1), str(qubit_2)), args={})
     assert expected == mapped
 
 
