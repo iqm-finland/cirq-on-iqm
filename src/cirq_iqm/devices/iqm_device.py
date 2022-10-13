@@ -21,9 +21,9 @@ to use with the architecture.
 from __future__ import annotations
 
 import collections.abc as ca
-import uuid
 from math import pi as PI
 from typing import Optional, Union
+import uuid
 
 import cirq
 from cirq import InsertStrategy, MeasurementGate, devices, ops, protocols
@@ -31,8 +31,7 @@ from cirq.contrib.routing.router import nx, route_circuit
 
 
 def _verify_unique_measurement_keys(operations: ca.Iterable[cirq.Operation]) -> None:
-    """Raises an error if a measurement key is repeated in the given set of Operations.
-    """
+    """Raises an error if a measurement key is repeated in the given set of Operations."""
     seen_keys: set[str] = set()
     for op in operations:
         if protocols.is_measurement(op):
@@ -53,6 +52,7 @@ class IQMDevice(devices.Device):
     Adds extra functionality on top of the basic :class:`cirq.Device` class for decomposing gates,
     optimizing circuits and mapping qubits.
     """
+
     QUBIT_COUNT: Optional[int] = None
     """number of qubits on the device"""
 
@@ -62,17 +62,10 @@ class IQMDevice(devices.Device):
     CONNECTIVITY: tuple[set[int], ...] = ()
     """qubit connectivity graph of the device"""
 
-    NATIVE_GATES: tuple[type[cirq.Gate], ...] = (
-        ops.PhasedXPowGate,
-        ops.XPowGate,
-        ops.YPowGate,
-        ops.MeasurementGate
-    )
+    NATIVE_GATES: tuple[type[cirq.Gate], ...] = (ops.PhasedXPowGate, ops.XPowGate, ops.YPowGate, ops.MeasurementGate)
     """native gate set of the device (gate families)"""
 
-    NATIVE_GATE_INSTANCES: tuple[cirq.Gate, ...] = (
-        ops.CZPowGate(),
-    )
+    NATIVE_GATE_INSTANCES: tuple[cirq.Gate, ...] = (ops.CZPowGate(),)
     """native gate set of the device (individual gates)"""
 
     def __init__(self):
@@ -81,7 +74,7 @@ class IQMDevice(devices.Device):
     @classmethod
     def get_qubit_index(cls, qubit: cirq.NamedQubit) -> int:
         """The numeric index of the given qubit on the device."""
-        return int(qubit.name[len(cls.QUBIT_NAME_PREFIX):])
+        return int(qubit.name[len(cls.QUBIT_NAME_PREFIX) :])
 
     def get_qubit(self, index: int) -> cirq.NamedQubit:
         """The device qubit corresponding to the given numeric index."""
@@ -89,8 +82,7 @@ class IQMDevice(devices.Device):
 
     @classmethod
     def check_qubit_connectivity(cls, operation: cirq.Operation) -> None:
-        """Raises a ValueError if operation acts on qubits that are not connected.
-        """
+        """Raises a ValueError if operation acts on qubits that are not connected."""
         if len(operation.qubits) >= 2 and not isinstance(operation.gate, ops.MeasurementGate):
             connection = set(cls.get_qubit_index(q) for q in operation.qubits)  # type: ignore
             if connection not in cls.CONNECTIVITY:
@@ -99,12 +91,8 @@ class IQMDevice(devices.Device):
     @classmethod
     def is_native_operation(cls, op: cirq.Operation) -> bool:
         """Predicate, True iff the given operation is considered native for the architecture."""
-        return (
-            isinstance(op, (ops.GateOperation, ops.TaggedOperation))
-            and (
-                isinstance(op.gate, cls.NATIVE_GATES)
-                or op.gate in cls.NATIVE_GATE_INSTANCES
-            )
+        return isinstance(op, (ops.GateOperation, ops.TaggedOperation)) and (
+            isinstance(op.gate, cls.NATIVE_GATES) or op.gate in cls.NATIVE_GATE_INSTANCES
         )
 
     def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
@@ -179,8 +167,7 @@ class IQMDevice(devices.Device):
         return None
 
     def decompose_operation(self, operation: cirq.Operation) -> cirq.OP_TREE:
-        """Decompose a single quantum operation into the native operation set.
-        """
+        """Decompose a single quantum operation into the native operation set."""
         if self.is_native_operation(operation):
             return operation
 
@@ -188,14 +175,11 @@ class IQMDevice(devices.Device):
             operation,
             intercepting_decomposer=self.operation_decomposer,
             keep=self.is_native_operation,
-            on_stuck_raise=None
+            on_stuck_raise=None,
         )
 
     def route_circuit(
-            self,
-            circuit: cirq.Circuit,
-            *,
-            return_swap_network: bool = False
+        self, circuit: cirq.Circuit, *, return_swap_network: bool = False
     ) -> Union[cirq.Circuit, cirq.contrib.routing.SwapNetwork]:
         """Routes the given circuit to the device connectivity.
 
@@ -244,9 +228,7 @@ class IQMDevice(devices.Device):
         swap_network.circuit.append(new_measurements, InsertStrategy.NEW_THEN_INLINE)
 
         # Remove additional identity gates.
-        identity_gates = swap_network.circuit.findall_operations(
-            lambda op: i_tag in op.tags
-        )
+        identity_gates = swap_network.circuit.findall_operations(lambda op: i_tag in op.tags)
         swap_network.circuit.batch_remove(identity_gates)
 
         if return_swap_network:

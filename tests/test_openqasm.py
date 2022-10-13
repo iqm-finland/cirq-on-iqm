@@ -20,15 +20,24 @@ import pytest
 from cirq_iqm.extended_qasm_parser import QasmUGate, circuit_from_qasm
 
 
-@pytest.mark.parametrize('qasm, op', [
-    ('U(pi * 0.1, pi * 0.2, pi * 0.3) q[0];', QasmUGate(theta=0.1, phi=0.2, lmda=0.3)),
-    ('u3(pi * 0.1, pi * 0.2, pi * 0.3) q[0];', QasmUGate(theta=0.1, phi=0.2, lmda=0.3)),
-    ('CX q[0], q[1];', cirq.CNOT),
-    ('U(pi * 0.4, pi * 0.25, pi * -0.25) q[0];', cirq.PhasedXPowGate(phase_exponent=0.75, global_shift=-0.5) ** 0.4),
-    ('u3(pi * 0.4, pi * 0.25, pi * -0.25) q[0];', cirq.PhasedXPowGate(phase_exponent=0.75, global_shift=-0.5) ** 0.4),
-    ('cz q[0], q[1];', cirq.CZ),
-    ('measure q[0] -> c[0];', cirq.MeasurementGate(1, 'c_0')),
-])
+@pytest.mark.parametrize(
+    'qasm, op',
+    [
+        ('U(pi * 0.1, pi * 0.2, pi * 0.3) q[0];', QasmUGate(theta=0.1, phi=0.2, lmda=0.3)),
+        ('u3(pi * 0.1, pi * 0.2, pi * 0.3) q[0];', QasmUGate(theta=0.1, phi=0.2, lmda=0.3)),
+        ('CX q[0], q[1];', cirq.CNOT),
+        (
+            'U(pi * 0.4, pi * 0.25, pi * -0.25) q[0];',
+            cirq.PhasedXPowGate(phase_exponent=0.75, global_shift=-0.5) ** 0.4,
+        ),
+        (
+            'u3(pi * 0.4, pi * 0.25, pi * -0.25) q[0];',
+            cirq.PhasedXPowGate(phase_exponent=0.75, global_shift=-0.5) ** 0.4,
+        ),
+        ('cz q[0], q[1];', cirq.CZ),
+        ('measure q[0] -> c[0];', cirq.MeasurementGate(1, 'c_0')),
+    ],
+)
 def test_qasm_to_circuit(qasm, op):
     """Check that the extended QASM parser correctly imports various operations."""
     preamble = """
@@ -42,23 +51,28 @@ creg c[1];
     assert len(c) == 1
     assert c[0].operations[0].gate == op
 
-@pytest.mark.parametrize('op, qasm', [
-    (QasmUGate(theta=0.1, phi=0.2, lmda=0.3), 'u3(pi*0.1,pi*0.2,pi*0.3) q[0];'),
-    (cirq.CNOT, 'cx q[0],q[1];'),
-    # NOTE the addition of pi to the phase angle, and negation of the rotation angle (Cirq convention)
-    (cirq.PhasedXPowGate(phase_exponent=0.75, global_shift=-0.5) ** 0.4, 'u3(pi*-0.4, pi*1.25, pi*-1.25) q[0];'),
-    (cirq.CZ, 'cz q[0],q[1];'),
-    (cirq.MeasurementGate(1, 'key'), 'measure q[0] -> m_key[0];'),
-])
+
+@pytest.mark.parametrize(
+    'op, qasm',
+    [
+        (QasmUGate(theta=0.1, phi=0.2, lmda=0.3), 'u3(pi*0.1,pi*0.2,pi*0.3) q[0];'),
+        (cirq.CNOT, 'cx q[0],q[1];'),
+        # NOTE the addition of pi to the phase angle, and negation of the rotation angle (Cirq convention)
+        (cirq.PhasedXPowGate(phase_exponent=0.75, global_shift=-0.5) ** 0.4, 'u3(pi*-0.4, pi*1.25, pi*-1.25) q[0];'),
+        (cirq.CZ, 'cz q[0],q[1];'),
+        (cirq.MeasurementGate(1, 'key'), 'measure q[0] -> m_key[0];'),
+    ],
+)
 def test_circuit_to_qasm(op, qasm):
     """Check that Cirq exports various operations as OpenQASM in the expected way."""
 
     qubits = [cirq.NamedQubit('Alice'), cirq.NamedQubit('Bob')]
     c = cirq.Circuit()
-    c.append(op(*qubits[:op._num_qubits_()]))
+    c.append(op(*qubits[: op._num_qubits_()]))
 
     got_qasm = c.to_qasm()
     assert got_qasm.endswith(qasm + '\n')
+
 
 def test_round_trip():
     """Circuit into OpenQASM and back."""

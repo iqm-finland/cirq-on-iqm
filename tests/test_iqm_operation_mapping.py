@@ -12,13 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import cirq
-import pytest
-from cirq import (CZPowGate, GateOperation, MeasurementGate, PhasedXPowGate,
-                  XPowGate, YPowGate, ZPowGate)
+from cirq import CZPowGate, GateOperation, MeasurementGate, PhasedXPowGate, XPowGate, YPowGate, ZPowGate
 from iqm_client.iqm_client import Instruction
+import pytest
 
-from cirq_iqm.iqm_operation_mapping import (OperationNotSupportedError,
-                                            map_operation)
+from cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, map_operation
 
 
 @pytest.fixture()
@@ -41,23 +39,23 @@ def test_maps_measurement_gate(qubit_1):
     key = 'test measurement'
     operation = GateOperation(MeasurementGate(1, key), [qubit_1])
     mapped = map_operation(operation)
-    expected = Instruction(
-        name='measurement',
-        qubits=[str(qubit_1)],
-        args={'key': key}
-    )
+    expected = Instruction(name='measurement', qubits=(str(qubit_1),), args={'key': key})
     assert expected == mapped
 
 
-@pytest.mark.parametrize('gate, expected_angle, expected_phase',
-                         [(XPowGate(exponent=0.5), 0.25, 0),
-                          (YPowGate(exponent=0.75), 0.375, 0.25),
-                          (PhasedXPowGate(exponent=0.25, phase_exponent=0.5), 0.125, 0.25)])
+@pytest.mark.parametrize(
+    'gate, expected_angle, expected_phase',
+    [
+        (XPowGate(exponent=0.5), 0.25, 0),
+        (YPowGate(exponent=0.75), 0.375, 0.25),
+        (PhasedXPowGate(exponent=0.25, phase_exponent=0.5), 0.125, 0.25),
+    ],
+)
 def test_maps_to_phased_rx(qubit_1, gate, expected_angle, expected_phase):
     operation = GateOperation(gate, [qubit_1])
     mapped = map_operation(operation)
     assert mapped.name == 'phased_rx'
-    assert mapped.qubits == [str(qubit_1)]
+    assert mapped.qubits == (str(qubit_1),)
     # The unit for angle and phase is full turns
     assert mapped.args['angle_t'] == expected_angle
     assert mapped.args['phase_t'] == expected_phase
@@ -66,11 +64,7 @@ def test_maps_to_phased_rx(qubit_1, gate, expected_angle, expected_phase):
 def test_maps_cz_gate(qubit_1, qubit_2):
     operation = GateOperation(CZPowGate(), [qubit_1, qubit_2])
     mapped = map_operation(operation)
-    expected = Instruction(
-        name='cz',
-        qubits=[str(qubit_1), str(qubit_2)],
-        args={}
-    )
+    expected = Instruction(name='cz', qubits=(str(qubit_1), str(qubit_2)), args={})
     assert expected == mapped
 
 

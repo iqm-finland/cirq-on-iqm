@@ -19,9 +19,9 @@
 from __future__ import annotations
 
 import cirq
+from cirq import IdentityGate
 import numpy as np
 import pytest
-from cirq import IdentityGate
 
 from cirq_iqm import Adonis
 
@@ -98,10 +98,13 @@ class TestOperationValidation:
         adonis.validate_operation(gate(q0, q2))
         adonis.validate_operation(gate(q2, q0))
 
-    @pytest.mark.parametrize('meas', [
-        cirq.measure,
-        lambda q: cirq.measure(q, key='test'),
-    ])
+    @pytest.mark.parametrize(
+        'meas',
+        [
+            cirq.measure,
+            lambda q: cirq.measure(q, key='test'),
+        ],
+    )
     def test_native_measurements(self, adonis, meas):
         """Native operations must pass validation."""
 
@@ -131,10 +134,13 @@ class TestOperationValidation:
         with pytest.raises(ValueError, match='Unsupported gate type'):
             adonis.validate_operation(gate(q2, q0))
 
-    @pytest.mark.parametrize('qubit', [
-        cirq.NamedQubit('xxx'),
-        cirq.GridQubit(0, 1),
-    ])
+    @pytest.mark.parametrize(
+        'qubit',
+        [
+            cirq.NamedQubit('xxx'),
+            cirq.GridQubit(0, 1),
+        ],
+    )
     def test_qubits_not_on_device(self, adonis, qubit):
         """Gates operating on qubits not on device must not pass validation."""
 
@@ -174,8 +180,8 @@ class TestGateDecomposition:
         q0 = adonis.qubits[0]
 
         for op in (
-                gate.on(q0),
-                gate.on(q0).with_tags('tag_baz'),
+            gate.on(q0),
+            gate.on(q0).with_tags('tag_baz'),
         ):
             decomposition = adonis.decompose_operation(op)
             assert decomposition == op
@@ -188,8 +194,8 @@ class TestGateDecomposition:
         q1 = adonis.qubits[1]
 
         for op in (
-                gate.on(q1),
-                gate.on(q1).with_tags('tag_baz'),
+            gate.on(q1),
+            gate.on(q1).with_tags('tag_baz'),
         ):
             decomposition = adonis.decompose_operation(op)
             assert TestGateDecomposition.is_native(decomposition)
@@ -201,8 +207,8 @@ class TestGateDecomposition:
         q0, _, q2 = adonis.qubits[:3]
 
         for op in (
-                gate.on(q0, q2),
-                gate.on(q2, q0).with_tags('tag_baz'),
+            gate.on(q0, q2),
+            gate.on(q2, q0).with_tags('tag_baz'),
         ):
             decomposition = adonis.decompose_operation(op)
             assert decomposition == op
@@ -215,9 +221,9 @@ class TestGateDecomposition:
         q0, q1, q2 = adonis.qubits[:3]
 
         for op in (
-                gate.on(q0, q2),
-                gate.on(q2, q0).with_tags('tag_baz'),
-                gate.on(q2, q1),
+            gate.on(q0, q2),
+            gate.on(q2, q0).with_tags('tag_baz'),
+            gate.on(q2, q1),
         ):
             decomposition = adonis.decompose_operation(op)
             assert TestGateDecomposition.is_native(decomposition)
@@ -258,8 +264,7 @@ class TestCircuitValidation:
 
 class TestCircuitDecomposition:
     def test_decompose_circuit_native_only(self, adonis):
-        """Circuit containing only native ops decomposes trivially.
-        """
+        """Circuit containing only native ops decomposes trivially."""
         q0, q1 = cirq.NamedQubit.range(0, 2, prefix='qubit_')
         circuit = cirq.Circuit(
             cirq.CZ(q0, q1),
@@ -270,8 +275,7 @@ class TestCircuitDecomposition:
         assert new == circuit
 
     def test_decompose_circuit(self, adonis):
-        """Any gates should be decomposable to native gates.
-        """
+        """Any gates should be decomposable to native gates."""
         q0, q1 = cirq.NamedQubit.range(0, 2, prefix='qubit_')
         circuit = cirq.Circuit(
             cirq.CNOT(q0, q1),
@@ -284,15 +288,9 @@ class TestCircuitDecomposition:
         assert new[1].operations[0].gate == cirq.CZ  # CNOT decomposes into CZ plus Ry:s
 
     def test_decompose_complicated_circuit(self, adonis):
-        """Can handle even 3-qubit gates.
-        """
+        """Can handle even 3-qubit gates."""
         q0, q1, q2 = cirq.NamedQubit.range(0, 3, prefix='qubit_')
-        circuit = cirq.Circuit(
-            cirq.H(q0),
-            cirq.X(q1),
-            cirq.TOFFOLI(q0, q2, q1),
-            cirq.measure(q0, q1, q2, key='mk')
-        )
+        circuit = cirq.Circuit(cirq.H(q0), cirq.X(q1), cirq.TOFFOLI(q0, q2, q1), cirq.measure(q0, q1, q2, key='mk'))
         new = adonis.decompose_circuit(circuit)
 
         # still uses the original qubits, not device qubits
@@ -308,20 +306,18 @@ class TestCircuitRouting:
             cirq.NamedQubit('Bob'),
             cirq.NamedQubit('Charlie'),
             cirq.NamedQubit('Dan'),
-            cirq.NamedQubit('Eve')
+            cirq.NamedQubit('Eve'),
         ]
 
     def test_routing_circuit_too_large(self, adonis):
-        """The circuit must fit on the device.
-        """
+        """The circuit must fit on the device."""
         qubits = cirq.NamedQubit.range(0, 6, prefix='qubit_')
         circuit = cirq.Circuit([cirq.X(q) for q in qubits])
         with pytest.raises(ValueError, match='Number of logical qubits is greater than number of physical qubits'):
             adonis.route_circuit(circuit)
 
     def test_routing_without_SWAPs(self, adonis, qubits):
-        """Circuit graph can be embedded in the Adonis connectivity graph, no SWAPs needed.
-        """
+        """Circuit graph can be embedded in the Adonis connectivity graph, no SWAPs needed."""
         circuit = cirq.Circuit(
             cirq.CZ(*qubits[0:2]),
             cirq.CZ(*qubits[1:3]),
@@ -333,8 +329,7 @@ class TestCircuitRouting:
         # assert len(new) == len(circuit)  # TODO at the moment the routing algo may add unnecessary SWAPs
 
     def test_routing_needs_SWAPs(self, adonis, qubits):
-        """Circuit has cyclic connectivity, Adonis doesn't, so SWAPs are needed.
-        """
+        """Circuit has cyclic connectivity, Adonis doesn't, so SWAPs are needed."""
         circuit = cirq.Circuit(
             cirq.CZ(*qubits[0:2]),
             cirq.CZ(*qubits[1:3]),
@@ -352,16 +347,18 @@ class TestCircuitRouting:
         decomposed = adonis.decompose_circuit(new)
         adonis.validate_circuit(decomposed)
 
-    @pytest.mark.parametrize('qid', [
-        cirq.LineQubit(4),
-        cirq.GridQubit(5, 6),
-        cirq.NamedQid('Quentin', dimension=2),
-        cirq.LineQid(4, dimension=2),
-        cirq.GridQid(5, 6, dimension=2),
-    ])
+    @pytest.mark.parametrize(
+        'qid',
+        [
+            cirq.LineQubit(4),
+            cirq.GridQubit(5, 6),
+            cirq.NamedQid('Quentin', dimension=2),
+            cirq.LineQid(4, dimension=2),
+            cirq.GridQid(5, 6, dimension=2),
+        ],
+    )
     def test_routing_with_qids(self, adonis, qid):
-        """Routing can handle all kinds of Qid types, not just NamedQubit.
-        """
+        """Routing can handle all kinds of Qid types, not just NamedQubit."""
         q = cirq.NamedQubit('Alice')
         circuit = cirq.Circuit(
             cirq.X(q),
@@ -405,7 +402,7 @@ class TestCircuitRouting:
             cirq.X(qubits[4]),
             cirq.CZ(qubits[0], qubits[2]),
             cirq.measure(*qubits[0:2], key='m1'),
-            cirq.measure(*qubits[2:5], key='m2')
+            cirq.measure(*qubits[2:5], key='m2'),
         )
         new = adonis.route_circuit(circuit)
         assert new.all_qubits() == set(adonis.qubits)
@@ -416,9 +413,6 @@ class TestCircuitRouting:
 
     def test_routing_with_nonterminal_measurements_raises_error(self, adonis):
         q = cirq.NamedQubit('q1')
-        circuit = cirq.Circuit(
-            cirq.measure(q, key='m'),
-            cirq.Y(q)
-        )
+        circuit = cirq.Circuit(cirq.measure(q, key='m'), cirq.Y(q))
         with pytest.raises(ValueError, match='Non-terminal measurements are not supported'):
             adonis.route_circuit(circuit)
