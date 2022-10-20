@@ -27,29 +27,32 @@ After installation Cirq on IQM can be imported in your Python code as follows:
 IQM's quantum devices
 ---------------------
 
-Cirq on IQM provides descriptions of IQM's quantum architectures as subclasses of :class:`.IQMDevice`.
-The abstract class :class:`.IQMDevice` itself is a subclass of :class:`cirq.devices.Device` and implements general
-functionality relevant to all IQM devices. Each device subclass describes the native gates and the connectivity of a particular architecture
-and the relevant functionality. As an example, let us import the class :class:`.Adonis`, which describes IQM's
-five-qubit architecture and view some of its properties contained in the class variables:
+Cirq on IQM provides descriptions of IQM's quantum architectures using the :class:`.IQMDevice` class, which is a
+subclass of :class:`cirq.devices.Device` and implements general functionality relevant to all IQM devices. The native
+gates and connectivity of the architecture are available in the :class:`.IQMDeviceMetadata` object returned by the
+:meth:`.IQMDevice.metadata` property of the device. It is possible to use :class:`.IQMDevice` class directly, but
+certain devices with predefined metadata are also available as subclasses of :class:`.IQMDevice`. As an example, let
+us import the class :class:`.Adonis`, which describes IQM's five-qubit architecture and view some of its properties
+contained in the :meth:`.Adonis.metadata` property:
 
 .. code-block:: python
 
     from cirq_iqm import Adonis
 
-    print(Adonis.QUBIT_COUNT)
-    print(Adonis.NATIVE_GATES)
-    print(Adonis.CONNECTIVITY)
+    adonis = Adonis()
+
+    print(adonis.metadata.qubit_set)
+    print(adonis.metadata.gateset)
+    print(adonis.metadata.nx_graph)
 
 
 IQM devices use :class:`cirq.NamedQubit` to represent their qubits. The names of the qubits consist of a prefix
 followed by a numeric index, so we have qubit names like ``QB1``, ``QB2``, etc. Note that we use 1-based
-indexing. The qubit connectivity information is stored using the qubit indices only. You can get the list of the qubits
-in a particular device by accessing the ``qubits`` attribute of a corresponding :class:`.IQMDevice` instance:
+indexing. You can get the list of the qubits in a particular device by accessing the ``qubits`` attribute of a
+corresponding :class:`.IQMDevice` instance:
 
 .. code-block:: python
 
-    adonis = Adonis()
     print(adonis.qubits)
 
 
@@ -214,14 +217,16 @@ instance and use its :meth:`~.IQMSampler.run` method to send a circuit for execu
 
    from cirq_iqm.iqm_sampler import IQMSampler
 
-   sampler = IQMSampler(iqm_server_url, adonis)
+   sampler = IQMSampler(iqm_server_url)
    result = sampler.run(circuit_1, repetitions=10)
    print(result.measurements['m'])
 
 
 Note that the code snippet above assumes that you have set the variable ``iqm_server_url`` to the URL
 of the IQM server. By default, the latest calibration set is used for running the circuit. If you want to use
-a particular calibration set, provide a ``calibration_set_id`` integer argument.
+a particular calibration set, provide a ``calibration_set_id`` integer argument. The sampler will by default use an
+:class:`.IQMDevice` created based on architecture data obtained from the server, which is then available in the
+:meth:`.IQMSampler.device` property. Alternatively, the device can be specified directly with the ``device`` argument.
 
 If the IQM server you are connecting to requires authentication, you will also have to use
 `Cortex CLI <https://github.com/iqm-finland/cortex-cli>`_ to retrieve and automatically refresh access tokens,
@@ -244,7 +249,7 @@ can be used to specify this correspondence.
 
     qubit_mapping = {'Alice': 'QB1', 'Bob': 'QB3'}
 
-    sampler = IQMSampler(iqm_server_url, adonis, qubit_mapping=qubit_mapping)
+    sampler = IQMSampler(iqm_server_url, qubit_mapping=qubit_mapping)
     result = sampler.run(decomposed_circuit_1, repetitions=10)
     print(result.measurements['m'])
 

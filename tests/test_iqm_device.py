@@ -17,10 +17,13 @@ from cirq_iqm import Adonis, Apollo, Valkmusa
 def test_equality_method():
     adonis_1 = Adonis()
     adonis_2 = Adonis()
+    adonis_3 = Adonis()
     apollo_1 = Apollo()
     apollo_2 = Apollo()
     valkmusa = Valkmusa()
+    adonis_3._metadata = valkmusa.metadata
 
     assert adonis_1 == adonis_2
     assert valkmusa != adonis_1
     assert apollo_1 == apollo_2
+    assert adonis_2 != adonis_3

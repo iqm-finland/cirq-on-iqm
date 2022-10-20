@@ -17,9 +17,10 @@ IQM's Valkmusa quantum architecture.
 from math import pi as PI
 from typing import Optional
 
+import cirq
 from cirq import ops
 
-from .iqm_device import IQMDevice
+from .iqm_device import IQMDevice, IQMDeviceMetadata
 
 PI_2 = PI / 2
 
@@ -44,21 +45,19 @@ class Valkmusa(IQMDevice):
     The qubits are always measured simultaneously at the end of the computation.
     """
 
-    QUBIT_COUNT = 2
-
-    CONNECTIVITY = ({1, 2},)
-
-    NATIVE_GATES = (
-        ops.PhasedXPowGate,
-        # XPow and YPow kept for convenience, Cirq does not know how to decompose them into PhasedX
-        # so we would have to add those rules...
-        ops.XPowGate,
-        ops.YPowGate,
-        ops.ISwapPowGate,
-        ops.MeasurementGate,
-    )
-
-    NATIVE_GATE_INSTANCES = ()
+    def __init__(self):
+        qubits = self._qubit_set_from_count(2)
+        connectivity = ({1, 2},)
+        gateset = cirq.Gateset(
+            ops.PhasedXPowGate,
+            # XPow and YPow kept for convenience, Cirq does not know how to decompose them into PhasedX
+            # so we would have to add those rules...
+            ops.XPowGate,
+            ops.YPowGate,
+            ops.ISwapPowGate,
+            ops.MeasurementGate,
+        )
+        super().__init__(IQMDeviceMetadata(qubits, connectivity, gateset))
 
     def operation_decomposer(self, op: ops.Operation) -> Optional[list[ops.Operation]]:
         # Decomposes CNOT and the CZPowGate family to Valkmusa native gates.

@@ -164,12 +164,12 @@ class TestGateDecomposition:
     """Decomposing gates."""
 
     @staticmethod
-    def is_native(op_or_op_list) -> bool:
-        """True iff the op_list consists of native operations only."""
-        if Apollo.is_native_operation(op_or_op_list):
+    def is_native(apollo, op_or_op_list) -> bool:
+        """True iff the op_list consists of native operations of apollo only."""
+        if apollo.is_native_operation(op_or_op_list):
             return True
         for op in op_or_op_list:
-            if not Apollo.is_native_operation(op):
+            if not apollo.is_native_operation(op):
                 raise TypeError(f'Non-native operation: {op}')
         return True
 
@@ -185,7 +185,7 @@ class TestGateDecomposition:
         ):
             decomposition = apollo.decompose_operation(op)
             assert decomposition == op
-            assert TestGateDecomposition.is_native(decomposition)
+            assert TestGateDecomposition.is_native(apollo, decomposition)
 
     @pytest.mark.parametrize('gate', non_native_1q_gates)
     def test_non_native_single_qubit_gates(self, apollo, gate):
@@ -198,7 +198,7 @@ class TestGateDecomposition:
             gate.on(q1).with_tags('tag_baz'),
         ):
             decomposition = apollo.decompose_operation(op)
-            assert TestGateDecomposition.is_native(decomposition)
+            assert TestGateDecomposition.is_native(apollo, decomposition)
 
     @pytest.mark.parametrize('gate', native_2q_gates)
     def test_native_two_qubit_gate(self, apollo, gate):
@@ -212,7 +212,7 @@ class TestGateDecomposition:
         ):
             decomposition = apollo.decompose_operation(op)
             assert decomposition == op
-            assert TestGateDecomposition.is_native(decomposition)
+            assert TestGateDecomposition.is_native(apollo, decomposition)
 
     @pytest.mark.parametrize('gate', non_native_2q_gates)
     def test_non_native_two_qubit_gates(self, apollo, gate):
@@ -226,7 +226,7 @@ class TestGateDecomposition:
             gate.on(q2, q1),
         ):
             decomposition = apollo.decompose_operation(op)
-            assert TestGateDecomposition.is_native(decomposition)
+            assert TestGateDecomposition.is_native(apollo, decomposition)
 
             # matrix representations must match up to global phase
             U = cirq.Circuit(op)._unitary_()

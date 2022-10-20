@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 8.0
+===========
+
+* Implement metadata for IQM devices. `#92 <https://github.com/iqm-finland/cirq-on-iqm/pull/92>`_
+
 Version 7.8
 ===========
 

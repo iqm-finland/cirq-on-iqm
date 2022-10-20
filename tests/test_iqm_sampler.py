@@ -14,7 +14,7 @@
 import uuid
 
 import cirq
-from iqm_client.iqm_client import Circuit, IQMClient, Metadata, RunResult, Status
+from iqm_client.iqm_client import Circuit, IQMClient, Metadata, QuantumArchitecture, RunResult, Status
 from mockito import ANY, mock, when
 import pytest
 import sympy
@@ -134,3 +134,25 @@ def test_close_client():
         sampler.close_client()
     except Exception as exc:  # pylint: disable=broad-except
         assert False, f'sampler created with credentials raised an exception {exc} on .close_client()'
+
+
+@pytest.mark.usefixtures('unstub')
+def test_device_metadata_from_architecture(base_url):
+    qa = {
+        'quantum_architecture': {
+            'name': 'Valkmusa',
+            'operations': [
+                'phased_rx',
+                'measurement',
+            ],
+            'qubits': ['QB1', 'QB2'],
+            'qubit_connectivity': [
+                ['QB1', 'QB2'],
+            ],
+        }
+    }
+    with when(IQMClient).get_quantum_architecture().thenReturn(QuantumArchitecture(**qa).quantum_architecture):
+        sampler = IQMSampler(base_url)
+    assert sampler.device.metadata.qubit_set == {cirq.NamedQubit('QB1'), cirq.NamedQubit('QB2')}
+    assert list(sampler.device.metadata.nx_graph.edges) == [(cirq.NamedQubit('QB1'), cirq.NamedQubit('QB2'))]
+    assert sampler.device.metadata.gateset == cirq.Gateset(cirq.PhasedXPowGate, cirq.MeasurementGate)

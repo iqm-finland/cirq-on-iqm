@@ -25,8 +25,16 @@ from iqm_client import iqm_client
 from iqm_client.iqm_client import IQMClient
 import numpy as np
 
-from cirq_iqm import IQMDevice
+from cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
 from cirq_iqm.iqm_operation_mapping import map_operation
+
+# Mapping from IQM operation names to cirq operations
+_IQM_CIRQ_OP_MAP = {
+    'phased_rx': cirq.ops.PhasedXPowGate,
+    'cz': cirq.ops.CZ,
+    'measurement': cirq.ops.MeasurementGate,
+    'barrier': None,
+}
 
 
 def serialize_circuit(circuit: cirq.Circuit) -> iqm_client.Circuit:
@@ -47,7 +55,8 @@ class IQMSampler(cirq.work.Sampler):
 
     Args:
         url: Endpoint for accessing the server interface. Has to start with http or https.
-        device: Quantum architecture to execute the circuits on
+        device: Device to execute the circuits on. If None, the device will be created based
+            on the quantum architecture obtained from IQMClient.
 
     Keyword Args:
         qubit_mapping:
@@ -65,16 +74,24 @@ class IQMSampler(cirq.work.Sampler):
     def __init__(
         self,
         url: str,
-        device: IQMDevice,
+        device: Optional[IQMDevice] = None,
         *,
         qubit_mapping: Optional[dict[str, str]] = None,
         calibration_set_id: Optional[int] = None,
         **user_auth_args,  # contains keyword args auth_server_url, username and password
     ):
         self._client = IQMClient(url, **user_auth_args)
-        self._device = device
+        if device is None:
+            self._device = IQMDevice(self._metadata_from_architecture())
+        else:
+            self._device = device
         self._qubit_mapping = qubit_mapping
         self._calibration_set_id = calibration_set_id
+
+    @property
+    def device(self) -> IQMDevice:
+        """Returns the device used by the sampler."""
+        return self._device
 
     def close_client(self):
         """Close IQMClient's session with the user authentication server. Discard the client."""
@@ -149,3 +166,13 @@ class IQMSampler(cirq.work.Sampler):
             raise RuntimeError('No measurements returned from IQM quantum computer.')
 
         return [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements]
+
+    def _metadata_from_architecture(self):
+        arch = self._client.get_quantum_architecture()
+        qubits = frozenset(cirq.NamedQubit(qb) for qb in arch.qubits)
+        connectivity = (
+            {int(qb.removeprefix(IQMDeviceMetadata.QUBIT_NAME_PREFIX)) for qb in edge}
+            for edge in arch.qubit_connectivity
+        )
+        gateset = cirq.Gateset(*(_IQM_CIRQ_OP_MAP[op] for op in arch.operations if _IQM_CIRQ_OP_MAP[op] is not None))
+        return IQMDeviceMetadata(qubits, connectivity, gateset)
