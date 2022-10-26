@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 7.8
+===========
+
+* Bump ``iqm-client`` dependency. `#91 <https://github.com/iqm-finland/cirq-on-iqm/pull/91>`_
+
 Version 7.7
 ===========
 
