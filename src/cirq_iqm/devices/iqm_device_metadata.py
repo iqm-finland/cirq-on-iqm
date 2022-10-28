@@ -12,12 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """DeviceMetadata subtype for IQM devices."""
+from __future__ import annotations
 
-from typing import FrozenSet, Optional
+from typing import FrozenSet, Optional, Type, Union
 
 import cirq
 from cirq import NamedQubit, devices, ops
 from cirq.contrib.routing.router import nx
+from iqm_client import QuantumArchitectureSpecification
+
+# Mapping from IQM operation names to cirq operations
+_IQM_CIRQ_OP_MAP: dict[str, Optional[tuple[Union[Type[cirq.Gate], cirq.Gate, cirq.GateFamily], ...]]] = {
+    # XPow and YPow kept for convenience, Cirq does not know how to decompose them into PhasedX
+    # so we would have to add those rules...
+    'phased_rx': (cirq.ops.PhasedXPowGate, cirq.ops.XPowGate, cirq.ops.YPowGate),
+    'cz': (cirq.ops.CZ,),
+    'measurement': (cirq.ops.MeasurementGate,),
+    'barrier': None,
+}
 
 
 @cirq.value.value_equality
@@ -54,6 +66,24 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
             )
         else:
             self._gateset = gateset
+
+    @classmethod
+    def from_architecture(cls, architecture: QuantumArchitectureSpecification) -> IQMDeviceMetadata:
+        """Returns device metadata object created based on architecture specification"""
+        qubits = frozenset(cirq.NamedQubit(qb) for qb in architecture.qubits)
+        connectivity = tuple(
+            {int(qb.removeprefix(IQMDeviceMetadata.QUBIT_NAME_PREFIX)) for qb in edge}
+            for edge in architecture.qubit_connectivity
+        )
+        gateset = cirq.Gateset(
+            *tuple(
+                cirq_op
+                for iqm_op in architecture.operations
+                if (cirq_ops := _IQM_CIRQ_OP_MAP[iqm_op]) is not None
+                for cirq_op in cirq_ops
+            )
+        )
+        return IQMDeviceMetadata(qubits, connectivity, gateset)
 
     @property
     def qubit_set(self) -> FrozenSet[cirq.NamedQubit]:

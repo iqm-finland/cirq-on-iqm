@@ -28,16 +28,6 @@ import numpy as np
 from cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
 from cirq_iqm.iqm_operation_mapping import map_operation
 
-# Mapping from IQM operation names to cirq operations
-_IQM_CIRQ_OP_MAP = {
-    # XPow and YPow kept for convenience, Cirq does not know how to decompose them into PhasedX
-    # so we would have to add those rules...
-    'phased_rx': (cirq.ops.PhasedXPowGate, cirq.ops.XPowGate, cirq.ops.YPowGate),
-    'cz': (cirq.ops.CZ,),
-    'measurement': (cirq.ops.MeasurementGate,),
-    'barrier': None,
-}
-
 
 def serialize_circuit(circuit: cirq.Circuit) -> iqm_client.Circuit:
     """Serializes a quantum circuit into the IQM data transfer format.
@@ -84,7 +74,8 @@ class IQMSampler(cirq.work.Sampler):
     ):
         self._client = IQMClient(url, **user_auth_args)
         if device is None:
-            self._device = IQMDevice(self._metadata_from_architecture())
+            device_metadata = IQMDeviceMetadata.from_architecture(self._client.get_quantum_architecture())
+            self._device = IQMDevice(device_metadata)
         else:
             self._device = device
         self._qubit_mapping = qubit_mapping
@@ -168,20 +159,3 @@ class IQMSampler(cirq.work.Sampler):
             raise RuntimeError('No measurements returned from IQM quantum computer.')
 
         return [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements]
-
-    def _metadata_from_architecture(self):
-        arch = self._client.get_quantum_architecture()
-        qubits = frozenset(cirq.NamedQubit(qb) for qb in arch.qubits)
-        connectivity = (
-            {int(qb.removeprefix(IQMDeviceMetadata.QUBIT_NAME_PREFIX)) for qb in edge}
-            for edge in arch.qubit_connectivity
-        )
-        gateset = cirq.Gateset(
-            *(
-                cirq_op
-                for iqm_op in arch.operations
-                for cirq_op in _IQM_CIRQ_OP_MAP[iqm_op]
-                if _IQM_CIRQ_OP_MAP[iqm_op] is not None
-            )
-        )
-        return IQMDeviceMetadata(qubits, connectivity, gateset)

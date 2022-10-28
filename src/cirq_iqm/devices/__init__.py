@@ -17,4 +17,5 @@
 from .adonis import Adonis
 from .apollo import Apollo
 from .iqm_device import IQMDevice
+from .iqm_device_metadata import IQMDeviceMetadata
 from .valkmusa import Valkmusa
