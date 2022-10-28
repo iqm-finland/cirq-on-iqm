@@ -30,9 +30,11 @@ from cirq_iqm.iqm_operation_mapping import map_operation
 
 # Mapping from IQM operation names to cirq operations
 _IQM_CIRQ_OP_MAP = {
-    'phased_rx': cirq.ops.PhasedXPowGate,
-    'cz': cirq.ops.CZ,
-    'measurement': cirq.ops.MeasurementGate,
+    # XPow and YPow kept for convenience, Cirq does not know how to decompose them into PhasedX
+    # so we would have to add those rules...
+    'phased_rx': (cirq.ops.PhasedXPowGate, cirq.ops.XPowGate, cirq.ops.YPowGate),
+    'cz': (cirq.ops.CZ,),
+    'measurement': (cirq.ops.MeasurementGate,),
     'barrier': None,
 }
 
@@ -174,5 +176,12 @@ class IQMSampler(cirq.work.Sampler):
             {int(qb.removeprefix(IQMDeviceMetadata.QUBIT_NAME_PREFIX)) for qb in edge}
             for edge in arch.qubit_connectivity
         )
-        gateset = cirq.Gateset(*(_IQM_CIRQ_OP_MAP[op] for op in arch.operations if _IQM_CIRQ_OP_MAP[op] is not None))
+        gateset = cirq.Gateset(
+            *(
+                cirq_op
+                for iqm_op in arch.operations
+                for cirq_op in _IQM_CIRQ_OP_MAP[iqm_op]
+                if _IQM_CIRQ_OP_MAP[iqm_op] is not None
+            )
+        )
         return IQMDeviceMetadata(qubits, connectivity, gateset)

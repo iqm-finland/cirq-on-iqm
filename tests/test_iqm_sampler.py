@@ -155,4 +155,6 @@ def test_device_metadata_from_architecture(base_url):
         sampler = IQMSampler(base_url)
     assert sampler.device.metadata.qubit_set == {cirq.NamedQubit('QB1'), cirq.NamedQubit('QB2')}
     assert list(sampler.device.metadata.nx_graph.edges) == [(cirq.NamedQubit('QB1'), cirq.NamedQubit('QB2'))]
-    assert sampler.device.metadata.gateset == cirq.Gateset(cirq.PhasedXPowGate, cirq.MeasurementGate)
+    assert sampler.device.metadata.gateset == cirq.Gateset(
+        cirq.PhasedXPowGate, cirq.XPowGate, cirq.YPowGate, cirq.MeasurementGate
+    )
