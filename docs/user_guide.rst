@@ -30,10 +30,10 @@ IQM's quantum devices
 Cirq on IQM provides descriptions of IQM's quantum architectures using the :class:`.IQMDevice` class, which is a
 subclass of :class:`cirq.devices.Device` and implements general functionality relevant to all IQM devices. The native
 gates and connectivity of the architecture are available in the :class:`.IQMDeviceMetadata` object returned by the
-:meth:`.IQMDevice.metadata` property of the device. It is possible to use :class:`.IQMDevice` class directly, but
-certain devices with predefined metadata are also available as subclasses of :class:`.IQMDevice`. As an example, let
-us import the class :class:`.Adonis`, which describes IQM's five-qubit architecture and view some of its properties
-contained in the :meth:`.Adonis.metadata` property:
+:attr:`.IQMDevice.metadata` property. It is possible to use the IQMDevice class directly, but
+certain devices with predefined metadata are also available as subclasses of IQMDevice. As an example, let
+us import the class :class:`.Adonis`, which describes IQM's five-qubit architecture, and view some of its
+properties contained in its ``metadata`` property:
 
 .. code-block:: python
 
@@ -48,7 +48,7 @@ contained in the :meth:`.Adonis.metadata` property:
 
 IQM devices use :class:`cirq.NamedQubit` to represent their qubits. The names of the qubits consist of a prefix
 followed by a numeric index, so we have qubit names like ``QB1``, ``QB2``, etc. Note that we use 1-based
-indexing. You can get the list of the qubits in a particular device by accessing the ``qubits`` attribute of a
+indexing. You can get the list of the qubits in a particular device by accessing the :attr:`qubits` attribute of a
 corresponding :class:`.IQMDevice` instance:
 
 .. code-block:: python
@@ -224,7 +224,7 @@ instance and use its :meth:`~.IQMSampler.run` method to send a circuit for execu
 
 Note that the code snippet above assumes that you have set the variable ``iqm_server_url`` to the URL
 of the IQM server. By default, the latest calibration set is used for running the circuit. If you want to use
-a particular calibration set, provide a ``calibration_set_id`` integer argument. The sampler will by default use an
+a particular calibration set, provide the ``calibration_set_id`` argument. The sampler will by default use an
 :class:`.IQMDevice` created based on architecture data obtained from the server, which is then available in the
 :meth:`.IQMSampler.device` property. Alternatively, the device can be specified directly with the ``device`` argument.
 
@@ -234,7 +234,7 @@ then set the ``IQM_TOKENS_FILE`` environment variable to use those tokens.
 See Cortex CLI's `documentation <https://iqm-finland.github.io/cortex-cli/readme.html>`_ for details.
 Alternatively, authorize with the IQM_AUTH_SERVER, IQM_AUTH_USERNAME and IQM_AUTH_PASSWORD environment variables
 or pass them as arguments to the constructor of :class:`.IQMProvider`, however this approach is less secure
-and considered as deprecated.
+and considered deprecated.
 
 When executing a circuit that uses something other than the device qubits, you need to either route it first
 as explained in :ref:`workflow 1 <workflow_1>` above,

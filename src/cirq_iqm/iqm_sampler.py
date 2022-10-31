@@ -47,19 +47,20 @@ class IQMSampler(cirq.work.Sampler):
 
     Args:
         url: Endpoint for accessing the server interface. Has to start with http or https.
-        device: Device to execute the circuits on. If None, the device will be created based
-            on the quantum architecture obtained from IQMClient.
+        device: Device to execute the circuits on. If ``None``, the device will be created based
+            on the quantum architecture obtained from :class:`.IQMClient`.
+        qubit_mapping:
+            Mapping of logical qubit names to physical qubit names.
+            If ``None``, use the identity mapping.
+        calibration_set_id:
+            ID of the calibration set to use. If ``None``, use the latest one.
 
     Keyword Args:
-        qubit_mapping:
-            Mapping of logical qubit names to physical qubits
-        calibration_set_id:
-            ID of the calibration set to use instead of the latest one
-        auth_server_url: URL of user authentication server, if required by the IQM Cortex server.
+        auth_server_url (str): URL of user authentication server, if required by the IQM Cortex server.
             This can also be set in the IQM_AUTH_SERVER environment variable.
-        username: Username, if required by the IQM Cortex server.
+        username (str): Username, if required by the IQM Cortex server.
             This can also be set in the IQM_AUTH_USERNAME environment variable.
-        password: Password, if required by the IQM Cortex server.
+        password (str): Password, if required by the IQM Cortex server.
             This can also be set in the IQM_AUTH_PASSWORD environment variable.
     """
 
