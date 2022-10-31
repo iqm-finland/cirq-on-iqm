@@ -16,7 +16,7 @@ IQM's Apollo quantum architecture.
 """
 from __future__ import annotations
 
-from .iqm_device import IQMDevice
+from .iqm_device import IQMDevice, IQMDeviceMetadata
 
 
 class Apollo(IQMDevice):
@@ -46,25 +46,38 @@ class Apollo(IQMDevice):
     the circuit.
     """
 
-    QUBIT_COUNT = 20
-
-    CONNECTIVITY = (
-        {1, 2}, {1, 4},
-        {2, 5},
-        {3, 4}, {3, 8},
-        {4, 5}, {4, 9},
-        {5, 6}, {5, 10},
-        {6, 7}, {6, 11},
-        {7, 12},
-        {8, 9}, {8, 13},
-        {9, 10}, {9, 14},
-        {10, 11}, {10, 15},
-        {11, 12}, {11, 16},
-        {12, 17},
-        {13, 14},
-        {14, 15}, {14, 18},
-        {15, 16}, {15, 19},
-        {16, 17}, {16, 20},
-        {18, 19},
-        {19, 20}
-    )
+    def __init__(self):
+        qubits = self._qubit_set_from_count(20)
+        connectivity = (
+            {1, 2},
+            {1, 4},
+            {2, 5},
+            {3, 4},
+            {3, 8},
+            {4, 5},
+            {4, 9},
+            {5, 6},
+            {5, 10},
+            {6, 7},
+            {6, 11},
+            {7, 12},
+            {8, 9},
+            {8, 13},
+            {9, 10},
+            {9, 14},
+            {10, 11},
+            {10, 15},
+            {11, 12},
+            {11, 16},
+            {12, 17},
+            {13, 14},
+            {14, 15},
+            {14, 18},
+            {15, 16},
+            {15, 19},
+            {16, 17},
+            {16, 20},
+            {18, 19},
+            {19, 20},
+        )
+        super().__init__(IQMDeviceMetadata(qubits, connectivity))

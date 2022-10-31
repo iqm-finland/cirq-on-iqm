@@ -15,9 +15,8 @@
 Imports OpenQASM 2.0 programs in a way that preserves gates native to the IQM architectures.
 """
 import cirq
+from cirq.contrib.qasm_import._parser import QasmGateStatement, QasmParser, QasmUGate
 import numpy as np
-from cirq.contrib.qasm_import._parser import (QasmGateStatement, QasmParser,
-                                              QasmUGate)
 
 
 def circuit_from_qasm(qasm: str) -> cirq.circuits.Circuit:
@@ -31,7 +30,7 @@ def circuit_from_qasm(qasm: str) -> cirq.circuits.Circuit:
     """
     parser = QasmParser()
 
-    def convert_U(args: tuple) -> cirq.Gate:
+    def convert_U(args: list[float]) -> cirq.Gate:
         """Maps the OpenQASM builtin one-qubit gate ``U`` to :class:`cirq.QasmUGate`,
         or :class:`cirq.PhasedXPowGate` if possible.
         """

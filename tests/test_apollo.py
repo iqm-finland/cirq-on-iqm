@@ -19,9 +19,9 @@
 from __future__ import annotations
 
 import cirq
+from cirq import IdentityGate
 import numpy as np
 import pytest
-from cirq import IdentityGate
 
 from cirq_iqm import Apollo
 
@@ -98,10 +98,13 @@ class TestOperationValidation:
         apollo.validate_operation(gate(q0, q1))
         apollo.validate_operation(gate(q1, q0))
 
-    @pytest.mark.parametrize('meas', [
-        cirq.measure,
-        lambda q: cirq.measure(q, key='test'),
-    ])
+    @pytest.mark.parametrize(
+        'meas',
+        [
+            cirq.measure,
+            lambda q: cirq.measure(q, key='test'),
+        ],
+    )
     def test_native_measurements(self, apollo, meas):
         """Native operations must pass validation."""
 
@@ -131,10 +134,13 @@ class TestOperationValidation:
         with pytest.raises(ValueError, match='Unsupported gate type'):
             apollo.validate_operation(gate(q1, q0))
 
-    @pytest.mark.parametrize('qubit', [
-        cirq.NamedQubit('xxx'),
-        cirq.GridQubit(0, 1),
-    ])
+    @pytest.mark.parametrize(
+        'qubit',
+        [
+            cirq.NamedQubit('xxx'),
+            cirq.GridQubit(0, 1),
+        ],
+    )
     def test_qubits_not_on_device(self, apollo, qubit):
         """Gates operating on qubits not on device must not pass validation."""
 
@@ -158,12 +164,12 @@ class TestGateDecomposition:
     """Decomposing gates."""
 
     @staticmethod
-    def is_native(op_or_op_list) -> bool:
-        """True iff the op_list consists of native operations only."""
-        if Apollo.is_native_operation(op_or_op_list):
+    def is_native(apollo, op_or_op_list) -> bool:
+        """True iff the op_list consists of native operations of apollo only."""
+        if apollo.is_native_operation(op_or_op_list):
             return True
         for op in op_or_op_list:
-            if not Apollo.is_native_operation(op):
+            if not apollo.is_native_operation(op):
                 raise TypeError(f'Non-native operation: {op}')
         return True
 
@@ -174,12 +180,12 @@ class TestGateDecomposition:
         q0 = apollo.qubits[0]
 
         for op in (
-                gate.on(q0),
-                gate.on(q0).with_tags('tag_baz'),
+            gate.on(q0),
+            gate.on(q0).with_tags('tag_baz'),
         ):
             decomposition = apollo.decompose_operation(op)
             assert decomposition == op
-            assert TestGateDecomposition.is_native(decomposition)
+            assert TestGateDecomposition.is_native(apollo, decomposition)
 
     @pytest.mark.parametrize('gate', non_native_1q_gates)
     def test_non_native_single_qubit_gates(self, apollo, gate):
@@ -188,11 +194,11 @@ class TestGateDecomposition:
         q1 = apollo.qubits[1]
 
         for op in (
-                gate.on(q1),
-                gate.on(q1).with_tags('tag_baz'),
+            gate.on(q1),
+            gate.on(q1).with_tags('tag_baz'),
         ):
             decomposition = apollo.decompose_operation(op)
-            assert TestGateDecomposition.is_native(decomposition)
+            assert TestGateDecomposition.is_native(apollo, decomposition)
 
     @pytest.mark.parametrize('gate', native_2q_gates)
     def test_native_two_qubit_gate(self, apollo, gate):
@@ -201,12 +207,12 @@ class TestGateDecomposition:
         q0, _, q2 = apollo.qubits[:3]
 
         for op in (
-                gate.on(q0, q2),
-                gate.on(q2, q0).with_tags('tag_baz'),
+            gate.on(q0, q2),
+            gate.on(q2, q0).with_tags('tag_baz'),
         ):
             decomposition = apollo.decompose_operation(op)
             assert decomposition == op
-            assert TestGateDecomposition.is_native(decomposition)
+            assert TestGateDecomposition.is_native(apollo, decomposition)
 
     @pytest.mark.parametrize('gate', non_native_2q_gates)
     def test_non_native_two_qubit_gates(self, apollo, gate):
@@ -215,12 +221,12 @@ class TestGateDecomposition:
         q0, q1, q2 = apollo.qubits[:3]
 
         for op in (
-                gate.on(q0, q2),
-                gate.on(q2, q0).with_tags('tag_baz'),
-                gate.on(q2, q1),
+            gate.on(q0, q2),
+            gate.on(q2, q0).with_tags('tag_baz'),
+            gate.on(q2, q1),
         ):
             decomposition = apollo.decompose_operation(op)
-            assert TestGateDecomposition.is_native(decomposition)
+            assert TestGateDecomposition.is_native(apollo, decomposition)
 
             # matrix representations must match up to global phase
             U = cirq.Circuit(op)._unitary_()
@@ -258,8 +264,7 @@ class TestCircuitValidation:
 
 class TestCircuitDecomposition:
     def test_decompose_circuit_native_only(self, apollo):
-        """Circuit containing only native ops decomposes trivially.
-        """
+        """Circuit containing only native ops decomposes trivially."""
         q0, q1 = cirq.NamedQubit.range(0, 2, prefix='qubit_')
         circuit = cirq.Circuit(
             cirq.CZ(q0, q1),
@@ -269,8 +274,7 @@ class TestCircuitDecomposition:
         assert new == circuit
 
     def test_decompose_circuit(self, apollo):
-        """Any gates should be decomposable to native gates.
-        """
+        """Any gates should be decomposable to native gates."""
         q0, q1 = cirq.NamedQubit.range(0, 2, prefix='qubit_')
         circuit = cirq.Circuit(
             cirq.CNOT(q0, q1),
@@ -283,15 +287,9 @@ class TestCircuitDecomposition:
         assert new[1].operations[0].gate == cirq.CZ  # CNOT decomposes into CZ plus Ry:s
 
     def test_decompose_complicated_circuit(self, apollo):
-        """Can handle even 3-qubit gates.
-        """
+        """Can handle even 3-qubit gates."""
         q0, q1, q2 = cirq.NamedQubit.range(0, 3, prefix='qubit_')
-        circuit = cirq.Circuit(
-            cirq.H(q0),
-            cirq.X(q1),
-            cirq.TOFFOLI(q0, q2, q1),
-            cirq.measure(q0, q1, q2, key='mk')
-        )
+        circuit = cirq.Circuit(cirq.H(q0), cirq.X(q1), cirq.TOFFOLI(q0, q2, q1), cirq.measure(q0, q1, q2, key='mk'))
         new = apollo.decompose_circuit(circuit)
 
         # still uses the original qubits, not device qubits
@@ -322,24 +320,19 @@ class TestCircuitRouting:
             cirq.NamedQubit('Quant'),
             cirq.NamedQubit('Rupert'),
             cirq.NamedQubit('Sybil'),
-            cirq.NamedQubit('Trent')
+            cirq.NamedQubit('Trent'),
         ]
 
     def test_routing_circuit_too_large(self, apollo):
-        """The circuit must fit on the device.
-        """
+        """The circuit must fit on the device."""
         qubits = cirq.NamedQubit.range(0, 21, prefix='qubit_')
         circuit = cirq.Circuit([cirq.X(q) for q in qubits])
         with pytest.raises(ValueError, match='Number of logical qubits is greater than number of physical qubits'):
             apollo.route_circuit(circuit)
 
     def test_routing_without_SWAPs(self, apollo, qubits):
-        """Circuit graph can be embedded in the Apollo connectivity graph, no SWAPs needed.
-        """
-        circuit = cirq.Circuit(
-            cirq.CZ(*qubits[0:2]),
-            cirq.CZ(*qubits[2:4])
-        )
+        """Circuit graph can be embedded in the Apollo connectivity graph, no SWAPs needed."""
+        circuit = cirq.Circuit(cirq.CZ(*qubits[0:2]), cirq.CZ(*qubits[2:4]))
         new = apollo.route_circuit(circuit)
 
         assert len(new.all_qubits()) == 4
@@ -347,16 +340,13 @@ class TestCircuitRouting:
         # assert len(new) == len(circuit)  # TODO at the moment the routing algo may add unnecessary SWAPs
 
     def test_routing_needs_SWAPs(self, apollo, qubits):
-        """Circuit has direct cyclic connectivity with 3 qubits, Apollo doesn't, so SWAPs are needed.
-        """
+        """Circuit has direct cyclic connectivity with 3 qubits, Apollo doesn't, so SWAPs are needed."""
         circuit = cirq.Circuit(
-            cirq.CZ(qubits[0], qubits[1]),
-            cirq.CZ(qubits[0], qubits[2]),
-            cirq.CZ(qubits[1], qubits[2])
+            cirq.CZ(qubits[0], qubits[1]), cirq.CZ(qubits[0], qubits[2]), cirq.CZ(qubits[1], qubits[2])
         )
         new = apollo.route_circuit(circuit)
 
-        assert len(new.all_qubits()) >= 3    # routing algo may use more qubits
+        assert len(new.all_qubits()) >= 3  # routing algo may use more qubits
         assert new.all_qubits() <= set(apollo.qubits)
         assert len(new) == 4  # a SWAP gate was added
 
@@ -374,23 +364,25 @@ class TestCircuitRouting:
             cirq.CZ(qubits[0], qubits[2]),
             cirq.CZ(qubits[0], qubits[3]),
             cirq.CZ(qubits[0], qubits[4]),
-            cirq.CZ(qubits[0], qubits[5])
+            cirq.CZ(qubits[0], qubits[5]),
         )
         routed_circuit = apollo.route_circuit(circuit)
         valid_circuit = apollo.decompose_circuit(routed_circuit)
 
         apollo.validate_circuit(valid_circuit)
 
-    @pytest.mark.parametrize('qid', [
-        cirq.LineQubit(4),
-        cirq.GridQubit(5, 6),
-        cirq.NamedQid('Quentin', dimension=2),
-        cirq.LineQid(4, dimension=2),
-        cirq.GridQid(5, 6, dimension=2),
-    ])
+    @pytest.mark.parametrize(
+        'qid',
+        [
+            cirq.LineQubit(4),
+            cirq.GridQubit(5, 6),
+            cirq.NamedQid('Quentin', dimension=2),
+            cirq.LineQid(4, dimension=2),
+            cirq.GridQid(5, 6, dimension=2),
+        ],
+    )
     def test_routing_with_qids(self, apollo, qid):
-        """Routing can handle all kinds of Qid types, not just NamedQubit.
-        """
+        """Routing can handle all kinds of Qid types, not just NamedQubit."""
         q = cirq.NamedQubit('Alice')
         circuit = cirq.Circuit(
             cirq.X(q),
@@ -461,8 +453,8 @@ class TestCircuitRouting:
             cirq.CZ(qubits[9], qubits[11]),
             cirq.CZ(qubits[10], qubits[12]),
             cirq.measure(*qubits[0:2], key='m1'),
-            cirq.measure(*qubits[2:20], key='m2')
-            )
+            cirq.measure(*qubits[2:20], key='m2'),
+        )
         new = apollo.route_circuit(circuit)
         assert new.all_qubits() == set(apollo.qubits)
         # Test that all measurements exist.
@@ -472,9 +464,6 @@ class TestCircuitRouting:
 
     def test_routing_with_nonterminal_measurements_raises_error(self, apollo):
         q = cirq.NamedQubit('q1')
-        circuit = cirq.Circuit(
-            cirq.measure(q, key='m'),
-            cirq.Y(q)
-        )
+        circuit = cirq.Circuit(cirq.measure(q, key='m'), cirq.Y(q))
         with pytest.raises(ValueError, match='Non-terminal measurements are not supported'):
             apollo.route_circuit(circuit)

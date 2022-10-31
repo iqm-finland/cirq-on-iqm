@@ -16,8 +16,6 @@
 Mocks server calls for testing
 """
 
-import json
-import os
 from uuid import UUID
 
 import pytest
@@ -29,13 +27,3 @@ missing_run = UUID('059e4186-50a3-4e6c-ba1f-37fe6afbdfc2')
 @pytest.fixture()
 def base_url():
     return 'https://example.com'
-
-
-@pytest.fixture
-def settings_dict():
-    """
-    Reads and parses settings file into a dictionary
-    """
-    settings_path = os.path.dirname(os.path.realpath(__file__)) + '/settings.json'
-    with open(settings_path, 'r', encoding='utf-8') as f:
-        return json.loads(f.read())

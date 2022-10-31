@@ -27,29 +27,32 @@ After installation Cirq on IQM can be imported in your Python code as follows:
 IQM's quantum devices
 ---------------------
 
-Cirq on IQM provides descriptions of IQM's quantum architectures as subclasses of :class:`.IQMDevice`.
-The abstract class :class:`.IQMDevice` itself is a subclass of :class:`cirq.devices.Device` and implements general
-functionality relevant to all IQM devices. Each device subclass describes the native gates and the connectivity of a particular architecture
-and the relevant functionality. As an example, let us import the class :class:`.Adonis`, which describes IQM's
-five-qubit architecture and view some of its properties contained in the class variables:
+Cirq on IQM provides descriptions of IQM's quantum architectures using the :class:`.IQMDevice` class, which is a
+subclass of :class:`cirq.devices.Device` and implements general functionality relevant to all IQM devices. The native
+gates and connectivity of the architecture are available in the :class:`.IQMDeviceMetadata` object returned by the
+:attr:`.IQMDevice.metadata` property. It is possible to use the IQMDevice class directly, but
+certain devices with predefined metadata are also available as subclasses of IQMDevice. As an example, let
+us import the class :class:`.Adonis`, which describes IQM's five-qubit architecture, and view some of its
+properties contained in its ``metadata`` property:
 
 .. code-block:: python
 
     from cirq_iqm import Adonis
 
-    print(Adonis.QUBIT_COUNT)
-    print(Adonis.NATIVE_GATES)
-    print(Adonis.CONNECTIVITY)
+    adonis = Adonis()
+
+    print(adonis.metadata.qubit_set)
+    print(adonis.metadata.gateset)
+    print(adonis.metadata.nx_graph)
 
 
 IQM devices use :class:`cirq.NamedQubit` to represent their qubits. The names of the qubits consist of a prefix
 followed by a numeric index, so we have qubit names like ``QB1``, ``QB2``, etc. Note that we use 1-based
-indexing. The qubit connectivity information is stored using the qubit indices only. You can get the list of the qubits
-in a particular device by accessing the ``qubits`` attribute of a corresponding :class:`.IQMDevice` instance:
+indexing. You can get the list of the qubits in a particular device by accessing the :attr:`qubits` attribute of a
+corresponding :class:`.IQMDevice` instance:
 
 .. code-block:: python
 
-    adonis = Adonis()
     print(adonis.qubits)
 
 
@@ -207,34 +210,31 @@ Cirq contains various simulators which you can use to simulate the circuits cons
 In this subsection we demonstrate how to run them on an IQM quantum computer.
 
 Cirq on IQM implements :class:`.IQMSampler`, a subclass of :class:`cirq.work.Sampler`, which is used
-to execute quantum circuits. You need to have access to an IQM server and have a settings file for
-the quantum hardware of interest. Once these resources are in place, you can create an
-:class:`.IQMSampler` instance and use its :meth:`~.IQMSampler.run` method to send a circuit for execution
-and retrieve the results:
+to execute quantum circuits. Once you have access to an IQM server you can create an :class:`.IQMSampler`
+instance and use its :meth:`~.IQMSampler.run` method to send a circuit for execution and retrieve the results:
 
 .. code-block:: python
 
    from cirq_iqm.iqm_sampler import IQMSampler
 
-   with open(iqm_settings_path, 'r') as f:
-       settings = json.load(f)
-
-   sampler = IQMSampler(iqm_server_url, adonis, settings=settings)
+   sampler = IQMSampler(iqm_server_url)
    result = sampler.run(circuit_1, repetitions=10)
    print(result.measurements['m'])
 
 
-Note that the code snippet above assumes that you have set the variables ``iqm_server_url`` and
-``iqm_settings_path``.
-If you want to use the latest calibration set, omit ``settings`` argument from the ``backend.run`` call.
-If you want to use a particular calibration set, provide a ``calibration_set_id`` integer argument. You cannot set both
-``settings`` and ``calibration_set_id`` simultaneously, because IQM server rejects such requests.
+Note that the code snippet above assumes that you have set the variable ``iqm_server_url`` to the URL
+of the IQM server. By default, the latest calibration set is used for running the circuit. If you want to use
+a particular calibration set, provide the ``calibration_set_id`` argument. The sampler will by default use an
+:class:`.IQMDevice` created based on architecture data obtained from the server, which is then available in the
+:meth:`.IQMSampler.device` property. Alternatively, the device can be specified directly with the ``device`` argument.
 
-If the IQM server you are connecting to requires authentication, you will also have to set the IQM_AUTH_SERVER,
-IQM_AUTH_USERNAME and IQM_AUTH_PASSWORD environment variables or pass them as arguments to the constructor of
-:class:`.IQMProvider`. Alternatively, authorize with `Cortex CLI <https://github.com/iqm-finland/cortex-cli>`_ to
-retrieve and automatically refresh access tokens, then set the ``IQM_TOKENS_FILE`` environment variable to use those
-tokens. See Cortex CLI's `documentation <https://iqm-finland.github.io/cortex-cli/readme.html>`_ for details.
+If the IQM server you are connecting to requires authentication, you will also have to use
+`Cortex CLI <https://github.com/iqm-finland/cortex-cli>`_ to retrieve and automatically refresh access tokens,
+then set the ``IQM_TOKENS_FILE`` environment variable to use those tokens.
+See Cortex CLI's `documentation <https://iqm-finland.github.io/cortex-cli/readme.html>`_ for details.
+Alternatively, authorize with the IQM_AUTH_SERVER, IQM_AUTH_USERNAME and IQM_AUTH_PASSWORD environment variables
+or pass them as arguments to the constructor of :class:`.IQMProvider`, however this approach is less secure
+and considered deprecated.
 
 When executing a circuit that uses something other than the device qubits, you need to either route it first
 as explained in :ref:`workflow 1 <workflow_1>` above,
@@ -249,10 +249,7 @@ can be used to specify this correspondence.
 
     qubit_mapping = {'Alice': 'QB1', 'Bob': 'QB3'}
 
-    with open(iqm_settings_path, 'r', encoding='utf-8') as f:
-        settings = json.load(f)
-
-    sampler = IQMSampler(iqm_server_url, adonis, qubit_mapping=qubit_mapping, settings=settings)
+    sampler = IQMSampler(iqm_server_url, qubit_mapping=qubit_mapping)
     result = sampler.run(decomposed_circuit_1, repetitions=10)
     print(result.measurements['m'])
 

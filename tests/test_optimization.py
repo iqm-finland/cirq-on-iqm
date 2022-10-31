@@ -17,31 +17,29 @@
 # pylint: disable=no-self-use
 
 import cirq
-import pytest
 from cirq import ops
+import pytest
 
-from cirq_iqm.optimizers import (DropRZBeforeMeasurement,
-                                 MergeOneParameterGroupGates, simplify_circuit)
+from cirq_iqm.optimizers import DropRZBeforeMeasurement, MergeOneParameterGroupGates, simplify_circuit
 
 TOLERANCE = 1e-10  # numerical tolerance
 
 
 @pytest.fixture(scope='module')
 def qubits():
-    return [
-        cirq.NamedQubit('Alice'),
-        cirq.NamedQubit('Bob'),
-        cirq.NamedQubit('Charlie')
-    ]
+    return [cirq.NamedQubit('Alice'), cirq.NamedQubit('Bob'), cirq.NamedQubit('Charlie')]
 
 
 class TestGateOptimization:
     """Test various circuit optimization techniques."""
 
-    @pytest.mark.parametrize('family', [
-        ops.ZZPowGate,
-        ops.ISwapPowGate,
-    ])
+    @pytest.mark.parametrize(
+        'family',
+        [
+            ops.ZZPowGate,
+            ops.ISwapPowGate,
+        ],
+    )
     @pytest.mark.parametrize('a, b', [(0, 0.3), (-0.5, 0.5), (1.0, 2.0), (0.1, -4.1)])
     def test_gate_merging(self, family, a, b, qubits):
         """Merging one-parameter group gates."""
@@ -49,10 +47,12 @@ class TestGateOptimization:
         q0, q1 = qubits[:2]
 
         c = cirq.Circuit()
-        c.append([
-            family(exponent=a)(q0, q1),
-            family(exponent=b)(q0, q1),
-        ])
+        c.append(
+            [
+                family(exponent=a)(q0, q1),
+                family(exponent=b)(q0, q1),
+            ]
+        )
 
         MergeOneParameterGroupGates().optimize_circuit(c)
         c = cirq.drop_empty_moments(c)
@@ -66,38 +66,37 @@ class TestGateOptimization:
             expected = MergeOneParameterGroupGates._normalize_par(a + b)
             assert c[0].operations[0].gate.exponent == pytest.approx(expected, abs=TOLERANCE)
 
-
-    @pytest.mark.parametrize('family, ex', [
-        (cirq.ops.CZPowGate, 0.2),  # diagonal
-        (ops.ISwapPowGate, 1),      # swaplike with Rz when ex is an odd integer
-        (ops.ISwapPowGate, 3),
-        pytest.param(
-            ops.ISwapPowGate, 0.6,
-            marks=pytest.mark.xfail(strict=True)
-        ),
-        # diagonal, but currently do not work with EjectZ
-        pytest.param(
-            ops.ZZPowGate, 0.37,
-            marks=pytest.mark.xfail(strict=True, reason='Implementation missing in Cirq.')
-        ),
-        pytest.param(
-            ops.ISwapPowGate, 2,
-            marks=pytest.mark.xfail(strict=True, reason='Implementation missing in Cirq.')
-        ),
-    ])
+    @pytest.mark.parametrize(
+        'family, ex',
+        [
+            (cirq.ops.CZPowGate, 0.2),  # diagonal
+            (ops.ISwapPowGate, 1),  # swaplike with Rz when ex is an odd integer
+            (ops.ISwapPowGate, 3),
+            pytest.param(ops.ISwapPowGate, 0.6, marks=pytest.mark.xfail(strict=True)),
+            # diagonal, but currently do not work with EjectZ
+            pytest.param(
+                ops.ZZPowGate, 0.37, marks=pytest.mark.xfail(strict=True, reason='Implementation missing in Cirq.')
+            ),
+            pytest.param(
+                ops.ISwapPowGate, 2, marks=pytest.mark.xfail(strict=True, reason='Implementation missing in Cirq.')
+            ),
+        ],
+    )
     def test_eject_z(self, family, ex, qubits):
         """Commuting z rotations towards the end of the circuit."""
 
         q0, q1 = qubits[:2]
 
         c = cirq.Circuit()
-        c.append([
-            cirq.ZPowGate(exponent=0.3)(q0),
-            cirq.ZPowGate(exponent=0.8)(q1),
-            family(exponent=ex)(q0, q1),
-            cirq.MeasurementGate(1, key='q0')(q0),
-            cirq.MeasurementGate(1, key='q1')(q1),
-        ])
+        c.append(
+            [
+                cirq.ZPowGate(exponent=0.3)(q0),
+                cirq.ZPowGate(exponent=0.8)(q1),
+                family(exponent=ex)(q0, q1),
+                cirq.MeasurementGate(1, key='q0')(q0),
+                cirq.MeasurementGate(1, key='q1')(q1),
+            ]
+        )
 
         c = cirq.eject_z(c)
         c = cirq.drop_empty_moments(c)
@@ -107,25 +106,31 @@ class TestGateOptimization:
 
 
 class TestSimplifyCircuit:
-
-    @pytest.mark.parametrize('two_qubit_gate', [
-        cirq.CZPowGate(exponent=1),
-        pytest.param(cirq.ZZPowGate(exponent=0.1),
-                     marks=pytest.mark.xfail(strict=True,
-                                             reason='ZZPowGate does not yet implement the _phase_by_ protocol in Cirq.',
-                                             raises=AssertionError
-                                             )
-                     )
-    ])
+    @pytest.mark.parametrize(
+        'two_qubit_gate',
+        [
+            cirq.CZPowGate(exponent=1),
+            pytest.param(
+                cirq.ZZPowGate(exponent=0.1),
+                marks=pytest.mark.xfail(
+                    strict=True,
+                    reason='ZZPowGate does not yet implement the _phase_by_ protocol in Cirq.',
+                    raises=AssertionError,
+                ),
+            ),
+        ],
+    )
     def test_simplify_circuit_eject_z(self, two_qubit_gate, qubits):
 
         q0, q1 = qubits[:2]
         c = cirq.Circuit()
-        c.append([
-            cirq.ZPowGate(exponent=0.55)(q0),
-            two_qubit_gate(q0, q1),
-            cirq.MeasurementGate(2, key='mk')(q0, q1),
-        ])
+        c.append(
+            [
+                cirq.ZPowGate(exponent=0.55)(q0),
+                two_qubit_gate(q0, q1),
+                cirq.MeasurementGate(2, key='mk')(q0, q1),
+            ]
+        )
         new = simplify_circuit(c)
 
         assert len(new) == 2
@@ -134,10 +139,12 @@ class TestSimplifyCircuit:
 
         q0, q1 = qubits[:2]
         c = cirq.Circuit()
-        c.append([
-            cirq.ZZPowGate(exponent=0.3)(q0, q1),
-            cirq.ZZPowGate(exponent=0.1)(q0, q1),
-        ])
+        c.append(
+            [
+                cirq.ZZPowGate(exponent=0.3)(q0, q1),
+                cirq.ZZPowGate(exponent=0.1)(q0, q1),
+            ]
+        )
         new = simplify_circuit(c)
 
         # ZZPowGates have been merged
@@ -147,11 +154,13 @@ class TestSimplifyCircuit:
 
         q0, q1 = qubits[:2]
         c = cirq.Circuit()
-        c.append([
-            cirq.ZPowGate(exponent=0.1)(q0),
-            cirq.ZPowGate(exponent=0.2)(q1),
-            cirq.MeasurementGate(1, key='measurement')(q0),
-        ])
+        c.append(
+            [
+                cirq.ZPowGate(exponent=0.1)(q0),
+                cirq.ZPowGate(exponent=0.2)(q1),
+                cirq.MeasurementGate(1, key='measurement')(q0),
+            ]
+        )
         new = simplify_circuit(c)
 
         # the ZPowGate preceding the measurement has been dropped
@@ -163,12 +172,14 @@ class TestSimplifyCircuit:
 
         q0, q1, q2 = qubits[:3]
         c = cirq.Circuit()
-        c.append([
-            (cirq.X ** 0.4)(q0),
-            cirq.ZPowGate(exponent=0.1)(q1),
-            cirq.MeasurementGate(1, key='measurement')(q1),
-            cirq.ZPowGate(exponent=0.2)(q2),
-        ])
+        c.append(
+            [
+                (cirq.X**0.4)(q0),
+                cirq.ZPowGate(exponent=0.1)(q1),
+                cirq.MeasurementGate(1, key='measurement')(q1),
+                cirq.ZPowGate(exponent=0.2)(q2),
+            ]
+        )
         new = c.copy()
         DropRZBeforeMeasurement().optimize_circuit(new)
 
@@ -186,12 +197,14 @@ class TestSimplifyCircuit:
 
         q0, q1, q2 = qubits[:3]
         c = cirq.Circuit()
-        c.append([
-            (cirq.X ** 0.4)(q0),
-            cirq.ZPowGate(exponent=0.1)(q1),  # Rz followed by measurement
-            cirq.MeasurementGate(1, key='measurement')(q1),
-            cirq.ZPowGate(exponent=0.2)(q2),  # final Rz
-        ])
+        c.append(
+            [
+                (cirq.X**0.4)(q0),
+                cirq.ZPowGate(exponent=0.1)(q1),  # Rz followed by measurement
+                cirq.MeasurementGate(1, key='measurement')(q1),
+                cirq.ZPowGate(exponent=0.2)(q2),  # final Rz
+            ]
+        )
         new = c.copy()
         DropRZBeforeMeasurement(drop_final=True).optimize_circuit(new)
 
@@ -206,11 +219,13 @@ class TestSimplifyCircuit:
 
         q0 = qubits[0]
         c = cirq.Circuit()
-        c.append([
-            cirq.XPowGate(exponent=0.1)(q0),
-            cirq.YPowGate(exponent=0.2)(q0),
-            cirq.ZPowGate(exponent=0.3)(q0),
-        ])
+        c.append(
+            [
+                cirq.XPowGate(exponent=0.1)(q0),
+                cirq.YPowGate(exponent=0.2)(q0),
+                cirq.ZPowGate(exponent=0.3)(q0),
+            ]
+        )
         new = simplify_circuit(c)
 
         # the one-qubit gates have been merged
