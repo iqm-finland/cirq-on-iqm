@@ -262,9 +262,5 @@ class IQMDevice(devices.Device):
 
         self.check_qubit_connectivity(operation)
 
-    @staticmethod
-    def _qubit_set_from_count(qubit_count: int) -> frozenset[cirq.NamedQubit]:
-        return frozenset(cirq.NamedQubit.range(1, qubit_count + 1, prefix=IQMDeviceMetadata.QUBIT_NAME_PREFIX))
-
     def __eq__(self, other):
         return self.__class__ == other.__class__ and self._metadata == other._metadata

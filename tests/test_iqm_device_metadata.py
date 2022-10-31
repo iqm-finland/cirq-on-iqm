@@ -32,5 +32,5 @@ def test_device_metadata_from_architecture():
     }
     metadata = IQMDeviceMetadata.from_architecture(QuantumArchitectureSpecification(**qa))
     assert metadata.qubit_set == {cirq.NamedQubit('QB1'), cirq.NamedQubit('QB2')}
-    assert list(metadata.nx_graph.edges) == [(cirq.NamedQubit('QB1'), cirq.NamedQubit('QB2'))]
+    assert [set(e) for e in metadata.nx_graph.edges] == [{cirq.NamedQubit('QB1'), cirq.NamedQubit('QB2')}]
     assert metadata.gateset == cirq.Gateset(cirq.PhasedXPowGate, cirq.XPowGate, cirq.YPowGate, cirq.MeasurementGate)

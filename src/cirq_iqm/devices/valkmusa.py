@@ -46,7 +46,7 @@ class Valkmusa(IQMDevice):
     """
 
     def __init__(self):
-        qubits = self._qubit_set_from_count(2)
+        qubit_count = 2
         connectivity = ({1, 2},)
         gateset = cirq.Gateset(
             ops.PhasedXPowGate,
@@ -57,7 +57,7 @@ class Valkmusa(IQMDevice):
             ops.ISwapPowGate,
             ops.MeasurementGate,
         )
-        super().__init__(IQMDeviceMetadata(qubits, connectivity, gateset))
+        super().__init__(IQMDeviceMetadata.from_qubit_indices(qubit_count, connectivity, gateset))
 
     def operation_decomposer(self, op: ops.Operation) -> Optional[list[ops.Operation]]:
         # Decomposes CNOT and the CZPowGate family to Valkmusa native gates.
