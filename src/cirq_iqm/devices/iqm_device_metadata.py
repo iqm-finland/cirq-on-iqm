@@ -14,7 +14,7 @@
 """DeviceMetadata subtype for IQM devices."""
 from __future__ import annotations
 
-from typing import FrozenSet, Optional, Type, Union
+from typing import Optional, Union
 
 import cirq
 from cirq import NamedQubit, devices, ops
@@ -22,13 +22,13 @@ from cirq.contrib.routing.router import nx
 from iqm_client import QuantumArchitectureSpecification
 
 # Mapping from IQM operation names to cirq operations
-_IQM_CIRQ_OP_MAP: dict[str, Optional[tuple[Union[Type[cirq.Gate], cirq.Gate, cirq.GateFamily], ...]]] = {
+_IQM_CIRQ_OP_MAP: dict[str, tuple[Union[type[cirq.Gate], cirq.Gate, cirq.GateFamily], ...]] = {
     # XPow and YPow kept for convenience, Cirq does not know how to decompose them into PhasedX
     # so we would have to add those rules...
     'phased_rx': (cirq.ops.PhasedXPowGate, cirq.ops.XPowGate, cirq.ops.YPowGate),
     'cz': (cirq.ops.CZ,),
     'measurement': (cirq.ops.MeasurementGate,),
-    'barrier': None,
+    'barrier': (),
 }
 
 
@@ -37,7 +37,7 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
     """Hardware metadata for IQM devices.
 
     Args:
-        qubits: frozenset of qubits that exist on the device
+        qubits: qubits that exist on the device
         connectivity: qubit connectivity graph of the device
         gateset: Native gateset of the device. If None, a default IQM device gateset will be used.
     """
@@ -76,11 +76,10 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
             for edge in architecture.qubit_connectivity
         )
         gateset = cirq.Gateset(
-            *tuple(
+            *(
                 cirq_op
                 for iqm_op in architecture.operations
-                if (cirq_ops := _IQM_CIRQ_OP_MAP[iqm_op]) is not None
-                for cirq_op in cirq_ops
+                for cirq_op in _IQM_CIRQ_OP_MAP[iqm_op]
             )
         )
         return IQMDeviceMetadata(qubits, connectivity, gateset)

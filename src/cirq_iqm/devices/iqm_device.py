@@ -22,7 +22,7 @@ from __future__ import annotations
 
 import collections.abc as ca
 from math import pi as PI
-from typing import FrozenSet, Optional, Union
+from typing import Optional, Union
 import uuid
 
 import cirq
@@ -263,7 +263,7 @@ class IQMDevice(devices.Device):
         self.check_qubit_connectivity(operation)
 
     @staticmethod
-    def _qubit_set_from_count(qubit_count: int) -> FrozenSet[cirq.NamedQubit]:
+    def _qubit_set_from_count(qubit_count: int) -> frozenset[cirq.NamedQubit]:
         return frozenset(cirq.NamedQubit.range(1, qubit_count + 1, prefix=IQMDeviceMetadata.QUBIT_NAME_PREFIX))
 
     def __eq__(self, other):
