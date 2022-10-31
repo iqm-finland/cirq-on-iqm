@@ -226,7 +226,7 @@ Note that the code snippet above assumes that you have set the variable ``iqm_se
 of the IQM server. By default, the latest calibration set is used for running the circuit. If you want to use
 a particular calibration set, provide the ``calibration_set_id`` argument. The sampler will by default use an
 :class:`.IQMDevice` created based on architecture data obtained from the server, which is then available in the
-:meth:`.IQMSampler.device` property. Alternatively, the device can be specified directly with the ``device`` argument.
+:attr:`.IQMSampler.device` property. Alternatively, the device can be specified directly with the ``device`` argument.
 
 If the IQM server you are connecting to requires authentication, you will also have to use
 `Cortex CLI <https://github.com/iqm-finland/cortex-cli>`_ to retrieve and automatically refresh access tokens,
