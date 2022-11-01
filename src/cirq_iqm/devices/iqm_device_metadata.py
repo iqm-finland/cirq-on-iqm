@@ -14,7 +14,8 @@
 """DeviceMetadata subtype for IQM devices."""
 from __future__ import annotations
 
-from typing import Iterable, Optional, Union
+from collections.abc import Iterable
+from typing import Optional, Union
 
 import cirq
 from cirq import NamedQubit, Qid, devices, ops
@@ -91,8 +92,4 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         return self._gateset
 
     def _value_equality_values_(self):
-        graph_equality = (
-            tuple(sorted(self._nx_graph.nodes())),
-            tuple(sorted(self._nx_graph.edges(data='directed'))),
-        )
-        return self._qubits_set, graph_equality, self._gateset
+        return *super()._value_equality_values_(), self._gateset
