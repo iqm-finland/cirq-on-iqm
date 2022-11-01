@@ -27,7 +27,9 @@ import uuid
 
 import cirq
 from cirq import InsertStrategy, MeasurementGate, devices, ops, protocols
-from cirq.contrib.routing.router import nx, route_circuit
+from cirq.contrib.routing.router import route_circuit
+
+from .iqm_device_metadata import IQMDeviceMetadata
 
 
 def _verify_unique_measurement_keys(operations: ca.Iterable[cirq.Operation]) -> None:
@@ -51,48 +53,41 @@ class IQMDevice(devices.Device):
 
     Adds extra functionality on top of the basic :class:`cirq.Device` class for decomposing gates,
     optimizing circuits and mapping qubits.
+
+    Args:
+        metadata: device metadata which contains the qubits, their connectivity, and the native gateset
     """
 
-    QUBIT_COUNT: Optional[int] = None
-    """number of qubits on the device"""
+    def __init__(self, metadata: IQMDeviceMetadata):
+        self._metadata = metadata
+        self.qubits = tuple(sorted(self._metadata.qubit_set))
 
-    QUBIT_NAME_PREFIX: str = 'QB'
-    """prefix for qubit names, to be followed by their numerical index"""
-
-    CONNECTIVITY: tuple[set[int], ...] = ()
-    """qubit connectivity graph of the device"""
-
-    NATIVE_GATES: tuple[type[cirq.Gate], ...] = (ops.PhasedXPowGate, ops.XPowGate, ops.YPowGate, ops.MeasurementGate)
-    """native gate set of the device (gate families)"""
-
-    NATIVE_GATE_INSTANCES: tuple[cirq.Gate, ...] = (ops.CZPowGate(),)
-    """native gate set of the device (individual gates)"""
-
-    def __init__(self):
-        self.qubits = tuple(cirq.NamedQubit.range(1, self.QUBIT_COUNT + 1, prefix=self.QUBIT_NAME_PREFIX))
+    @property
+    def metadata(self) -> IQMDeviceMetadata:
+        """Returns metadata for the device."""
+        return self._metadata
 
     @classmethod
     def get_qubit_index(cls, qubit: cirq.NamedQubit) -> int:
         """The numeric index of the given qubit on the device."""
-        return int(qubit.name[len(cls.QUBIT_NAME_PREFIX) :])
+        return int(qubit.name[len(IQMDeviceMetadata.QUBIT_NAME_PREFIX) :])
 
-    def get_qubit(self, index: int) -> cirq.NamedQubit:
+    def get_qubit(self, index: int) -> cirq.Qid:
         """The device qubit corresponding to the given numeric index."""
         return self.qubits[index - 1]  # 1-based indexing
 
-    @classmethod
-    def check_qubit_connectivity(cls, operation: cirq.Operation) -> None:
+    def check_qubit_connectivity(self, operation: cirq.Operation) -> None:
         """Raises a ValueError if operation acts on qubits that are not connected."""
         if len(operation.qubits) >= 2 and not isinstance(operation.gate, ops.MeasurementGate):
-            connection = set(cls.get_qubit_index(q) for q in operation.qubits)  # type: ignore
-            if connection not in cls.CONNECTIVITY:
+            if operation.qubits not in self._metadata.nx_graph.edges:
                 raise ValueError(f'Unsupported qubit connectivity required for {operation!r}')
 
-    @classmethod
-    def is_native_operation(cls, op: cirq.Operation) -> bool:
+    def is_native_operation(self, op: cirq.Operation) -> bool:
         """Predicate, True iff the given operation is considered native for the architecture."""
-        return isinstance(op, (ops.GateOperation, ops.TaggedOperation)) and (
-            isinstance(op.gate, cls.NATIVE_GATES) or op.gate in cls.NATIVE_GATE_INSTANCES
+        return (
+            isinstance(op, (ops.GateOperation, ops.TaggedOperation))
+            and (op.gate is not None)
+            and (op.gate in self._metadata.gateset)
         )
 
     def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
@@ -199,8 +194,6 @@ class IQMDevice(devices.Device):
         """
         _validate_for_routing(circuit)
 
-        device_graph = nx.Graph(tuple(map(self.get_qubit, edge)) for edge in self.CONNECTIVITY)
-
         # Remove all measurement gates and replace them with 1-qubit identity gates so they don't
         # disappear from the final swap network if no other operations remain. We will add them back after routing the
         # rest of the network. This is done for two purposes: it allows the circuit to contain measurements of more than
@@ -215,7 +208,7 @@ class IQMDevice(devices.Device):
             modified_circuit.append(cirq.I(q).with_tags(i_tag))
 
         # Route the modified circuit.
-        swap_network = route_circuit(modified_circuit, device_graph, algo_name='greedy')
+        swap_network = route_circuit(modified_circuit, self._metadata.nx_graph, algo_name='greedy')
 
         # Return measurements to the circuit with potential qubit swaps.
         final_qubit_mapping = {v: k for k, v in swap_network.final_mapping().items()}
@@ -270,4 +263,4 @@ class IQMDevice(devices.Device):
         self.check_qubit_connectivity(operation)
 
     def __eq__(self, other):
-        return self.__class__ == other.__class__
+        return self.__class__ == other.__class__ and self._metadata == other._metadata

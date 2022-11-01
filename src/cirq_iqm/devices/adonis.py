@@ -16,7 +16,7 @@ IQM's Adonis quantum architecture.
 """
 from __future__ import annotations
 
-from .iqm_device import IQMDevice
+from .iqm_device import IQMDevice, IQMDeviceMetadata
 
 
 class Adonis(IQMDevice):
@@ -38,6 +38,7 @@ class Adonis(IQMDevice):
     the circuit.
     """
 
-    QUBIT_COUNT = 5
-
-    CONNECTIVITY = ({1, 3}, {2, 3}, {4, 3}, {5, 3})
+    def __init__(self):
+        qubit_count = 5
+        connectivity = ({1, 3}, {2, 3}, {4, 3}, {5, 3})
+        super().__init__(IQMDeviceMetadata.from_qubit_indices(qubit_count, connectivity))

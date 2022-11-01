@@ -25,7 +25,7 @@ from iqm_client import iqm_client
 from iqm_client.iqm_client import IQMClient
 import numpy as np
 
-from cirq_iqm import IQMDevice
+from cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
 from cirq_iqm.iqm_operation_mapping import map_operation
 
 
@@ -47,34 +47,45 @@ class IQMSampler(cirq.work.Sampler):
 
     Args:
         url: Endpoint for accessing the server interface. Has to start with http or https.
-        device: Quantum architecture to execute the circuits on
+        device: Device to execute the circuits on. If ``None``, the device will be created based
+            on the quantum architecture obtained from :class:`.IQMClient`.
+        qubit_mapping:
+            Mapping of logical qubit names to physical qubit names.
+            If ``None``, use the identity mapping.
+        calibration_set_id:
+            ID of the calibration set to use. If ``None``, use the latest one.
 
     Keyword Args:
-        qubit_mapping:
-            Mapping of logical qubit names to physical qubits
-        calibration_set_id:
-            ID of the calibration set to use instead of the latest one
-        auth_server_url: URL of user authentication server, if required by the IQM Cortex server.
+        auth_server_url (str): URL of user authentication server, if required by the IQM Cortex server.
             This can also be set in the IQM_AUTH_SERVER environment variable.
-        username: Username, if required by the IQM Cortex server.
+        username (str): Username, if required by the IQM Cortex server.
             This can also be set in the IQM_AUTH_USERNAME environment variable.
-        password: Password, if required by the IQM Cortex server.
+        password (str): Password, if required by the IQM Cortex server.
             This can also be set in the IQM_AUTH_PASSWORD environment variable.
     """
 
     def __init__(
         self,
         url: str,
-        device: IQMDevice,
+        device: Optional[IQMDevice] = None,
         *,
         qubit_mapping: Optional[dict[str, str]] = None,
         calibration_set_id: Optional[int] = None,
         **user_auth_args,  # contains keyword args auth_server_url, username and password
     ):
         self._client = IQMClient(url, **user_auth_args)
-        self._device = device
+        if device is None:
+            device_metadata = IQMDeviceMetadata.from_architecture(self._client.get_quantum_architecture())
+            self._device = IQMDevice(device_metadata)
+        else:
+            self._device = device
         self._qubit_mapping = qubit_mapping
         self._calibration_set_id = calibration_set_id
+
+    @property
+    def device(self) -> IQMDevice:
+        """Returns the device used by the sampler."""
+        return self._device
 
     def close_client(self):
         """Close IQMClient's session with the user authentication server. Discard the client."""
