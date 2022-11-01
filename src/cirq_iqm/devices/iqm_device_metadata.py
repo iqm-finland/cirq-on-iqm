@@ -70,21 +70,21 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
     @classmethod
     def from_architecture(cls, architecture: QuantumArchitectureSpecification) -> IQMDeviceMetadata:
         """Returns device metadata object created based on architecture specification"""
-        qubits = frozenset(NamedQubit(qb) for qb in architecture.qubits)
-        connectivity = tuple({NamedQubit(qb) for qb in edge} for edge in architecture.qubit_connectivity)
+        qubits = tuple(NamedQubit(qb) for qb in architecture.qubits)
+        connectivity = tuple(tuple(NamedQubit(qb) for qb in edge) for edge in architecture.qubit_connectivity)
         gateset = cirq.Gateset(*(cirq_op for iqm_op in architecture.operations for cirq_op in _IQM_CIRQ_OP_MAP[iqm_op]))
-        return IQMDeviceMetadata(qubits, connectivity, gateset)
+        return cls(qubits, connectivity, gateset)
 
     @classmethod
     def from_qubit_indices(
         cls, qubit_count: int, connectivity_indices: tuple[set[int], ...], gateset: Optional[cirq.Gateset] = None
     ) -> IQMDeviceMetadata:
         """Returns device metadata object created based on connectivity specified using qubit indices only."""
-        qubits = frozenset(NamedQubit.range(1, qubit_count + 1, prefix=IQMDeviceMetadata.QUBIT_NAME_PREFIX))
+        qubits = tuple(NamedQubit.range(1, qubit_count + 1, prefix=cls.QUBIT_NAME_PREFIX))
         connectivity = tuple(
-            {NamedQubit(f'{IQMDeviceMetadata.QUBIT_NAME_PREFIX}{qb}') for qb in edge} for edge in connectivity_indices
+            tuple(NamedQubit(f'{cls.QUBIT_NAME_PREFIX}{qb}') for qb in edge) for edge in connectivity_indices
         )
-        return IQMDeviceMetadata(qubits, connectivity, gateset)
+        return cls(qubits, connectivity, gateset)
 
     @property
     def qubit_set(self) -> frozenset[NamedQubit]:
