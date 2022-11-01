@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>cirq_iqm.devices.iqm_device.IQMDevice &#8212; Cirq on IQM 7.8 documentation</title>
+    <title>cirq_iqm.devices.iqm_device.IQMDevice &#8212; Cirq on IQM 8.0 documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -35,7 +35,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="cirq_iqm.devices.valkmusa" href="cirq_iqm.devices.valkmusa.html" />
+    <link rel="next" title="cirq_iqm.devices.iqm_device_metadata" href="cirq_iqm.devices.iqm_device_metadata.html" />
     <link rel="prev" title="cirq_iqm.devices.iqm_device" href="cirq_iqm.devices.iqm_device.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -135,6 +135,11 @@
        <li class="toctree-l4 current active">
         <a class="reference internal" href="cirq_iqm.devices.iqm_device.html">
          cirq_iqm.devices.iqm_device
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="cirq_iqm.devices.iqm_device_metadata.html">
+         cirq_iqm.devices.iqm_device_metadata
         </a>
        </li>
        <li class="toctree-l4">
@@ -389,11 +394,16 @@ title="Print to PDF"
 <h1>cirq_iqm.devices.iqm_device.IQMDevice<a class="headerlink" href="#cirq-iqm-devices-iqm-device-iqmdevice" title="Permalink to this headline">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="cirq_iqm.devices.iqm_device.IQMDevice">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cirq_iqm.devices.iqm_device.</span></span><span class="sig-name descname"><span class="pre">IQMDevice</span></span><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cirq_iqm.devices.iqm_device.</span></span><span class="sig-name descname"><span class="pre">IQMDevice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.devices.device.Device</span></code></p>
 <p>ABC for the properties of a specific IQM quantum architecture.</p>
 <p>Adds extra functionality on top of the basic <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.Device</span></code> class for decomposing gates,
 optimizing circuits and mapping qubits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<a class="reference internal" href="cirq_iqm.devices.iqm_device_metadata.IQMDeviceMetadata.html#cirq_iqm.devices.iqm_device_metadata.IQMDeviceMetadata" title="cirq_iqm.devices.iqm_device_metadata.IQMDeviceMetadata"><em>IQMDeviceMetadata</em></a>) – device metadata which contains the qubits, their connectivity, and the native gateset</p>
+</dd>
+</dl>
 <p class="rubric">Attributes</p>
 <table class="autosummary longtable table autosummary">
 <colgroup>
@@ -401,20 +411,8 @@ optimizing circuits and mapping qubits.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.devices.iqm_device.IQMDevice.CONNECTIVITY" title="cirq_iqm.devices.iqm_device.IQMDevice.CONNECTIVITY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CONNECTIVITY</span></code></a></p></td>
-<td><p>qubit connectivity graph of the device</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cirq_iqm.devices.iqm_device.IQMDevice.NATIVE_GATES" title="cirq_iqm.devices.iqm_device.IQMDevice.NATIVE_GATES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NATIVE_GATES</span></code></a></p></td>
-<td><p>native gate set of the device (gate families)</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.devices.iqm_device.IQMDevice.NATIVE_GATE_INSTANCES" title="cirq_iqm.devices.iqm_device.IQMDevice.NATIVE_GATE_INSTANCES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NATIVE_GATE_INSTANCES</span></code></a></p></td>
-<td><p>native gate set of the device (individual gates)</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cirq_iqm.devices.iqm_device.IQMDevice.QUBIT_COUNT" title="cirq_iqm.devices.iqm_device.IQMDevice.QUBIT_COUNT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QUBIT_COUNT</span></code></a></p></td>
-<td><p>number of qubits on the device</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.devices.iqm_device.IQMDevice.QUBIT_NAME_PREFIX" title="cirq_iqm.devices.iqm_device.IQMDevice.QUBIT_NAME_PREFIX"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QUBIT_NAME_PREFIX</span></code></a></p></td>
-<td><p>prefix for qubit names, to be followed by their numerical index</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.devices.iqm_device.IQMDevice.metadata" title="cirq_iqm.devices.iqm_device.IQMDevice.metadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadata</span></code></a></p></td>
+<td><p>Returns metadata for the device.</p></td>
 </tr>
 </tbody>
 </table>
@@ -460,34 +458,10 @@ optimizing circuits and mapping qubits.</p>
 </tr>
 </tbody>
 </table>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cirq_iqm.devices.iqm_device.IQMDevice.QUBIT_COUNT">
-<span class="sig-name descname"><span class="pre">QUBIT_COUNT</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.QUBIT_COUNT" title="Permalink to this definition">#</a></dt>
-<dd><p>number of qubits on the device</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cirq_iqm.devices.iqm_device.IQMDevice.QUBIT_NAME_PREFIX">
-<span class="sig-name descname"><span class="pre">QUBIT_NAME_PREFIX</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'QB'</span></em><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.QUBIT_NAME_PREFIX" title="Permalink to this definition">#</a></dt>
-<dd><p>prefix for qubit names, to be followed by their numerical index</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cirq_iqm.devices.iqm_device.IQMDevice.CONNECTIVITY">
-<span class="sig-name descname"><span class="pre">CONNECTIVITY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#tuple" title="(in Python v3.9)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#set" title="(in Python v3.9)"><span class="pre">set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.CONNECTIVITY" title="Permalink to this definition">#</a></dt>
-<dd><p>qubit connectivity graph of the device</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cirq_iqm.devices.iqm_device.IQMDevice.NATIVE_GATES">
-<span class="sig-name descname"><span class="pre">NATIVE_GATES</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#tuple" title="(in Python v3.9)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#type" title="(in Python v3.9)"><span class="pre">type</span></a><span class="p"><span class="pre">[</span></span><span class="pre">cirq.ops.raw_types.Gate</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'cirq.ops.phased_x_gate.PhasedXPowGate'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'cirq.ops.common_gates.XPowGate'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'cirq.ops.common_gates.YPowGate'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'cirq.ops.measurement_gate.MeasurementGate'&gt;)</span></em><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.NATIVE_GATES" title="Permalink to this definition">#</a></dt>
-<dd><p>native gate set of the device (gate families)</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cirq_iqm.devices.iqm_device.IQMDevice.NATIVE_GATE_INSTANCES">
-<span class="sig-name descname"><span class="pre">NATIVE_GATE_INSTANCES</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#tuple" title="(in Python v3.9)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><span class="pre">cirq.ops.raw_types.Gate</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(cirq.CZ,)</span></em><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.NATIVE_GATE_INSTANCES" title="Permalink to this definition">#</a></dt>
-<dd><p>native gate set of the device (individual gates)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="cirq_iqm.devices.iqm_device.IQMDevice.metadata">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="cirq_iqm.devices.iqm_device_metadata.IQMDeviceMetadata.html#cirq_iqm.devices.iqm_device_metadata.IQMDeviceMetadata" title="cirq_iqm.devices.iqm_device_metadata.IQMDeviceMetadata"><span class="pre">cirq_iqm.devices.iqm_device_metadata.IQMDeviceMetadata</span></a></em><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.metadata" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns metadata for the device.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -513,14 +487,14 @@ optimizing circuits and mapping qubits.</p>
 <dd class="field-odd"><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – </p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>cirq.ops.named_qubit.NamedQubit</p>
+<dd class="field-even"><p>cirq.ops.raw_types.Qid</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cirq_iqm.devices.iqm_device.IQMDevice.check_qubit_connectivity">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_qubit_connectivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.check_qubit_connectivity" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">check_qubit_connectivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.check_qubit_connectivity" title="Permalink to this definition">#</a></dt>
 <dd><p>Raises a ValueError if operation acts on qubits that are not connected.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -534,7 +508,7 @@ optimizing circuits and mapping qubits.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cirq_iqm.devices.iqm_device.IQMDevice.is_native_operation">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_native_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.is_native_operation" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">is_native_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.is_native_operation" title="Permalink to this definition">#</a></dt>
 <dd><p>Predicate, True iff the given operation is considered native for the architecture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -674,10 +648,10 @@ Note that only gates of one or two qubits, and measurement operations of arbitra
             <p class="prev-next-title">cirq_iqm.devices.iqm_device</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="cirq_iqm.devices.valkmusa.html" title="next page">
+    <a class='right-next' id="next-link" href="cirq_iqm.devices.iqm_device_metadata.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">cirq_iqm.devices.valkmusa</p>
+        <p class="prev-next-title">cirq_iqm.devices.iqm_device_metadata</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -691,7 +665,7 @@ Note that only gates of one or two qubits, and measurement operations of arbitra
     By Cirq on IQM developers<br/>
   
       &copy; Copyright 2020–2022, Cirq on IQM developers.<br/>
-    Last updated on 2022-10-26.<br/>
+    Last updated on 2022-11-01.<br/>
 </p>
         </footer>
     </div>

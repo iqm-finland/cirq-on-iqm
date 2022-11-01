@@ -13,11 +13,7 @@ cirq\_iqm.devices.iqm\_device.IQMDevice
 
    .. autosummary::
    
-      ~IQMDevice.CONNECTIVITY
-      ~IQMDevice.NATIVE_GATES
-      ~IQMDevice.NATIVE_GATE_INSTANCES
-      ~IQMDevice.QUBIT_COUNT
-      ~IQMDevice.QUBIT_NAME_PREFIX
+      ~IQMDevice.metadata
    
    
 

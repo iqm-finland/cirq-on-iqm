@@ -9,6 +9,12 @@ cirq\_iqm.iqm\_sampler.IQMSampler
 
    
    
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~IQMSampler.device
+   
    
 
 

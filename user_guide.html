@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>User guide &#8212; Cirq on IQM 7.8 documentation</title>
+    <title>User guide &#8212; Cirq on IQM 8.0 documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -135,6 +135,11 @@
        <li class="toctree-l4">
         <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.html">
          cirq_iqm.devices.iqm_device
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.devices.iqm_device_metadata.html">
+         cirq_iqm.devices.iqm_device_metadata
         </a>
        </li>
        <li class="toctree-l4">
@@ -523,24 +528,27 @@ code snippets and check the output yourself.</p>
 </section>
 <section id="iqm-s-quantum-devices">
 <h2>IQM’s quantum devices<a class="headerlink" href="#iqm-s-quantum-devices" title="Permalink to this headline">#</a></h2>
-<p>Cirq on IQM provides descriptions of IQM’s quantum architectures as subclasses of <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice" title="cirq_iqm.devices.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a>.
-The abstract class <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice" title="cirq_iqm.devices.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a> itself is a subclass of <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.devices.Device</span></code> and implements general
-functionality relevant to all IQM devices. Each device subclass describes the native gates and the connectivity of a particular architecture
-and the relevant functionality. As an example, let us import the class <a class="reference internal" href="api/cirq_iqm.devices.adonis.Adonis.html#cirq_iqm.devices.adonis.Adonis" title="cirq_iqm.devices.adonis.Adonis"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adonis</span></code></a>, which describes IQM’s
-five-qubit architecture and view some of its properties contained in the class variables:</p>
+<p>Cirq on IQM provides descriptions of IQM’s quantum architectures using the <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice" title="cirq_iqm.devices.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a> class, which is a
+subclass of <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.devices.Device</span></code> and implements general functionality relevant to all IQM devices. The native
+gates and connectivity of the architecture are available in the <a class="reference internal" href="api/cirq_iqm.devices.iqm_device_metadata.IQMDeviceMetadata.html#cirq_iqm.devices.iqm_device_metadata.IQMDeviceMetadata" title="cirq_iqm.devices.iqm_device_metadata.IQMDeviceMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDeviceMetadata</span></code></a> object returned by the
+<a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice.metadata" title="cirq_iqm.devices.iqm_device.IQMDevice.metadata"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IQMDevice.metadata</span></code></a> property. It is possible to use the IQMDevice class directly, but
+certain devices with predefined metadata are also available as subclasses of IQMDevice. As an example, let
+us import the class <a class="reference internal" href="api/cirq_iqm.devices.adonis.Adonis.html#cirq_iqm.devices.adonis.Adonis" title="cirq_iqm.devices.adonis.Adonis"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adonis</span></code></a>, which describes IQM’s five-qubit architecture, and view some of its
+properties contained in its <code class="docutils literal notranslate"><span class="pre">metadata</span></code> property:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cirq_iqm</span> <span class="kn">import</span> <span class="n">Adonis</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">Adonis</span><span class="o">.</span><span class="n">QUBIT_COUNT</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">Adonis</span><span class="o">.</span><span class="n">NATIVE_GATES</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">Adonis</span><span class="o">.</span><span class="n">CONNECTIVITY</span><span class="p">)</span>
+<span class="n">adonis</span> <span class="o">=</span> <span class="n">Adonis</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">adonis</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">qubit_set</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">adonis</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">gateset</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">adonis</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">nx_graph</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>IQM devices use <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.NamedQubit</span></code> to represent their qubits. The names of the qubits consist of a prefix
 followed by a numeric index, so we have qubit names like <code class="docutils literal notranslate"><span class="pre">QB1</span></code>, <code class="docutils literal notranslate"><span class="pre">QB2</span></code>, etc. Note that we use 1-based
-indexing. The qubit connectivity information is stored using the qubit indices only. You can get the list of the qubits
-in a particular device by accessing the <code class="docutils literal notranslate"><span class="pre">qubits</span></code> attribute of a corresponding <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice" title="cirq_iqm.devices.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a> instance:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">adonis</span> <span class="o">=</span> <span class="n">Adonis</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">adonis</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span>
+indexing. You can get the list of the qubits in a particular device by accessing the <code class="xref py py-attr docutils literal notranslate"><span class="pre">qubits</span></code> attribute of a
+corresponding <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice" title="cirq_iqm.devices.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a> instance:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">adonis</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -672,21 +680,23 @@ to execute quantum circuits. Once you have access to an IQM server you can creat
 instance and use its <code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code> method to send a circuit for execution and retrieve the results:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cirq_iqm.iqm_sampler</span> <span class="kn">import</span> <span class="n">IQMSampler</span>
 
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">IQMSampler</span><span class="p">(</span><span class="n">iqm_server_url</span><span class="p">,</span> <span class="n">adonis</span><span class="p">)</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">IQMSampler</span><span class="p">(</span><span class="n">iqm_server_url</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit_1</span><span class="p">,</span> <span class="n">repetitions</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">measurements</span><span class="p">[</span><span class="s1">&#39;m&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Note that the code snippet above assumes that you have set the variable <code class="docutils literal notranslate"><span class="pre">iqm_server_url</span></code> to the URL
 of the IQM server. By default, the latest calibration set is used for running the circuit. If you want to use
-a particular calibration set, provide a <code class="docutils literal notranslate"><span class="pre">calibration_set_id</span></code> integer argument.</p>
+a particular calibration set, provide the <code class="docutils literal notranslate"><span class="pre">calibration_set_id</span></code> argument. The sampler will by default use an
+<a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice" title="cirq_iqm.devices.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a> created based on architecture data obtained from the server, which is then available in the
+<a class="reference internal" href="api/cirq_iqm.iqm_sampler.IQMSampler.html#cirq_iqm.iqm_sampler.IQMSampler.device" title="cirq_iqm.iqm_sampler.IQMSampler.device"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IQMSampler.device</span></code></a> property. Alternatively, the device can be specified directly with the <code class="docutils literal notranslate"><span class="pre">device</span></code> argument.</p>
 <p>If the IQM server you are connecting to requires authentication, you will also have to use
 <a class="reference external" href="https://github.com/iqm-finland/cortex-cli">Cortex CLI</a> to retrieve and automatically refresh access tokens,
 then set the <code class="docutils literal notranslate"><span class="pre">IQM_TOKENS_FILE</span></code> environment variable to use those tokens.
 See Cortex CLI’s <a class="reference external" href="https://iqm-finland.github.io/cortex-cli/readme.html">documentation</a> for details.
 Alternatively, authorize with the IQM_AUTH_SERVER, IQM_AUTH_USERNAME and IQM_AUTH_PASSWORD environment variables
 or pass them as arguments to the constructor of <code class="xref py py-class docutils literal notranslate"><span class="pre">IQMProvider</span></code>, however this approach is less secure
-and considered as deprecated.</p>
+and considered deprecated.</p>
 <p>When executing a circuit that uses something other than the device qubits, you need to either route it first
 as explained in <a class="reference internal" href="#workflow-1"><span class="std std-ref">workflow 1</span></a> above,
 or provide the mapping from the <em>logical</em> qubits in the circuit to the <em>physical</em> qubits on the device yourself.
@@ -697,7 +707,7 @@ can be used to specify this correspondence.</p>
 
 <span class="n">qubit_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Alice&#39;</span><span class="p">:</span> <span class="s1">&#39;QB1&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">:</span> <span class="s1">&#39;QB3&#39;</span><span class="p">}</span>
 
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">IQMSampler</span><span class="p">(</span><span class="n">iqm_server_url</span><span class="p">,</span> <span class="n">adonis</span><span class="p">,</span> <span class="n">qubit_mapping</span><span class="o">=</span><span class="n">qubit_mapping</span><span class="p">)</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">IQMSampler</span><span class="p">(</span><span class="n">iqm_server_url</span><span class="p">,</span> <span class="n">qubit_mapping</span><span class="o">=</span><span class="n">qubit_mapping</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">decomposed_circuit_1</span><span class="p">,</span> <span class="n">repetitions</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">measurements</span><span class="p">[</span><span class="s1">&#39;m&#39;</span><span class="p">])</span>
 </pre></div>
@@ -782,7 +792,7 @@ be created automatically based on the latest version definition in the CHANGELOG
     By Cirq on IQM developers<br/>
   
       &copy; Copyright 2020–2022, Cirq on IQM developers.<br/>
-    Last updated on 2022-10-26.<br/>
+    Last updated on 2022-11-01.<br/>
 </p>
         </footer>
     </div>

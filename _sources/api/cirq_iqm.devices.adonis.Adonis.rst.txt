@@ -13,8 +13,6 @@ cirq\_iqm.devices.adonis.Adonis
 
    .. autosummary::
    
-      ~Adonis.CONNECTIVITY
-      ~Adonis.QUBIT_COUNT
    
    
 

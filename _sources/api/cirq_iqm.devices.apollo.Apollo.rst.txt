@@ -13,8 +13,6 @@ cirq\_iqm.devices.apollo.Apollo
 
    .. autosummary::
    
-      ~Apollo.CONNECTIVITY
-      ~Apollo.QUBIT_COUNT
    
    
 

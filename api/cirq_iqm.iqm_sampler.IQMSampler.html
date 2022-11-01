@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>cirq_iqm.iqm_sampler.IQMSampler &#8212; Cirq on IQM 7.8 documentation</title>
+    <title>cirq_iqm.iqm_sampler.IQMSampler &#8212; Cirq on IQM 8.0 documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -135,6 +135,11 @@
        <li class="toctree-l4">
         <a class="reference internal" href="cirq_iqm.devices.iqm_device.html">
          cirq_iqm.devices.iqm_device
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="cirq_iqm.devices.iqm_device_metadata.html">
+         cirq_iqm.devices.iqm_device_metadata
         </a>
        </li>
        <li class="toctree-l4">
@@ -389,31 +394,43 @@ title="Print to PDF"
 <h1>cirq_iqm.iqm_sampler.IQMSampler<a class="headerlink" href="#cirq-iqm-iqm-sampler-iqmsampler" title="Permalink to this headline">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="cirq_iqm.iqm_sampler.IQMSampler">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cirq_iqm.iqm_sampler.</span></span><span class="sig-name descname"><span class="pre">IQMSampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qubit_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_set_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">user_auth_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_sampler.IQMSampler" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cirq_iqm.iqm_sampler.</span></span><span class="sig-name descname"><span class="pre">IQMSampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qubit_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_set_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">user_auth_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_sampler.IQMSampler" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.work.sampler.Sampler</span></code></p>
 <p>Circuit sampler for executing quantum circuits on IQM quantum computers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Endpoint for accessing the server interface. Has to start with http or https.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice" title="cirq_iqm.devices.iqm_device.IQMDevice"><em>IQMDevice</em></a>) – Quantum architecture to execute the circuits on</p></li>
-<li><p><strong>qubit_mapping</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>calibration_set_id</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>]</em>) – </p></li>
+<li><p><strong>device</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice" title="cirq_iqm.devices.iqm_device.IQMDevice"><em>IQMDevice</em></a><em>]</em>) – Device to execute the circuits on. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the device will be created based
+on the quantum architecture obtained from <code class="xref py py-class docutils literal notranslate"><span class="pre">IQMClient</span></code>.</p></li>
+<li><p><strong>qubit_mapping</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em><em>]</em>) – Mapping of logical qubit names to physical qubit names.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, use the identity mapping.</p></li>
+<li><p><strong>calibration_set_id</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>]</em>) – ID of the calibration set to use. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, use the latest one.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>qubit_mapping</strong> – Mapping of logical qubit names to physical qubits</p></li>
-<li><p><strong>calibration_set_id</strong> – ID of the calibration set to use instead of the latest one</p></li>
-<li><p><strong>auth_server_url</strong> – URL of user authentication server, if required by the IQM Cortex server.
+<li><p><strong>auth_server_url</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – URL of user authentication server, if required by the IQM Cortex server.
 This can also be set in the IQM_AUTH_SERVER environment variable.</p></li>
-<li><p><strong>username</strong> – Username, if required by the IQM Cortex server.
+<li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Username, if required by the IQM Cortex server.
 This can also be set in the IQM_AUTH_USERNAME environment variable.</p></li>
-<li><p><strong>password</strong> – Password, if required by the IQM Cortex server.
+<li><p><strong>password</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Password, if required by the IQM Cortex server.
 This can also be set in the IQM_AUTH_PASSWORD environment variable.</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.iqm_sampler.IQMSampler.device" title="cirq_iqm.iqm_sampler.IQMSampler.device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">device</span></code></a></p></td>
+<td><p>Returns the device used by the sampler.</p></td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable table autosummary">
 <colgroup>
@@ -435,6 +452,12 @@ This can also be set in the IQM_AUTH_PASSWORD environment variable.</p></li>
 </tr>
 </tbody>
 </table>
+<dl class="py property">
+<dt class="sig sig-object py" id="cirq_iqm.iqm_sampler.IQMSampler.device">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">device</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice" title="cirq_iqm.devices.iqm_device.IQMDevice"><span class="pre">cirq_iqm.devices.iqm_device.IQMDevice</span></a></em><a class="headerlink" href="#cirq_iqm.iqm_sampler.IQMSampler.device" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the device used by the sampler.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="cirq_iqm.iqm_sampler.IQMSampler.close_client">
 <span class="sig-name descname"><span class="pre">close_client</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_sampler.IQMSampler.close_client" title="Permalink to this definition">#</a></dt>
@@ -529,7 +552,7 @@ true asynchronous sampling should override it to use other strategies.</p>
     By Cirq on IQM developers<br/>
   
       &copy; Copyright 2020–2022, Cirq on IQM developers.<br/>
-    Last updated on 2022-10-26.<br/>
+    Last updated on 2022-11-01.<br/>
 </p>
         </footer>
     </div>
