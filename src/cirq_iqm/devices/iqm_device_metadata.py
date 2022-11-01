@@ -17,7 +17,7 @@ from __future__ import annotations
 from typing import Iterable, Optional, Union
 
 import cirq
-from cirq import NamedQubit, devices, ops
+from cirq import NamedQubit, Qid, devices, ops
 from cirq.contrib.routing.router import nx
 from iqm_client import QuantumArchitectureSpecification
 
@@ -45,10 +45,10 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
     QUBIT_NAME_PREFIX: str = 'QB'
     """prefix for qubit names, to be followed by their numerical index"""
 
-    def __init__(  # pylint: disable=super-init-not-called
+    def __init__(
         self,
-        qubits: Iterable[NamedQubit],
-        connectivity: Iterable[Iterable[NamedQubit]],
+        qubits: Iterable[Qid],
+        connectivity: Iterable[Iterable[Qid]],
         gateset: Optional[cirq.Gateset] = None,
     ):
         """Construct an IQMDeviceMetadata object."""
@@ -56,8 +56,7 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         for edge in connectivity:
             edge_qubits = list(edge)
             nx_graph.add_edge(edge_qubits[0], edge_qubits[1])
-        self._qubits_set: frozenset[NamedQubit] = frozenset(qubits)
-        self._nx_graph = nx_graph
+        super().__init__(qubits, nx_graph)
 
         if gateset is None:
             # default gateset for IQM devices
@@ -85,11 +84,6 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
             tuple(NamedQubit(f'{cls.QUBIT_NAME_PREFIX}{qb}') for qb in edge) for edge in connectivity_indices
         )
         return cls(qubits, connectivity, gateset)
-
-    @property
-    def qubit_set(self) -> frozenset[NamedQubit]:
-        """Returns the set of qubits on the device."""
-        return self._qubits_set
 
     @property
     def gateset(self) -> cirq.Gateset:
