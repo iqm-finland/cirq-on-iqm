@@ -39,6 +39,6 @@ class Adonis(IQMDevice):
     """
 
     def __init__(self):
-        qubits = self._qubit_set_from_count(5)
+        qubit_count = 5
         connectivity = ({1, 3}, {2, 3}, {4, 3}, {5, 3})
-        super().__init__(IQMDeviceMetadata(qubits, connectivity))
+        super().__init__(IQMDeviceMetadata.from_qubit_indices(qubit_count, connectivity))

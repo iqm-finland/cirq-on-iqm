@@ -14,21 +14,22 @@
 """DeviceMetadata subtype for IQM devices."""
 from __future__ import annotations
 
-from typing import FrozenSet, Optional, Type, Union
+from collections.abc import Iterable
+from typing import Optional, Union
 
 import cirq
-from cirq import NamedQubit, devices, ops
+from cirq import NamedQubit, Qid, devices, ops
 from cirq.contrib.routing.router import nx
 from iqm_client import QuantumArchitectureSpecification
 
 # Mapping from IQM operation names to cirq operations
-_IQM_CIRQ_OP_MAP: dict[str, Optional[tuple[Union[Type[cirq.Gate], cirq.Gate, cirq.GateFamily], ...]]] = {
+_IQM_CIRQ_OP_MAP: dict[str, tuple[Union[type[cirq.Gate], cirq.Gate, cirq.GateFamily], ...]] = {
     # XPow and YPow kept for convenience, Cirq does not know how to decompose them into PhasedX
     # so we would have to add those rules...
     'phased_rx': (cirq.ops.PhasedXPowGate, cirq.ops.XPowGate, cirq.ops.YPowGate),
     'cz': (cirq.ops.CZ,),
     'measurement': (cirq.ops.MeasurementGate,),
-    'barrier': None,
+    'barrier': (),
 }
 
 
@@ -37,7 +38,7 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
     """Hardware metadata for IQM devices.
 
     Args:
-        qubits: frozenset of qubits that exist on the device
+        qubits: qubits that exist on the device
         connectivity: qubit connectivity graph of the device
         gateset: Native gateset of the device. If None, a default IQM device gateset will be used.
     """
@@ -45,19 +46,18 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
     QUBIT_NAME_PREFIX: str = 'QB'
     """prefix for qubit names, to be followed by their numerical index"""
 
-    def __init__(  # pylint: disable=super-init-not-called
+    def __init__(
         self,
-        qubits: FrozenSet[cirq.NamedQubit],
-        connectivity: tuple[set[int], ...],
+        qubits: Iterable[Qid],
+        connectivity: Iterable[Iterable[Qid]],
         gateset: Optional[cirq.Gateset] = None,
     ):
         """Construct an IQMDeviceMetadata object."""
         nx_graph = nx.Graph()
         for edge in connectivity:
-            edge_qubits = [NamedQubit(f'{self.QUBIT_NAME_PREFIX}{q}') for q in edge]
+            edge_qubits = list(edge)
             nx_graph.add_edge(edge_qubits[0], edge_qubits[1])
-        self._qubits_set: FrozenSet[cirq.NamedQubit] = frozenset(qubits)
-        self._nx_graph = nx_graph
+        super().__init__(qubits, nx_graph)
 
         if gateset is None:
             # default gateset for IQM devices
@@ -70,25 +70,21 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
     @classmethod
     def from_architecture(cls, architecture: QuantumArchitectureSpecification) -> IQMDeviceMetadata:
         """Returns device metadata object created based on architecture specification"""
-        qubits = frozenset(cirq.NamedQubit(qb) for qb in architecture.qubits)
-        connectivity = tuple(
-            {int(qb.removeprefix(IQMDeviceMetadata.QUBIT_NAME_PREFIX)) for qb in edge}
-            for edge in architecture.qubit_connectivity
-        )
-        gateset = cirq.Gateset(
-            *tuple(
-                cirq_op
-                for iqm_op in architecture.operations
-                if (cirq_ops := _IQM_CIRQ_OP_MAP[iqm_op]) is not None
-                for cirq_op in cirq_ops
-            )
-        )
-        return IQMDeviceMetadata(qubits, connectivity, gateset)
+        qubits = tuple(NamedQubit(qb) for qb in architecture.qubits)
+        connectivity = tuple(tuple(NamedQubit(qb) for qb in edge) for edge in architecture.qubit_connectivity)
+        gateset = cirq.Gateset(*(cirq_op for iqm_op in architecture.operations for cirq_op in _IQM_CIRQ_OP_MAP[iqm_op]))
+        return cls(qubits, connectivity, gateset)
 
-    @property
-    def qubit_set(self) -> FrozenSet[cirq.NamedQubit]:
-        """Returns the set of qubits on the device."""
-        return self._qubits_set
+    @classmethod
+    def from_qubit_indices(
+        cls, qubit_count: int, connectivity_indices: tuple[set[int], ...], gateset: Optional[cirq.Gateset] = None
+    ) -> IQMDeviceMetadata:
+        """Returns device metadata object created based on connectivity specified using qubit indices only."""
+        qubits = tuple(NamedQubit.range(1, qubit_count + 1, prefix=cls.QUBIT_NAME_PREFIX))
+        connectivity = tuple(
+            tuple(NamedQubit(f'{cls.QUBIT_NAME_PREFIX}{qb}') for qb in edge) for edge in connectivity_indices
+        )
+        return cls(qubits, connectivity, gateset)
 
     @property
     def gateset(self) -> cirq.Gateset:
@@ -96,8 +92,4 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         return self._gateset
 
     def _value_equality_values_(self):
-        graph_equality = (
-            tuple(sorted(self._nx_graph.nodes())),
-            tuple(sorted(self._nx_graph.edges(data='directed'))),
-        )
-        return self._qubits_set, graph_equality, self._gateset
+        return *super()._value_equality_values_(), self._gateset

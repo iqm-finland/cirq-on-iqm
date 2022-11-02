@@ -47,7 +47,7 @@ class Apollo(IQMDevice):
     """
 
     def __init__(self):
-        qubits = self._qubit_set_from_count(20)
+        qubit_count = 20
         connectivity = (
             {1, 2},
             {1, 4},
@@ -80,4 +80,4 @@ class Apollo(IQMDevice):
             {18, 19},
             {19, 20},
         )
-        super().__init__(IQMDeviceMetadata(qubits, connectivity))
+        super().__init__(IQMDeviceMetadata.from_qubit_indices(qubit_count, connectivity))

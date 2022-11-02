@@ -72,7 +72,7 @@ class IQMDevice(devices.Device):
         """The numeric index of the given qubit on the device."""
         return int(qubit.name[len(IQMDeviceMetadata.QUBIT_NAME_PREFIX) :])
 
-    def get_qubit(self, index: int) -> cirq.NamedQubit:
+    def get_qubit(self, index: int) -> cirq.Qid:
         """The device qubit corresponding to the given numeric index."""
         return self.qubits[index - 1]  # 1-based indexing
 
