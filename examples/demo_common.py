@@ -29,7 +29,6 @@ from cirq_iqm.optimizers import simplify_circuit
 np.set_printoptions(precision=3)
 
 
-
 def get_measurements(circuit: cirq.Circuit) -> list[tuple[int, cirq.GateOperation]]:
     """Find all measurements in a circuit.
 
