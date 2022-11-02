@@ -1,4 +1,4 @@
-# Copyright 2020–2021 Cirq on IQM developers
+# Copyright 2020–2022 Cirq on IQM developers
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ from cirq_iqm.devices import Adonis
 from cirq_iqm.extended_qasm_parser import circuit_from_qasm
 
 
-def demo_adonis(do_measure=False, use_qsim=False):
+def demo_adonis(use_qsim: bool = False) -> None:
     """Run the demo using the Adonis architecture."""
 
     print('\nAdonis demo\n===========\n')
@@ -31,15 +31,19 @@ def demo_adonis(do_measure=False, use_qsim=False):
         OPENQASM 2.0;
         include "qelib1.inc";
         qreg q[3];
-        creg meas[3];
+
+        creg a[2];
+        creg b[1];
+
         U(0.2, 0.5, 1.7) q[1];
         h q[0];
         h q[2];
+        cx q[1], q[0];
         cx q[2], q[1];
+        ry(0.3) q[0];
+        measure q[0] -> a[1];
+        measure q[1] -> b[0];
     """
-    if do_measure:
-        qasm_program += '\nmeasure q -> meas;'
-
     circuit = circuit_from_qasm(qasm_program)
 
     # add some more gates
@@ -48,7 +52,7 @@ def demo_adonis(do_measure=False, use_qsim=False):
     circuit.insert(len(circuit) - 1, cirq.CXPowGate(exponent=0.723)(q2, q0))
 
     qubit_mapping = {'q_0': 'QB1', 'q_1': 'QB2', 'q_2': 'QB3'}
-    demo(device, circuit, do_measure, use_qsim=use_qsim, qubit_mapping=qubit_mapping)
+    demo(device, circuit, use_qsim=use_qsim, qubit_mapping=qubit_mapping)
 
 
 if __name__ == '__main__':

@@ -22,7 +22,7 @@ from cirq_iqm.devices import Apollo
 from cirq_iqm.extended_qasm_parser import circuit_from_qasm
 
 
-def demo_apollo(do_measure=False, use_qsim=False):
+def demo_apollo(use_qsim: bool = False) -> None:
     """Run the demo using the Apollo architecture."""
 
     print('\nApollo demo\n===========\n')
@@ -30,28 +30,30 @@ def demo_apollo(do_measure=False, use_qsim=False):
     qasm_program = """
         OPENQASM 2.0;
         include "qelib1.inc";
+
         qreg q[6];
-        creg meas[3];
+        creg meas[6];
+
         U(0.2, 0.5, 1.7) q[1];
         h q[0];
         h q[2];
+        h q[3];
         h q[4];
         h q[5];
-        cx q[0], q[1];
+        cx q[1], q[2];
+        cx q[2], q[5];
         cx q[3], q[4];
+        cx q[0], q[1];
+        measure q -> meas;
     """
-    if do_measure:
-        qasm_program += '\nmeasure q -> meas;'
-
     circuit = circuit_from_qasm(qasm_program)
 
     # add some more gates
     q2 = cirq.NamedQubit('q_2')
     q3 = cirq.NamedQubit('q_3')
-    circuit.insert(len(circuit) - 1, cirq.CXPowGate(exponent=0.723)(q2, q3))
+    circuit.insert(len(circuit) - 2, cirq.CXPowGate(exponent=0.723)(q2, q3))
 
-    qubit_mapping = {'q_0': 'QB1', 'q_1': 'QB2', 'q_2': 'QB3', 'q_3': 'QB4', 'q_4': 'QB5', 'q_5': 'QB6'}
-    demo(device, circuit, do_measure, use_qsim=use_qsim, qubit_mapping=qubit_mapping)
+    demo(device, circuit, use_qsim=use_qsim, qubit_mapping=None)
 
 
 if __name__ == '__main__':
