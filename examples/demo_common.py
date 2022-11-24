@@ -145,7 +145,6 @@ def demo(
     device: IQMDevice,
     circuit: cirq.Circuit,
     *,
-    qubit_mapping: Optional[dict[str, str]] = None,
     use_qsim: bool = False
 ) -> None:
     """Transform the given circuit to a form the given device accepts, then simulate it.
@@ -153,8 +152,6 @@ def demo(
     Args:
         device: device on which to execute the quantum circuit
         circuit: quantum circuit
-        qubit_mapping: Mapping from ``circuit`` qubit names to ``device`` qubit names.
-            If None, try routing ``circuit``.
         use_qsim: Iff True, use the ``qsim`` circuit simulator instead of the Cirq builtin simulator.
     """
     print('Source circuit:')
@@ -169,11 +166,7 @@ def demo(
     pause()
 
     # map the circuit qubits to device qubits
-    if qubit_mapping is None:
-        circuit_mapped = device.route_circuit(circuit_simplified)
-    else:
-        temp = {cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in qubit_mapping.items()}
-        circuit_mapped = circuit_simplified.transform_qubits(temp)
+    circuit_mapped = device.route_circuit(circuit_simplified)
 
     print('\nRouted simplified circuit:')
     print(circuit_mapped)

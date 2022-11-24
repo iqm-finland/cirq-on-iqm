@@ -43,34 +43,8 @@ def iqm_metadata():
 
 
 @pytest.fixture()
-def qubit_mapping():
-    return {'q1 log.': 'QB1', 'q2 log.': 'QB2'}
-
-
-@pytest.fixture()
-def adonis_sampler(base_url, qubit_mapping):
-    return IQMSampler(base_url, Adonis(), qubit_mapping=qubit_mapping)
-
-
-@pytest.mark.usefixtures('unstub')
-def test_run_sweep_executes_circuit(adonis_sampler, circuit, iqm_metadata):
-    client = mock(IQMClient)
-    run_id = uuid.uuid4()
-    run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
-    when(client).submit_circuits(ANY, qubit_mapping=ANY, calibration_set_id=ANY, shots=ANY).thenReturn(run_id)
-    when(client).wait_for_results(run_id).thenReturn(run_result)
-
-    adonis_sampler._client = client
-    results = adonis_sampler.run_sweep(circuit, None, repetitions=2)
-    assert isinstance(results[0], cirq.Result)
-
-
-@pytest.mark.usefixtures('unstub')
-def test_run_sweep_with_bad_qubit_mapping(base_url, circuit):
-    qubit_mapping = {'q1 log.': 'QB1', 'q2 log.': 'QB1'}
-    sampler = IQMSampler(base_url, Adonis(), qubit_mapping=qubit_mapping)
-    with pytest.raises(ValueError, match='Failed applying qubit mapping.'):
-        sampler.run_sweep(circuit, None, repetitions=2)
+def adonis_sampler(base_url):
+    return IQMSampler(base_url, Adonis())
 
 
 @pytest.mark.usefixtures('unstub')
@@ -78,7 +52,7 @@ def test_run_sweep_executes_circuit_with_physical_names(adonis_sampler, circuit_
     client = mock(IQMClient)
     run_id = uuid.uuid4()
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
-    when(client).submit_circuits(ANY, qubit_mapping=ANY, calibration_set_id=ANY, shots=ANY).thenReturn(run_id)
+    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY).thenReturn(run_id)
     when(client).wait_for_results(run_id).thenReturn(run_result)
 
     adonis_sampler._client = client
@@ -93,7 +67,7 @@ def test_run_sweep_with_parameter_sweep(adonis_sampler, iqm_metadata):
     run_result = RunResult(
         status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
     )
-    when(client).submit_circuits(ANY, qubit_mapping=ANY, calibration_set_id=ANY, shots=ANY).thenReturn(run_id)
+    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY).thenReturn(run_id)
     when(client).wait_for_results(run_id).thenReturn(run_result)
     qubit_1 = cirq.NamedQubit('QB1')
     qubit_2 = cirq.NamedQubit('QB2')

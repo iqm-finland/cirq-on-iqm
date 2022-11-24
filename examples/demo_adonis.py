@@ -51,8 +51,7 @@ def demo_adonis(use_qsim: bool = False) -> None:
     q2 = cirq.NamedQubit('q_2')
     circuit.insert(len(circuit) - 1, cirq.CXPowGate(exponent=0.723)(q2, q0))
 
-    qubit_mapping = {'q_0': 'QB1', 'q_1': 'QB2', 'q_2': 'QB3'}
-    demo(device, circuit, use_qsim=use_qsim, qubit_mapping=qubit_mapping)
+    demo(device, circuit, use_qsim=use_qsim)
 
 
 if __name__ == '__main__':
