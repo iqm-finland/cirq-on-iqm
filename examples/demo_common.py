@@ -69,8 +69,8 @@ def get_qubit_order(circuit: cirq.Circuit) -> tuple[list[cirq.Qid], int]:
 
 
 def simulate_measurement_probabilities(
-        sim: cirq.Simulator,
-        circuit: cirq.Circuit,
+    sim: cirq.Simulator,
+    circuit: cirq.Circuit,
 ) -> tuple[dict[tuple, float], list[str]]:
     """Simulate the probabilities of obtaining different measurement results in the given circuit.
 
@@ -113,8 +113,8 @@ def simulate_measurement_probabilities(
 
 
 def simulate_without_measurements(
-        sim: cirq.Simulator,
-        circuit: cirq.Circuit,
+    sim: cirq.Simulator,
+    circuit: cirq.Circuit,
 ) -> np.ndarray:
     """Simulates given quantum circuit without its measurement operations.
 
@@ -141,12 +141,7 @@ def pause() -> None:
     input('\npress enter\n')
 
 
-def demo(
-    device: IQMDevice,
-    circuit: cirq.Circuit,
-    *,
-    use_qsim: bool = False
-) -> None:
+def demo(device: IQMDevice, circuit: cirq.Circuit, *, use_qsim: bool = False) -> None:
     """Transform the given circuit to a form the given device accepts, then simulate it.
 
     Args:
@@ -182,6 +177,7 @@ def demo(
     # Initialize a ket-based simulator for evaluating the circuit
     if use_qsim:
         import qsimcirq
+
         sim = qsimcirq.QSimSimulator()
         print('Using qsim.')
     else:
@@ -197,9 +193,9 @@ def demo(
     state_1 = simulate_without_measurements(sim, circuit_transformed)
 
     # Overlap won't be perfect due to use of simplify_circuit above, which may eliminate Rz gates
-    #overlap = np.abs(np.vdot(state_0, state_1))
-    #print('\noverlap = |<original|transformed>| =', overlap)
-    #assert np.abs(overlap - 1.0) < 1e-6, 'Circuits are not equivalent!'
+    # overlap = np.abs(np.vdot(state_0, state_1))
+    # print('\noverlap = |<original|transformed>| =', overlap)
+    # assert np.abs(overlap - 1.0) < 1e-6, 'Circuits are not equivalent!'
 
     # Basis state probabilities, however, are preserved.
     probs_0 = np.abs(state_0) ** 2
