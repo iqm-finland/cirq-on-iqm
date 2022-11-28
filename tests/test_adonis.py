@@ -309,6 +309,38 @@ class TestCircuitRouting:
             cirq.NamedQubit('Eve'),
         ]
 
+    def test_routing_with_partial_initial_mapping(self, adonis, qubits):
+        circuit = cirq.Circuit(
+            cirq.CZ(qubits[0], qubits[1]),
+            cirq.measure(qubits[0], key='mk0'),
+            cirq.measure(qubits[1], key='mk1'),
+        )
+
+        initial_mapping = dict(zip(adonis.metadata.nx_graph, qubits[0:2]))
+        # route_circuit() checks mapping consistency when initial_mapping is provided
+        new = adonis.route_circuit(circuit, initial_mapping=initial_mapping)
+
+        adonis.validate_circuit(new)
+
+    def test_routing_with_complete_initial_mapping(self, adonis, qubits):
+        circuit = cirq.Circuit(
+            cirq.CZ(qubits[0], qubits[1]),
+            cirq.CZ(qubits[2], qubits[1]),
+            cirq.CZ(qubits[3], qubits[1]),
+            cirq.CZ(qubits[4], qubits[1]),
+            cirq.measure(qubits[0], key='mk0'),
+            cirq.measure(qubits[1], key='mk1'),
+            cirq.measure(qubits[2], key='mk2'),
+            cirq.measure(qubits[3], key='mk3'),
+            cirq.measure(qubits[4], key='mk4'),
+        )
+
+        initial_mapping = dict(zip(adonis.metadata.nx_graph, qubits[0:5]))
+        # route_circuit() checks mapping consistency when initial_mapping is provided
+        new = adonis.route_circuit(circuit, initial_mapping=initial_mapping)
+
+        adonis.validate_circuit(new)
+
     def test_routing_circuit_too_large(self, adonis):
         """The circuit must fit on the device."""
         qubits = cirq.NamedQubit.range(0, 6, prefix='qubit_')

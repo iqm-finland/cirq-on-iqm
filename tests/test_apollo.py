@@ -323,6 +323,35 @@ class TestCircuitRouting:
             cirq.NamedQubit('Trent'),
         ]
 
+    def test_routing_with_partial_initial_mapping(self, apollo, qubits):
+        circuit = cirq.Circuit(
+            cirq.CZ(qubits[0], qubits[1]),
+            cirq.measure(qubits[0], key='mk0'),
+            cirq.measure(qubits[1], key='mk1'),
+        )
+
+        initial_mapping = dict(zip(apollo.metadata.nx_graph, qubits[0:2]))
+        # route_circuit() checks mapping consistency when initial_mapping is provided
+        new = apollo.route_circuit(circuit, initial_mapping=initial_mapping)
+
+        apollo.validate_circuit(new)
+
+    def test_routing_with_complete_initial_mapping(self, apollo, qubits):
+        circuit = cirq.Circuit(
+            [
+                cirq.CZ(qubits[0], qubits[1]),
+                cirq.CZ(qubits[0], qubits[2]),
+                cirq.CZ(qubits[2], qubits[4]),
+            ]
+            + [cirq.measure([q]) for q in qubits]
+        )
+
+        initial_mapping = dict(zip(apollo.metadata.nx_graph, qubits))
+        # route_circuit() checks mapping consistency when initial_mapping is provided
+        new = apollo.route_circuit(circuit, initial_mapping=initial_mapping)
+
+        apollo.validate_circuit(new)
+
     def test_routing_circuit_too_large(self, apollo):
         """The circuit must fit on the device."""
         qubits = cirq.NamedQubit.range(0, 21, prefix='qubit_')
