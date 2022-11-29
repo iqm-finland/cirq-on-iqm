@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 8.1
+===========
+
+* ``IQMDevice.route_circuit`` accepts ``initial mapping`` `#93 <https://github.com/iqm-finland/cirq-on-iqm/pull/93>`_
+* ``IQMSampler`` no longer accepts ``qubit_mapping`` `#93 <https://github.com/iqm-finland/cirq-on-iqm/pull/93>`_
+
 Version 8.0
 ===========
 

@@ -53,7 +53,7 @@ def demo_apollo(use_qsim: bool = False) -> None:
     q3 = cirq.NamedQubit('q_3')
     circuit.insert(len(circuit) - 2, cirq.CXPowGate(exponent=0.723)(q2, q3))
 
-    demo(device, circuit, use_qsim=use_qsim, qubit_mapping=None)
+    demo(device, circuit, use_qsim=use_qsim)
 
 
 if __name__ == '__main__':

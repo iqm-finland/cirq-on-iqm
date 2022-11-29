@@ -22,7 +22,7 @@ from __future__ import annotations
 
 import collections.abc as ca
 from math import pi as PI
-from typing import Optional, Union
+from typing import Dict, Optional, Union
 import uuid
 
 import cirq
@@ -174,7 +174,11 @@ class IQMDevice(devices.Device):
         )
 
     def route_circuit(
-        self, circuit: cirq.Circuit, *, return_swap_network: bool = False
+        self,
+        circuit: cirq.Circuit,
+        *,
+        return_swap_network: bool = False,
+        initial_mapping: Optional[Dict['cirq.Qid', 'cirq.Qid']] = None,
     ) -> Union[cirq.Circuit, cirq.contrib.routing.SwapNetwork]:
         """Routes the given circuit to the device connectivity.
 
@@ -185,6 +189,7 @@ class IQMDevice(devices.Device):
         Args:
             circuit: circuit to route
             return_swap_network: iff True, return the full swap network instead of the routed circuit
+            initial_mapping: mapping between logical and physical qubits
 
         Returns:
             routed circuit, or the swap network if requested
@@ -208,7 +213,9 @@ class IQMDevice(devices.Device):
             modified_circuit.append(cirq.I(q).with_tags(i_tag))
 
         # Route the modified circuit.
-        swap_network = route_circuit(modified_circuit, self._metadata.nx_graph, algo_name='greedy')
+        swap_network = route_circuit(
+            modified_circuit, self._metadata.nx_graph, algo_name='greedy', initial_mapping=initial_mapping
+        )
 
         # Return measurements to the circuit with potential qubit swaps.
         final_qubit_mapping = {v: k for k, v in swap_network.final_mapping().items()}

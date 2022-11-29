@@ -38,20 +38,13 @@ def demo_adonis_run():
     a = cirq.NamedQubit('Alice')
     b = cirq.NamedQubit('Bob')
 
-    circuit = cirq.Circuit(
-        cirq.X(a) ** 0.5,
-        cirq.Z(a),
-        cirq.measure(a, b, key='result')
-    )
-
-    # map the logical qubits used in the circuit to the device qubits
-    qubit_mapping = {a.name: 'QB1', b.name: 'QB2'}
+    circuit = cirq.Circuit(cirq.X(a) ** 0.5, cirq.Z(a), cirq.measure(a, b, key='result'))
 
     device = Adonis()
     circuit_decomposed = device.decompose_circuit(circuit)
     print(circuit_decomposed)
 
-    sampler = IQMSampler(os.environ['IQM_SERVER_URL'], device, qubit_mapping=qubit_mapping)
+    sampler = IQMSampler(os.environ['IQM_SERVER_URL'], device)
 
     # This will send the circuit to the server to be run, and return a cirq.study.Result
     # containing the measurement results.

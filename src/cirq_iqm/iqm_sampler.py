@@ -49,9 +49,6 @@ class IQMSampler(cirq.work.Sampler):
         url: Endpoint for accessing the server interface. Has to start with http or https.
         device: Device to execute the circuits on. If ``None``, the device will be created based
             on the quantum architecture obtained from :class:`.IQMClient`.
-        qubit_mapping:
-            Mapping of logical qubit names to physical qubit names.
-            If ``None``, use the identity mapping.
         calibration_set_id:
             ID of the calibration set to use. If ``None``, use the latest one.
 
@@ -69,7 +66,6 @@ class IQMSampler(cirq.work.Sampler):
         url: str,
         device: Optional[IQMDevice] = None,
         *,
-        qubit_mapping: Optional[dict[str, str]] = None,
         calibration_set_id: Optional[int] = None,
         **user_auth_args,  # contains keyword args auth_server_url, username and password
     ):
@@ -79,7 +75,6 @@ class IQMSampler(cirq.work.Sampler):
             self._device = IQMDevice(device_metadata)
         else:
             self._device = device
-        self._qubit_mapping = qubit_mapping
         self._calibration_set_id = calibration_set_id
 
     @property
@@ -97,20 +92,9 @@ class IQMSampler(cirq.work.Sampler):
     def run_sweep(  # type: ignore[override]
         self, program: cirq.Circuit, params: cirq.Sweepable, repetitions: int = 1
     ) -> list[cirq.Result]:
-        mapped = program
-        if self._qubit_mapping is not None:
-            # apply the qubit_mapping
-            qubit_map: dict['cirq.Qid', 'cirq.Qid'] = {
-                cirq.NamedQubit(k): cirq.NamedQubit(v) for k, v in self._qubit_mapping.items()
-            }
-            try:
-                mapped = program.transform_qubits(qubit_map)
-            except ValueError as e:
-                raise ValueError('Failed applying qubit mapping.') from e
 
-        # validate the circuit for the device. If qubit_mapping was given then validation is done after applying it,
-        # otherwise it is assumed that the circuit already contains device qubits, and it is validated as is.
-        self._device.validate_circuit(mapped)
+        # validate the circuit for the device
+        self._device.validate_circuit(program)
 
         resolvers = list(cirq.to_resolvers(params))
 
@@ -119,7 +103,6 @@ class IQMSampler(cirq.work.Sampler):
         measurements = self._send_circuits(
             circuits,
             repetitions=repetitions,
-            qubit_mapping=self._qubit_mapping,
             calibration_set_id=self._calibration_set_id,
         )
         return [study.ResultDict(params=res, measurements=mes) for res, mes in zip(resolvers, measurements)]
@@ -127,7 +110,6 @@ class IQMSampler(cirq.work.Sampler):
     def _send_circuits(  # pylint: disable=too-many-arguments
         self,
         circuits: list[cirq.Circuit],
-        qubit_mapping: Optional[dict[str, str]],
         calibration_set_id: Optional[int],
         repetitions: int = 1,
     ) -> list[dict[str, np.ndarray]]:
@@ -135,7 +117,6 @@ class IQMSampler(cirq.work.Sampler):
 
         Args:
             circuits: quantum circuit(s) to execute
-            qubit_mapping: Mapping of qubit names
             calibration_set_id: ID of the calibration set to use instead of the latest one
             repetitions: number of times the circuit(s) are sampled
 
@@ -153,7 +134,7 @@ class IQMSampler(cirq.work.Sampler):
         serialized_circuits = [serialize_circuit(circuit) for circuit in circuits]
 
         job_id = self._client.submit_circuits(
-            serialized_circuits, qubit_mapping=qubit_mapping, calibration_set_id=calibration_set_id, shots=repetitions
+            serialized_circuits, calibration_set_id=calibration_set_id, shots=repetitions
         )
         results = self._client.wait_for_results(job_id)
         if results.measurements is None:
