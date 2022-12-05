@@ -316,7 +316,7 @@ class TestCircuitRouting:
             cirq.measure(qubits[1], key='mk1'),
         )
 
-        initial_mapping = dict(zip(adonis.metadata.nx_graph, qubits[0:2]))
+        initial_mapping = dict(zip(qubits[0:2], adonis.metadata.nx_graph))
         # route_circuit() checks mapping consistency when initial_mapping is provided
         new = adonis.route_circuit(circuit, initial_mapping=initial_mapping)
 
@@ -335,7 +335,7 @@ class TestCircuitRouting:
             cirq.measure(qubits[4], key='mk4'),
         )
 
-        initial_mapping = dict(zip(adonis.metadata.nx_graph, qubits[0:5]))
+        initial_mapping = dict(zip(qubits[0:5], adonis.metadata.nx_graph))
         # route_circuit() checks mapping consistency when initial_mapping is provided
         new = adonis.route_circuit(circuit, initial_mapping=initial_mapping)
 
