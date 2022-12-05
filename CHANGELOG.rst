@@ -2,6 +2,17 @@
 Changelog
 =========
 
+Version 8.2
+===========
+
+* User guide updated.
+
+Bugfixes
+--------
+
+* :meth:`.IQMDevice.route_circuit` bugfix: ``initial_mapping`` must be reversed to match the
+  :mod:`cirq.contrib.routing.greedy` convention.
+
 Version 8.1
 ===========
 

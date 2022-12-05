@@ -22,7 +22,7 @@ from __future__ import annotations
 
 import collections.abc as ca
 from math import pi as PI
-from typing import Dict, Optional, Union
+from typing import Optional, Union
 import uuid
 
 import cirq
@@ -178,18 +178,19 @@ class IQMDevice(devices.Device):
         circuit: cirq.Circuit,
         *,
         return_swap_network: bool = False,
-        initial_mapping: Optional[Dict['cirq.Qid', 'cirq.Qid']] = None,
+        initial_mapping: Optional[dict['cirq.Qid', 'cirq.Qid']] = None,
     ) -> Union[cirq.Circuit, cirq.contrib.routing.SwapNetwork]:
-        """Routes the given circuit to the device connectivity.
+        """Routes the given circuit to the device connectivity and qubit names.
 
         The routed circuit uses the device qubits, and may have additional SWAP gates inserted to perform the qubit
-        routing. The function :func:`cirq.contrib.routing.router` is used for routing.
+        routing. The function :func:`cirq.contrib.routing.router.route_circuit` is used for routing.
         Note that only gates of one or two qubits, and measurement operations of arbitrary size are supported.
 
         Args:
             circuit: circuit to route
             return_swap_network: iff True, return the full swap network instead of the routed circuit
-            initial_mapping: mapping between logical and physical qubits
+            initial_mapping: Initial mapping from ``circuit`` qubits to device qubits, to serve as
+                the starting point of the routing. ``None`` means it will be generated automatically.
 
         Returns:
             routed circuit, or the swap network if requested
@@ -212,9 +213,16 @@ class IQMDevice(devices.Device):
         for q in measurement_qubits:
             modified_circuit.append(cirq.I(q).with_tags(i_tag))
 
+        if initial_mapping is not None:
+            # reverse the mapping to match the cirq.contrib.routing.greedy convention
+            initial_mapping = {v: k for k, v in initial_mapping.items()}
+
         # Route the modified circuit.
         swap_network = route_circuit(
-            modified_circuit, self._metadata.nx_graph, algo_name='greedy', initial_mapping=initial_mapping
+            modified_circuit,
+            self._metadata.nx_graph,
+            algo_name='greedy',
+            initial_mapping=initial_mapping,
         )
 
         # Return measurements to the circuit with potential qubit swaps.
