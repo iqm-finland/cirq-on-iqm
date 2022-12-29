@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 8.2
+===========
+
+* Upgrade to IQMClient version 10.0. `#95 <https://github.com/iqm-finland/cirq-on-iqm/pull/95>`_
+
 Version 8.1
 ===========
 
