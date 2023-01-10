@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 9.1
+===========
+
+* Upgrade cirq to use version ~= 1.1.
+
 Version 8.2
 ===========
 
