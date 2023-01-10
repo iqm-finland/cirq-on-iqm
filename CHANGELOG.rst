@@ -13,6 +13,11 @@ Bugfixes
 * :meth:`.IQMDevice.route_circuit` bugfix: ``initial_mapping`` must be reversed to match the
   :mod:`cirq.contrib.routing.greedy` convention.
 
+Version 8.2
+===========
+
+* Upgrade to IQMClient version 10.0. `#95 <https://github.com/iqm-finland/cirq-on-iqm/pull/95>`_
+
 Version 8.1
 ===========
 

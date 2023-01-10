@@ -14,7 +14,7 @@
 import uuid
 
 import cirq
-from iqm_client.iqm_client import Circuit, IQMClient, Metadata, RunResult, Status
+from iqm_client.iqm_client import Circuit, IQMClient, Metadata, RunRequest, RunResult, Status
 from mockito import ANY, mock, when
 import pytest
 import sympy
@@ -32,7 +32,7 @@ def circuit():
 
 @pytest.fixture()
 def iqm_metadata():
-    return Metadata(shots=4, circuits=[Circuit(name='circuit_1', instructions=[])])
+    return Metadata(request=RunRequest(shots=4, circuits=[Circuit(name='circuit_1', instructions=[])]))
 
 
 @pytest.fixture()
