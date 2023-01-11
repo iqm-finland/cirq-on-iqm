@@ -59,21 +59,17 @@ corresponding :class:`.IQMDevice` instance:
 Constructing circuits
 ---------------------
 
-There are two main workflows of using :class:`cirq.Circuit` instances with IQM devices:
+There are two main ways of constructing :class:`cirq.Circuit` instances for IQM devices:
 
-1. Create a ``Circuit`` instance, use arbitrary qubit names and types. There is no
-   validation of the operations when appending. At any point the user can apply :meth:`.IQMDevice.decompose_circuit`
-   to decompose the circuit contents into the native operation set of the device, or :meth:`.IQMDevice.route_circuit`
-   to route the circuit to the device connectivity and device qubits.
+1. Create a ``Circuit`` instance using arbitrary qubit names and types.
 2. Create a ``Circuit`` from an OpenQASM 2.0 program. The qubit names are determined by the OpenQASM ``qreg`` names,
-   appended with zero-based indices. Proceed as in workflow 1.
+   appended with zero-based indices.
 
-Below we demonstrate examples of creating circuits in each of the two workflows.
+Below we give an example of each method.
 
-.. _workflow_1:
 
-Workflow 1
-^^^^^^^^^^
+Method 1
+^^^^^^^^
 
 Construct a circuit and use arbitrary qubits:
 
@@ -82,12 +78,12 @@ Construct a circuit and use arbitrary qubits:
     import cirq
 
     q1, q2 = cirq.NamedQubit('Alice'), cirq.NamedQubit('Bob')
-    circuit_1 = cirq.Circuit()
-    circuit_1.append(cirq.X(q1))
-    circuit_1.append(cirq.H(q2))
-    circuit_1.append(cirq.CNOT(q1, q2))
-    circuit_1.append(cirq.measure(q1, q2, key='m'))
-    print(circuit_1)
+    circuit = cirq.Circuit()
+    circuit.append(cirq.X(q1))
+    circuit.append(cirq.H(q2))
+    circuit.append(cirq.CNOT(q1, q2))
+    circuit.append(cirq.measure(q1, q2, key='m'))
+    print(circuit)
 
 This will result in the circuit
 ::
@@ -96,71 +92,9 @@ This will result in the circuit
                  │   │
    Bob: ─────H───X───M────────
 
-After the circuit has been constructed, it can be decomposed and routed against a particular ``IQMDevice``.
-The method :meth:`.IQMDevice.decompose_circuit` accepts a :class:`cirq.Circuit` object as an argument and
-returns the decomposed circuit containing only native gates for the corresponding device:
 
-.. code-block:: python
-
-    decomposed_circuit_1 = adonis.decompose_circuit(circuit_1)
-
-
-The method :meth:`.IQMDevice.route_circuit` accepts a :class:`cirq.Circuit` object as an argument,
-and returns the circuit routed against the device, acting on the device qubits instead of the
-arbitrary qubits we had originally.
-
-.. code-block:: python
-
-    routed_circuit_1 = adonis.route_circuit(decomposed_circuit_1)
-    print(routed_circuit_1)
-
-
-::
-
-    QB3: ───X────────────────────@───────────M('m')───
-                                 │           │
-    QB4: ───Y^0.5───X───Y^-0.5───@───Y^0.5───M────────
-
-By default :meth:`.route_circuit` returns only the routed circuit. However if you set its keyword
-argument ``return_swap_network`` to ``True``, it will return the full
-:class:`cirq.contrib.routing.swap_network.SwapNetwork` object which contains the routed
-circuit itself and the mapping between the used device qubits and the original ones.
-
-Under the hood, :meth:`.route_circuit` leverages the routing algorithm in :mod:`cirq.contrib.routing.router`.
-It works on single- and two-qubit gates, and measurement operations of arbitrary size.
-If you have gates involving more than two qubits you need to decompose them before routing.
-Since routing may add some SWAP gates to the circuit, you will need to decompose the circuit
-again after the routing, unless SWAP is a native gate for the target device.
-
-Yet another important topic is circuit optimization. In addition to the optimizers available in Cirq you can also
-benefit from Cirq on IQM's :mod:`.optimizers` module which contains some optimization tools geared towards IQM devices.
-The function :func:`.optimizers.simplify_circuit` is a convenience method encapsulating a particular sequence of
-optimizations. Let us try it out on our decomposed and routed circuit above:
-
-.. code-block:: python
-
-    from cirq_iqm.optimizers import simplify_circuit
-
-    simplified_circuit_1 = simplify_circuit(routed_circuit_1)
-    print(simplified_circuit_1)
-
-
-::
-
-    QB3: ───PhX(1)───@───────────────────M('m')───
-                     │                   │
-    QB5: ────────────@───PhX(-0.5)^0.5───M────────
-
-
-.. note::
-
-    The funtion :func:`.simplify_circuit` is not associated with any IQM device, so its result may contain non-native
-    gates for a particular device. In the example above we don't have them, however it is generally a good idea to run
-    decomposition once again after the simplification.
-
-
-Workflow 2
-^^^^^^^^^^
+Method 2
+^^^^^^^^
 
 You can read an OpenQASM 2.0 program from a file (or a string), e.g.
 
@@ -178,16 +112,14 @@ You can read an OpenQASM 2.0 program from a file (or a string), e.g.
    measure q -> m;
 
 and convert it into a :class:`cirq.Circuit` object using :func:`.circuit_from_qasm`.
-Once you have done this, you can perform the decomposition and routing steps as in
-the previous workflow to prepare the circuit for execution on an IQM device.
 
 .. code-block:: python
 
     import cirq_iqm
 
     with open('circuit.qasm', 'r') as f:
-        circuit_2 = cirq_iqm.circuit_from_qasm(f.read())
-    print(circuit_2)
+        qasm_circuit = cirq_iqm.circuit_from_qasm(f.read())
+    print(qasm_circuit)
 
 ::
 
@@ -196,6 +128,111 @@ the previous workflow to prepare the circuit for execution on an IQM device.
    q_1: ───H───X───M('m_1')───
 
 :func:`.circuit_from_qasm` uses the OpenQASM 2.0 parser in :mod:`cirq.contrib.qasm_import`.
+
+After a circuit has been constructed, it can be decomposed and routed against a particular ``IQMDevice``.
+
+
+Decomposition
+-------------
+
+The method :meth:`.IQMDevice.decompose_circuit` accepts a :class:`cirq.Circuit` object as an argument and
+returns the decomposed circuit containing only native operations for the corresponding device:
+
+.. code-block:: python
+
+    decomposed_circuit = adonis.decompose_circuit(circuit)
+    print(decomposed_circuit)
+
+::
+
+    Alice: ───X────────────────────@───────────M('m')───
+                                   │           │
+    Bob: ─────Y^0.5───X───Y^-0.5───@───Y^0.5───M────────
+
+The Hadamard and CNOT gates are not native to Adonis, so they were decomposed to X, Y and CZ gates which are.
+
+
+.. _routing:
+
+Routing
+-------
+
+Routing means transforming a circuit such that it acts on the device qubits, and respects the
+device connectivity.
+The method :meth:`.IQMDevice.route_circuit` accepts a :class:`cirq.Circuit` object as an argument,
+and returns the circuit routed against the device, acting on the device qubits instead of the
+arbitrary qubits we had originally.
+
+.. code-block:: python
+
+    routed_circuit_1 = adonis.route_circuit(decomposed_circuit)
+    print(routed_circuit_1)
+
+::
+
+    QB3: ───X────────────────────@───────────M('m')───
+                                 │           │
+    QB4: ───Y^0.5───X───Y^-0.5───@───Y^0.5───M────────
+
+By default :meth:`.route_circuit` returns only the routed circuit. However, if you set its keyword
+argument ``return_swap_network`` to ``True``, it will return the full
+:class:`cirq.contrib.routing.swap_network.SwapNetwork` object which contains the routed
+circuit itself and the mapping between the used device qubits and the original ones.
+
+You may also provide the initial mapping from the *logical* qubits in the circuit to the *physical*
+qubits on the device yourself, by using the keyword argument ``initial_mapping``.
+It serves as the starting point of the routing:
+
+.. code-block:: python
+
+    routed_circuit_2 = adonis.route_circuit(
+        decomposed_circuit,
+        initial_mapping={q1: adonis.qubits[2], q2: adonis.qubits[0]},
+    )
+    print(routed_circuit_2)
+
+::
+
+    QB1: ───Y^0.5───X───Y^-0.5───@───Y^0.5───────M────────
+                                 │               │
+    QB3: ───X────────────────────@───────────────M('m')───
+
+Under the hood, :meth:`.route_circuit` leverages the routing algorithm in :mod:`cirq.contrib.routing.router`.
+It works on single- and two-qubit gates, and measurement operations of arbitrary size.
+If you have gates involving more than two qubits you need to decompose them before routing.
+Since routing may add some SWAP gates to the circuit, you will need to decompose the circuit
+again after the routing, unless SWAP is a native gate for the target device.
+
+
+Optimization
+------------
+
+Yet another important topic is circuit optimization. In addition to the optimizers available in Cirq you can also
+benefit from Cirq on IQM's :mod:`.optimizers` module which contains some optimization tools geared towards IQM devices.
+The function :func:`.optimizers.simplify_circuit` is a convenience method encapsulating a particular sequence of
+optimizations. Let us try it out on our decomposed and routed circuit above:
+
+.. code-block:: python
+
+    from cirq_iqm.optimizers import simplify_circuit
+
+    simplified_circuit = simplify_circuit(routed_circuit_1)
+    print(simplified_circuit)
+
+
+::
+
+    QB3: ───PhX(1)───@───────────────────M('m')───
+                     │                   │
+    QB4: ────────────@───PhX(-0.5)^0.5───M────────
+
+
+.. note::
+
+    The funtion :func:`.simplify_circuit` is not associated with any IQM device, so its result may contain non-native
+    gates for a particular device. In the example above we don't have them, however it is generally a good idea to run
+    decomposition once again after the simplification.
+
 
 
 Running on a real quantum computer
@@ -218,7 +255,7 @@ instance and use its :meth:`~.IQMSampler.run` method to send a circuit for execu
    from cirq_iqm.iqm_sampler import IQMSampler
 
    sampler = IQMSampler(iqm_server_url)
-   result = sampler.run(circuit_1, repetitions=10)
+   result = sampler.run(routed_circuit_1, repetitions=10)
    print(result.measurements['m'])
 
 
@@ -232,27 +269,12 @@ If the IQM server you are connecting to requires authentication, you will also h
 `Cortex CLI <https://github.com/iqm-finland/cortex-cli>`_ to retrieve and automatically refresh access tokens,
 then set the ``IQM_TOKENS_FILE`` environment variable to use those tokens.
 See Cortex CLI's `documentation <https://iqm-finland.github.io/cortex-cli/readme.html>`_ for details.
-Alternatively, authorize with the IQM_AUTH_SERVER, IQM_AUTH_USERNAME and IQM_AUTH_PASSWORD environment variables
-or pass them as arguments to the constructor of :class:`.IQMProvider`, however this approach is less secure
-and considered deprecated.
+Alternatively, you can authenticate yourself using the ``IQM_AUTH_SERVER``, ``IQM_AUTH_USERNAME``
+and ``IQM_AUTH_PASSWORD`` environment variables, or pass them as arguments to the constructor of
+:class:`.IQMProvider`, but this approach is less secure and considered deprecated.
 
-When executing a circuit that uses something other than the device qubits, you need to either route it first
-as explained in :ref:`workflow 1 <workflow_1>` above,
-or provide the mapping from the *logical* qubits in the circuit to the *physical* qubits on the device yourself.
-The initializer of :class:`.IQMSampler` accepts an optional argument called ``qubit_mapping`` which
-can be used to specify this correspondence.
-
-.. code-block:: python
-
-    import json
-
-
-    qubit_mapping = {'Alice': 'QB1', 'Bob': 'QB3'}
-
-    sampler = IQMSampler(iqm_server_url, qubit_mapping=qubit_mapping)
-    result = sampler.run(decomposed_circuit_1, repetitions=10)
-    print(result.measurements['m'])
-
+When executing a circuit that uses something other than the device qubits, you need to route it first,
+as explained in the :ref:`routing` section above.
 
 
 More examples

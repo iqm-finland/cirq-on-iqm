@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>User guide &#8212; Cirq on IQM 8.2 documentation</title>
+    <title>User guide &#8212; Cirq on IQM 9.0 documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -404,16 +404,31 @@ title="Print to PDF"
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#workflow-1">
-     Workflow 1
+    <a class="reference internal nav-link" href="#method-1">
+     Method 1
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#workflow-2">
-     Workflow 2
+    <a class="reference internal nav-link" href="#method-2">
+     Method 2
     </a>
    </li>
   </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#decomposition">
+   Decomposition
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#routing">
+   Routing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#optimization">
+   Optimization
+  </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#running-on-a-real-quantum-computer">
@@ -470,16 +485,31 @@ title="Print to PDF"
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#workflow-1">
-     Workflow 1
+    <a class="reference internal nav-link" href="#method-1">
+     Method 1
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#workflow-2">
-     Workflow 2
+    <a class="reference internal nav-link" href="#method-2">
+     Method 2
     </a>
    </li>
   </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#decomposition">
+   Decomposition
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#routing">
+   Routing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#optimization">
+   Optimization
+  </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#running-on-a-real-quantum-computer">
@@ -518,7 +548,7 @@ code snippets and check the output yourself.</p>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">#</a></h2>
 <p>The recommended way is to install the distribution package <code class="docutils literal notranslate"><span class="pre">cirq-iqm</span></code> directly from the Python Package Index (PyPI):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install cirq-iqm
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>cirq-iqm
 </pre></div>
 </div>
 <p>After installation Cirq on IQM can be imported in your Python code as follows:</p>
@@ -554,28 +584,25 @@ corresponding <a class="reference internal" href="api/cirq_iqm.devices.iqm_devic
 </section>
 <section id="constructing-circuits">
 <h2>Constructing circuits<a class="headerlink" href="#constructing-circuits" title="Permalink to this headline">#</a></h2>
-<p>There are two main workflows of using <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> instances with IQM devices:</p>
+<p>There are two main ways of constructing <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> instances for IQM devices:</p>
 <ol class="arabic simple">
-<li><p>Create a <code class="docutils literal notranslate"><span class="pre">Circuit</span></code> instance, use arbitrary qubit names and types. There is no
-validation of the operations when appending. At any point the user can apply <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice.decompose_circuit" title="cirq_iqm.devices.iqm_device.IQMDevice.decompose_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.decompose_circuit()</span></code></a>
-to decompose the circuit contents into the native operation set of the device, or <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.devices.iqm_device.IQMDevice.route_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.route_circuit()</span></code></a>
-to route the circuit to the device connectivity and device qubits.</p></li>
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">Circuit</span></code> instance using arbitrary qubit names and types.</p></li>
 <li><p>Create a <code class="docutils literal notranslate"><span class="pre">Circuit</span></code> from an OpenQASM 2.0 program. The qubit names are determined by the OpenQASM <code class="docutils literal notranslate"><span class="pre">qreg</span></code> names,
-appended with zero-based indices. Proceed as in workflow 1.</p></li>
+appended with zero-based indices.</p></li>
 </ol>
-<p>Below we demonstrate examples of creating circuits in each of the two workflows.</p>
-<section id="workflow-1">
-<span id="id2"></span><h3>Workflow 1<a class="headerlink" href="#workflow-1" title="Permalink to this headline">#</a></h3>
+<p>Below we give an example of each method.</p>
+<section id="method-1">
+<h3>Method 1<a class="headerlink" href="#method-1" title="Permalink to this headline">#</a></h3>
 <p>Construct a circuit and use arbitrary qubits:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cirq</span>
 
 <span class="n">q1</span><span class="p">,</span> <span class="n">q2</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">NamedQubit</span><span class="p">(</span><span class="s1">&#39;Alice&#39;</span><span class="p">),</span> <span class="n">cirq</span><span class="o">.</span><span class="n">NamedQubit</span><span class="p">(</span><span class="s1">&#39;Bob&#39;</span><span class="p">)</span>
-<span class="n">circuit_1</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">()</span>
-<span class="n">circuit_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="n">q1</span><span class="p">))</span>
-<span class="n">circuit_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">H</span><span class="p">(</span><span class="n">q2</span><span class="p">))</span>
-<span class="n">circuit_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">CNOT</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span> <span class="n">q2</span><span class="p">))</span>
-<span class="n">circuit_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span> <span class="n">q2</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">circuit_1</span><span class="p">)</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="n">q1</span><span class="p">))</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">H</span><span class="p">(</span><span class="n">q2</span><span class="p">))</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">CNOT</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span> <span class="n">q2</span><span class="p">))</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span> <span class="n">q2</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This will result in the circuit</p>
@@ -584,57 +611,9 @@ appended with zero-based indices. Proceed as in workflow 1.</p></li>
 Bob: ─────H───X───M────────
 </pre></div>
 </div>
-<p>After the circuit has been constructed, it can be decomposed and routed against a particular <code class="docutils literal notranslate"><span class="pre">IQMDevice</span></code>.
-The method <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice.decompose_circuit" title="cirq_iqm.devices.iqm_device.IQMDevice.decompose_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.decompose_circuit()</span></code></a> accepts a <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> object as an argument and
-returns the decomposed circuit containing only native gates for the corresponding device:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">decomposed_circuit_1</span> <span class="o">=</span> <span class="n">adonis</span><span class="o">.</span><span class="n">decompose_circuit</span><span class="p">(</span><span class="n">circuit_1</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The method <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.devices.iqm_device.IQMDevice.route_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.route_circuit()</span></code></a> accepts a <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> object as an argument,
-and returns the circuit routed against the device, acting on the device qubits instead of the
-arbitrary qubits we had originally.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">routed_circuit_1</span> <span class="o">=</span> <span class="n">adonis</span><span class="o">.</span><span class="n">route_circuit</span><span class="p">(</span><span class="n">decomposed_circuit_1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">routed_circuit_1</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QB3: ───X────────────────────@───────────M(&#39;m&#39;)───
-                             │           │
-QB4: ───Y^0.5───X───Y^-0.5───@───Y^0.5───M────────
-</pre></div>
-</div>
-<p>By default <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.devices.iqm_device.IQMDevice.route_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">route_circuit()</span></code></a> returns only the routed circuit. However if you set its keyword
-argument <code class="docutils literal notranslate"><span class="pre">return_swap_network</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code>, it will return the full
-<code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.contrib.routing.swap_network.SwapNetwork</span></code> object which contains the routed
-circuit itself and the mapping between the used device qubits and the original ones.</p>
-<p>Under the hood, <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.devices.iqm_device.IQMDevice.route_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">route_circuit()</span></code></a> leverages the routing algorithm in <code class="xref py py-mod docutils literal notranslate"><span class="pre">cirq.contrib.routing.router</span></code>.
-It works on single- and two-qubit gates, and measurement operations of arbitrary size.
-If you have gates involving more than two qubits you need to decompose them before routing.
-Since routing may add some SWAP gates to the circuit, you will need to decompose the circuit
-again after the routing, unless SWAP is a native gate for the target device.</p>
-<p>Yet another important topic is circuit optimization. In addition to the optimizers available in Cirq you can also
-benefit from Cirq on IQM’s <a class="reference internal" href="api/cirq_iqm.optimizers.html#module-cirq_iqm.optimizers" title="cirq_iqm.optimizers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">optimizers</span></code></a> module which contains some optimization tools geared towards IQM devices.
-The function <a class="reference internal" href="api/cirq_iqm.optimizers.simplify_circuit.html#cirq_iqm.optimizers.simplify_circuit" title="cirq_iqm.optimizers.simplify_circuit"><code class="xref py py-func docutils literal notranslate"><span class="pre">optimizers.simplify_circuit()</span></code></a> is a convenience method encapsulating a particular sequence of
-optimizations. Let us try it out on our decomposed and routed circuit above:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cirq_iqm.optimizers</span> <span class="kn">import</span> <span class="n">simplify_circuit</span>
-
-<span class="n">simplified_circuit_1</span> <span class="o">=</span> <span class="n">simplify_circuit</span><span class="p">(</span><span class="n">routed_circuit_1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">simplified_circuit_1</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QB3: ───PhX(1)───@───────────────────M(&#39;m&#39;)───
-                 │                   │
-QB5: ────────────@───PhX(-0.5)^0.5───M────────
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The funtion <a class="reference internal" href="api/cirq_iqm.optimizers.simplify_circuit.html#cirq_iqm.optimizers.simplify_circuit" title="cirq_iqm.optimizers.simplify_circuit"><code class="xref py py-func docutils literal notranslate"><span class="pre">simplify_circuit()</span></code></a> is not associated with any IQM device, so its result may contain non-native
-gates for a particular device. In the example above we don’t have them, however it is generally a good idea to run
-decomposition once again after the simplification.</p>
-</div>
 </section>
-<section id="workflow-2">
-<h3>Workflow 2<a class="headerlink" href="#workflow-2" title="Permalink to this headline">#</a></h3>
+<section id="method-2">
+<h3>Method 2<a class="headerlink" href="#method-2" title="Permalink to this headline">#</a></h3>
 <p>You can read an OpenQASM 2.0 program from a file (or a string), e.g.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OPENQASM</span> <span class="mf">2.0</span><span class="p">;</span>
 <span class="n">include</span> <span class="s2">&quot;qelib1.inc&quot;</span><span class="p">;</span>
@@ -648,14 +627,12 @@ decomposition once again after the simplification.</p>
 <span class="n">measure</span> <span class="n">q</span> <span class="o">-&gt;</span> <span class="n">m</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>and convert it into a <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> object using <a class="reference internal" href="api/cirq_iqm.extended_qasm_parser.circuit_from_qasm.html#cirq_iqm.extended_qasm_parser.circuit_from_qasm" title="cirq_iqm.extended_qasm_parser.circuit_from_qasm"><code class="xref py py-func docutils literal notranslate"><span class="pre">circuit_from_qasm()</span></code></a>.
-Once you have done this, you can perform the decomposition and routing steps as in
-the previous workflow to prepare the circuit for execution on an IQM device.</p>
+<p>and convert it into a <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> object using <a class="reference internal" href="api/cirq_iqm.extended_qasm_parser.circuit_from_qasm.html#cirq_iqm.extended_qasm_parser.circuit_from_qasm" title="cirq_iqm.extended_qasm_parser.circuit_from_qasm"><code class="xref py py-func docutils literal notranslate"><span class="pre">circuit_from_qasm()</span></code></a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cirq_iqm</span>
 
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;circuit.qasm&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">circuit_2</span> <span class="o">=</span> <span class="n">cirq_iqm</span><span class="o">.</span><span class="n">circuit_from_qasm</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">circuit_2</span><span class="p">)</span>
+    <span class="n">qasm_circuit</span> <span class="o">=</span> <span class="n">cirq_iqm</span><span class="o">.</span><span class="n">circuit_from_qasm</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">qasm_circuit</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>q_0: ───X───@───M(&#39;m_0&#39;)───
@@ -664,7 +641,88 @@ q_1: ───H───X───M(&#39;m_1&#39;)───
 </pre></div>
 </div>
 <p><a class="reference internal" href="api/cirq_iqm.extended_qasm_parser.circuit_from_qasm.html#cirq_iqm.extended_qasm_parser.circuit_from_qasm" title="cirq_iqm.extended_qasm_parser.circuit_from_qasm"><code class="xref py py-func docutils literal notranslate"><span class="pre">circuit_from_qasm()</span></code></a> uses the OpenQASM 2.0 parser in <code class="xref py py-mod docutils literal notranslate"><span class="pre">cirq.contrib.qasm_import</span></code>.</p>
+<p>After a circuit has been constructed, it can be decomposed and routed against a particular <code class="docutils literal notranslate"><span class="pre">IQMDevice</span></code>.</p>
 </section>
+</section>
+<section id="decomposition">
+<h2>Decomposition<a class="headerlink" href="#decomposition" title="Permalink to this headline">#</a></h2>
+<p>The method <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice.decompose_circuit" title="cirq_iqm.devices.iqm_device.IQMDevice.decompose_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.decompose_circuit()</span></code></a> accepts a <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> object as an argument and
+returns the decomposed circuit containing only native operations for the corresponding device:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">decomposed_circuit</span> <span class="o">=</span> <span class="n">adonis</span><span class="o">.</span><span class="n">decompose_circuit</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decomposed_circuit</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Alice: ───X────────────────────@───────────M(&#39;m&#39;)───
+                               │           │
+Bob: ─────Y^0.5───X───Y^-0.5───@───Y^0.5───M────────
+</pre></div>
+</div>
+<p>The Hadamard and CNOT gates are not native to Adonis, so they were decomposed to X, Y and CZ gates which are.</p>
+</section>
+<section id="routing">
+<span id="id2"></span><h2>Routing<a class="headerlink" href="#routing" title="Permalink to this headline">#</a></h2>
+<p>Routing means transforming a circuit such that it acts on the device qubits, and respects the
+device connectivity.
+The method <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.devices.iqm_device.IQMDevice.route_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.route_circuit()</span></code></a> accepts a <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.Circuit</span></code> object as an argument,
+and returns the circuit routed against the device, acting on the device qubits instead of the
+arbitrary qubits we had originally.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">routed_circuit_1</span> <span class="o">=</span> <span class="n">adonis</span><span class="o">.</span><span class="n">route_circuit</span><span class="p">(</span><span class="n">decomposed_circuit</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">routed_circuit_1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QB3: ───X────────────────────@───────────M(&#39;m&#39;)───
+                             │           │
+QB4: ───Y^0.5───X───Y^-0.5───@───Y^0.5───M────────
+</pre></div>
+</div>
+<p>By default <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.devices.iqm_device.IQMDevice.route_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">route_circuit()</span></code></a> returns only the routed circuit. However, if you set its keyword
+argument <code class="docutils literal notranslate"><span class="pre">return_swap_network</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code>, it will return the full
+<code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.contrib.routing.swap_network.SwapNetwork</span></code> object which contains the routed
+circuit itself and the mapping between the used device qubits and the original ones.</p>
+<p>You may also provide the initial mapping from the <em>logical</em> qubits in the circuit to the <em>physical</em>
+qubits on the device yourself, by using the keyword argument <code class="docutils literal notranslate"><span class="pre">initial_mapping</span></code>.
+It serves as the starting point of the routing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">routed_circuit_2</span> <span class="o">=</span> <span class="n">adonis</span><span class="o">.</span><span class="n">route_circuit</span><span class="p">(</span>
+    <span class="n">decomposed_circuit</span><span class="p">,</span>
+    <span class="n">initial_mapping</span><span class="o">=</span><span class="p">{</span><span class="n">q1</span><span class="p">:</span> <span class="n">adonis</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">q2</span><span class="p">:</span> <span class="n">adonis</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">0</span><span class="p">]},</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">routed_circuit_2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QB1: ───Y^0.5───X───Y^-0.5───@───Y^0.5───────M────────
+                             │               │
+QB3: ───X────────────────────@───────────────M(&#39;m&#39;)───
+</pre></div>
+</div>
+<p>Under the hood, <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.devices.iqm_device.IQMDevice.route_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">route_circuit()</span></code></a> leverages the routing algorithm in <code class="xref py py-mod docutils literal notranslate"><span class="pre">cirq.contrib.routing.router</span></code>.
+It works on single- and two-qubit gates, and measurement operations of arbitrary size.
+If you have gates involving more than two qubits you need to decompose them before routing.
+Since routing may add some SWAP gates to the circuit, you will need to decompose the circuit
+again after the routing, unless SWAP is a native gate for the target device.</p>
+</section>
+<section id="optimization">
+<h2>Optimization<a class="headerlink" href="#optimization" title="Permalink to this headline">#</a></h2>
+<p>Yet another important topic is circuit optimization. In addition to the optimizers available in Cirq you can also
+benefit from Cirq on IQM’s <a class="reference internal" href="api/cirq_iqm.optimizers.html#module-cirq_iqm.optimizers" title="cirq_iqm.optimizers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">optimizers</span></code></a> module which contains some optimization tools geared towards IQM devices.
+The function <a class="reference internal" href="api/cirq_iqm.optimizers.simplify_circuit.html#cirq_iqm.optimizers.simplify_circuit" title="cirq_iqm.optimizers.simplify_circuit"><code class="xref py py-func docutils literal notranslate"><span class="pre">optimizers.simplify_circuit()</span></code></a> is a convenience method encapsulating a particular sequence of
+optimizations. Let us try it out on our decomposed and routed circuit above:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cirq_iqm.optimizers</span> <span class="kn">import</span> <span class="n">simplify_circuit</span>
+
+<span class="n">simplified_circuit</span> <span class="o">=</span> <span class="n">simplify_circuit</span><span class="p">(</span><span class="n">routed_circuit_1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">simplified_circuit</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QB3: ───PhX(1)───@───────────────────M(&#39;m&#39;)───
+                 │                   │
+QB4: ────────────@───PhX(-0.5)^0.5───M────────
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The funtion <a class="reference internal" href="api/cirq_iqm.optimizers.simplify_circuit.html#cirq_iqm.optimizers.simplify_circuit" title="cirq_iqm.optimizers.simplify_circuit"><code class="xref py py-func docutils literal notranslate"><span class="pre">simplify_circuit()</span></code></a> is not associated with any IQM device, so its result may contain non-native
+gates for a particular device. In the example above we don’t have them, however it is generally a good idea to run
+decomposition once again after the simplification.</p>
+</div>
 </section>
 <section id="running-on-a-real-quantum-computer">
 <h2>Running on a real quantum computer<a class="headerlink" href="#running-on-a-real-quantum-computer" title="Permalink to this headline">#</a></h2>
@@ -681,7 +739,7 @@ instance and use its <code class="xref py py-meth docutils literal notranslate">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cirq_iqm.iqm_sampler</span> <span class="kn">import</span> <span class="n">IQMSampler</span>
 
 <span class="n">sampler</span> <span class="o">=</span> <span class="n">IQMSampler</span><span class="p">(</span><span class="n">iqm_server_url</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit_1</span><span class="p">,</span> <span class="n">repetitions</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">routed_circuit_1</span><span class="p">,</span> <span class="n">repetitions</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">measurements</span><span class="p">[</span><span class="s1">&#39;m&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -694,24 +752,11 @@ a particular calibration set, provide the <code class="docutils literal notransl
 <a class="reference external" href="https://github.com/iqm-finland/cortex-cli">Cortex CLI</a> to retrieve and automatically refresh access tokens,
 then set the <code class="docutils literal notranslate"><span class="pre">IQM_TOKENS_FILE</span></code> environment variable to use those tokens.
 See Cortex CLI’s <a class="reference external" href="https://iqm-finland.github.io/cortex-cli/readme.html">documentation</a> for details.
-Alternatively, authorize with the IQM_AUTH_SERVER, IQM_AUTH_USERNAME and IQM_AUTH_PASSWORD environment variables
-or pass them as arguments to the constructor of <code class="xref py py-class docutils literal notranslate"><span class="pre">IQMProvider</span></code>, however this approach is less secure
-and considered deprecated.</p>
-<p>When executing a circuit that uses something other than the device qubits, you need to either route it first
-as explained in <a class="reference internal" href="#workflow-1"><span class="std std-ref">workflow 1</span></a> above,
-or provide the mapping from the <em>logical</em> qubits in the circuit to the <em>physical</em> qubits on the device yourself.
-The initializer of <a class="reference internal" href="api/cirq_iqm.iqm_sampler.IQMSampler.html#cirq_iqm.iqm_sampler.IQMSampler" title="cirq_iqm.iqm_sampler.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a> accepts an optional argument called <code class="docutils literal notranslate"><span class="pre">qubit_mapping</span></code> which
-can be used to specify this correspondence.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
-
-
-<span class="n">qubit_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Alice&#39;</span><span class="p">:</span> <span class="s1">&#39;QB1&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">:</span> <span class="s1">&#39;QB3&#39;</span><span class="p">}</span>
-
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">IQMSampler</span><span class="p">(</span><span class="n">iqm_server_url</span><span class="p">,</span> <span class="n">qubit_mapping</span><span class="o">=</span><span class="n">qubit_mapping</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">decomposed_circuit_1</span><span class="p">,</span> <span class="n">repetitions</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">measurements</span><span class="p">[</span><span class="s1">&#39;m&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
+Alternatively, you can authenticate yourself using the <code class="docutils literal notranslate"><span class="pre">IQM_AUTH_SERVER</span></code>, <code class="docutils literal notranslate"><span class="pre">IQM_AUTH_USERNAME</span></code>
+and <code class="docutils literal notranslate"><span class="pre">IQM_AUTH_PASSWORD</span></code> environment variables, or pass them as arguments to the constructor of
+<code class="xref py py-class docutils literal notranslate"><span class="pre">IQMProvider</span></code>, but this approach is less secure and considered deprecated.</p>
+<p>When executing a circuit that uses something other than the device qubits, you need to route it first,
+as explained in the <a class="reference internal" href="#routing"><span class="std std-ref">Routing</span></a> section above.</p>
 </section>
 <section id="more-examples">
 <h2>More examples<a class="headerlink" href="#more-examples" title="Permalink to this headline">#</a></h2>
@@ -727,18 +772,18 @@ or by opening a pull request to submit your own improvements to the codebase.</p
 <p>To start developing the project, clone the
 <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm">GitHub repository</a>
 and install it in editable mode with all the extras:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone git@github.com:iqm-finland/cirq-on-iqm.git
-$ <span class="nb">cd</span> cirq-on-iqm
-$ pip install -e <span class="s2">&quot;.[dev,docs,testing]&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:iqm-finland/cirq-on-iqm.git
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>cirq-on-iqm
+$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev,docs,testing]&quot;</span>
 </pre></div>
 </div>
 <p>Build and view the docs:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tox -e docs
-$ firefox build/sphinx/html/index.html
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tox<span class="w"> </span>-e<span class="w"> </span>docs
+$<span class="w"> </span>firefox<span class="w"> </span>build/sphinx/html/index.html
 </pre></div>
 </div>
 <p>Run the tests:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tox
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tox
 </pre></div>
 </div>
 </section>
@@ -792,7 +837,7 @@ be created automatically based on the latest version definition in the CHANGELOG
     By Cirq on IQM developers<br/>
   
       &copy; Copyright 2020–2022, Cirq on IQM developers.<br/>
-    Last updated on 2022-12-29.<br/>
+    Last updated on 2023-01-11.<br/>
 </p>
         </footer>
     </div>

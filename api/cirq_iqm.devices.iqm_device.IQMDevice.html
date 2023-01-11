@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>cirq_iqm.devices.iqm_device.IQMDevice &#8212; Cirq on IQM 8.2 documentation</title>
+    <title>cirq_iqm.devices.iqm_device.IQMDevice &#8212; Cirq on IQM 9.0 documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -448,7 +448,7 @@ optimizing circuits and mapping qubits.</p>
 <td><p>Decomposes operations into the native operation set.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.devices.iqm_device.IQMDevice.route_circuit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">route_circuit</span></code></a>(circuit, *[, ...])</p></td>
-<td><p>Routes the given circuit to the device connectivity.</p></td>
+<td><p>Routes the given circuit to the device connectivity and qubit names.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cirq_iqm.devices.iqm_device.IQMDevice.validate_circuit" title="cirq_iqm.devices.iqm_device.IQMDevice.validate_circuit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_circuit</span></code></a>(circuit)</p></td>
 <td><p>Raises an exception if a circuit is not valid.</p></td>
@@ -555,16 +555,17 @@ optimizing circuits and mapping qubits.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cirq_iqm.devices.iqm_device.IQMDevice.route_circuit">
 <span class="sig-name descname"><span class="pre">route_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_swap_network</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="Permalink to this definition">#</a></dt>
-<dd><p>Routes the given circuit to the device connectivity.</p>
+<dd><p>Routes the given circuit to the device connectivity and qubit names.</p>
 <p>The routed circuit uses the device qubits, and may have additional SWAP gates inserted to perform the qubit
-routing. The function <code class="xref py py-func docutils literal notranslate"><span class="pre">cirq.contrib.routing.router()</span></code> is used for routing.
+routing. The function <code class="xref py py-func docutils literal notranslate"><span class="pre">cirq.contrib.routing.router.route_circuit()</span></code> is used for routing.
 Note that only gates of one or two qubits, and measurement operations of arbitrary size are supported.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>circuit</strong> (<em>cirq.circuits.circuit.Circuit</em>) – circuit to route</p></li>
 <li><p><strong>return_swap_network</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – iff True, return the full swap network instead of the routed circuit</p></li>
-<li><p><strong>initial_mapping</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Optional" title="(in Python v3.9)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Dict" title="(in Python v3.9)"><em>Dict</em></a><em>[</em><em>cirq.ops.raw_types.Qid</em><em>, </em><em>cirq.ops.raw_types.Qid</em><em>]</em><em>]</em>) – mapping between logical and physical qubits</p></li>
+<li><p><strong>initial_mapping</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Optional" title="(in Python v3.9)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>[</em><em>'cirq.Qid'</em><em>, </em><em>'cirq.Qid'</em><em>]</em><em>]</em>) – Initial mapping from <code class="docutils literal notranslate"><span class="pre">circuit</span></code> qubits to device qubits, to serve as
+the starting point of the routing. <code class="docutils literal notranslate"><span class="pre">None</span></code> means it will be generated automatically.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -666,7 +667,7 @@ Note that only gates of one or two qubits, and measurement operations of arbitra
     By Cirq on IQM developers<br/>
   
       &copy; Copyright 2020–2022, Cirq on IQM developers.<br/>
-    Last updated on 2022-12-29.<br/>
+    Last updated on 2023-01-11.<br/>
 </p>
         </footer>
     </div>
