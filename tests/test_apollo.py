@@ -330,7 +330,7 @@ class TestCircuitRouting:
             cirq.measure(qubits[1], key='mk1'),
         )
 
-        initial_mapping = dict(zip(apollo.metadata.nx_graph, qubits[0:2]))
+        initial_mapping = dict(zip(qubits[0:2], apollo.metadata.nx_graph))
         # route_circuit() checks mapping consistency when initial_mapping is provided
         new = apollo.route_circuit(circuit, initial_mapping=initial_mapping)
 
@@ -346,7 +346,7 @@ class TestCircuitRouting:
             + [cirq.measure([q]) for q in qubits]
         )
 
-        initial_mapping = dict(zip(apollo.metadata.nx_graph, qubits))
+        initial_mapping = dict(zip(qubits, apollo.metadata.nx_graph))
         # route_circuit() checks mapping consistency when initial_mapping is provided
         new = apollo.route_circuit(circuit, initial_mapping=initial_mapping)
 
