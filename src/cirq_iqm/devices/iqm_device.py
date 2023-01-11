@@ -22,12 +22,11 @@ from __future__ import annotations
 
 import collections.abc as ca
 from math import pi as PI
-from typing import Optional, Union
+from typing import Optional, cast
 import uuid
 
 import cirq
 from cirq import InsertStrategy, MeasurementGate, devices, ops, protocols
-from cirq.contrib.routing.router import route_circuit
 
 from .iqm_device_metadata import IQMDeviceMetadata
 
@@ -177,23 +176,24 @@ class IQMDevice(devices.Device):
         self,
         circuit: cirq.Circuit,
         *,
-        return_swap_network: bool = False,
-        initial_mapping: Optional[dict['cirq.Qid', 'cirq.Qid']] = None,
-    ) -> Union[cirq.Circuit, cirq.contrib.routing.SwapNetwork]:
+        initial_mapper: Optional[cirq.HardCodedInitialMapper] = None,
+    ) -> tuple[cirq.Circuit, dict[cirq.Qid, cirq.Qid], dict[cirq.Qid, cirq.Qid]]:
         """Routes the given circuit to the device connectivity and qubit names.
 
         The routed circuit uses the device qubits, and may have additional SWAP gates inserted to perform the qubit
-        routing. The function :func:`cirq.contrib.routing.router.route_circuit` is used for routing.
+        routing. The transformer :class:`cirq.RouterCQC` is used for routing.
         Note that only gates of one or two qubits, and measurement operations of arbitrary size are supported.
 
         Args:
             circuit: circuit to route
-            return_swap_network: iff True, return the full swap network instead of the routed circuit
-            initial_mapping: Initial mapping from ``circuit`` qubits to device qubits, to serve as
+            initial_mapper: Initial mapping from ``circuit`` qubits to device qubits, to serve as
                 the starting point of the routing. ``None`` means it will be generated automatically.
 
         Returns:
-            routed circuit, or the swap network if requested
+            The routed circuit.
+            The initial mapping before inserting SWAP gates, see docstring of :func:`cirq.RouterCQC.route_circuit`
+            The final mapping from physical qubits to physical qubits,
+                see docstring of :func:`cirq.RouterCQC.route_circuit`
 
         Raises:
             ValueError: routing is impossible
@@ -202,8 +202,7 @@ class IQMDevice(devices.Device):
 
         # Remove all measurement gates and replace them with 1-qubit identity gates so they don't
         # disappear from the final swap network if no other operations remain. We will add them back after routing the
-        # rest of the network. This is done for two purposes: it allows the circuit to contain measurements of more than
-        # 2 qubits in the circuit and prevents measurements becoming non-terminal during routing.
+        # rest of the network. This is done to prevent measurements becoming non-terminal during routing.
         measurement_ops = list(circuit.findall_operations_with_gate_type(MeasurementGate))
         measurement_qubits = set().union(*[op.qubits for _, op, _ in measurement_ops])
 
@@ -213,35 +212,27 @@ class IQMDevice(devices.Device):
         for q in measurement_qubits:
             modified_circuit.append(cirq.I(q).with_tags(i_tag))
 
-        if initial_mapping is not None:
-            # reverse the mapping to match the cirq.contrib.routing.greedy convention
-            initial_mapping = {v: k for k, v in initial_mapping.items()}
-
         # Route the modified circuit.
-        swap_network = route_circuit(
-            modified_circuit,
-            self._metadata.nx_graph,
-            algo_name='greedy',
-            initial_mapping=initial_mapping,
+        router = cirq.RouteCQC(self._metadata.nx_graph)
+        routed_circuit, initial_mapping, final_mapping = router.route_circuit(
+            modified_circuit, initial_mapper=initial_mapper
         )
+        routed_circuit = cast(cirq.Circuit, routed_circuit)
 
         # Return measurements to the circuit with potential qubit swaps.
-        final_qubit_mapping = {v: k for k, v in swap_network.final_mapping().items()}
         new_measurements = []
         for _, op, gate in measurement_ops:
-            new_qubits = [final_qubit_mapping[q] for q in op.qubits]
+            new_qubits = [final_mapping[initial_mapping[q]] for q in op.qubits]
             new_measurement = cirq.measure(*new_qubits, key=gate.key)
             new_measurements.append(new_measurement)
 
-        swap_network.circuit.append(new_measurements, InsertStrategy.NEW_THEN_INLINE)
+        routed_circuit.append(new_measurements, InsertStrategy.NEW_THEN_INLINE)
 
         # Remove additional identity gates.
-        identity_gates = swap_network.circuit.findall_operations(lambda op: i_tag in op.tags)
-        swap_network.circuit.batch_remove(identity_gates)
+        identity_gates = routed_circuit.findall_operations(lambda op: i_tag in op.tags)
+        routed_circuit.batch_remove(identity_gates)
 
-        if return_swap_network:
-            return swap_network
-        return swap_network.circuit
+        return routed_circuit, initial_mapping, final_mapping
 
     def decompose_circuit(self, circuit: cirq.Circuit) -> cirq.Circuit:
         """Decomposes the given circuit to the native gate set of the device.
