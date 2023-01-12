@@ -176,7 +176,7 @@ class IQMDevice(devices.Device):
         self,
         circuit: cirq.Circuit,
         *,
-        initial_mapper: Optional[cirq.HardCodedInitialMapper] = None,
+        initial_mapper: Optional[cirq.AbstractInitialMapper] = None,
     ) -> tuple[cirq.Circuit, dict[cirq.Qid, cirq.Qid], dict[cirq.Qid, cirq.Qid]]:
         """Routes the given circuit to the device connectivity and qubit names.
 
@@ -191,7 +191,9 @@ class IQMDevice(devices.Device):
 
         Returns:
             The routed circuit.
+
             The initial mapping before inserting SWAP gates, see docstring of :func:`cirq.RouterCQC.route_circuit`
+
             The final mapping from physical qubits to physical qubits,
                 see docstring of :func:`cirq.RouterCQC.route_circuit`
 
