@@ -180,7 +180,7 @@ The ``initial_mapping`` is either the mapping from circuit to device qubits as p
 The ``final_mapping`` is the mapping from physical qubits before inserting SWAP gates to the physical
 qubits after the routing is complete
 
-As mentioned above you may also provide the initial mapping from the *logical* qubits in the circuit to the 
+As mentioned above, you may also provide the initial mapping from the *logical* qubits in the circuit to the 
 *physical* qubits on the device yourself, by using the keyword argument ``initial_mapper``.
 It serves as the starting point of the routing:
 
