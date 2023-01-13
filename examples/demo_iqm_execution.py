@@ -57,7 +57,7 @@ def demo_run_circuit():
 
     # Sampler results can be accessed several ways
     # For instance, to see the histogram of results
-    print(results.histogram(key='m', fold_func=lambda x: tuple(x)))
+    print(results.histogram(key='m', fold_func=tuple))
 
     # Or the data itself
     print(results.data)
