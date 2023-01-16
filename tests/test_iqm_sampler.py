@@ -76,6 +76,29 @@ def test_run_sweep_with_parameter_sweep(adonis_sampler, iqm_metadata):
     assert all(isinstance(result, cirq.Result) for result in results)
 
 
+@pytest.mark.usefixtures('unstub')
+def test_run_iqm_batch(adonis_sampler, iqm_metadata):
+    client = mock(IQMClient)
+    run_id = uuid.uuid4()
+    run_result = RunResult(
+        status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
+    )
+    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY).thenReturn(run_id)
+    when(client).wait_for_results(run_id).thenReturn(run_result)
+
+    qubit_1 = cirq.NamedQubit('QB1')
+    qubit_2 = cirq.NamedQubit('QB2')
+    circuit1 = cirq.Circuit(cirq.X(qubit_1), cirq.measure(qubit_1, qubit_2, key='result'))
+    circuit2 = cirq.Circuit(cirq.X(qubit_2), cirq.measure(qubit_1, qubit_2, key='result'))
+    circuits = [circuit1, circuit2]
+
+    adonis_sampler._client = client
+    results = adonis_sampler.run_iqm_batch(circuits, repetitions=123)
+
+    assert len(results) == len(circuits)
+    assert all(isinstance(result, cirq.Result) for result in results)
+
+
 def test_credentials_are_passed_to_client():
     user_auth_args = {
         'auth_server_url': 'https://fake.auth.server.com',

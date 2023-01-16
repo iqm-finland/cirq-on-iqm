@@ -102,32 +102,49 @@ class IQMSampler(cirq.work.Sampler):
 
         measurements = self._send_circuits(
             circuits,
-            repetitions=repetitions,
             calibration_set_id=self._calibration_set_id,
+            repetitions=repetitions,
         )
         return [study.ResultDict(params=res, measurements=mes) for res, mes in zip(resolvers, measurements)]
 
-    def _send_circuits(  # pylint: disable=too-many-arguments
-        self,
-        circuits: list[cirq.Circuit],
-        calibration_set_id: Optional[int],
-        repetitions: int = 1,
-    ) -> list[dict[str, np.ndarray]]:
-        """Sends the circuit(s) to be executed.
+    def run_iqm_batch(self, programs: list[cirq.Circuit], repetitions: int = 1) -> list[cirq.Result]:
+        """Sends a batch of circuits to be executed.
+
+        Running circuits in a batch is more efficient and hence completes quicker than running the circuits
+        individually. Circuits run in a batch must all measure the same qubits.
 
         Args:
-            circuits: quantum circuit(s) to execute
-            calibration_set_id: ID of the calibration set to use instead of the latest one
-            repetitions: number of times the circuit(s) are sampled
+            programs: quantum circuits to execute
+            repetitions: number of times the circuits are sampled
 
         Returns:
             results of the execution
 
         Raises:
+            ValueError: circuits are not valid for execution
             CircuitExecutionError: something went wrong on the server
             APITimeoutError: server did not return the results in the allocated time
             RuntimeError: IQM client session has been closed
         """
+        # validate each circuit for the device
+        for program in programs:
+            self._device.validate_circuit(program)
+
+        measurements = self._send_circuits(
+            programs,
+            calibration_set_id=self._calibration_set_id,
+            repetitions=repetitions,
+        )
+
+        return [study.ResultDict(measurements=meas) for meas in measurements]
+
+    def _send_circuits(
+        self,
+        circuits: list[cirq.Circuit],
+        calibration_set_id: Optional[int],
+        repetitions: int = 1,
+    ) -> list[dict[str, np.ndarray]]:
+        """Sends a batch of circuits to be executed."""
 
         if not self._client:
             raise RuntimeError('Cannot submit circuits since session to IQM client has been closed.')
