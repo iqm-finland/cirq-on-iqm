@@ -165,7 +165,7 @@ arbitrary qubits we had originally.
 
 .. code-block:: python
 
-    routed_circuit_1 = adonis.route_circuit(decomposed_circuit)
+    routed_circuit_1, initial_mapping, final_mapping = adonis.route_circuit(decomposed_circuit)
     print(routed_circuit_1)
 
 ::
@@ -174,20 +174,22 @@ arbitrary qubits we had originally.
                                  │           │
     QB4: ───Y^0.5───X───Y^-0.5───@───Y^0.5───M────────
 
-By default :meth:`.route_circuit` returns only the routed circuit. However, if you set its keyword
-argument ``return_swap_network`` to ``True``, it will return the full
-:class:`cirq.contrib.routing.swap_network.SwapNetwork` object which contains the routed
-circuit itself and the mapping between the used device qubits and the original ones.
+Along with the routed circuit :meth:`.route_circuit` returns the ``initial_mapping`` and ``final_mapping``.
+The ``initial_mapping`` is either the mapping from circuit to device qubits as provided by an 
+:class:`cirq.AbstractInitialMapper` or a mapping that is initialized from the device graph.
+The ``final_mapping`` is the mapping from physical qubits before inserting SWAP gates to the physical
+qubits after the routing is complete
 
-You may also provide the initial mapping from the *logical* qubits in the circuit to the *physical*
-qubits on the device yourself, by using the keyword argument ``initial_mapping``.
+As mentioned above, you may also provide the initial mapping from the *logical* qubits in the circuit to the 
+*physical* qubits on the device yourself, by using the keyword argument ``initial_mapper``.
 It serves as the starting point of the routing:
 
 .. code-block:: python
 
-    routed_circuit_2 = adonis.route_circuit(
+    initial_mapper = cirq.cirq.HardCodedInitialMapper({q1: adonis.qubits[2], q2: adonis.qubits[0]})
+    routed_circuit_2, _, _ = adonis.route_circuit(
         decomposed_circuit,
-        initial_mapping={q1: adonis.qubits[2], q2: adonis.qubits[0]},
+        initial_mapper=initial_mapper,
     )
     print(routed_circuit_2)
 
@@ -197,7 +199,7 @@ It serves as the starting point of the routing:
                                  │               │
     QB3: ───X────────────────────@───────────────M('m')───
 
-Under the hood, :meth:`.route_circuit` leverages the routing algorithm in :mod:`cirq.contrib.routing.router`.
+Under the hood, :meth:`.route_circuit` leverages the routing provided by :class:`cirq.RouteCQC`.
 It works on single- and two-qubit gates, and measurement operations of arbitrary size.
 If you have gates involving more than two qubits you need to decompose them before routing.
 Since routing may add some SWAP gates to the circuit, you will need to decompose the circuit

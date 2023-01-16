@@ -330,9 +330,9 @@ class TestCircuitRouting:
             cirq.measure(qubits[1], key='mk1'),
         )
 
-        initial_mapping = dict(zip(qubits[0:2], apollo.metadata.nx_graph))
-        # route_circuit() checks mapping consistency when initial_mapping is provided
-        new = apollo.route_circuit(circuit, initial_mapping=initial_mapping)
+        initial_mapper = cirq.HardCodedInitialMapper(dict(zip(qubits[0:2], apollo.metadata.nx_graph)))
+        # route_circuit() checks mapping consistency when initial_mapper is provided
+        new, _, _ = apollo.route_circuit(circuit, initial_mapper=initial_mapper)
 
         apollo.validate_circuit(new)
 
@@ -346,9 +346,9 @@ class TestCircuitRouting:
             + [cirq.measure([q]) for q in qubits]
         )
 
-        initial_mapping = dict(zip(qubits, apollo.metadata.nx_graph))
-        # route_circuit() checks mapping consistency when initial_mapping is provided
-        new = apollo.route_circuit(circuit, initial_mapping=initial_mapping)
+        initial_mapper = cirq.HardCodedInitialMapper(dict(zip(qubits, apollo.metadata.nx_graph)))
+        # route_circuit() checks mapping consistency when initial_mapper is provided
+        new, _, _ = apollo.route_circuit(circuit, initial_mapper=initial_mapper)
 
         apollo.validate_circuit(new)
 
@@ -356,13 +356,13 @@ class TestCircuitRouting:
         """The circuit must fit on the device."""
         qubits = cirq.NamedQubit.range(0, 21, prefix='qubit_')
         circuit = cirq.Circuit([cirq.X(q) for q in qubits])
-        with pytest.raises(ValueError, match='Number of logical qubits is greater than number of physical qubits'):
+        with pytest.raises(ValueError, match='No available physical qubits left on the device.'):
             apollo.route_circuit(circuit)
 
     def test_routing_without_SWAPs(self, apollo, qubits):
         """Circuit graph can be embedded in the Apollo connectivity graph, no SWAPs needed."""
         circuit = cirq.Circuit(cirq.CZ(*qubits[0:2]), cirq.CZ(*qubits[2:4]))
-        new = apollo.route_circuit(circuit)
+        new, _, _ = apollo.route_circuit(circuit)
 
         assert len(new.all_qubits()) == 4
         assert new.all_qubits() <= set(apollo.qubits)
@@ -373,14 +373,14 @@ class TestCircuitRouting:
         circuit = cirq.Circuit(
             cirq.CZ(qubits[0], qubits[1]), cirq.CZ(qubits[0], qubits[2]), cirq.CZ(qubits[1], qubits[2])
         )
-        new = apollo.route_circuit(circuit)
+        new, _, _ = apollo.route_circuit(circuit)
 
         assert len(new.all_qubits()) >= 3  # routing algo may use more qubits
         assert new.all_qubits() <= set(apollo.qubits)
         assert len(new) == 4  # a SWAP gate was added
 
         # SWAPs added by routing can be decomposed
-        with pytest.raises(ValueError, match='Unsupported gate type: cirq.contrib.acquaintance.SwapPermutationGate()'):
+        with pytest.raises(ValueError, match='Unsupported gate type: cirq.SWAP'):
             apollo.validate_circuit(new)
         decomposed = apollo.decompose_circuit(new)
         apollo.validate_circuit(decomposed)
@@ -395,7 +395,7 @@ class TestCircuitRouting:
             cirq.CZ(qubits[0], qubits[4]),
             cirq.CZ(qubits[0], qubits[5]),
         )
-        routed_circuit = apollo.route_circuit(circuit)
+        routed_circuit, _, _ = apollo.route_circuit(circuit)
         valid_circuit = apollo.decompose_circuit(routed_circuit)
 
         apollo.validate_circuit(valid_circuit)
@@ -418,7 +418,7 @@ class TestCircuitRouting:
             cirq.Y(qid),
             cirq.CZ(q, qid),
         )
-        new = apollo.route_circuit(circuit)
+        new, _, _ = apollo.route_circuit(circuit)
 
         assert len(new.all_qubits()) == 2
         assert new.all_qubits() <= set(apollo.qubits)
@@ -433,20 +433,19 @@ class TestCircuitRouting:
             cirq.measure(qubits[2], key='mk2'),
         )
 
-        swap_network = apollo.route_circuit(circuit, return_swap_network=True)
-        circuit_routed = swap_network.circuit
-        mapping = {k.name: v.name for k, v in swap_network.final_mapping().items()}  # physical name to logical name
+        circuit, initial_mapping, final_mapping = apollo.route_circuit(circuit)
 
-        assert circuit_routed.are_all_measurements_terminal()
-        assert circuit_routed.all_measurement_key_names() == {'mk0', 'mk1', 'mk2'}
+        assert circuit.are_all_measurements_terminal()
+        assert circuit.all_measurement_key_names() == {'mk0', 'mk1', 'mk2'}
 
         # Check that measurements in the routed circuit are mapped to correct qubits
-        measurements = [op for _, op, _ in circuit_routed.findall_operations_with_gate_type(cirq.MeasurementGate)]
-        mk_to_physical_name = {op.gate.key: op.qubits[0].name for op in measurements}
+        measurements = [op for _, op, _ in circuit.findall_operations_with_gate_type(cirq.MeasurementGate)]
+        mk_to_physical = {op.gate.key: cirq.NamedQubit(op.qubits[0].name) for op in measurements}
+        routed_physical_to_logical_mapping = {final_mapping[v]: k for k, v in initial_mapping.items()}
         assert all(len(op.qubits) == 1 for op in measurements)
-        assert mapping[mk_to_physical_name['mk0']] == 'Alice'
-        assert mapping[mk_to_physical_name['mk1']] == 'Bob'
-        assert mapping[mk_to_physical_name['mk2']] == 'Charlie'
+        assert routed_physical_to_logical_mapping[mk_to_physical['mk0']].name == 'Alice'
+        assert routed_physical_to_logical_mapping[mk_to_physical['mk1']].name == 'Bob'
+        assert routed_physical_to_logical_mapping[mk_to_physical['mk2']].name == 'Charlie'
 
     def test_routing_with_multi_qubit_measurements(self, apollo, qubits):
         circuit = cirq.Circuit(
@@ -484,7 +483,7 @@ class TestCircuitRouting:
             cirq.measure(*qubits[0:2], key='m1'),
             cirq.measure(*qubits[2:20], key='m2'),
         )
-        new = apollo.route_circuit(circuit)
+        new, _, _ = apollo.route_circuit(circuit)
         assert new.all_qubits() == set(apollo.qubits)
         # Test that all measurements exist.
         assert new.all_measurement_key_names() == {'m1', 'm2'}

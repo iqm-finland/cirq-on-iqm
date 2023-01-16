@@ -2,6 +2,16 @@
 Changelog
 =========
 
+Version 10.1
+============
+
+* Add :meth:`.IQMSampler.run_iqm_batch` for running multiple circuits in a batch. `#100 <https://github.com/iqm-finland/cirq-on-iqm/pull/100>`_
+
+Version 10.0
+============
+
+* Replace routing function from cirq.contrib with newly added routing functionality in cirq 1.1. `#97 <https://github.com/iqm-finland/cirq-on-iqm/pull/97>`_
+
 Version 9.0
 ===========
 
