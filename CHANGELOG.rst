@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 11.0
+============
+
+* Use new opaque UUID for ``calibration_set_id``. `#98 <https://github.com/iqm-finland/cirq-on-iqm/pull/98>`_
+
 Version 10.1
 ============
 
