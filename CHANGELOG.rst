@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 9.1
+===========
+
+* Add :meth:`.IQMSampler.run_iqm_batch` for running multiple circuits in a batch.
+
 Version 9.0
 ===========
 
