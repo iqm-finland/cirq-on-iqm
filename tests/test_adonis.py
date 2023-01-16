@@ -316,9 +316,9 @@ class TestCircuitRouting:
             cirq.measure(qubits[1], key='mk1'),
         )
 
-        initial_mapping = dict(zip(qubits[0:2], adonis.metadata.nx_graph))
-        # route_circuit() checks mapping consistency when initial_mapping is provided
-        new = adonis.route_circuit(circuit, initial_mapping=initial_mapping)
+        initial_mapper = cirq.HardCodedInitialMapper(dict(zip(qubits[0:2], adonis.metadata.nx_graph)))
+        # route_circuit() checks mapping consistency when initial_mapper is provided
+        new, _, _ = adonis.route_circuit(circuit, initial_mapper=initial_mapper)
 
         adonis.validate_circuit(new)
 
@@ -335,9 +335,9 @@ class TestCircuitRouting:
             cirq.measure(qubits[4], key='mk4'),
         )
 
-        initial_mapping = dict(zip(qubits[0:5], adonis.metadata.nx_graph))
-        # route_circuit() checks mapping consistency when initial_mapping is provided
-        new = adonis.route_circuit(circuit, initial_mapping=initial_mapping)
+        initial_mapper = cirq.HardCodedInitialMapper(dict(zip(qubits[0:5], adonis.metadata.nx_graph)))
+        # route_circuit() checks mapping consistency when initial_mapper is provided
+        new, _, _ = adonis.route_circuit(circuit, initial_mapper=initial_mapper)
 
         adonis.validate_circuit(new)
 
@@ -345,7 +345,7 @@ class TestCircuitRouting:
         """The circuit must fit on the device."""
         qubits = cirq.NamedQubit.range(0, 6, prefix='qubit_')
         circuit = cirq.Circuit([cirq.X(q) for q in qubits])
-        with pytest.raises(ValueError, match='Number of logical qubits is greater than number of physical qubits'):
+        with pytest.raises(ValueError, match='No available physical qubits left on the device.'):
             adonis.route_circuit(circuit)
 
     def test_routing_without_SWAPs(self, adonis, qubits):
@@ -354,7 +354,7 @@ class TestCircuitRouting:
             cirq.CZ(*qubits[0:2]),
             cirq.CZ(*qubits[1:3]),
         )
-        new = adonis.route_circuit(circuit)
+        new, _, _ = adonis.route_circuit(circuit)
 
         assert len(new.all_qubits()) == 3
         assert new.all_qubits() <= set(adonis.qubits)
@@ -367,14 +367,14 @@ class TestCircuitRouting:
             cirq.CZ(*qubits[1:3]),
             cirq.CZ(qubits[0], qubits[2]),
         )
-        new = adonis.route_circuit(circuit)
+        new, _, _ = adonis.route_circuit(circuit)
 
         assert len(new.all_qubits()) == 3
         assert new.all_qubits() <= set(adonis.qubits)
-        assert len(new) == 4  # a SWAP gate was added
+        assert len(new) > 3  # a SWAP gate was added
 
         # SWAPs added by routing can be decomposed
-        with pytest.raises(ValueError, match='Unsupported gate type: cirq.contrib.acquaintance.SwapPermutationGate()'):
+        with pytest.raises(ValueError, match='Unsupported gate type: cirq.SWAP'):
             adonis.validate_circuit(new)
         decomposed = adonis.decompose_circuit(new)
         adonis.validate_circuit(decomposed)
@@ -397,7 +397,7 @@ class TestCircuitRouting:
             cirq.Y(qid),
             cirq.CZ(q, qid),
         )
-        new = adonis.route_circuit(circuit)
+        new, _, _ = adonis.route_circuit(circuit)
 
         assert len(new.all_qubits()) == 2
         assert new.all_qubits() <= set(adonis.qubits)
@@ -412,20 +412,19 @@ class TestCircuitRouting:
             cirq.measure(qubits[2], key='mk2'),
         )
 
-        swap_network = adonis.route_circuit(circuit, return_swap_network=True)
-        circuit_routed = swap_network.circuit
-        mapping = {k.name: v.name for k, v in swap_network.final_mapping().items()}  # physical name to logical name
+        circuit, initial_mapping, final_mapping = adonis.route_circuit(circuit)
 
-        assert circuit_routed.are_all_measurements_terminal()
-        assert circuit_routed.all_measurement_key_names() == {'mk0', 'mk1', 'mk2'}
+        assert circuit.are_all_measurements_terminal()
+        assert circuit.all_measurement_key_names() == {'mk0', 'mk1', 'mk2'}
 
         # Check that measurements in the routed circuit are mapped to correct qubits
-        measurements = [op for _, op, _ in circuit_routed.findall_operations_with_gate_type(cirq.MeasurementGate)]
-        mk_to_physical_name = {op.gate.key: op.qubits[0].name for op in measurements}
+        measurements = [op for _, op, _ in circuit.findall_operations_with_gate_type(cirq.MeasurementGate)]
+        mk_to_physical = {op.gate.key: cirq.NamedQubit(op.qubits[0].name) for op in measurements}
+        routed_physical_to_logical_mapping = {final_mapping[v]: k for k, v in initial_mapping.items()}
         assert all(len(op.qubits) == 1 for op in measurements)
-        assert mapping[mk_to_physical_name['mk0']] == 'Alice'
-        assert mapping[mk_to_physical_name['mk1']] == 'Bob'
-        assert mapping[mk_to_physical_name['mk2']] == 'Charlie'
+        assert routed_physical_to_logical_mapping[mk_to_physical['mk0']].name == 'Alice'
+        assert routed_physical_to_logical_mapping[mk_to_physical['mk1']].name == 'Bob'
+        assert routed_physical_to_logical_mapping[mk_to_physical['mk2']].name == 'Charlie'
 
     def test_routing_with_multi_qubit_measurements(self, adonis, qubits):
         circuit = cirq.Circuit(
@@ -436,7 +435,7 @@ class TestCircuitRouting:
             cirq.measure(*qubits[0:2], key='m1'),
             cirq.measure(*qubits[2:5], key='m2'),
         )
-        new = adonis.route_circuit(circuit)
+        new, _, _ = adonis.route_circuit(circuit)
         assert new.all_qubits() == set(adonis.qubits)
         # Test that all measurements exist.
         assert new.all_measurement_key_names() == {'m1', 'm2'}

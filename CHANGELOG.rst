@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 10.0
+============
+
+* Replace routing function from cirq.contrib with newly added routing functionality in cirq 1.1. `#97 <https://github.com/iqm-finland/cirq-on-iqm/pull/97>`_
+
 Version 9.0
 ===========
 
