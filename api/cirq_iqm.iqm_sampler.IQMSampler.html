@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>cirq_iqm.iqm_sampler.IQMSampler &#8212; Cirq on IQM 10.0 documentation</title>
+    <title>cirq_iqm.iqm_sampler.IQMSampler &#8212; Cirq on IQM 10.1 documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -437,15 +437,18 @@ This can also be set in the IQM_AUTH_PASSWORD environment variable.</p></li>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_send_circuits</span></code>(circuits, calibration_set_id)</p></td>
-<td><p>Sends the circuit(s) to be executed.</p></td>
+<td><p>Sends a batch of circuits to be executed.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cirq_iqm.iqm_sampler.IQMSampler.close_client" title="cirq_iqm.iqm_sampler.IQMSampler.close_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close_client</span></code></a>()</p></td>
 <td><p>Close IQMClient's session with the user authentication server.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.iqm_sampler.IQMSampler.run_sweep" title="cirq_iqm.iqm_sampler.IQMSampler.run_sweep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_sweep</span></code></a>(program, params[, repetitions])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch" title="cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_iqm_batch</span></code></a>(programs[, repetitions])</p></td>
+<td><p>Sends a batch of circuits to be executed.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cirq_iqm.iqm_sampler.IQMSampler.run_sweep" title="cirq_iqm.iqm_sampler.IQMSampler.run_sweep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_sweep</span></code></a>(program, params[, repetitions])</p></td>
 <td><p>Samples from the given Circuit.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cirq_iqm.iqm_sampler.IQMSampler.run_sweep_async" title="cirq_iqm.iqm_sampler.IQMSampler.run_sweep_async"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_sweep_async</span></code></a>(program, params[, repetitions])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cirq_iqm.iqm_sampler.IQMSampler.run_sweep_async" title="cirq_iqm.iqm_sampler.IQMSampler.run_sweep_async"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_sweep_async</span></code></a>(program, params[, repetitions])</p></td>
 <td><p>Asynchronously samples from the given Circuit.</p></td>
 </tr>
 </tbody>
@@ -486,6 +489,36 @@ related circuits efficiently.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[cirq.study.result.Result]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch">
+<span class="sig-name descname"><span class="pre">run_iqm_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">programs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch" title="Permalink to this definition">#</a></dt>
+<dd><p>Sends a batch of circuits to be executed.</p>
+<p>Running circuits in a batch is more efficient and hence completes quicker than running the circuits
+individually. Circuits run in a batch must all measure the same qubits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>programs</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><em>cirq.circuits.circuit.Circuit</em><em>]</em>) – quantum circuits to execute</p></li>
+<li><p><strong>repetitions</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – number of times the circuits are sampled</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>results of the execution</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – circuits are not valid for execution</p></li>
+<li><p><strong>CircuitExecutionError</strong> – something went wrong on the server</p></li>
+<li><p><strong>APITimeoutError</strong> – server did not return the results in the allocated time</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#RuntimeError" title="(in Python v3.9)"><strong>RuntimeError</strong></a> – IQM client session has been closed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[cirq.study.result.Result]</p>
 </dd>
 </dl>
 </dd></dl>

@@ -26,6 +26,7 @@ cirq\_iqm.iqm\_sampler.IQMSampler
    
       ~IQMSampler._send_circuits
       ~IQMSampler.close_client
+      ~IQMSampler.run_iqm_batch
       ~IQMSampler.run_sweep
       ~IQMSampler.run_sweep_async
    
