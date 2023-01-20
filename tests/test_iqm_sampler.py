@@ -54,6 +54,21 @@ def test_run_sweep_executes_circuit_with_physical_names(adonis_sampler, circuit,
 
 
 @pytest.mark.usefixtures('unstub')
+def test_run_sweep_executes_circuit_with_calibration_set_id(base_url, circuit, iqm_metadata):
+    client = mock(IQMClient)
+    run_id = uuid.uuid4()
+    calibration_set_id = uuid.uuid4()
+    sampler = IQMSampler(base_url, Adonis(), calibration_set_id=calibration_set_id)
+    run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
+    when(client).submit_circuits(ANY, calibration_set_id=calibration_set_id, shots=ANY).thenReturn(run_id)
+    when(client).wait_for_results(run_id).thenReturn(run_result)
+
+    sampler._client = client
+    results = sampler.run_sweep(circuit, None, repetitions=2)
+    assert isinstance(results[0], cirq.Result)
+
+
+@pytest.mark.usefixtures('unstub')
 def test_run_sweep_with_parameter_sweep(adonis_sampler, iqm_metadata):
     client = mock(IQMClient)
     run_id = uuid.uuid4()

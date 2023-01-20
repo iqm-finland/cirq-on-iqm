@@ -18,6 +18,7 @@ Circuit sampler that executes quantum circuits on an IQM quantum computer.
 from __future__ import annotations
 
 from typing import Optional
+from uuid import UUID
 
 import cirq
 from cirq import study
@@ -66,7 +67,7 @@ class IQMSampler(cirq.work.Sampler):
         url: str,
         device: Optional[IQMDevice] = None,
         *,
-        calibration_set_id: Optional[int] = None,
+        calibration_set_id: Optional[UUID] = None,
         **user_auth_args,  # contains keyword args auth_server_url, username and password
     ):
         self._client = IQMClient(url, **user_auth_args)
@@ -141,7 +142,7 @@ class IQMSampler(cirq.work.Sampler):
     def _send_circuits(
         self,
         circuits: list[cirq.Circuit],
-        calibration_set_id: Optional[int],
+        calibration_set_id: Optional[UUID],
         repetitions: int = 1,
     ) -> list[dict[str, np.ndarray]]:
         """Sends a batch of circuits to be executed."""
