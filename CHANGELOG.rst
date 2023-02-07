@@ -2,6 +2,13 @@
 Changelog
 =========
 
+Version 11.1
+============
+
+* "Pin down" supported Python versions to 3.9 and 3.10. `#102 <https://github.com/iqm-finland/cirq-on-iqm/pull/102>`_
+* Configure Tox to skip missing versions of Python interpreters when running tests. `#102 <https://github.com/iqm-finland/cirq-on-iqm/pull/102>`_
+* Move project metadata and configuration to pyproject.toml. `#102 <https://github.com/iqm-finland/cirq-on-iqm/pull/102>`_
+
 Version 11.0
 ============
 
