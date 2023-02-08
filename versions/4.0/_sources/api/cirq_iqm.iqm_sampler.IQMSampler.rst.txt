@@ -1,0 +1,26 @@
+cirq\_iqm.iqm\_sampler.IQMSampler
+=================================
+
+.. currentmodule:: cirq_iqm.iqm_sampler
+
+.. autoclass:: IQMSampler
+   :members:
+   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~IQMSampler._send_circuit
+      ~IQMSampler.close_client
+      ~IQMSampler.run_sweep
+      ~IQMSampler.run_sweep_async
+   
+   
