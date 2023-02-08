@@ -10,9 +10,13 @@ import sys
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
-# Find the path to the source files we want to to document, relative to the location of this file,
+# Find the path to the source files we want to document, relative to the location of this file,
 # convert it to an absolute path.
-py_path = os.path.join(os.getcwd(), os.path.dirname(__file__), '../src')
+# Sphinx-multiversion checks out the repo at different ref points into tmp directory.
+# We're using SPHINX_MULTIVERSION_SOURCEDIR in order to access each such directory.
+# See https://github.com/Holzhaus/sphinx-multiversion/issues/42 for details.
+default_py_root = os.path.join(os.getcwd(), os.path.dirname(__file__))
+py_path = os.path.join(os.getenv("SPHINX_MULTIVERSION_SOURCEDIR", default=default_py_root), "../src")
 sys.path.insert(0, os.path.abspath(py_path))
 
 
@@ -51,6 +55,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.extlinks',
     'sphinx.ext.intersphinx',
+    "sphinx_multiversion",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -116,6 +121,12 @@ html_theme_options = {
     'logo_only': True,
 }
 
+html_sidebars = {
+    '**': [
+        'sidebar-logo.html', 'search-field.html', 'sbt-sidebar-nav.html', 'versioning.html'
+    ]
+}
+
 # A shorter title for the navigation bar.  Default is the same as html_title.
 # html_short_title = None
 
@@ -176,3 +187,13 @@ extlinks = {
 
 # List of all bibliography files used.
 #bibtex_bibfiles = ['references.bib']
+
+# -- Options for sphinx_multiversion --------------------------------------------------
+# Only include certain tags (i.e. all tags except for ones listed below)
+# (technically a whitelist, but we treat it as blacklist by using negative lookahead regex `?!`)
+smv_tag_whitelist = r'^(?!([0-3]\.[0-9]*)).*$'  # ignore all the versions before 4.0
+
+smv_branch_whitelist = "None"   # Do not include local branches in versions list
+smv_remote_whitelist = "None"   # Do not include remote branches in versions list
+smv_released_pattern = r'^refs/tags/.*$'  # Tags recognized as releases
+smv_outputdir_format = 'versions/{ref.name}'  # Store versioned docs in a subdirectory
