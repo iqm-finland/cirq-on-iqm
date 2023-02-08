@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 11.1
+============
+
+* Build and publish docs for older versions. `#101 <https://github.com/iqm-finland/cirq-on-iqm/pull/101>`_
+
 Version 11.0
 ============
 
