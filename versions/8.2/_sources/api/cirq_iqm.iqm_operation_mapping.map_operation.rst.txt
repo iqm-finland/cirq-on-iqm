@@ -1,1 +1,6 @@
-/home/runner/work/cirq-on-iqm/cirq-on-iqm/build/sphinx/html/_sources/api/cirq_iqm.iqm_operation_mapping.map_operation.rst.txt
+cirq\_iqm.iqm\_operation\_mapping.map\_operation
+================================================
+
+.. currentmodule:: cirq_iqm.iqm_operation_mapping
+
+.. autofunction:: map_operation

@@ -1,1 +1,2 @@
-/home/runner/work/cirq-on-iqm/cirq-on-iqm/build/sphinx/html/_sources/authors.rst.txt
+.. _authors:
+.. include:: ../AUTHORS.rst

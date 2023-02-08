@@ -1,1 +1,6 @@
-/home/runner/work/cirq-on-iqm/cirq-on-iqm/build/sphinx/html/_sources/api/cirq_iqm.iqm_operation_mapping.OperationNotSupportedError.rst.txt
+cirq\_iqm.iqm\_operation\_mapping.OperationNotSupportedError
+============================================================
+
+.. currentmodule:: cirq_iqm.iqm_operation_mapping
+
+.. autoexception:: OperationNotSupportedError

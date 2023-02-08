@@ -1,1 +1,2 @@
-/home/runner/work/cirq-on-iqm/cirq-on-iqm/build/sphinx/html/_sources/changelog.rst.txt
+.. _changes:
+.. include:: ../CHANGELOG.rst

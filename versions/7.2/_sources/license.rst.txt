@@ -1,1 +1,8 @@
-/home/runner/work/cirq-on-iqm/cirq-on-iqm/build/sphinx/html/_sources/license.rst.txt
+.. _license:
+
+=======
+License
+=======
+
+.. include:: ../LICENSE
+   :literal:

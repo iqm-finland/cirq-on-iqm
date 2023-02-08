@@ -1,1 +1,33 @@
-/home/runner/work/cirq-on-iqm/cirq-on-iqm/build/sphinx/html/_sources/api/cirq_iqm.iqm_sampler.IQMSampler.rst.txt
+cirq\_iqm.iqm\_sampler.IQMSampler
+=================================
+
+.. currentmodule:: cirq_iqm.iqm_sampler
+
+.. autoclass:: IQMSampler
+   :members:
+   :show-inheritance:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~IQMSampler.device
+   
+   
+
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~IQMSampler._send_circuits
+      ~IQMSampler.close_client
+      ~IQMSampler.run_iqm_batch
+      ~IQMSampler.run_sweep
+      ~IQMSampler.run_sweep_async
+   
+   

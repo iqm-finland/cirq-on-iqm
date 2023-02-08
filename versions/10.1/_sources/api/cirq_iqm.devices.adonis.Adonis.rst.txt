@@ -1,1 +1,27 @@
-/home/runner/work/cirq-on-iqm/cirq-on-iqm/build/sphinx/html/_sources/api/cirq_iqm.devices.adonis.Adonis.rst.txt
+cirq\_iqm.devices.adonis.Adonis
+===============================
+
+.. currentmodule:: cirq_iqm.devices.adonis
+
+.. autoclass:: Adonis
+   :members:
+   :show-inheritance:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+   
+   

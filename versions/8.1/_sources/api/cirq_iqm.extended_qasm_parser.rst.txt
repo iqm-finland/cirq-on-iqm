@@ -1,1 +1,34 @@
-/home/runner/work/cirq-on-iqm/cirq-on-iqm/build/sphinx/html/_sources/api/cirq_iqm.extended_qasm_parser.rst.txt
+cirq\_iqm.extended\_qasm\_parser
+================================
+
+.. automodule:: cirq_iqm.extended_qasm_parser
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      circuit_from_qasm
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+
+
+
+

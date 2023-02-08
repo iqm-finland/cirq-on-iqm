@@ -1,1 +1,0 @@
-/home/runner/work/cirq-on-iqm/cirq-on-iqm/build/sphinx/html/_static/locales/sv/LC_MESSAGES/booktheme.po

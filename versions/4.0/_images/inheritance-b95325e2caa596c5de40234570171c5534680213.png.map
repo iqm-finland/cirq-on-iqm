@@ -1,1 +1,5 @@
-/home/runner/work/cirq-on-iqm/cirq-on-iqm/build/sphinx/html/_images/inheritance-b95325e2caa596c5de40234570171c5534680213.png.map
+<map id="inheritance6a11dfc887" name="inheritance6a11dfc887">
+<area shape="rect" id="node1" href="cirq_iqm.optimizers.DropRZBeforeMeasurement.html#cirq_iqm.optimizers.DropRZBeforeMeasurement" target="_top" title="Drops z rotations that happen right before a z&#45;basis measurement." alt="" coords="187,5,391,31"/>
+<area shape="rect" id="node2" title="Makes circuit improvements focused on a specific location." alt="" coords="5,31,124,56"/>
+<area shape="rect" id="node3" href="cirq_iqm.optimizers.MergeOneParameterGroupGates.html#cirq_iqm.optimizers.MergeOneParameterGroupGates" target="_top" title="Merges adjacent gates belonging to the same parametrized gate family." alt="" coords="172,55,405,80"/>
+</map>

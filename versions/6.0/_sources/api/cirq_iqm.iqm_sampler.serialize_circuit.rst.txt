@@ -1,1 +1,6 @@
-/home/runner/work/cirq-on-iqm/cirq-on-iqm/build/sphinx/html/_sources/api/cirq_iqm.iqm_sampler.serialize_circuit.rst.txt
+cirq\_iqm.iqm\_sampler.serialize\_circuit
+=========================================
+
+.. currentmodule:: cirq_iqm.iqm_sampler
+
+.. autofunction:: serialize_circuit
