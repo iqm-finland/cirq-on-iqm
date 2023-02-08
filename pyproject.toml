@@ -141,23 +141,15 @@ group_by_package = true
 
 
 [tool.mypy]
-ignore_missing_imports = true
 namespace_packages = true
 
 [[tool.mypy.overrides]]
-module = ["cirq"]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = ["iqm_client"]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = ["mockito"]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = ["requests"]
+module = [
+    "cirq",
+    "iqm_client",
+    "mockito",
+    "requests"
+]
 ignore_missing_imports = true
 
 
