@@ -2,11 +2,15 @@
 Changelog
 =========
 
-Version 11.2
+Version 11.3
 ============
 
 * Provide version information to IQMClient. `#103 <https://github.com/iqm-finland/cirq-on-iqm/pull/103>`_
 
+Version 11.2
+============
+
+* Build and publish docs for older versions fixes. `#103 <https://github.com/iqm-finland/cirq-on-iqm/pull/103>`_
 
 Version 11.1
 ============
