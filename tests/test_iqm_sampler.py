@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from importlib.metadata import version
 import uuid
 
 import cirq
@@ -125,6 +126,13 @@ def test_credentials_are_passed_to_client():
     assert sampler._client._credentials.auth_server_url == user_auth_args['auth_server_url']
     assert sampler._client._credentials.username == user_auth_args['username']
     assert sampler._client._credentials.password == user_auth_args['password']
+
+
+@pytest.mark.usefixtures('unstub')
+def test_client_signature_is_passed_to_client():
+    """Test that IQMSampler set client signature"""
+    sampler = IQMSampler('http://some-url.iqm.fi', Adonis())
+    assert sampler._client._signature == f'iqm-client {version("iqm-client")}, cirq-iqm {version("cirq-iqm")}'
 
 
 def test_close_client():

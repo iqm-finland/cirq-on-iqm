@@ -17,6 +17,7 @@ Circuit sampler that executes quantum circuits on an IQM quantum computer.
 """
 from __future__ import annotations
 
+from importlib.metadata import version
 from typing import Optional
 from uuid import UUID
 
@@ -70,7 +71,7 @@ class IQMSampler(cirq.work.Sampler):
         calibration_set_id: Optional[UUID] = None,
         **user_auth_args,  # contains keyword args auth_server_url, username and password
     ):
-        self._client = IQMClient(url, **user_auth_args)
+        self._client = IQMClient(url, client_signature=f'cirq-iqm {version("cirq-iqm")}', **user_auth_args)
         if device is None:
             device_metadata = IQMDeviceMetadata.from_architecture(self._client.get_quantum_architecture())
             self._device = IQMDevice(device_metadata)
