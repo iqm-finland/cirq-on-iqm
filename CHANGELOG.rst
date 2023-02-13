@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 11.3
+============
+
+* Provide version information to IQMClient. `#104 <https://github.com/iqm-finland/cirq-on-iqm/pull/104>`_
+
 Version 11.2
 ============
 
