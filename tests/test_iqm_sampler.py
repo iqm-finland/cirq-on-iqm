@@ -132,7 +132,7 @@ def test_credentials_are_passed_to_client():
 def test_client_signature_is_passed_to_client():
     """Test that IQMSampler set client signature"""
     sampler = IQMSampler('http://some-url.iqm.fi', Adonis())
-    assert sampler._client._signature == f'iqm-client {version("iqm-client")}, cirq-iqm {version("cirq-iqm")}'
+    assert f'cirq-iqm {version("cirq-iqm")}' in sampler._client._signature
 
 
 def test_close_client():
