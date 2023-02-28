@@ -27,25 +27,31 @@ E.g.
 import os
 
 import cirq
+import numpy as np
 
 from cirq_iqm.iqm_sampler import IQMSampler
 from cirq_iqm.optimizers import simplify_circuit
 
 
-def demo_run_circuit():
+def fold_func(x: np.ndarray) -> str:
+    """Fold the measured bit arrays into strings."""
+    return ''.join(map(lambda x: chr(x + ord('0')), x))
+
+
+def demo_run_circuit() -> None:
     """
     Run a quantum circuit on an IQM quantum computer.
     """
     a = cirq.NamedQubit('Alice')
     b = cirq.NamedQubit('Bob')
-    circuit = cirq.Circuit(cirq.X(a) ** 0.5, cirq.CX(a, b), cirq.measure(a, b, key='m'))
+    circuit = cirq.Circuit(cirq.H(a), cirq.CX(a, b), cirq.measure(a, b, key='m'))
     print('Original circuit:\n')
     print(circuit)
 
     sampler = IQMSampler(os.environ['IQM_SERVER_URL'])
 
     circuit_decomposed = sampler.device.decompose_circuit(circuit)
-    circuit_routed = sampler.device.route_circuit(circuit_decomposed)
+    circuit_routed, _, _ = sampler.device.route_circuit(circuit_decomposed)
     circuit = simplify_circuit(circuit_routed)
     print('\nTranspiled and routed circuit:\n')
     print(circuit)
@@ -57,7 +63,7 @@ def demo_run_circuit():
 
     # Sampler results can be accessed several ways
     # For instance, to see the histogram of results
-    print(results.histogram(key='m', fold_func=tuple))
+    print(results.histogram(key='m', fold_func=fold_func))
 
     # Or the data itself
     print(results.data)
