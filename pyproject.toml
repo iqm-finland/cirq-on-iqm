@@ -22,7 +22,7 @@ dependencies = [
     "numpy",
     "cirq ~= 1.1",
     "ply",  # Required by cirq.contrib.qasm_import
-    "iqm-client >= 11.0, < 12.0"
+    "iqm-client >= 11.4, < 12.0"
 ]
 
 [project.urls]
@@ -62,7 +62,6 @@ cicd = [
 
 [tool.setuptools_scm]
 version_scheme = "no-guess-dev"
-write_to = "version.txt"
 
 
 [tool.pytest.ini_options]
@@ -86,7 +85,6 @@ filterwarnings = [
 line-length = 120
 skip-string-normalization = true
 target-version = ["py311"]
-extend-exclude = "_pb2.py$"
 
 
 [tool.coverage.run]
