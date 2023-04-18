@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 11.5
+============
+
+* Upgrade to IQMClient version 12.0 `#106 <https://github.com/iqm-finland/cirq-on-iqm/pull/106>`_
+
 Version 11.4
 ============
 
