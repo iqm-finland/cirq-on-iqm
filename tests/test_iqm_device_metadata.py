@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import cirq
-from iqm_client.iqm_client import QuantumArchitectureSpecification
+from iqm_client.models import QuantumArchitectureSpecification
 
 from cirq_iqm import IQMDeviceMetadata
 
