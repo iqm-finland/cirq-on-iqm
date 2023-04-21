@@ -15,8 +15,7 @@ from importlib.metadata import version
 import uuid
 
 import cirq
-from iqm_client.iqm_client import IQMClient
-from iqm_client.models import Circuit, Instruction, Metadata, RunRequest, RunResult, Status
+from iqm_client.iqm_client import Circuit, Instruction, IQMClient, Metadata, RunRequest, RunResult, Status
 from mockito import ANY, mock, when
 import pytest
 import sympy
