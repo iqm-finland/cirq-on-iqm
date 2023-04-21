@@ -23,8 +23,8 @@ from uuid import UUID
 
 import cirq
 from cirq import study
-from iqm_client import iqm_client
-from iqm_client.iqm_client import IQMClient
+import iqm_client
+from iqm_client import IQMClient
 import numpy as np
 
 from cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
