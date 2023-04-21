@@ -23,15 +23,15 @@ from uuid import UUID
 
 import cirq
 from cirq import study
-import iqm_client.iqm_client
-from iqm_client.iqm_client import IQMClient
+import iqm_client
+from iqm_client import IQMClient
 import numpy as np
 
 from cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
 from cirq_iqm.iqm_operation_mapping import map_operation
 
 
-def serialize_circuit(circuit: cirq.Circuit) -> iqm_client.iqm_client.Circuit:
+def serialize_circuit(circuit: cirq.Circuit) -> iqm_client.Circuit:
     """Serializes a quantum circuit into the IQM data transfer format.
 
     Args:
@@ -41,7 +41,7 @@ def serialize_circuit(circuit: cirq.Circuit) -> iqm_client.iqm_client.Circuit:
         data transfer object representing the circuit
     """
     instructions = list(map(map_operation, circuit.all_operations()))
-    return iqm_client.iqm_client.Circuit(name='Serialized from Cirq', instructions=instructions)
+    return iqm_client.Circuit(name='Serialized from Cirq', instructions=instructions)
 
 
 class IQMSampler(cirq.work.Sampler):
