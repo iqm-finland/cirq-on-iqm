@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 11.7
+============
+
+* Generate license information for dependencies on every release `#108 <https://github.com/iqm-finland/cirq-on-iqm/pull/108>`_
+
 Version 11.6
 ============
 
