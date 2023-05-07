@@ -17,10 +17,10 @@ Circuit sampler that executes quantum circuits on an IQM quantum computer.
 """
 from __future__ import annotations
 
-from importlib.metadata import version
-from typing import Optional
-from uuid import UUID
 from dataclasses import dataclass
+from importlib.metadata import version
+from typing import Optional, Tuple
+from uuid import UUID
 
 import cirq
 from cirq import study
@@ -94,7 +94,7 @@ class IQMSampler(cirq.work.Sampler):
 
     def run_sweep(  # type: ignore[override]
         self, program: cirq.Circuit, params: cirq.Sweepable, repetitions: int = 1
-    ) -> list[cirq.Result]:
+    ) -> list[IQMResult]:
 
         # validate the circuit for the device
         self._device.validate_circuit(program)
@@ -118,7 +118,7 @@ class IQMSampler(cirq.work.Sampler):
             for res, mes in zip(resolvers, measurements)
         ]
 
-    def run_iqm_batch(self, programs: list[cirq.Circuit], repetitions: int = 1) -> list[cirq.Result]:
+    def run_iqm_batch(self, programs: list[cirq.Circuit], repetitions: int = 1) -> list[IQMResult]:
         """Sends a batch of circuits to be executed.
 
         Running circuits in a batch is more efficient and hence completes quicker than running the circuits
@@ -161,7 +161,7 @@ class IQMSampler(cirq.work.Sampler):
         circuits: list[cirq.Circuit],
         calibration_set_id: Optional[UUID],
         repetitions: int = 1,
-    ) -> list[dict[str, np.ndarray]]:
+    ) -> Tuple[dict[str, np.ndarray], UUID, UUID, RunRequest]:
         """Sends a batch of circuits to be executed."""
 
         if not self._client:
@@ -210,6 +210,7 @@ class IQMResult:
         calibration_set_id: A UUID representing the calibration set used for this result.
         request: A RunRequest object representing the request made to run the circuit.
     """
+
     result_dict: cirq.study.ResultDict
     job_id: UUID
     calibration_set_id: UUID
