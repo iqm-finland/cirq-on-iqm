@@ -20,11 +20,12 @@ from __future__ import annotations
 from importlib.metadata import version
 from typing import Optional
 from uuid import UUID
+from dataclasses import dataclass
 
 import cirq
 from cirq import study
 import iqm_client
-from iqm_client import IQMClient
+from iqm_client import IQMClient, RunRequest
 import numpy as np
 
 from cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
@@ -102,12 +103,20 @@ class IQMSampler(cirq.work.Sampler):
 
         circuits = [cirq.protocols.resolve_parameters(program, res) for res in resolvers] if resolvers else [program]
 
-        measurements = self._send_circuits(
+        measurements, job_id, calibration_set_id, request = self._send_circuits(
             circuits,
             calibration_set_id=self._calibration_set_id,
             repetitions=repetitions,
         )
-        return [study.ResultDict(params=res, measurements=mes) for res, mes in zip(resolvers, measurements)]
+        return [
+            self._create_iqm_result(
+                result_dict=study.ResultDict(params=res, measurements=mes),
+                job_id=job_id,
+                calibration_set_id=calibration_set_id,
+                request=request,
+            )
+            for res, mes in zip(resolvers, measurements)
+        ]
 
     def run_iqm_batch(self, programs: list[cirq.Circuit], repetitions: int = 1) -> list[cirq.Result]:
         """Sends a batch of circuits to be executed.
@@ -132,13 +141,20 @@ class IQMSampler(cirq.work.Sampler):
         for program in programs:
             self._device.validate_circuit(program)
 
-        measurements = self._send_circuits(
+        measurements, job_id, calibration_set_id, request = self._send_circuits(
             programs,
             calibration_set_id=self._calibration_set_id,
             repetitions=repetitions,
         )
-
-        return [study.ResultDict(measurements=meas) for meas in measurements]
+        return [
+            self._create_iqm_result(
+                result_dict=study.ResultDict(measurements=mes),
+                job_id=job_id,
+                calibration_set_id=calibration_set_id,
+                request=request,
+            )
+            for mes in measurements
+        ]
 
     def _send_circuits(
         self,
@@ -159,4 +175,42 @@ class IQMSampler(cirq.work.Sampler):
         if results.measurements is None:
             raise RuntimeError('No measurements returned from IQM quantum computer.')
 
-        return [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements]
+        return (
+            [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements],
+            job_id,
+            results.metadata.calibration_set_id,
+            results.metadata.request,
+        )
+
+    def _create_iqm_result(
+        self,
+        result_dict: cirq.study.ResultDict,
+        job_id: UUID,
+        calibration_set_id: UUID,
+        request: RunRequest,
+    ) -> IQMResult:
+        """
+        Creates an IQMResult instance with the given attributes.
+        """
+        return IQMResult(
+            result_dict=result_dict,
+            job_id=job_id,
+            calibration_set_id=calibration_set_id,
+            request=request,
+        )
+
+
+@dataclass
+class IQMResult:
+    """A data class to store the result of a quantum circuit execution on an IQM device.
+
+    Attributes:
+        result_dict: A cirq.study.ResultDict object containing the results and parameters.
+        job_id: A UUID representing the job.
+        calibration_set_id: A UUID representing the calibration set used for this result.
+        request: A RunRequest object representing the request made to run the circuit.
+    """
+    result_dict: cirq.study.ResultDict
+    job_id: UUID
+    calibration_set_id: UUID
+    request: RunRequest
