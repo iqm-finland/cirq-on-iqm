@@ -105,12 +105,7 @@ class IQMSampler(cirq.work.Sampler):
 
         circuits = [cirq.protocols.resolve_parameters(program, res) for res in resolvers] if resolvers else [program]
 
-        measurements = self._send_circuits(
-            circuits,
-            calibration_set_id=self._calibration_set_id,
-            repetitions=repetitions,
-            circuit_duration_check=self._circuit_duration_check,
-        )
+        measurements = self._send_circuits(circuits, repetitions=repetitions)
         return [study.ResultDict(params=res, measurements=mes) for res, mes in zip(resolvers, measurements)]
 
     def run_iqm_batch(self, programs: list[cirq.Circuit], repetitions: int = 1) -> list[cirq.Result]:
@@ -136,21 +131,13 @@ class IQMSampler(cirq.work.Sampler):
         for program in programs:
             self._device.validate_circuit(program)
 
-        measurements = self._send_circuits(
-            programs,
-            calibration_set_id=self._calibration_set_id,
-            repetitions=repetitions,
-            circuit_duration_check=self._circuit_duration_check,
-        )
-
+        measurements = self._send_circuits(programs, repetitions=repetitions)
         return [study.ResultDict(measurements=meas) for meas in measurements]
 
     def _send_circuits(
         self,
         circuits: list[cirq.Circuit],
-        calibration_set_id: Optional[UUID],
         repetitions: int = 1,
-        circuit_duration_check: bool = True,
     ) -> list[dict[str, np.ndarray]]:
         """Sends a batch of circuits to be executed."""
 
@@ -160,9 +147,9 @@ class IQMSampler(cirq.work.Sampler):
 
         job_id = self._client.submit_circuits(
             serialized_circuits,
-            calibration_set_id=calibration_set_id,
+            calibration_set_id=self._calibration_set_id,
             shots=repetitions,
-            circuit_duration_check=circuit_duration_check,
+            circuit_duration_check=self._circuit_duration_check,
         )
         results = self._client.wait_for_results(job_id)
         if results.measurements is None:
