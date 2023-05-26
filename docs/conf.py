@@ -110,9 +110,7 @@ html_theme = 'sphinx_book_theme'
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = [sphinx_book_theme.get_html_theme_path()]
 
-html_context = dict(
-    display_github=False
-)
+html_context = dict(display_github=False)
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -121,11 +119,7 @@ html_theme_options = {
     'logo_only': True,
 }
 
-html_sidebars = {
-    '**': [
-        'sidebar-logo.html', 'search-field.html', 'sbt-sidebar-nav.html', 'versioning.html'
-    ]
-}
+html_sidebars = {'**': ['sidebar-logo.html', 'search-field.html', 'sbt-sidebar-nav.html', 'versioning.html']}
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 # html_short_title = None
@@ -186,14 +180,14 @@ extlinks = {
 # -- Options for sphinxcontrib.bibtex -------------------------------------------------
 
 # List of all bibliography files used.
-#bibtex_bibfiles = ['references.bib']
+# bibtex_bibfiles = ['references.bib']
 
 # -- Options for sphinx_multiversion --------------------------------------------------
 # Only include certain tags (i.e. all tags except for ones listed below)
 # (technically a whitelist, but we treat it as blacklist by using negative lookahead regex `?!`)
 smv_tag_whitelist = r'^(?!([0-3]\.[0-9]*)).*$'  # ignore all the versions before 4.0
 
-smv_branch_whitelist = "None"   # Do not include local branches in versions list
-smv_remote_whitelist = "None"   # Do not include remote branches in versions list
+smv_branch_whitelist = "None"  # Do not include local branches in versions list
+smv_remote_whitelist = "None"  # Do not include remote branches in versions list
 smv_released_pattern = r'^refs/tags/.*$'  # Tags recognized as releases
 smv_outputdir_format = 'versions/{ref.name}'  # Store versioned docs in a subdirectory
