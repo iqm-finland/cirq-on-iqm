@@ -87,12 +87,11 @@ def test_run_sweep_executes_circuit_with_calibration_set_id(base_url, circuit, i
 def test_run_sweep_executes_circuit_with_duration_check_disabled(base_url, circuit, iqm_metadata):
     client = mock(IQMClient)
     run_id = uuid.uuid4()
-    calibration_set_id = uuid.uuid4()
-    sampler = IQMSampler(base_url, Adonis(), calibration_set_id=calibration_set_id, circuit_duration_check=False)
+    sampler = IQMSampler(base_url, Adonis(), circuit_duration_check=False)
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
-    when(client).submit_circuits(
-        ANY, calibration_set_id=calibration_set_id, shots=ANY, circuit_duration_check=False
-    ).thenReturn(run_id)
+    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY, circuit_duration_check=False).thenReturn(
+        run_id
+    )
     when(client).wait_for_results(run_id).thenReturn(run_result)
 
     sampler._client = client
