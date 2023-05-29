@@ -18,7 +18,7 @@ import cirq
 from iqm_client import Circuit, Instruction, IQMClient, Metadata, RunRequest, RunResult, Status
 from mockito import ANY, mock, when
 import pytest
-import sympy
+import sympy  # type: ignore
 
 from cirq_iqm import Adonis
 from cirq_iqm.iqm_sampler import IQMSampler
@@ -58,7 +58,7 @@ def test_run_sweep_executes_circuit_with_physical_names(adonis_sampler, circuit,
     client = mock(IQMClient)
     run_id = uuid.uuid4()
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
-    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY).thenReturn(run_id)
+    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY, circuit_duration_check=ANY).thenReturn(run_id)
     when(client).wait_for_results(run_id).thenReturn(run_result)
 
     adonis_sampler._client = client
@@ -73,7 +73,25 @@ def test_run_sweep_executes_circuit_with_calibration_set_id(base_url, circuit, i
     calibration_set_id = uuid.uuid4()
     sampler = IQMSampler(base_url, Adonis(), calibration_set_id=calibration_set_id)
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
-    when(client).submit_circuits(ANY, calibration_set_id=calibration_set_id, shots=ANY).thenReturn(run_id)
+    when(client).submit_circuits(
+        ANY, calibration_set_id=calibration_set_id, shots=ANY, circuit_duration_check=ANY
+    ).thenReturn(run_id)
+    when(client).wait_for_results(run_id).thenReturn(run_result)
+
+    sampler._client = client
+    results = sampler.run_sweep(circuit, None, repetitions=2)
+    assert isinstance(results[0], cirq.Result)
+
+
+@pytest.mark.usefixtures('unstub')
+def test_run_sweep_executes_circuit_with_duration_check_disabled(base_url, circuit, iqm_metadata):
+    client = mock(IQMClient)
+    run_id = uuid.uuid4()
+    sampler = IQMSampler(base_url, Adonis(), circuit_duration_check=False)
+    run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
+    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY, circuit_duration_check=False).thenReturn(
+        run_id
+    )
     when(client).wait_for_results(run_id).thenReturn(run_result)
 
     sampler._client = client
@@ -88,7 +106,7 @@ def test_run_sweep_with_parameter_sweep(adonis_sampler, iqm_metadata):
     run_result = RunResult(
         status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
     )
-    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY).thenReturn(run_id)
+    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY, circuit_duration_check=ANY).thenReturn(run_id)
     when(client).wait_for_results(run_id).thenReturn(run_result)
     qubit_1 = cirq.NamedQubit('QB1')
     qubit_2 = cirq.NamedQubit('QB2')
@@ -111,7 +129,7 @@ def test_run_iqm_batch(adonis_sampler, iqm_metadata):
     run_result = RunResult(
         status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
     )
-    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY).thenReturn(run_id)
+    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY, circuit_duration_check=ANY).thenReturn(run_id)
     when(client).wait_for_results(run_id).thenReturn(run_result)
 
     qubit_1 = cirq.NamedQubit('QB1')
