@@ -286,6 +286,9 @@
       <li class="version_item current_version">dev</li>
     
     
+      <li class="version_item"><a href="../versions/11.8/index.html">11.8</a></li>
+    
+    
       <li class="version_item"><a href="../versions/11.7/index.html">11.7</a></li>
     
     
@@ -513,7 +516,7 @@ title="Print to PDF"
   <strong>
     
     You're reading the documentation for a development version.
-    For the latest released version, please have a look at <a href="../versions/11.7/index.html">11.7</a>.
+    For the latest released version, please have a look at <a href="../versions/11.8/index.html">11.8</a>.
     
   </strong>
 </div>
@@ -523,7 +526,7 @@ title="Print to PDF"
 <h1>cirq_iqm.iqm_sampler.IQMSampler<a class="headerlink" href="#cirq-iqm-iqm-sampler-iqmsampler" title="Permalink to this headline">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="cirq_iqm.iqm_sampler.IQMSampler">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cirq_iqm.iqm_sampler.</span></span><span class="sig-name descname"><span class="pre">IQMSampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_set_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">user_auth_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_sampler.IQMSampler" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cirq_iqm.iqm_sampler.</span></span><span class="sig-name descname"><span class="pre">IQMSampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_set_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circuit_duration_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">user_auth_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cirq_iqm.iqm_sampler.IQMSampler" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.work.sampler.Sampler</span></code></p>
 <p>Circuit sampler for executing quantum circuits on IQM quantum computers.</p>
 <dl class="field-list simple">
@@ -533,6 +536,7 @@ title="Print to PDF"
 <li><p><strong>device</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice" title="cirq_iqm.devices.iqm_device.IQMDevice"><em>IQMDevice</em></a><em>]</em>) – Device to execute the circuits on. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the device will be created based
 on the quantum architecture obtained from <code class="xref py py-class docutils literal notranslate"><span class="pre">IQMClient</span></code>.</p></li>
 <li><p><strong>calibration_set_id</strong> (<em>Optional</em><em>[</em><em>UUID</em><em>]</em>) – ID of the calibration set to use. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, use the latest one.</p></li>
+<li><p><strong>circuit_duration_check</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – whether to enable or disable server-side circuit duration check</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keyword Arguments</dt>
@@ -565,7 +569,7 @@ This can also be set in the IQM_AUTH_PASSWORD environment variable.</p></li>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_send_circuits</span></code>(circuits, calibration_set_id)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_send_circuits</span></code>(circuits[, repetitions])</p></td>
 <td><p>Sends a batch of circuits to be executed.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cirq_iqm.iqm_sampler.IQMSampler.close_client" title="cirq_iqm.iqm_sampler.IQMSampler.close_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close_client</span></code></a>()</p></td>
@@ -713,7 +717,7 @@ true asynchronous sampling should override it to use other strategies.</p>
     By Cirq on IQM developers<br/>
   
       &copy; Copyright 2020–2022, Cirq on IQM developers.<br/>
-    Last updated on 2023-05-03.<br/>
+    Last updated on 2023-05-29.<br/>
 </p>
         </footer>
     </div>
