@@ -55,6 +55,7 @@ class IQMSampler(cirq.work.Sampler):
             ID of the calibration set to use. If ``None``, use the latest one.
         run_sweep_timeout:
             timeout to poll sweep results in seconds.
+        circuit_duration_check: whether to enable or disable server-side circuit duration check
 
     Keyword Args:
         auth_server_url (str): URL of user authentication server, if required by the IQM Cortex server.
@@ -72,6 +73,7 @@ class IQMSampler(cirq.work.Sampler):
         *,
         calibration_set_id: Optional[UUID] = None,
         run_sweep_timeout: Optional[int] = None,
+        circuit_duration_check: bool = True,
         **user_auth_args,  # contains keyword args auth_server_url, username and password
     ):
         self._client = IQMClient(url, client_signature=f'cirq-iqm {version("cirq-iqm")}', **user_auth_args)
@@ -82,6 +84,7 @@ class IQMSampler(cirq.work.Sampler):
             self._device = device
         self._calibration_set_id = calibration_set_id
         self._run_sweep_timeout = run_sweep_timeout
+        self._circuit_duration_check = circuit_duration_check
 
     @property
     def device(self) -> IQMDevice:
@@ -106,11 +109,7 @@ class IQMSampler(cirq.work.Sampler):
 
         circuits = [cirq.protocols.resolve_parameters(program, res) for res in resolvers] if resolvers else [program]
 
-        measurements = self._send_circuits(
-            circuits,
-            calibration_set_id=self._calibration_set_id,
-            repetitions=repetitions,
-        )
+        measurements = self._send_circuits(circuits, repetitions=repetitions)
         return [study.ResultDict(params=res, measurements=mes) for res, mes in zip(resolvers, measurements)]
 
     def run_iqm_batch(self, programs: list[cirq.Circuit], repetitions: int = 1) -> list[cirq.Result]:
@@ -136,18 +135,12 @@ class IQMSampler(cirq.work.Sampler):
         for program in programs:
             self._device.validate_circuit(program)
 
-        measurements = self._send_circuits(
-            programs,
-            calibration_set_id=self._calibration_set_id,
-            repetitions=repetitions,
-        )
-
+        measurements = self._send_circuits(programs, repetitions=repetitions)
         return [study.ResultDict(measurements=meas) for meas in measurements]
 
     def _send_circuits(
         self,
         circuits: list[cirq.Circuit],
-        calibration_set_id: Optional[UUID],
         repetitions: int = 1,
     ) -> list[dict[str, np.ndarray]]:
         """Sends a batch of circuits to be executed."""
@@ -157,7 +150,10 @@ class IQMSampler(cirq.work.Sampler):
         serialized_circuits = [serialize_circuit(circuit) for circuit in circuits]
 
         job_id = self._client.submit_circuits(
-            serialized_circuits, calibration_set_id=calibration_set_id, shots=repetitions
+            serialized_circuits,
+            calibration_set_id=self._calibration_set_id,
+            shots=repetitions,
+            circuit_duration_check=self._circuit_duration_check,
         )
         timeout_arg = [self._run_sweep_timeout] if self._run_sweep_timeout is not None else []
         results = self._client.wait_for_results(job_id, *timeout_arg)
