@@ -53,6 +53,8 @@ class IQMSampler(cirq.work.Sampler):
             on the quantum architecture obtained from :class:`.IQMClient`.
         calibration_set_id:
             ID of the calibration set to use. If ``None``, use the latest one.
+        run_sweep_timeout:
+            timeout to poll sweep results in seconds.
 
     Keyword Args:
         auth_server_url (str): URL of user authentication server, if required by the IQM Cortex server.
@@ -69,6 +71,7 @@ class IQMSampler(cirq.work.Sampler):
         device: Optional[IQMDevice] = None,
         *,
         calibration_set_id: Optional[UUID] = None,
+        run_sweep_timeout: Optional[int] = None,
         **user_auth_args,  # contains keyword args auth_server_url, username and password
     ):
         self._client = IQMClient(url, client_signature=f'cirq-iqm {version("cirq-iqm")}', **user_auth_args)
@@ -78,6 +81,7 @@ class IQMSampler(cirq.work.Sampler):
         else:
             self._device = device
         self._calibration_set_id = calibration_set_id
+        self._run_sweep_timeout = run_sweep_timeout
 
     @property
     def device(self) -> IQMDevice:
@@ -155,7 +159,8 @@ class IQMSampler(cirq.work.Sampler):
         job_id = self._client.submit_circuits(
             serialized_circuits, calibration_set_id=calibration_set_id, shots=repetitions
         )
-        results = self._client.wait_for_results(job_id)
+        timeout_arg = [self._run_sweep_timeout] if self._run_sweep_timeout is not None else []
+        results = self._client.wait_for_results(job_id, *timeout_arg)
         if results.measurements is None:
             raise RuntimeError('No measurements returned from IQM quantum computer.')
 

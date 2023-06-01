@@ -82,6 +82,21 @@ def test_run_sweep_executes_circuit_with_calibration_set_id(base_url, circuit, i
 
 
 @pytest.mark.usefixtures('unstub')
+def test_run_sweep_allows_to_override_polling_timeout(base_url, circuit, iqm_metadata):
+    client = mock(IQMClient)
+    run_id = uuid.uuid4()
+    timeout = 123
+    sampler = IQMSampler(base_url, Adonis(), run_sweep_timeout=timeout)
+    run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
+    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY).thenReturn(run_id)
+    when(client).wait_for_results(run_id, timeout).thenReturn(run_result)
+
+    sampler._client = client
+    results = sampler.run_sweep(circuit, None, repetitions=2)
+    assert isinstance(results[0], cirq.Result)
+
+
+@pytest.mark.usefixtures('unstub')
 def test_run_sweep_with_parameter_sweep(adonis_sampler, iqm_metadata):
     client = mock(IQMClient)
     run_id = uuid.uuid4()
@@ -122,6 +137,31 @@ def test_run_iqm_batch(adonis_sampler, iqm_metadata):
 
     adonis_sampler._client = client
     results = adonis_sampler.run_iqm_batch(circuits, repetitions=123)
+
+    assert len(results) == len(circuits)
+    assert all(isinstance(result, cirq.Result) for result in results)
+
+
+@pytest.mark.usefixtures('unstub')
+def test_run_iqm_batch_allows_to_override_polling_timeout(base_url, iqm_metadata):
+    client = mock(IQMClient)
+    run_id = uuid.uuid4()
+    run_result = RunResult(
+        status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
+    )
+    timeout = 123
+    sampler = IQMSampler(base_url, Adonis(), run_sweep_timeout=timeout)
+    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY).thenReturn(run_id)
+    when(client).wait_for_results(run_id, timeout).thenReturn(run_result)
+
+    qubit_1 = cirq.NamedQubit('QB1')
+    qubit_2 = cirq.NamedQubit('QB2')
+    circuit1 = cirq.Circuit(cirq.X(qubit_1), cirq.measure(qubit_1, qubit_2, key='result'))
+    circuit2 = cirq.Circuit(cirq.X(qubit_2), cirq.measure(qubit_1, qubit_2, key='result'))
+    circuits = [circuit1, circuit2]
+
+    sampler._client = client
+    results = sampler.run_iqm_batch(circuits, repetitions=123)
 
     assert len(results) == len(circuits)
     assert all(isinstance(result, cirq.Result) for result in results)
