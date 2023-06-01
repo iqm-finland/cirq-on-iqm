@@ -106,7 +106,7 @@ def test_run_sweep_allows_to_override_polling_timeout(base_url, circuit, iqm_met
     timeout = 123
     sampler = IQMSampler(base_url, Adonis(), run_sweep_timeout=timeout)
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
-    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY).thenReturn(run_id)
+    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY, circuit_duration_check=ANY).thenReturn(run_id)
     when(client).wait_for_results(run_id, timeout).thenReturn(run_result)
 
     sampler._client = client
@@ -169,7 +169,12 @@ def test_run_iqm_batch_allows_to_override_polling_timeout(base_url, iqm_metadata
     )
     timeout = 123
     sampler = IQMSampler(base_url, Adonis(), run_sweep_timeout=timeout)
-    when(client).submit_circuits(ANY, calibration_set_id=ANY, shots=ANY).thenReturn(run_id)
+    when(client).submit_circuits(
+        ANY,
+        calibration_set_id=ANY,
+        shots=ANY,
+        circuit_duration_check=ANY,
+    ).thenReturn(run_id)
     when(client).wait_for_results(run_id, timeout).thenReturn(run_result)
 
     qubit_1 = cirq.NamedQubit('QB1')
