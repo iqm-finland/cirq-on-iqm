@@ -22,7 +22,7 @@ dependencies = [
     "numpy",
     "cirq ~= 1.1",
     "ply",  # Required by cirq.contrib.qasm_import
-    "iqm-client >= 12.4, < 13.0"
+    "iqm-client >= 12.5, < 13.0"
 ]
 
 [project.urls]
