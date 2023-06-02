@@ -286,6 +286,9 @@
       <li class="version_item current_version">dev</li>
     
     
+      <li class="version_item"><a href="versions/11.9/user_guide.html">11.9</a></li>
+    
+    
       <li class="version_item"><a href="versions/11.8/user_guide.html">11.8</a></li>
     
     
@@ -667,7 +670,7 @@ title="Print to PDF"
   <strong>
     
     You're reading the documentation for a development version.
-    For the latest released version, please have a look at <a href="versions/11.8/user_guide.html">11.8</a>.
+    For the latest released version, please have a look at <a href="versions/11.9/user_guide.html">11.9</a>.
     
   </strong>
 </div>
@@ -815,7 +818,7 @@ qubits after the routing is complete</p>
 <p>As mentioned above, you may also provide the initial mapping from the <em>logical</em> qubits in the circuit to the
 <em>physical</em> qubits on the device yourself, by using the keyword argument <code class="docutils literal notranslate"><span class="pre">initial_mapper</span></code>.
 It serves as the starting point of the routing:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">initial_mapper</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">cirq</span><span class="o">.</span><span class="n">HardCodedInitialMapper</span><span class="p">({</span><span class="n">q1</span><span class="p">:</span> <span class="n">adonis</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">q2</span><span class="p">:</span> <span class="n">adonis</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">0</span><span class="p">]})</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">initial_mapper</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">HardCodedInitialMapper</span><span class="p">({</span><span class="n">q1</span><span class="p">:</span> <span class="n">adonis</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">q2</span><span class="p">:</span> <span class="n">adonis</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">0</span><span class="p">]})</span>
 <span class="n">routed_circuit_2</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">adonis</span><span class="o">.</span><span class="n">route_circuit</span><span class="p">(</span>
     <span class="n">decomposed_circuit</span><span class="p">,</span>
     <span class="n">initial_mapper</span><span class="o">=</span><span class="n">initial_mapper</span><span class="p">,</span>
@@ -979,7 +982,7 @@ be created automatically based on the latest version definition in the CHANGELOG
     By Cirq on IQM developers<br/>
   
       &copy; Copyright 2020–2022, Cirq on IQM developers.<br/>
-    Last updated on 2023-05-29.<br/>
+    Last updated on 2023-06-02.<br/>
 </p>
         </footer>
     </div>
