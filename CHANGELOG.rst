@@ -5,7 +5,7 @@ Changelog
 Version 11.9
 ============
 
-* Make polling of circuit results configurable. `#113 https://github.com/iqm-finland/cirq-on-iqm/pull/113`_
+* Make polling of circuit results configurable. `#113 <https://github.com/iqm-finland/cirq-on-iqm/pull/113>`_
 
 Version 11.8
 ============
