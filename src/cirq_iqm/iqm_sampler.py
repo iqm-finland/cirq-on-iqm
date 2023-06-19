@@ -53,6 +53,8 @@ class IQMSampler(cirq.work.Sampler):
             on the quantum architecture obtained from :class:`.IQMClient`.
         calibration_set_id:
             ID of the calibration set to use. If ``None``, use the latest one.
+        run_sweep_timeout:
+            timeout to poll sweep results in seconds.
         circuit_duration_check: whether to enable or disable server-side circuit duration check
         heralding_mode: Heralding mode to use during execution.
 
@@ -71,6 +73,7 @@ class IQMSampler(cirq.work.Sampler):
         device: Optional[IQMDevice] = None,
         *,
         calibration_set_id: Optional[UUID] = None,
+        run_sweep_timeout: Optional[int] = None,
         circuit_duration_check: bool = True,
         heralding_mode: HeraldingMode = HeraldingMode.NONE,
         **user_auth_args,  # contains keyword args auth_server_url, username and password
@@ -82,6 +85,7 @@ class IQMSampler(cirq.work.Sampler):
         else:
             self._device = device
         self._calibration_set_id = calibration_set_id
+        self._run_sweep_timeout = run_sweep_timeout
         self._circuit_duration_check = circuit_duration_check
         self._heralding_mode = heralding_mode
 
@@ -155,7 +159,8 @@ class IQMSampler(cirq.work.Sampler):
             circuit_duration_check=self._circuit_duration_check,
             heralding_mode=self._heralding_mode,
         )
-        results = self._client.wait_for_results(job_id)
+        timeout_arg = [self._run_sweep_timeout] if self._run_sweep_timeout is not None else []
+        results = self._client.wait_for_results(job_id, *timeout_arg)
         if results.measurements is None:
             raise RuntimeError('No measurements returned from IQM quantum computer.')
 
