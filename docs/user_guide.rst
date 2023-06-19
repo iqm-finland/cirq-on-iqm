@@ -186,7 +186,7 @@ It serves as the starting point of the routing:
 
 .. code-block:: python
 
-    initial_mapper = cirq.cirq.HardCodedInitialMapper({q1: adonis.qubits[2], q2: adonis.qubits[0]})
+    initial_mapper = cirq.HardCodedInitialMapper({q1: adonis.qubits[2], q2: adonis.qubits[0]})
     routed_circuit_2, _, _ = adonis.route_circuit(
         decomposed_circuit,
         initial_mapper=initial_mapper,
