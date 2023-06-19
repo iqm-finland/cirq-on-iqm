@@ -2,6 +2,23 @@
 Changelog
 =========
 
+Version 11.10
+=============
+
+* Make polling of circuit results configurable. `#113 <https://github.com/iqm-finland/cirq-on-iqm/pull/113>`_
+
+Version 11.9
+============
+
+* Add parameter ``heralding`` to ``IQMSampler``. `#112 <https://github.com/iqm-finland/cirq-on-iqm/pull/112>`_
+* Upgrade to IQMClient version 12.5 `#112 <https://github.com/iqm-finland/cirq-on-iqm/pull/112>`_
+
+Version 11.8
+============
+
+* Upgrade to IQMClient version 12.4 `#111 <https://github.com/iqm-finland/cirq-on-iqm/pull/111>`_
+* Add parameter ``circuit_duration_check`` to ``IQMSampler`` allowing to control server-side maximum circuit duration check `#111 <https://github.com/iqm-finland/cirq-on-iqm/pull/111>`_
+
 Version 11.7
 ============
 

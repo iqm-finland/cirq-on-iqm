@@ -25,7 +25,7 @@ from uuid import UUID
 import cirq
 from cirq import study
 import iqm_client
-from iqm_client import IQMClient, RunRequest
+from iqm_client import HeraldingMode, IQMClient, RunRequest
 import numpy as np
 
 from cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
@@ -54,6 +54,10 @@ class IQMSampler(cirq.work.Sampler):
             on the quantum architecture obtained from :class:`.IQMClient`.
         calibration_set_id:
             ID of the calibration set to use. If ``None``, use the latest one.
+        run_sweep_timeout:
+            timeout to poll sweep results in seconds.
+        circuit_duration_check: whether to enable or disable server-side circuit duration check
+        heralding_mode: Heralding mode to use during execution.
 
     Keyword Args:
         auth_server_url (str): URL of user authentication server, if required by the IQM Cortex server.
@@ -70,6 +74,9 @@ class IQMSampler(cirq.work.Sampler):
         device: Optional[IQMDevice] = None,
         *,
         calibration_set_id: Optional[UUID] = None,
+        run_sweep_timeout: Optional[int] = None,
+        circuit_duration_check: bool = True,
+        heralding_mode: HeraldingMode = HeraldingMode.NONE,
         **user_auth_args,  # contains keyword args auth_server_url, username and password
     ):
         self._client = IQMClient(url, client_signature=f'cirq-iqm {version("cirq-iqm")}', **user_auth_args)
@@ -79,6 +86,9 @@ class IQMSampler(cirq.work.Sampler):
         else:
             self._device = device
         self._calibration_set_id = calibration_set_id
+        self._run_sweep_timeout = run_sweep_timeout
+        self._circuit_duration_check = circuit_duration_check
+        self._heralding_mode = heralding_mode
 
     @property
     def device(self) -> IQMDevice:
@@ -105,7 +115,6 @@ class IQMSampler(cirq.work.Sampler):
 
         measurements, job_id, calibration_set_id, request = self._send_circuits(
             circuits,
-            calibration_set_id=self._calibration_set_id,
             repetitions=repetitions,
         )
         return [
@@ -143,7 +152,6 @@ class IQMSampler(cirq.work.Sampler):
 
         measurements, job_id, calibration_set_id, request = self._send_circuits(
             programs,
-            calibration_set_id=self._calibration_set_id,
             repetitions=repetitions,
         )
         return [
@@ -159,7 +167,6 @@ class IQMSampler(cirq.work.Sampler):
     def _send_circuits(
         self,
         circuits: list[cirq.Circuit],
-        calibration_set_id: Optional[UUID],
         repetitions: int = 1,
     ) -> Tuple[dict[str, np.ndarray], UUID, UUID, RunRequest]:
         """Sends a batch of circuits to be executed."""
@@ -169,9 +176,14 @@ class IQMSampler(cirq.work.Sampler):
         serialized_circuits = [serialize_circuit(circuit) for circuit in circuits]
 
         job_id = self._client.submit_circuits(
-            serialized_circuits, calibration_set_id=calibration_set_id, shots=repetitions
+            serialized_circuits,
+            calibration_set_id=self._calibration_set_id,
+            shots=repetitions,
+            circuit_duration_check=self._circuit_duration_check,
+            heralding_mode=self._heralding_mode,
         )
-        results = self._client.wait_for_results(job_id)
+        timeout_arg = [self._run_sweep_timeout] if self._run_sweep_timeout is not None else []
+        results = self._client.wait_for_results(job_id, *timeout_arg)
         if results.measurements is None:
             raise RuntimeError('No measurements returned from IQM quantum computer.')
 

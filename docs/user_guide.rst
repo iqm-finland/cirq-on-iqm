@@ -175,18 +175,18 @@ arbitrary qubits we had originally.
     QB4: ───Y^0.5───X───Y^-0.5───@───Y^0.5───M────────
 
 Along with the routed circuit :meth:`.route_circuit` returns the ``initial_mapping`` and ``final_mapping``.
-The ``initial_mapping`` is either the mapping from circuit to device qubits as provided by an 
+The ``initial_mapping`` is either the mapping from circuit to device qubits as provided by an
 :class:`cirq.AbstractInitialMapper` or a mapping that is initialized from the device graph.
 The ``final_mapping`` is the mapping from physical qubits before inserting SWAP gates to the physical
 qubits after the routing is complete
 
-As mentioned above, you may also provide the initial mapping from the *logical* qubits in the circuit to the 
+As mentioned above, you may also provide the initial mapping from the *logical* qubits in the circuit to the
 *physical* qubits on the device yourself, by using the keyword argument ``initial_mapper``.
 It serves as the starting point of the routing:
 
 .. code-block:: python
 
-    initial_mapper = cirq.cirq.HardCodedInitialMapper({q1: adonis.qubits[2], q2: adonis.qubits[0]})
+    initial_mapper = cirq.HardCodedInitialMapper({q1: adonis.qubits[2], q2: adonis.qubits[0]})
     routed_circuit_2, _, _ = adonis.route_circuit(
         decomposed_circuit,
         initial_mapper=initial_mapper,
@@ -266,6 +266,17 @@ of the IQM server. By default, the latest calibration set is used for running th
 a particular calibration set, provide the ``calibration_set_id`` argument. The sampler will by default use an
 :class:`.IQMDevice` created based on architecture data obtained from the server, which is then available in the
 :attr:`.IQMSampler.device` property. Alternatively, the device can be specified directly with the ``device`` argument.
+
+If any circuit in a job would take too long to execute compared to the coherence time of the QPU, the server will
+disqualify the job and not execute any circuits. In some special cases, you may want to disable this as follows:
+
+.. code-block:: python
+
+   result = sampler.run(circuit, repetitions=10, circuit_duration_check=False)
+
+
+Disabling the circuit duration check may be limited to certain users or groups, depending on the server settings.
+In normal use, the circuit duration check should always remain enabled.
 
 If the IQM server you are connecting to requires authentication, you will also have to use
 `Cortex CLI <https://github.com/iqm-finland/cortex-cli>`_ to retrieve and automatically refresh access tokens,
