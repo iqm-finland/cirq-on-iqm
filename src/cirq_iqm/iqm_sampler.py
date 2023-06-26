@@ -18,13 +18,15 @@ Circuit sampler that executes quantum circuits on an IQM quantum computer.
 from __future__ import annotations
 
 from importlib.metadata import version
+import sys
 from typing import Optional
 from uuid import UUID
+import warnings
 
 import cirq
 from cirq import study
 import iqm_client
-from iqm_client import HeraldingMode, IQMClient
+from iqm_client import HeraldingMode, IQMClient, JobAbortionError
 import numpy as np
 
 from cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
@@ -146,7 +148,10 @@ class IQMSampler(cirq.work.Sampler):
         circuits: list[cirq.Circuit],
         repetitions: int = 1,
     ) -> list[dict[str, np.ndarray]]:
-        """Sends a batch of circuits to be executed."""
+        """Sends a batch of circuits to be executed and retrieves the results.
+
+        If a user interrupts the program while it is waiting for results, attempts to abort the submitted job.
+        """
 
         if not self._client:
             raise RuntimeError('Cannot submit circuits since session to IQM client has been closed.')
@@ -159,9 +164,19 @@ class IQMSampler(cirq.work.Sampler):
             circuit_duration_check=self._circuit_duration_check,
             heralding_mode=self._heralding_mode,
         )
-        timeout_arg = [self._run_sweep_timeout] if self._run_sweep_timeout is not None else []
-        results = self._client.wait_for_results(job_id, *timeout_arg)
-        if results.measurements is None:
-            raise RuntimeError('No measurements returned from IQM quantum computer.')
 
-        return [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements]
+        try:
+            timeout_arg = [self._run_sweep_timeout] if self._run_sweep_timeout is not None else []
+            results = self._client.wait_for_results(job_id, *timeout_arg)
+            if results.measurements is None:
+                raise RuntimeError('No measurements returned from IQM quantum computer.')
+
+            return [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements]
+
+        except KeyboardInterrupt:
+            try:
+                self._client.abort_job(job_id)
+            except JobAbortionError as e:
+                warnings.warn(f'Failed to abort job: {e}')
+            finally:
+                sys.exit()
