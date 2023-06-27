@@ -2,8 +2,8 @@
 Changelog
 =========
 
-Version 12.0
-============
+Version 11.11
+=============
 
 * Submitted job is aborted if the user interrupts the program while it is waiting for results. `#114 <https://github.com/iqm-finland/cirq-on-iqm/pull/114>`_
 
