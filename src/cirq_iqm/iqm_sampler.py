@@ -19,11 +19,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from importlib.metadata import version
-from typing import Optional, Tuple
+from typing import List, Mapping, Optional
 from uuid import UUID
 
 import cirq
-from cirq import study
 import iqm_client
 from iqm_client import HeraldingMode, IQMClient, RunRequest
 import numpy as np
@@ -113,19 +112,21 @@ class IQMSampler(cirq.work.Sampler):
 
         circuits = [cirq.protocols.resolve_parameters(program, res) for res in resolvers] if resolvers else [program]
 
-        measurements, job_id, calibration_set_id, request = self._send_circuits(
+        circuit_results = self._send_circuits(
             circuits,
             repetitions=repetitions,
         )
-        return [
-            self._create_iqm_result(
-                result_dict=study.ResultDict(params=res, measurements=mes),
-                job_id=job_id,
-                calibration_set_id=calibration_set_id,
-                request=request,
+        results = [
+            IQMResult(
+                params=res,
+                measurements=result.measurements,
+                records=result.records,
+                metadata=result.metadata,
             )
-            for res, mes in zip(resolvers, measurements)
+            for res, result in zip(resolvers, circuit_results)
         ]
+
+        return results
 
     def run_iqm_batch(self, programs: list[cirq.Circuit], repetitions: int = 1) -> list[IQMResult]:
         """Sends a batch of circuits to be executed.
@@ -150,25 +151,27 @@ class IQMSampler(cirq.work.Sampler):
         for program in programs:
             self._device.validate_circuit(program)
 
-        measurements, job_id, calibration_set_id, request = self._send_circuits(
+        circuit_results = self._send_circuits(
             programs,
             repetitions=repetitions,
         )
-        return [
-            self._create_iqm_result(
-                result_dict=study.ResultDict(measurements=mes),
-                job_id=job_id,
-                calibration_set_id=calibration_set_id,
-                request=request,
+        results = [
+            IQMResult(
+                params=cirq.ParamResolver(),
+                measurements=result.measurements,
+                records=result.records,
+                metadata=result.metadata,
             )
-            for mes in measurements
+            for result in circuit_results
         ]
+
+        return results
 
     def _send_circuits(
         self,
         circuits: list[cirq.Circuit],
         repetitions: int = 1,
-    ) -> Tuple[dict[str, np.ndarray], UUID, UUID, RunRequest]:
+    ) -> List[IQMResult]:
         """Sends a batch of circuits to be executed."""
 
         if not self._client:
@@ -187,43 +190,72 @@ class IQMSampler(cirq.work.Sampler):
         if results.measurements is None:
             raise RuntimeError('No measurements returned from IQM quantum computer.')
 
-        return (
-            [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements],
-            job_id,
-            results.metadata.calibration_set_id,
-            results.metadata.request,
-        )
+        return [
+            self._create_iqm_result(
+                result_dict=cirq.ResultDict(
+                    params=None, measurements={k: np.array(v) for k, v in measurements.items()}
+                ),
+                job_id=job_id,
+                calibration_set_id=results.metadata.calibration_set_id,
+                request=results.metadata.request,
+            )
+            for measurements in results.measurements
+        ]
 
     def _create_iqm_result(
         self,
-        result_dict: cirq.study.ResultDict,
+        result_dict: cirq.ResultDict,
         job_id: UUID,
-        calibration_set_id: UUID,
+        calibration_set_id: Optional[UUID],
         request: RunRequest,
     ) -> IQMResult:
+        # pylint: disable=no-self-use
         """
         Creates an IQMResult instance with the given attributes.
         """
         return IQMResult(
-            result_dict=result_dict,
-            job_id=job_id,
-            calibration_set_id=calibration_set_id,
-            request=request,
+            params=result_dict.params,
+            measurements=result_dict.measurements,
+            metadata=ResultMetadata(
+                job_id=job_id,
+                calibration_set_id=calibration_set_id,
+                request=request,
+            ),
         )
 
 
 @dataclass
-class IQMResult:
-    """A data class to store the result of a quantum circuit execution on an IQM device.
+class ResultMetadata:
+    """Metadata for an IQM execution result.
 
     Attributes:
-        result_dict: A cirq.study.ResultDict object containing the results and parameters.
         job_id: A UUID representing the job.
         calibration_set_id: A UUID representing the calibration set used for this result.
         request: A RunRequest object representing the request made to run the circuit.
     """
 
-    result_dict: cirq.study.ResultDict
     job_id: UUID
-    calibration_set_id: UUID
+    calibration_set_id: Optional[UUID]
     request: RunRequest
+
+
+class IQMResult(cirq.ResultDict):
+    """A class to store the result of a quantum circuit execution on an IQM device.
+
+    Args:
+        params: A cirq.ParamResolver of settings used for this result
+        measurements: A dictionary of measurement keys to measurement results. This is a 2-D array of booleans.
+        records: A dictionary of meaurement keys to measurement results. This is a 3D array of booleans.
+        metadata: Metadata for results from IQM circuit execution.
+    """
+
+    def __init__(
+        self,
+        *,
+        params: Optional[cirq.ParamResolver] = None,
+        measurements: Optional[Mapping[str, np.ndarray]] = None,
+        records: Optional[Mapping[str, np.ndarray]] = None,
+        metadata=ResultMetadata,
+    ) -> None:
+        super().__init__(params=params, measurements=measurements, records=records)
+        self.metadata = metadata
