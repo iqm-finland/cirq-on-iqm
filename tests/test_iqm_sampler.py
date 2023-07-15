@@ -12,11 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from importlib.metadata import version
+import sys
 import uuid
 
 import cirq
-from iqm_client import Circuit, HeraldingMode, Instruction, IQMClient, Metadata, RunRequest, RunResult, Status
-from mockito import ANY, mock, when
+from iqm_client import (
+    Circuit,
+    HeraldingMode,
+    Instruction,
+    IQMClient,
+    JobAbortionError,
+    Metadata,
+    RunRequest,
+    RunResult,
+    Status,
+)
+from mockito import ANY, mock, verify, when
 import pytest
 import sympy  # type: ignore
 
@@ -214,6 +225,42 @@ def test_run_sweep_with_parameter_sweep(adonis_sampler, iqm_metadata, submit_cir
     results = adonis_sampler.run_sweep(circuit_sweep, param_sweep)
     assert len(results) == sweep_length
     assert all(isinstance(result, cirq.Result) for result in results)
+
+
+@pytest.mark.usefixtures('unstub')
+def test_run_sweep_abort_job_successful(
+    adonis_sampler, circuit_physical, submit_circuits_default_kwargs, job_id, recwarn
+):
+    client = mock(IQMClient)
+    when(client).submit_circuits(ANY, **submit_circuits_default_kwargs).thenReturn(job_id)
+    when(client).wait_for_results(job_id).thenRaise(KeyboardInterrupt)
+    when(client).abort_job(job_id)
+    when(sys).exit().thenRaise(NotImplementedError)  # just for testing without actually exiting python
+
+    adonis_sampler._client = client
+    with pytest.raises(NotImplementedError):
+        adonis_sampler.run_sweep(circuit_physical, None)
+
+    assert len(recwarn) == 0
+    verify(client, times=1).abort_job(job_id)
+    verify(sys, times=1).exit()
+
+
+@pytest.mark.usefixtures('unstub')
+def test_run_sweep_abort_job_failed(adonis_sampler, circuit_physical, submit_circuits_default_kwargs, job_id):
+    client = mock(IQMClient)
+    when(client).submit_circuits(ANY, **submit_circuits_default_kwargs).thenReturn(job_id)
+    when(client).wait_for_results(job_id).thenRaise(KeyboardInterrupt)
+    when(client).abort_job(job_id).thenRaise(JobAbortionError)
+    when(sys).exit().thenRaise(NotImplementedError)  # just for testing without actually exiting python
+
+    adonis_sampler._client = client
+    with pytest.warns(UserWarning, match='Failed to abort job'):
+        with pytest.raises(NotImplementedError):
+            adonis_sampler.run_sweep(circuit_physical, None)
+
+    verify(client, times=1).abort_job(job_id)
+    verify(sys, times=1).exit()
 
 
 @pytest.mark.usefixtures('unstub')

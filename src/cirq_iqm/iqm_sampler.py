@@ -20,11 +20,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from importlib.metadata import version
 from typing import List, Mapping, Optional
+import sys
 from uuid import UUID
+import warnings
 
 import cirq
 import iqm_client
-from iqm_client import HeraldingMode, IQMClient, RunRequest
+from iqm_client import HeraldingMode, IQMClient, RunRequest, JobAbortionError
 import numpy as np
 
 from cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
@@ -172,7 +174,10 @@ class IQMSampler(cirq.work.Sampler):
         circuits: list[cirq.Circuit],
         repetitions: int = 1,
     ) -> List[IQMResult]:
-        """Sends a batch of circuits to be executed."""
+        """Sends a batch of circuits to be executed and retrieves the results.
+
+        If a user interrupts the program while it is waiting for results, attempts to abort the submitted job.
+        """
 
         if not self._client:
             raise RuntimeError('Cannot submit circuits since session to IQM client has been closed.')
@@ -185,22 +190,31 @@ class IQMSampler(cirq.work.Sampler):
             circuit_duration_check=self._circuit_duration_check,
             heralding_mode=self._heralding_mode,
         )
-        timeout_arg = [self._run_sweep_timeout] if self._run_sweep_timeout is not None else []
-        results = self._client.wait_for_results(job_id, *timeout_arg)
-        if results.measurements is None:
-            raise RuntimeError('No measurements returned from IQM quantum computer.')
+        try:
+            timeout_arg = [self._run_sweep_timeout] if self._run_sweep_timeout is not None else []
+            results = self._client.wait_for_results(job_id, *timeout_arg)
+            if results.measurements is None:
+                raise RuntimeError('No measurements returned from IQM quantum computer.')
 
-        return [
-            self._create_iqm_result(
-                result_dict=cirq.ResultDict(
-                    params=None, measurements={k: np.array(v) for k, v in measurements.items()}
-                ),
-                job_id=job_id,
-                calibration_set_id=results.metadata.calibration_set_id,
-                request=results.metadata.request,
-            )
-            for measurements in results.measurements
-        ]
+            return [
+                self._create_iqm_result(
+                    result_dict=cirq.ResultDict(
+                        params=None, measurements={k: np.array(v) for k, v in measurements.items()}
+                    ),
+                    job_id=job_id,
+                    calibration_set_id=results.metadata.calibration_set_id,
+                    request=results.metadata.request,
+                )
+                for measurements in results.measurements
+            ]
+
+        except KeyboardInterrupt:
+            try:
+                self._client.abort_job(job_id)
+            except JobAbortionError as e:
+                warnings.warn(f'Failed to abort job: {e}')
+            finally:
+                sys.exit()
 
     def _create_iqm_result(
         self,
