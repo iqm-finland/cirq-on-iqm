@@ -19,14 +19,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from importlib.metadata import version
-from typing import List, Mapping, Optional
 import sys
+from typing import List, Mapping, Optional
 from uuid import UUID
 import warnings
 
 import cirq
 import iqm_client
-from iqm_client import HeraldingMode, IQMClient, RunRequest, JobAbortionError
+from iqm_client import HeraldingMode, IQMClient, JobAbortionError, RunRequest
 import numpy as np
 
 from cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
