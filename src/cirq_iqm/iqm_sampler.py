@@ -216,14 +216,13 @@ class IQMSampler(cirq.work.Sampler):
             finally:
                 sys.exit()
 
+    @staticmethod
     def _create_iqm_result(
-        self,
         result_dict: cirq.ResultDict,
         job_id: UUID,
         calibration_set_id: Optional[UUID],
         request: RunRequest,
     ) -> IQMResult:
-        # pylint: disable=no-self-use
         """
         Creates an IQMResult instance with the given attributes.
         """
