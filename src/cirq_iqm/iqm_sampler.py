@@ -20,7 +20,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from importlib.metadata import version
 import sys
-from typing import List, Mapping, Optional
+from typing import Optional
 from uuid import UUID
 import warnings
 
@@ -121,13 +121,12 @@ class IQMSampler(cirq.work.Sampler):
         results = [
             IQMResult(
                 params=res,
-                measurements=result.measurements,
-                records=result.records,
+                measurements=dict(result.measurements),
+                records=dict(result.records),
                 metadata=result.metadata,
             )
             for res, result in zip(resolvers, circuit_results)
         ]
-
         return results
 
     def run_iqm_batch(self, programs: list[cirq.Circuit], repetitions: int = 1) -> list[IQMResult]:
@@ -160,8 +159,8 @@ class IQMSampler(cirq.work.Sampler):
         results = [
             IQMResult(
                 params=cirq.ParamResolver(),
-                measurements=result.measurements,
-                records=result.records,
+                measurements=dict(result.measurements),
+                records=dict(result.records),
                 metadata=result.metadata,
             )
             for result in circuit_results
@@ -173,7 +172,7 @@ class IQMSampler(cirq.work.Sampler):
         self,
         circuits: list[cirq.Circuit],
         repetitions: int = 1,
-    ) -> List[IQMResult]:
+    ) -> list[IQMResult]:
         """Sends a batch of circuits to be executed and retrieves the results.
 
         If a user interrupts the program while it is waiting for results, attempts to abort the submitted job.
@@ -228,7 +227,8 @@ class IQMSampler(cirq.work.Sampler):
         """
         return IQMResult(
             params=result_dict.params,
-            measurements=result_dict.measurements,
+            measurements=dict(result_dict.measurements),
+            records=dict(result_dict.records),
             metadata=ResultMetadata(
                 job_id=job_id,
                 calibration_set_id=calibration_set_id,
@@ -266,9 +266,11 @@ class IQMResult(cirq.ResultDict):
         self,
         *,
         params: Optional[cirq.ParamResolver] = None,
-        measurements: Optional[Mapping[str, np.ndarray]] = None,
-        records: Optional[Mapping[str, np.ndarray]] = None,
+        measurements: Optional[dict[str, np.ndarray]] = None,
+        records: Optional[dict[str, np.ndarray]] = None,
         metadata=ResultMetadata,
     ) -> None:
-        super().__init__(params=params, measurements=measurements, records=records)
+        measurements_dict = dict(measurements) if measurements is not None else {}
+        records_dict = dict(records) if records is not None else {}
+        super().__init__(params=params, measurements=measurements_dict, records=records_dict)
         self.metadata = metadata
