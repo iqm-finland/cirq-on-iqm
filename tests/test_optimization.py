@@ -74,9 +74,7 @@ class TestGateOptimization:
             (ops.ISwapPowGate, 3),
             pytest.param(ops.ISwapPowGate, 0.6, marks=pytest.mark.xfail(strict=True)),
             # diagonal, but currently do not work with EjectZ
-            pytest.param(
-                ops.ZZPowGate, 0.37, marks=pytest.mark.xfail(strict=True, reason='Implementation missing in Cirq.')
-            ),
+            pytest.param(ops.ZZPowGate, 0.37),
             pytest.param(
                 ops.ISwapPowGate, 2, marks=pytest.mark.xfail(strict=True, reason='Implementation missing in Cirq.')
             ),
@@ -110,14 +108,7 @@ class TestSimplifyCircuit:
         'two_qubit_gate',
         [
             cirq.CZPowGate(exponent=1),
-            pytest.param(
-                cirq.ZZPowGate(exponent=0.1),
-                marks=pytest.mark.xfail(
-                    strict=True,
-                    reason='ZZPowGate does not yet implement the _phase_by_ protocol in Cirq.',
-                    raises=AssertionError,
-                ),
-            ),
+            pytest.param(cirq.ZZPowGate(exponent=0.1)),
         ],
     )
     def test_simplify_circuit_eject_z(self, two_qubit_gate, qubits):

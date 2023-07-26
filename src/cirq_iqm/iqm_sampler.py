@@ -42,8 +42,8 @@ def serialize_circuit(circuit: cirq.Circuit) -> iqm_client.Circuit:
     Returns:
         data transfer object representing the circuit
     """
-    instructions = list(map(map_operation, circuit.all_operations()))
-    return iqm_client.Circuit(name='Serialized from Cirq', instructions=instructions)
+    instructions = tuple(map(map_operation, circuit.all_operations()))
+    return iqm_client.Circuit(name='Serialized from Cirq', instructions=instructions, metadata=None)
 
 
 class IQMSampler(cirq.work.Sampler):
@@ -118,16 +118,15 @@ class IQMSampler(cirq.work.Sampler):
             circuits,
             repetitions=repetitions,
         )
-        results = [
-            IQMResult(
-                params=res,
-                measurements=dict(result.measurements),
-                records=dict(result.records),
-                metadata=result.metadata,
+        return [
+            IQMSampler._create_iqm_result(
+                cirq.ResultDict(params=res, measurements=result),
+                metadata.job_id,
+                metadata.calibration_set_id,
+                metadata.request,
             )
-            for res, result in zip(resolvers, circuit_results)
+            for (result, metadata), res in zip(circuit_results, resolvers)
         ]
-        return results
 
     def run_iqm_batch(self, programs: list[cirq.Circuit], repetitions: int = 1) -> list[IQMResult]:
         """Sends a batch of circuits to be executed.
@@ -156,23 +155,21 @@ class IQMSampler(cirq.work.Sampler):
             programs,
             repetitions=repetitions,
         )
-        results = [
-            IQMResult(
-                params=cirq.ParamResolver(),
-                measurements=dict(result.measurements),
-                records=dict(result.records),
-                metadata=result.metadata,
+        return [
+            IQMSampler._create_iqm_result(
+                cirq.ResultDict(params=None, measurements=result),
+                metadata.job_id,
+                metadata.calibration_set_id,
+                metadata.request,
             )
-            for result in circuit_results
+            for result, metadata in circuit_results
         ]
-
-        return results
 
     def _send_circuits(
         self,
         circuits: list[cirq.Circuit],
         repetitions: int = 1,
-    ) -> list[IQMResult]:
+    ) -> list[tuple[dict[str, np.ndarray], ResultMetadata]]:
         """Sends a batch of circuits to be executed and retrieves the results.
 
         If a user interrupts the program while it is waiting for results, attempts to abort the submitted job.
@@ -196,13 +193,9 @@ class IQMSampler(cirq.work.Sampler):
                 raise RuntimeError('No measurements returned from IQM quantum computer.')
 
             return [
-                self._create_iqm_result(
-                    result_dict=cirq.ResultDict(
-                        params=None, measurements={k: np.array(v) for k, v in measurements.items()}
-                    ),
-                    job_id=job_id,
-                    calibration_set_id=results.metadata.calibration_set_id,
-                    request=results.metadata.request,
+                (
+                    {k: np.array(v) for k, v in measurements.items()},
+                    ResultMetadata(job_id, results.metadata.calibration_set_id, results.metadata.request),
                 )
                 for measurements in results.measurements
             ]
@@ -268,7 +261,7 @@ class IQMResult(cirq.ResultDict):
         params: Optional[cirq.ParamResolver] = None,
         measurements: Optional[dict[str, np.ndarray]] = None,
         records: Optional[dict[str, np.ndarray]] = None,
-        metadata=ResultMetadata,
+        metadata: ResultMetadata,
     ) -> None:
         measurements_dict = dict(measurements) if measurements is not None else {}
         records_dict = dict(records) if records is not None else {}
