@@ -290,8 +290,52 @@ When executing a circuit that uses something other than the device qubits, you n
 as explained in the :ref:`routing` section above.
 
 
-More examples
--------------
+More advanced examples
+----------------------
+
+In this section we demonstrate some of the more advanced examples of using Cirq on IQM and how you can use various tools available in Cirq.
+
+Multiple circuits can be submitted to the IQM quantum computer at once using the :meth:`~.IQMSampler.run_iqm_batch` method of :class:`.IQMSampler`. 
+
+.. code-block:: python
+   
+   circuit_list = []
+
+   circuit_list.append(routed_circuit_1)
+   circuit_list.append(routed_circuit_2)
+
+   results = sampler.run_iqm_batch(circuit_list, repetitions=10)
+
+   for result in results:
+        print(result.histogram(key="m"))
+
+
+Similiarly, parameterized circuits can be executed using :meth:`~.IQMSampler.run_sweep` and :meth:`~.cirq.resolve_parameters`.
+
+.. code-block:: python
+   
+   import sympy
+   q1, q2 = cirq.NamedQubit('Alice'), cirq.NamedQubit('Bob')
+   theta = sympy.Symbol("theta")
+   circuit = cirq.Circuit([
+    cirq.H(q1),
+    cirq.CNOT(q1, q2),
+    cirq.Z(q1) ** theta,
+    cirq.Z(q2) ** theta,
+    cirq.CNOT(q1, q2),
+    cirq.H(q1),
+    cirq.measure(q1, q2, key='m'),
+   ])
+
+   decomposed_circuit = adonis.decompose_circuit(circuit)
+   routed_circuit, _, _ = adonis.route_circuit(decomposed_circuit)
+   simplified_circuit = simplify_circuit(routed_circuit)
+
+   params = cirq.Linspace(key="theta", start=0, stop=0.5, length=3)
+   results = sampler.run_sweep(simplified_circuit, repetitions=10, params=params)
+   for result in results:
+       print(f'{result.params}: {result.histogram(key="m")}')
+
 
 More examples are available in the
 `examples directory <https://github.com/iqm-finland/cirq-on-iqm/tree/main/examples>`_
