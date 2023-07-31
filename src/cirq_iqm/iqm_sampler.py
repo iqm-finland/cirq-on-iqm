@@ -251,7 +251,7 @@ class IQMResult(cirq.ResultDict):
     Args:
         params: A cirq.ParamResolver of settings used for this result
         measurements: A dictionary of measurement keys to measurement results. This is a 2-D array of booleans.
-        records: A dictionary of meaurement keys to measurement results. This is a 3D array of booleans.
+        records: A dictionary of measurement keys to measurement results, which are 3D arrays of dtype bool.
         metadata: Metadata for results from IQM circuit execution.
     """
 
