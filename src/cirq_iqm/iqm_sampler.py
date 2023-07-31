@@ -246,7 +246,7 @@ class ResultMetadata:
 
 
 class IQMResult(cirq.ResultDict):
-    """A class to store the result of a quantum circuit execution on an IQM device.
+    """Stores the results of a quantum circuit execution on an IQM device.
 
     Args:
         params: A cirq.ParamResolver of settings used for this result
