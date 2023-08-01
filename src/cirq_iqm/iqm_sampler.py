@@ -43,7 +43,7 @@ def serialize_circuit(circuit: cirq.Circuit) -> iqm_client.Circuit:
         data transfer object representing the circuit
     """
     instructions = tuple(map(map_operation, circuit.all_operations()))
-    return iqm_client.Circuit(name='Serialized from Cirq', instructions=instructions, metadata=None)
+    return iqm_client.Circuit(name='Serialized from Cirq', instructions=instructions)
 
 
 class IQMSampler(cirq.work.Sampler):

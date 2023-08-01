@@ -130,6 +130,7 @@ group_by_package = true
 
 [tool.mypy]
 namespace_packages = true
+plugins = "pydantic.mypy"
 
 [[tool.mypy.overrides]]
 module = [
