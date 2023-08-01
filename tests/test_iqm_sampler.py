@@ -28,11 +28,12 @@ from iqm_client import (
     Status,
 )
 from mockito import ANY, mock, verify, when
+import numpy as np
 import pytest
 import sympy  # type: ignore
 
 from cirq_iqm import Adonis
-from cirq_iqm.iqm_sampler import IQMSampler
+from cirq_iqm.iqm_sampler import IQMResult, IQMSampler, ResultMetadata
 
 
 @pytest.fixture()
@@ -105,7 +106,9 @@ def test_run_sweep_executes_circuit_with_physical_names(
 
     adonis_sampler._client = client
     results = adonis_sampler.run_sweep(circuit_physical, None)
-    assert isinstance(results[0], cirq.Result)
+    assert isinstance(results[0], IQMResult)
+    assert isinstance(results[0].metadata, ResultMetadata)
+    np.testing.assert_array_equal(results[0].measurements['some stuff'], np.array([[0], [1]]))
 
 
 @pytest.mark.usefixtures('unstub')
@@ -122,7 +125,9 @@ def test_run_sweep_executes_circuit_with_calibration_set_id(
 
     sampler._client = client
     results = sampler.run_sweep(circuit_physical, None)
-    assert isinstance(results[0], cirq.Result)
+    assert isinstance(results[0], IQMResult)
+    assert isinstance(results[0].metadata, ResultMetadata)
+    np.testing.assert_array_equal(results[0].measurements['some stuff'], np.array([[0], [1]]))
 
 
 @pytest.mark.usefixtures('unstub')
@@ -138,7 +143,9 @@ def test_run_sweep_has_duration_check_enabled_by_default(
 
     sampler._client = client
     results = sampler.run_sweep(circuit_physical, None)
-    assert isinstance(results[0], cirq.Result)
+    assert isinstance(results[0], IQMResult)
+    assert isinstance(results[0].metadata, ResultMetadata)
+    np.testing.assert_array_equal(results[0].measurements['some stuff'], np.array([[0], [1]]))
 
 
 @pytest.mark.usefixtures('unstub')
@@ -154,7 +161,9 @@ def test_run_sweep_executes_circuit_with_duration_check_disabled(
 
     sampler._client = client
     results = sampler.run_sweep(circuit_physical, None)
-    assert isinstance(results[0], cirq.Result)
+    assert isinstance(results[0], IQMResult)
+    assert isinstance(results[0].metadata, ResultMetadata)
+    np.testing.assert_array_equal(results[0].measurements['some stuff'], np.array([[0], [1]]))
 
 
 @pytest.mark.usefixtures('unstub')
@@ -170,7 +179,9 @@ def test_run_sweep_allows_to_override_polling_timeout(
 
     sampler._client = client
     results = sampler.run_sweep(circuit_physical, None)
-    assert isinstance(results[0], cirq.Result)
+    assert isinstance(results[0], IQMResult)
+    assert isinstance(results[0].metadata, ResultMetadata)
+    np.testing.assert_array_equal(results[0].measurements['some stuff'], np.array([[0], [1]]))
 
 
 @pytest.mark.usefixtures('unstub')
@@ -186,7 +197,9 @@ def test_run_sweep_has_heralding_mode_none_by_default(
 
     sampler._client = client
     results = sampler.run_sweep(circuit_physical, None)
-    assert isinstance(results[0], cirq.Result)
+    assert isinstance(results[0], IQMResult)
+    assert isinstance(results[0].metadata, ResultMetadata)
+    np.testing.assert_array_equal(results[0].measurements['some stuff'], np.array([[0], [1]]))
 
 
 @pytest.mark.usefixtures('unstub')
@@ -202,7 +215,9 @@ def test_run_sweep_executes_circuit_with_heralding_mode_zeros(
 
     sampler._client = client
     results = sampler.run_sweep(circuit_physical, None)
-    assert isinstance(results[0], cirq.Result)
+    assert isinstance(results[0], IQMResult)
+    assert isinstance(results[0].metadata, ResultMetadata)
+    np.testing.assert_array_equal(results[0].measurements['some stuff'], np.array([[0], [1]]))
 
 
 @pytest.mark.usefixtures('unstub')
@@ -224,7 +239,12 @@ def test_run_sweep_with_parameter_sweep(adonis_sampler, iqm_metadata, submit_cir
 
     results = adonis_sampler.run_sweep(circuit_sweep, param_sweep)
     assert len(results) == sweep_length
-    assert all(isinstance(result, cirq.Result) for result in results)
+    assert all(isinstance(result, IQMResult) for result in results)
+    assert all(isinstance(result.metadata, ResultMetadata) for result in results)
+    np.testing.assert_array_equal(results[0].measurements['some stuff'], np.array([[0]]))
+    np.testing.assert_array_equal(results[1].measurements['some stuff'], np.array([[1]]))
+    for idx, param in enumerate(param_sweep):
+        assert results[idx].params == param
 
 
 @pytest.mark.usefixtures('unstub')
@@ -290,7 +310,10 @@ def test_run_iqm_batch(adonis_sampler, iqm_metadata, submit_circuits_default_kwa
     results = adonis_sampler.run_iqm_batch(circuits, repetitions=repetitions)
 
     assert len(results) == len(circuits)
-    assert all(isinstance(result, cirq.Result) for result in results)
+    assert all(isinstance(result, IQMResult) for result in results)
+    assert all(isinstance(result.metadata, ResultMetadata) for result in results)
+    np.testing.assert_array_equal(results[0].measurements['some stuff'], np.array([[0]]))
+    np.testing.assert_array_equal(results[1].measurements['some stuff'], np.array([[1]]))
 
 
 @pytest.mark.usefixtures('unstub')
@@ -316,7 +339,9 @@ def test_run_iqm_batch_allows_to_override_polling_timeout(
     results = sampler.run_iqm_batch(circuits)
 
     assert len(results) == len(circuits)
-    assert all(isinstance(result, cirq.Result) for result in results)
+    assert all(isinstance(result, IQMResult) for result in results)
+    np.testing.assert_array_equal(results[0].measurements['some stuff'], np.array([[0]]))
+    np.testing.assert_array_equal(results[1].measurements['some stuff'], np.array([[1]]))
 
 
 def test_credentials_are_passed_to_client():
