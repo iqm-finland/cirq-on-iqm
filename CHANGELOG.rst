@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 11.12
+=============
+
+* Return IQM Client metadata with results. `#109 <https://github.com/iqm-finland/cirq-on-iqm/pull/109>`_
+
 Version 11.11
 =============
 
