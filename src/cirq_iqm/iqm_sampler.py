@@ -201,9 +201,9 @@ class ResultMetadata:
     """Metadata for an IQM execution result.
 
     Attributes:
-        job_id: A UUID representing the job.
-        calibration_set_id: A UUID representing the calibration set used for this result.
-        request: A RunRequest object representing the request made to run the circuit.
+        job_id: ID of the computational job.
+        calibration_set_id: Calibration set used for this :class:`.IQMResult`.
+        request: Request made to run the job.
     """
 
     job_id: UUID
