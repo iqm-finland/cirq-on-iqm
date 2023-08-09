@@ -119,8 +119,8 @@ class IQMSampler(cirq.work.Sampler):
             repetitions=repetitions,
         )
         return [
-            IQMResult(measurements=result, params=res, metadata=metadata)
-            for (result, metadata), res in zip(circuit_results, resolvers)
+            IQMResult(measurements=result, params=res, metadata=circuit_results[1])
+            for result, res in zip(circuit_results[0], resolvers)
         ]
 
     def run_iqm_batch(self, programs: list[cirq.Circuit], repetitions: int = 1) -> list[IQMResult]:
@@ -150,16 +150,22 @@ class IQMSampler(cirq.work.Sampler):
             programs,
             repetitions=repetitions,
         )
-        return [IQMResult(measurements=result, metadata=metadata) for result, metadata in circuit_results]
+        return [IQMResult(measurements=result, metadata=circuit_results[1]) for result in circuit_results[0]]
 
     def _send_circuits(
         self,
         circuits: list[cirq.Circuit],
         repetitions: int = 1,
-    ) -> list[tuple[dict[str, np.ndarray], ResultMetadata]]:
+    ) -> tuple[list[dict[str, np.ndarray]], ResultMetadata]:
         """Sends a batch of circuits to be executed and retrieves the results.
 
         If a user interrupts the program while it is waiting for results, attempts to abort the submitted job.
+        Args:
+            circuits: quantum circuits to execute
+            repetitions: number of shots to execute each circuit
+
+        Returns:
+            circuit execution results, result metadata
         """
 
         if not self._client:
@@ -179,13 +185,10 @@ class IQMSampler(cirq.work.Sampler):
             if results.measurements is None:
                 raise RuntimeError('No measurements returned from IQM quantum computer.')
 
-            return [
-                (
-                    {k: np.array(v) for k, v in measurements.items()},
-                    ResultMetadata(job_id, results.metadata.calibration_set_id, results.metadata.request),
-                )
-                for measurements in results.measurements
-            ]
+            return (
+                [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements],
+                ResultMetadata(job_id, results.metadata.calibration_set_id, results.metadata.request),
+            )
 
         except KeyboardInterrupt:
             try:
@@ -217,7 +220,9 @@ class IQMResult(cirq.ResultDict):
     Args:
         params: A cirq.ParamResolver of settings used for this result
         measurements: A dictionary of measurement keys to measurement results. This is a 2-D array of booleans.
+            shape == (repetitions, qubits).
         records: A dictionary of measurement keys to measurement results, which are 3D arrays of dtype bool.
+            shape == (repetitions, instances, qubits).
         metadata: Metadata for results from IQM circuit execution.
     """
 
