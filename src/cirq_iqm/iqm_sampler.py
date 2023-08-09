@@ -218,12 +218,12 @@ class IQMResult(cirq.ResultDict):
     """Stores the results of a quantum circuit execution on an IQM device.
 
     Args:
-        params: A cirq.ParamResolver of settings used for this result
-        measurements: A dictionary of measurement keys to measurement results. This is a 2-D array of booleans.
-            shape == (repetitions, qubits).
-        records: A dictionary of measurement keys to measurement results, which are 3D arrays of dtype bool.
-            shape == (repetitions, instances, qubits).
-        metadata: Metadata for results from IQM circuit execution.
+        params: Parameter resolver used for this circuit, if any.
+        measurements: Maps measurement keys to measurement results, which are 2-D arrays of dtype bool.
+            `shape == (repetitions, qubits)`.
+        records: Maps measurement keys to measurement results, which are 3D arrays of dtype bool.
+            `shape == (repetitions, instances, qubits)`.
+        metadata: Metadata for the circuit execution results.
     """
 
     def __init__(
