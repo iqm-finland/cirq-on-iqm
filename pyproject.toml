@@ -17,10 +17,10 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: Apache Software License"
 ]
-requires-python = ">=3.9, <3.11"
+requires-python = ">=3.9, <3.12"
 dependencies = [
     "numpy",
-    "cirq ~= 1.1",
+    "cirq ~= 1.2",
     "ply",  # Required by cirq.contrib.qasm_import
     "iqm-client >= 13.0, < 14.0"
 ]
@@ -47,7 +47,7 @@ testing = [
     "isort == 5.10.1",
     "jsons == 1.4.2",
     "mockito == 1.2.2",
-    "mypy == 0.982",
+    "mypy == 1.4.1",
     "pytest == 7.1.2",
     "pytest-cov == 3.0.0",
     "pytest-isort == 3.0.0",
@@ -130,6 +130,7 @@ group_by_package = true
 
 [tool.mypy]
 namespace_packages = true
+plugins = "pydantic.mypy"
 
 [[tool.mypy.overrides]]
 module = [
