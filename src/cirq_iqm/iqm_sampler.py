@@ -114,13 +114,13 @@ class IQMSampler(cirq.work.Sampler):
 
         circuits = [cirq.protocols.resolve_parameters(program, res) for res in resolvers] if resolvers else [program]
 
-        circuit_results = self._send_circuits(
+        results, metadata = self._send_circuits(
             circuits,
             repetitions=repetitions,
         )
         return [
-            IQMResult(measurements=result, params=res, metadata=circuit_results[1])
-            for result, res in zip(circuit_results[0], resolvers)
+            IQMResult(measurements=result, params=resolver, metadata=metadata)
+            for result, resolver in zip(results, resolvers)
         ]
 
     def run_iqm_batch(self, programs: list[cirq.Circuit], repetitions: int = 1) -> list[IQMResult]:
@@ -146,11 +146,11 @@ class IQMSampler(cirq.work.Sampler):
         for program in programs:
             self._device.validate_circuit(program)
 
-        circuit_results = self._send_circuits(
+        results, metadata = self._send_circuits(
             programs,
             repetitions=repetitions,
         )
-        return [IQMResult(measurements=result, metadata=circuit_results[1]) for result in circuit_results[0]]
+        return [IQMResult(measurements=result, metadata=metadata) for result in results]
 
     def _send_circuits(
         self,
@@ -162,7 +162,7 @@ class IQMSampler(cirq.work.Sampler):
         If a user interrupts the program while it is waiting for results, attempts to abort the submitted job.
         Args:
             circuits: quantum circuits to execute
-            repetitions: number of shots to execute each circuit
+            repetitions: number of shots to sample from each circuit
 
         Returns:
             circuit execution results, result metadata
