@@ -114,13 +114,13 @@ class IQMSampler(cirq.work.Sampler):
 
         circuits = [cirq.protocols.resolve_parameters(program, res) for res in resolvers] if resolvers else [program]
 
-        circuit_results = self._send_circuits(
+        results, metadata = self._send_circuits(
             circuits,
             repetitions=repetitions,
         )
         return [
-            IQMResult(measurements=result, params=res, metadata=metadata)
-            for (result, metadata), res in zip(circuit_results, resolvers)
+            IQMResult(measurements=result, params=resolver, metadata=metadata)
+            for result, resolver in zip(results, resolvers)
         ]
 
     def run_iqm_batch(self, programs: list[cirq.Circuit], repetitions: int = 1) -> list[IQMResult]:
@@ -146,20 +146,26 @@ class IQMSampler(cirq.work.Sampler):
         for program in programs:
             self._device.validate_circuit(program)
 
-        circuit_results = self._send_circuits(
+        results, metadata = self._send_circuits(
             programs,
             repetitions=repetitions,
         )
-        return [IQMResult(measurements=result, metadata=metadata) for result, metadata in circuit_results]
+        return [IQMResult(measurements=result, metadata=metadata) for result in results]
 
     def _send_circuits(
         self,
         circuits: list[cirq.Circuit],
         repetitions: int = 1,
-    ) -> list[tuple[dict[str, np.ndarray], ResultMetadata]]:
+    ) -> tuple[list[dict[str, np.ndarray]], ResultMetadata]:
         """Sends a batch of circuits to be executed and retrieves the results.
 
         If a user interrupts the program while it is waiting for results, attempts to abort the submitted job.
+        Args:
+            circuits: quantum circuits to execute
+            repetitions: number of shots to sample from each circuit
+
+        Returns:
+            circuit execution results, result metadata
         """
 
         if not self._client:
@@ -179,13 +185,10 @@ class IQMSampler(cirq.work.Sampler):
             if results.measurements is None:
                 raise RuntimeError('No measurements returned from IQM quantum computer.')
 
-            return [
-                (
-                    {k: np.array(v) for k, v in measurements.items()},
-                    ResultMetadata(job_id, results.metadata.calibration_set_id, results.metadata.request),
-                )
-                for measurements in results.measurements
-            ]
+            return (
+                [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements],
+                ResultMetadata(job_id, results.metadata.calibration_set_id, results.metadata.request),
+            )
 
         except KeyboardInterrupt:
             try:
@@ -201,9 +204,9 @@ class ResultMetadata:
     """Metadata for an IQM execution result.
 
     Attributes:
-        job_id: A UUID representing the job.
-        calibration_set_id: A UUID representing the calibration set used for this result.
-        request: A RunRequest object representing the request made to run the circuit.
+        job_id: ID of the computational job.
+        calibration_set_id: Calibration set used for this :class:`.IQMResult`.
+        request: Request made to run the job.
     """
 
     job_id: UUID
@@ -215,10 +218,12 @@ class IQMResult(cirq.ResultDict):
     """Stores the results of a quantum circuit execution on an IQM device.
 
     Args:
-        params: A cirq.ParamResolver of settings used for this result
-        measurements: A dictionary of measurement keys to measurement results. This is a 2-D array of booleans.
-        records: A dictionary of measurement keys to measurement results, which are 3D arrays of dtype bool.
-        metadata: Metadata for results from IQM circuit execution.
+        params: Parameter resolver used for this circuit, if any.
+        measurements: Maps measurement keys to measurement results, which are 2-D arrays of dtype bool.
+            `shape == (repetitions, qubits)`.
+        records: Maps measurement keys to measurement results, which are 3D arrays of dtype bool.
+            `shape == (repetitions, instances, qubits)`.
+        metadata: Metadata for the circuit execution results.
     """
 
     def __init__(

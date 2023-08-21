@@ -17,10 +17,10 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: Apache Software License"
 ]
-requires-python = ">=3.9, <3.11"
+requires-python = ">=3.9, <3.12"
 dependencies = [
     "numpy",
-    "cirq ~= 1.1",
+    "cirq ~= 1.2",
     "ply",  # Required by cirq.contrib.qasm_import
     "iqm-client >= 13.0, < 14.0"
 ]
