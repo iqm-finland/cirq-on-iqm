@@ -17,16 +17,16 @@ Circuit sampler that executes quantum circuits on an IQM quantum computer.
 """
 from __future__ import annotations
 
+from dataclasses import dataclass
 from importlib.metadata import version
 import sys
-from typing import Optional
+from typing import Mapping, Optional
 from uuid import UUID
 import warnings
 
 import cirq
-from cirq import study
 import iqm_client
-from iqm_client import HeraldingMode, IQMClient, JobAbortionError
+from iqm_client import HeraldingMode, IQMClient, JobAbortionError, RunRequest
 import numpy as np
 
 from cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
@@ -42,7 +42,7 @@ def serialize_circuit(circuit: cirq.Circuit) -> iqm_client.Circuit:
     Returns:
         data transfer object representing the circuit
     """
-    instructions = list(map(map_operation, circuit.all_operations()))
+    instructions = tuple(map(map_operation, circuit.all_operations()))
     return iqm_client.Circuit(name='Serialized from Cirq', instructions=instructions)
 
 
@@ -105,7 +105,7 @@ class IQMSampler(cirq.work.Sampler):
 
     def run_sweep(  # type: ignore[override]
         self, program: cirq.Circuit, params: cirq.Sweepable, repetitions: int = 1
-    ) -> list[cirq.Result]:
+    ) -> list[IQMResult]:
 
         # validate the circuit for the device
         self._device.validate_circuit(program)
@@ -114,10 +114,16 @@ class IQMSampler(cirq.work.Sampler):
 
         circuits = [cirq.protocols.resolve_parameters(program, res) for res in resolvers] if resolvers else [program]
 
-        measurements = self._send_circuits(circuits, repetitions=repetitions)
-        return [study.ResultDict(params=res, measurements=mes) for res, mes in zip(resolvers, measurements)]
+        results, metadata = self._send_circuits(
+            circuits,
+            repetitions=repetitions,
+        )
+        return [
+            IQMResult(measurements=result, params=resolver, metadata=metadata)
+            for result, resolver in zip(results, resolvers)
+        ]
 
-    def run_iqm_batch(self, programs: list[cirq.Circuit], repetitions: int = 1) -> list[cirq.Result]:
+    def run_iqm_batch(self, programs: list[cirq.Circuit], repetitions: int = 1) -> list[IQMResult]:
         """Sends a batch of circuits to be executed.
 
         Running circuits in a batch is more efficient and hence completes quicker than running the circuits
@@ -140,17 +146,26 @@ class IQMSampler(cirq.work.Sampler):
         for program in programs:
             self._device.validate_circuit(program)
 
-        measurements = self._send_circuits(programs, repetitions=repetitions)
-        return [study.ResultDict(measurements=meas) for meas in measurements]
+        results, metadata = self._send_circuits(
+            programs,
+            repetitions=repetitions,
+        )
+        return [IQMResult(measurements=result, metadata=metadata) for result in results]
 
     def _send_circuits(
         self,
         circuits: list[cirq.Circuit],
         repetitions: int = 1,
-    ) -> list[dict[str, np.ndarray]]:
+    ) -> tuple[list[dict[str, np.ndarray]], ResultMetadata]:
         """Sends a batch of circuits to be executed and retrieves the results.
 
         If a user interrupts the program while it is waiting for results, attempts to abort the submitted job.
+        Args:
+            circuits: quantum circuits to execute
+            repetitions: number of shots to sample from each circuit
+
+        Returns:
+            circuit execution results, result metadata
         """
 
         if not self._client:
@@ -164,14 +179,16 @@ class IQMSampler(cirq.work.Sampler):
             circuit_duration_check=self._circuit_duration_check,
             heralding_mode=self._heralding_mode,
         )
-
         try:
             timeout_arg = [self._run_sweep_timeout] if self._run_sweep_timeout is not None else []
             results = self._client.wait_for_results(job_id, *timeout_arg)
             if results.measurements is None:
                 raise RuntimeError('No measurements returned from IQM quantum computer.')
 
-            return [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements]
+            return (
+                [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements],
+                ResultMetadata(job_id, results.metadata.calibration_set_id, results.metadata.request),
+            )
 
         except KeyboardInterrupt:
             try:
@@ -180,3 +197,42 @@ class IQMSampler(cirq.work.Sampler):
                 warnings.warn(f'Failed to abort job: {e}')
             finally:
                 sys.exit()
+
+
+@dataclass
+class ResultMetadata:
+    """Metadata for an IQM execution result.
+
+    Attributes:
+        job_id: ID of the computational job.
+        calibration_set_id: Calibration set used for this :class:`.IQMResult`.
+        request: Request made to run the job.
+    """
+
+    job_id: UUID
+    calibration_set_id: Optional[UUID]
+    request: RunRequest
+
+
+class IQMResult(cirq.ResultDict):
+    """Stores the results of a quantum circuit execution on an IQM device.
+
+    Args:
+        params: Parameter resolver used for this circuit, if any.
+        measurements: Maps measurement keys to measurement results, which are 2-D arrays of dtype bool.
+            `shape == (repetitions, qubits)`.
+        records: Maps measurement keys to measurement results, which are 3D arrays of dtype bool.
+            `shape == (repetitions, instances, qubits)`.
+        metadata: Metadata for the circuit execution results.
+    """
+
+    def __init__(
+        self,
+        *,
+        params: Optional[cirq.ParamResolver] = None,
+        measurements: Optional[Mapping[str, np.ndarray]] = None,
+        records: Optional[Mapping[str, np.ndarray]] = None,
+        metadata: ResultMetadata,
+    ) -> None:
+        super().__init__(params=params, measurements=measurements, records=records)
+        self.metadata = metadata
