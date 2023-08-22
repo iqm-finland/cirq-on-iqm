@@ -35,8 +35,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="cirq_iqm.optimizers" href="cirq_iqm.optimizers.html" />
-    <link rel="prev" title="cirq_iqm.iqm_sampler.serialize_circuit" href="cirq_iqm.iqm_sampler.serialize_circuit.html" />
+    <link rel="next" title="cirq_iqm.iqm_sampler.ResultMetadata" href="cirq_iqm.iqm_sampler.ResultMetadata.html" />
+    <link rel="prev" title="cirq_iqm.iqm_sampler.IQMResult" href="cirq_iqm.iqm_sampler.IQMResult.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -203,9 +203,19 @@
          cirq_iqm.iqm_sampler.serialize_circuit
         </a>
        </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="cirq_iqm.iqm_sampler.IQMResult.html">
+         cirq_iqm.iqm_sampler.IQMResult
+        </a>
+       </li>
        <li class="toctree-l4 current active">
         <a class="current reference internal" href="#">
          cirq_iqm.iqm_sampler.IQMSampler
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="cirq_iqm.iqm_sampler.ResultMetadata.html">
+         cirq_iqm.iqm_sampler.ResultMetadata
         </a>
        </li>
       </ul>
@@ -308,6 +318,9 @@
     
     
       <li class="version_item"><a href="../versions/11.2/index.html">11.2</a></li>
+    
+    
+      <li class="version_item"><a href="../versions/11.12/index.html">11.12</a></li>
     
     
       <li class="version_item"><a href="../versions/11.11/index.html">11.11</a></li>
@@ -632,7 +645,7 @@ related circuits efficiently.</p>
 <dd class="field-even"><p>Result list for this run; one for each possible parameter resolver.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[cirq.study.result.Result]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference internal" href="cirq_iqm.iqm_sampler.IQMResult.html#cirq_iqm.iqm_sampler.IQMResult" title="cirq_iqm.iqm_sampler.IQMResult">cirq_iqm.iqm_sampler.IQMResult</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -662,7 +675,7 @@ individually. Circuits run in a batch must all measure the same qubits.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[cirq.study.result.Result]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference internal" href="cirq_iqm.iqm_sampler.IQMResult.html#cirq_iqm.iqm_sampler.IQMResult" title="cirq_iqm.iqm_sampler.IQMResult">cirq_iqm.iqm_sampler.IQMResult</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -704,17 +717,17 @@ true asynchronous sampling should override it to use other strategies.</p>
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="cirq_iqm.iqm_sampler.serialize_circuit.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="cirq_iqm.iqm_sampler.IQMResult.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">cirq_iqm.iqm_sampler.serialize_circuit</p>
+            <p class="prev-next-title">cirq_iqm.iqm_sampler.IQMResult</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="cirq_iqm.optimizers.html" title="next page">
+    <a class='right-next' id="next-link" href="cirq_iqm.iqm_sampler.ResultMetadata.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">cirq_iqm.optimizers</p>
+        <p class="prev-next-title">cirq_iqm.iqm_sampler.ResultMetadata</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -728,7 +741,7 @@ true asynchronous sampling should override it to use other strategies.</p>
     By Cirq on IQM developers<br/>
   
       &copy; Copyright 2020–2022, Cirq on IQM developers.<br/>
-    Last updated on 2023-07-03.<br/>
+    Last updated on 2023-08-22.<br/>
 </p>
         </footer>
     </div>
