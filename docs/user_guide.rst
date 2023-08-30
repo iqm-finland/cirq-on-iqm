@@ -262,21 +262,45 @@ instance and use its :meth:`~.IQMSampler.run` method to send a circuit for execu
 
 
 Note that the code snippet above assumes that you have set the variable ``iqm_server_url`` to the URL
-of the IQM server. By default, the latest calibration set is used for running the circuit. If you want to use
-a particular calibration set, provide the ``calibration_set_id`` argument. The sampler will by default use an
-:class:`.IQMDevice` created based on architecture data obtained from the server, which is then available in the
-:attr:`.IQMSampler.device` property. Alternatively, the device can be specified directly with the ``device`` argument.
+of the IQM server. Additionally, you can pass IQM backend specific options to the :class:`.IQMSampler` class. 
+The below table summarises the currently available options:
 
-If any circuit in a job would take too long to execute compared to the coherence time of the QPU, the server will
-disqualify the job and not execute any circuits. In some special cases, you may want to disable this as follows:
+
+.. list-table::
+   :widths: 25 20 25 100
+   :header-rows: 1
+
+   * - Name
+     - Type
+     - Example value
+     - Description
+   * - `calibration_set_id`
+     - str
+     - "f7d9642e-b0ca-4f2d-af2a-30195bd7a76d"
+     - Indicates the calibration set to use. Defaults to `None`, which means the IQM server will use the best
+       available calibration set automatically.
+   * - `circuit_duration_check`
+     - bool
+     - False
+     - Enable or disable server-side circuit duration checks. The default value is `True`, which means if any job is
+       estimated to take unreasonably long compared to the coherence times of the qubits, or too long in wall-clock
+       time, the server will reject it. This option can be used to disable this behaviour. In normal use, the
+       circuit duration check should always remain enabled.
+   * - `heralding_mode`
+     - :py:class:`~iqm_client.iqm_client.HeraldingMode`
+     - "zeros"
+     - Heralding mode to use during execution. The default value is "none".
+
+For example if you would like to use a particular calibration set, you can provide it as follows:
 
 .. code-block:: python
 
-   result = sampler.run(circuit, repetitions=10, circuit_duration_check=False)
+   sampler = IQMSampler(iqm_server_url, calibration_set_id="f7d9642e-b0ca-4f2d-af2a-30195bd7a76d")
 
 
-Disabling the circuit duration check may be limited to certain users or groups, depending on the server settings.
-In normal use, the circuit duration check should always remain enabled.
+The same applies for `heralding_mode` and `circuit_duration_check`. The sampler will by default use an
+:class:`.IQMDevice` created based on architecture data obtained from the server, which is then available in the
+:attr:`.IQMSampler.device` property. Alternatively, the device can be specified directly with the ``device`` argument.
 
 If the IQM server you are connecting to requires authentication, you will also have to use
 `Cortex CLI <https://github.com/iqm-finland/cortex-cli>`_ to retrieve and automatically refresh access tokens,
