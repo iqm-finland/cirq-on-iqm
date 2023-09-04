@@ -289,7 +289,7 @@ The below table summarises the currently available options:
    * - `heralding_mode`
      - :py:class:`~iqm_client.iqm_client.HeraldingMode`
      - "zeros"
-     - Heralding mode to use during execution. The default value is "none".
+     - Heralding mode to use during execution. The default value is "none", "zeros" enables heralding.
 
 For example if you would like to use a particular calibration set, you can provide it as follows:
 
