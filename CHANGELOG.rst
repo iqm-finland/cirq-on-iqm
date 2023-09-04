@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 11.13
+=============
+
+* Add table of backend options to the User Guide. Add example of submitting batch of circuits to the user guide. `#117 <https://github.com/iqm-finland/cirq-on-iqm/pull/117>`_
+
 Version 11.12
 =============
 
