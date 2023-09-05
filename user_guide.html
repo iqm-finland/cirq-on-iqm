@@ -320,6 +320,9 @@
       <li class="version_item"><a href="versions/11.2/user_guide.html">11.2</a></li>
     
     
+      <li class="version_item"><a href="versions/11.13/user_guide.html">11.13</a></li>
+    
+    
       <li class="version_item"><a href="versions/11.12/user_guide.html">11.12</a></li>
     
     
@@ -900,17 +903,51 @@ instance and use its <code class="xref py py-meth docutils literal notranslate">
 </pre></div>
 </div>
 <p>Note that the code snippet above assumes that you have set the variable <code class="docutils literal notranslate"><span class="pre">iqm_server_url</span></code> to the URL
-of the IQM server. By default, the latest calibration set is used for running the circuit. If you want to use
-a particular calibration set, provide the <code class="docutils literal notranslate"><span class="pre">calibration_set_id</span></code> argument. The sampler will by default use an
-<a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice" title="cirq_iqm.devices.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a> created based on architecture data obtained from the server, which is then available in the
-<a class="reference internal" href="api/cirq_iqm.iqm_sampler.IQMSampler.html#cirq_iqm.iqm_sampler.IQMSampler.device" title="cirq_iqm.iqm_sampler.IQMSampler.device"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IQMSampler.device</span></code></a> property. Alternatively, the device can be specified directly with the <code class="docutils literal notranslate"><span class="pre">device</span></code> argument.</p>
-<p>If any circuit in a job would take too long to execute compared to the coherence time of the QPU, the server will
-disqualify the job and not execute any circuits. In some special cases, you may want to disable this as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">repetitions</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">circuit_duration_check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+of the IQM server. Additionally, you can pass IQM backend specific options to the <a class="reference internal" href="api/cirq_iqm.iqm_sampler.IQMSampler.html#cirq_iqm.iqm_sampler.IQMSampler" title="cirq_iqm.iqm_sampler.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a> class.
+The below table summarises the currently available options:</p>
+<table class="colwidths-given table">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 12%" />
+<col style="width: 15%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Example value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>calibration_set_id</cite></p></td>
+<td><p>str</p></td>
+<td><p>“f7d9642e-b0ca-4f2d-af2a-30195bd7a76d”</p></td>
+<td><p>Indicates the calibration set to use. Defaults to <cite>None</cite>, which means the IQM server will use the best
+available calibration set automatically.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>circuit_duration_check</cite></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>Enable or disable server-side circuit duration checks. The default value is <cite>True</cite>, which means if any job is
+estimated to take unreasonably long compared to the coherence times of the qubits, or too long in wall-clock
+time, the server will reject it. This option can be used to disable this behaviour. In normal use, the
+circuit duration check should always remain enabled.</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>heralding_mode</cite></p></td>
+<td><p><code class="xref py py-class docutils literal notranslate"><span class="pre">HeraldingMode</span></code></p></td>
+<td><p>“zeros”</p></td>
+<td><p>Heralding mode to use during execution. The default value is “none”, “zeros” enables heralding.</p></td>
+</tr>
+</tbody>
+</table>
+<p>For example if you would like to use a particular calibration set, you can provide it as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sampler</span> <span class="o">=</span> <span class="n">IQMSampler</span><span class="p">(</span><span class="n">iqm_server_url</span><span class="p">,</span> <span class="n">calibration_set_id</span><span class="o">=</span><span class="s2">&quot;f7d9642e-b0ca-4f2d-af2a-30195bd7a76d&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Disabling the circuit duration check may be limited to certain users or groups, depending on the server settings.
-In normal use, the circuit duration check should always remain enabled.</p>
+<p>The same applies for <cite>heralding_mode</cite> and <cite>circuit_duration_check</cite>. The sampler will by default use an
+<a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice" title="cirq_iqm.devices.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a> created based on architecture data obtained from the server, which is then available in the
+<a class="reference internal" href="api/cirq_iqm.iqm_sampler.IQMSampler.html#cirq_iqm.iqm_sampler.IQMSampler.device" title="cirq_iqm.iqm_sampler.IQMSampler.device"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IQMSampler.device</span></code></a> property. Alternatively, the device can be specified directly with the <code class="docutils literal notranslate"><span class="pre">device</span></code> argument.</p>
 <p>If the IQM server you are connecting to requires authentication, you will also have to use
 <a class="reference external" href="https://github.com/iqm-finland/cortex-cli">Cortex CLI</a> to retrieve and automatically refresh access tokens,
 then set the <code class="docutils literal notranslate"><span class="pre">IQM_TOKENS_FILE</span></code> environment variable to use those tokens.
@@ -920,6 +957,19 @@ and <code class="docutils literal notranslate"><span class="pre">IQM_AUTH_PASSWO
 <code class="xref py py-class docutils literal notranslate"><span class="pre">IQMProvider</span></code>, but this approach is less secure and considered deprecated.</p>
 <p>When executing a circuit that uses something other than the device qubits, you need to route it first,
 as explained in the <a class="reference internal" href="#routing"><span class="std std-ref">Routing</span></a> section above.</p>
+<p>Multiple circuits can be submitted to the IQM quantum computer at once using the <a class="reference internal" href="api/cirq_iqm.iqm_sampler.IQMSampler.html#cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch" title="cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run_iqm_batch()</span></code></a> method of <a class="reference internal" href="api/cirq_iqm.iqm_sampler.IQMSampler.html#cirq_iqm.iqm_sampler.IQMSampler" title="cirq_iqm.iqm_sampler.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a>.
+This is often faster than executing the circuits individually. Circuits submitted in a batch are still executed sequentially.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circuit_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">circuit_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">routed_circuit_1</span><span class="p">)</span>
+<span class="n">circuit_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">routed_circuit_2</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run_iqm_batch</span><span class="p">(</span><span class="n">circuit_list</span><span class="p">,</span> <span class="n">repetitions</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+     <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
 </section>
 <section id="more-examples">
 <h2>More examples<a class="headerlink" href="#more-examples" title="Permalink to this headline">#</a></h2>
@@ -1001,7 +1051,7 @@ be created automatically based on the latest version definition in the CHANGELOG
     By Cirq on IQM developers<br/>
   
       &copy; Copyright 2020–2022, Cirq on IQM developers.<br/>
-    Last updated on 2023-08-22.<br/>
+    Last updated on 2023-09-05.<br/>
 </p>
         </footer>
     </div>

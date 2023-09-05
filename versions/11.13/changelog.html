@@ -1,0 +1,1758 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Changelog &#8212; Cirq on IQM 11.13 documentation</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Contributors" href="authors.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../_static/logo.png" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="user_guide.html">
+   User guide
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="API.html">
+   API Reference
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="api/cirq_iqm.html">
+     cirq_iqm
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="api/cirq_iqm.devices.html">
+       cirq_iqm.devices
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+      <label for="toctree-checkbox-3">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.devices.adonis.html">
+         cirq_iqm.devices.adonis
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.devices.apollo.html">
+         cirq_iqm.devices.apollo
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.devices.iqm_device.html">
+         cirq_iqm.devices.iqm_device
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.devices.iqm_device_metadata.html">
+         cirq_iqm.devices.iqm_device_metadata
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.devices.valkmusa.html">
+         cirq_iqm.devices.valkmusa
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="api/cirq_iqm.extended_qasm_parser.html">
+       cirq_iqm.extended_qasm_parser
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+      <label for="toctree-checkbox-4">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.extended_qasm_parser.circuit_from_qasm.html">
+         cirq_iqm.extended_qasm_parser.circuit_from_qasm
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="api/cirq_iqm.iqm_operation_mapping.html">
+       cirq_iqm.iqm_operation_mapping
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+      <label for="toctree-checkbox-5">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.iqm_operation_mapping.map_operation.html">
+         cirq_iqm.iqm_operation_mapping.map_operation
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.iqm_operation_mapping.OperationNotSupportedError.html">
+         cirq_iqm.iqm_operation_mapping.OperationNotSupportedError
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="api/cirq_iqm.iqm_sampler.html">
+       cirq_iqm.iqm_sampler
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+      <label for="toctree-checkbox-6">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.iqm_sampler.serialize_circuit.html">
+         cirq_iqm.iqm_sampler.serialize_circuit
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.iqm_sampler.IQMResult.html">
+         cirq_iqm.iqm_sampler.IQMResult
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.iqm_sampler.IQMSampler.html">
+         cirq_iqm.iqm_sampler.IQMSampler
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.iqm_sampler.ResultMetadata.html">
+         cirq_iqm.iqm_sampler.ResultMetadata
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="api/cirq_iqm.optimizers.html">
+       cirq_iqm.optimizers
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+      <label for="toctree-checkbox-7">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.optimizers.simplify_circuit.html">
+         cirq_iqm.optimizers.simplify_circuit
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.optimizers.DropRZBeforeMeasurement.html">
+         cirq_iqm.optimizers.DropRZBeforeMeasurement
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="api/cirq_iqm.optimizers.MergeOneParameterGroupGates.html">
+         cirq_iqm.optimizers.MergeOneParameterGroupGates
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="license.html">
+   License
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="authors.html">
+   Contributors
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Changelog
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav>
+<style type="text/css">
+  ul.version_list { padding-left: 0; }
+  ul.version_list li.version_item { display: inline; }
+  li.version_item a {
+    color: white;
+    background-color: #097aba;
+    padding: 0.12rem 0.45rem;
+    border-radius: 0.35rem;
+  }
+  li.version_item a:hover {
+    background-color: #064061;
+    text-decoration: none;
+  }
+  li.version_item.current_version {
+    color: white;
+    background-color: #064061;
+    padding: 0.12rem 0.45rem;
+    border-radius: 0.35rem;
+  }
+</style>
+<h3>Versions</h3>
+<ul class="version_list">
+    
+      <li class="version_item"><a href="../../changelog.html">dev</a></li>
+    
+    
+      <li class="version_item"><a href="../11.9/changelog.html">11.9</a></li>
+    
+    
+      <li class="version_item"><a href="../11.8/changelog.html">11.8</a></li>
+    
+    
+      <li class="version_item"><a href="../11.7/changelog.html">11.7</a></li>
+    
+    
+      <li class="version_item"><a href="../11.6/changelog.html">11.6</a></li>
+    
+    
+      <li class="version_item"><a href="../11.5/changelog.html">11.5</a></li>
+    
+    
+      <li class="version_item"><a href="../11.4/changelog.html">11.4</a></li>
+    
+    
+      <li class="version_item"><a href="../11.3/changelog.html">11.3</a></li>
+    
+    
+      <li class="version_item"><a href="../11.2/changelog.html">11.2</a></li>
+    
+    
+      <li class="version_item current_version">11.13</li>
+    
+    
+      <li class="version_item"><a href="../11.12/changelog.html">11.12</a></li>
+    
+    
+      <li class="version_item"><a href="../11.11/changelog.html">11.11</a></li>
+    
+    
+      <li class="version_item"><a href="../11.10/changelog.html">11.10</a></li>
+    
+    
+      <li class="version_item"><a href="../11.1/changelog.html">11.1</a></li>
+    
+    
+      <li class="version_item"><a href="../11.0/changelog.html">11.0</a></li>
+    
+    
+      <li class="version_item"><a href="../10.1/changelog.html">10.1</a></li>
+    
+    
+      <li class="version_item"><a href="../10.0/changelog.html">10.0</a></li>
+    
+    
+      <li class="version_item"><a href="../9.0/changelog.html">9.0</a></li>
+    
+    
+      <li class="version_item"><a href="../8.2/changelog.html">8.2</a></li>
+    
+    
+      <li class="version_item"><a href="../8.1/changelog.html">8.1</a></li>
+    
+    
+      <li class="version_item"><a href="../8.0/changelog.html">8.0</a></li>
+    
+    
+      <li class="version_item"><a href="../7.8/changelog.html">7.8</a></li>
+    
+    
+      <li class="version_item"><a href="../7.7/changelog.html">7.7</a></li>
+    
+    
+      <li class="version_item"><a href="../7.6/changelog.html">7.6</a></li>
+    
+    
+      <li class="version_item"><a href="../7.5/changelog.html">7.5</a></li>
+    
+    
+      <li class="version_item"><a href="../7.4/changelog.html">7.4</a></li>
+    
+    
+      <li class="version_item"><a href="../7.3/changelog.html">7.3</a></li>
+    
+    
+      <li class="version_item"><a href="../7.2/changelog.html">7.2</a></li>
+    
+    
+      <li class="version_item"><a href="../7.1/changelog.html">7.1</a></li>
+    
+    
+      <li class="version_item"><a href="../7.0/changelog.html">7.0</a></li>
+    
+    
+      <li class="version_item"><a href="../6.1/changelog.html">6.1</a></li>
+    
+    
+      <li class="version_item"><a href="../6.0/changelog.html">6.0</a></li>
+    
+    
+      <li class="version_item"><a href="../5.0/changelog.html">5.0</a></li>
+    
+    
+      <li class="version_item"><a href="../4.1/changelog.html">4.1</a></li>
+    
+    
+      <li class="version_item"><a href="../4.0/changelog.html">4.0</a></li>
+    
+</ul>
+</div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/changelog.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-13">
+   Version 11.13
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-12">
+   Version 11.12
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-11">
+   Version 11.11
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-10">
+   Version 11.10
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-9">
+   Version 11.9
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-8">
+   Version 11.8
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-7">
+   Version 11.7
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-6">
+   Version 11.6
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-5">
+   Version 11.5
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-4">
+   Version 11.4
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-3">
+   Version 11.3
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-2">
+   Version 11.2
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-1">
+   Version 11.1
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-0">
+   Version 11.0
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-10-1">
+   Version 10.1
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-10-0">
+   Version 10.0
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-9-0">
+   Version 9.0
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bugfixes">
+     Bugfixes
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-8-2">
+   Version 8.2
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-8-1">
+   Version 8.1
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-8-0">
+   Version 8.0
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-8">
+   Version 7.8
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-7">
+   Version 7.7
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-6">
+   Version 7.6
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-5">
+   Version 7.5
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-4">
+   Version 7.4
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-3">
+   Version 7.3
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-2">
+   Version 7.2
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-1">
+   Version 7.1
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-0">
+   Version 7.0
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-6-1">
+   Version 6.1
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-6-0">
+   Version 6.0
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-5-0">
+   Version 5.0
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-4-1">
+   Version 4.1
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-4-0">
+   Version 4.0
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-3-6">
+   Version 3.6
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-3-5">
+   Version 3.5
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-3-4">
+   Version 3.4
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-3-3-2021-11-15">
+   Version 3.3 (2021-11-15)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-3-2-2021-11-02">
+   Version 3.2 (2021-11-02)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-3-1-2021-10-19">
+   Version 3.1 (2021-10-19)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-3-0-2021-10-12">
+   Version 3.0 (2021-10-12)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-2-1-2021-09-21">
+   Version 2.1 (2021-09-21)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#features">
+     Features
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-2-0-2021-09-17">
+   Version 2.0 (2021-09-17)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-1-2-2021-09-03">
+   Version 1.2 (2021-09-03)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id51">
+     Features
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id53">
+     Bugfixes
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-1-1-2021-08-13">
+   Version 1.1 (2021-08-13)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-1-0-2021-08-11">
+   Version 1.0 (2021-08-11)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id55">
+     Features
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id59">
+     Bugfixes
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-0-7-2021-07-07">
+   Version 0.7 (2021-07-07)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id62">
+     Bugfixes
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-0-6-2021-07-02">
+   Version 0.6 (2021-07-02)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id64">
+     Features
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-0-5-2021-06-24">
+   Version 0.5 (2021-06-24)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id66">
+     Features
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-0-4-2021-06-23">
+   Version 0.4 (2021-06-23)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id69">
+     Features
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-0-3-2021-06-09">
+   Version 0.3 (2021-06-09)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id71">
+     Features
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-0-2-2021-04-23">
+   Version 0.2 (2021-04-23)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id73">
+     Features
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-0-1-2021-04-22">
+   Version 0.1 (2021-04-22)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id76">
+     Features
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Changelog</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-13">
+   Version 11.13
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-12">
+   Version 11.12
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-11">
+   Version 11.11
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-10">
+   Version 11.10
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-9">
+   Version 11.9
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-8">
+   Version 11.8
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-7">
+   Version 11.7
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-6">
+   Version 11.6
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-5">
+   Version 11.5
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-4">
+   Version 11.4
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-3">
+   Version 11.3
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-2">
+   Version 11.2
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-1">
+   Version 11.1
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-11-0">
+   Version 11.0
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-10-1">
+   Version 10.1
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-10-0">
+   Version 10.0
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-9-0">
+   Version 9.0
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bugfixes">
+     Bugfixes
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-8-2">
+   Version 8.2
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-8-1">
+   Version 8.1
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-8-0">
+   Version 8.0
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-8">
+   Version 7.8
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-7">
+   Version 7.7
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-6">
+   Version 7.6
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-5">
+   Version 7.5
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-4">
+   Version 7.4
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-3">
+   Version 7.3
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-2">
+   Version 7.2
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-1">
+   Version 7.1
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-7-0">
+   Version 7.0
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-6-1">
+   Version 6.1
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-6-0">
+   Version 6.0
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-5-0">
+   Version 5.0
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-4-1">
+   Version 4.1
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-4-0">
+   Version 4.0
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-3-6">
+   Version 3.6
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-3-5">
+   Version 3.5
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-3-4">
+   Version 3.4
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-3-3-2021-11-15">
+   Version 3.3 (2021-11-15)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-3-2-2021-11-02">
+   Version 3.2 (2021-11-02)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-3-1-2021-10-19">
+   Version 3.1 (2021-10-19)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-3-0-2021-10-12">
+   Version 3.0 (2021-10-12)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-2-1-2021-09-21">
+   Version 2.1 (2021-09-21)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#features">
+     Features
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-2-0-2021-09-17">
+   Version 2.0 (2021-09-17)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-1-2-2021-09-03">
+   Version 1.2 (2021-09-03)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id51">
+     Features
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id53">
+     Bugfixes
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-1-1-2021-08-13">
+   Version 1.1 (2021-08-13)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-1-0-2021-08-11">
+   Version 1.0 (2021-08-11)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id55">
+     Features
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id59">
+     Bugfixes
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-0-7-2021-07-07">
+   Version 0.7 (2021-07-07)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id62">
+     Bugfixes
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-0-6-2021-07-02">
+   Version 0.6 (2021-07-02)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id64">
+     Features
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-0-5-2021-06-24">
+   Version 0.5 (2021-06-24)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id66">
+     Features
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-0-4-2021-06-23">
+   Version 0.4 (2021-06-23)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id69">
+     Features
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-0-3-2021-06-09">
+   Version 0.3 (2021-06-09)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id71">
+     Features
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-0-2-2021-04-23">
+   Version 0.2 (2021-04-23)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id73">
+     Features
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#version-0-1-2021-04-22">
+   Version 0.1 (2021-04-22)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id76">
+     Features
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+
+<style type="text/css">
+  .version_notice {
+    background-color: #ffc107;
+    padding: 0.5em 0.75em;
+    margin-bottom: 1em;
+  }
+</style>
+<div class="version_notice">
+  <strong>
+    
+    You're reading an old version of this documentation.
+    If you want up-to-date information, please have a look at <a href="../11.9/changelog.html">11.9</a>.
+    
+  </strong>
+</div>
+
+
+  <section id="changelog">
+<span id="changes"></span><h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">#</a></h1>
+<section id="version-11-13">
+<h2>Version 11.13<a class="headerlink" href="#version-11-13" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Add table of backend options and an example of submitting a batch of circuits to the user guide. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/117">#117</a></p></li>
+</ul>
+</section>
+<section id="version-11-12">
+<h2>Version 11.12<a class="headerlink" href="#version-11-12" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Return IQM Client metadata with results. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/109">#109</a></p></li>
+</ul>
+</section>
+<section id="version-11-11">
+<h2>Version 11.11<a class="headerlink" href="#version-11-11" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Submitted job is aborted if the user interrupts the program while it is waiting for results. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/114">#114</a></p></li>
+</ul>
+</section>
+<section id="version-11-10">
+<h2>Version 11.10<a class="headerlink" href="#version-11-10" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Make polling of circuit results configurable. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/113">#113</a></p></li>
+</ul>
+</section>
+<section id="version-11-9">
+<h2>Version 11.9<a class="headerlink" href="#version-11-9" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Add parameter <code class="docutils literal notranslate"><span class="pre">heralding</span></code> to <code class="docutils literal notranslate"><span class="pre">IQMSampler</span></code>. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/112">#112</a></p></li>
+<li><p>Upgrade to IQMClient version 12.5 <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/112">#112</a></p></li>
+</ul>
+</section>
+<section id="version-11-8">
+<h2>Version 11.8<a class="headerlink" href="#version-11-8" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Upgrade to IQMClient version 12.4 <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/111">#111</a></p></li>
+<li><p>Add parameter <code class="docutils literal notranslate"><span class="pre">circuit_duration_check</span></code> to <code class="docutils literal notranslate"><span class="pre">IQMSampler</span></code> allowing to control server-side maximum circuit duration check <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/111">#111</a></p></li>
+</ul>
+</section>
+<section id="version-11-7">
+<h2>Version 11.7<a class="headerlink" href="#version-11-7" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Generate license information for dependencies on every release <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/108">#108</a></p></li>
+</ul>
+</section>
+<section id="version-11-6">
+<h2>Version 11.6<a class="headerlink" href="#version-11-6" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Upgrade to IQMClient version 12.2 <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/107">#107</a></p></li>
+</ul>
+</section>
+<section id="version-11-5">
+<h2>Version 11.5<a class="headerlink" href="#version-11-5" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Upgrade to IQMClient version 12.0 <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/106">#106</a></p></li>
+</ul>
+</section>
+<section id="version-11-4">
+<h2>Version 11.4<a class="headerlink" href="#version-11-4" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>“Pin down” supported Python versions to 3.9 and 3.10. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/102">#102</a></p></li>
+<li><p>Configure Tox to skip missing versions of Python interpreters when running tests. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/102">#102</a></p></li>
+<li><p>Move project metadata and configuration to <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/102">#102</a></p></li>
+</ul>
+</section>
+<section id="version-11-3">
+<h2>Version 11.3<a class="headerlink" href="#version-11-3" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Provide version information to IQMClient. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/104">#104</a></p></li>
+</ul>
+</section>
+<section id="version-11-2">
+<h2>Version 11.2<a class="headerlink" href="#version-11-2" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Build and publish docs for older versions fixes. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/103">#103</a></p></li>
+</ul>
+</section>
+<section id="version-11-1">
+<h2>Version 11.1<a class="headerlink" href="#version-11-1" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Build and publish docs for older versions. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/101">#101</a></p></li>
+</ul>
+</section>
+<section id="version-11-0">
+<h2>Version 11.0<a class="headerlink" href="#version-11-0" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Use new opaque UUID for <code class="docutils literal notranslate"><span class="pre">calibration_set_id</span></code>. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/98">#98</a></p></li>
+</ul>
+</section>
+<section id="version-10-1">
+<h2>Version 10.1<a class="headerlink" href="#version-10-1" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Add <a class="reference internal" href="api/cirq_iqm.iqm_sampler.IQMSampler.html#cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch" title="cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMSampler.run_iqm_batch()</span></code></a> for running multiple circuits in a batch. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/100">#100</a></p></li>
+</ul>
+</section>
+<section id="version-10-0">
+<h2>Version 10.0<a class="headerlink" href="#version-10-0" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Replace routing function from cirq.contrib with newly added routing functionality in cirq 1.1. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/97">#97</a></p></li>
+</ul>
+</section>
+<section id="version-9-0">
+<h2>Version 9.0<a class="headerlink" href="#version-9-0" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>User guide updated.</p></li>
+</ul>
+<section id="bugfixes">
+<h3>Bugfixes<a class="headerlink" href="#bugfixes" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="api/cirq_iqm.devices.iqm_device.IQMDevice.html#cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="cirq_iqm.devices.iqm_device.IQMDevice.route_circuit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMDevice.route_circuit()</span></code></a> bugfix: <code class="docutils literal notranslate"><span class="pre">initial_mapping</span></code> must be reversed to match the
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">cirq.contrib.routing.greedy</span></code> convention.</p></li>
+</ul>
+</section>
+</section>
+<section id="version-8-2">
+<h2>Version 8.2<a class="headerlink" href="#version-8-2" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Upgrade to IQMClient version 10.0. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/95">#95</a></p></li>
+</ul>
+</section>
+<section id="version-8-1">
+<h2>Version 8.1<a class="headerlink" href="#version-8-1" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IQMDevice.route_circuit</span></code> accepts <code class="docutils literal notranslate"><span class="pre">initial</span> <span class="pre">mapping</span></code> <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/93">#93</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IQMSampler</span></code> no longer accepts <code class="docutils literal notranslate"><span class="pre">qubit_mapping</span></code> <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/93">#93</a></p></li>
+</ul>
+</section>
+<section id="version-8-0">
+<h2>Version 8.0<a class="headerlink" href="#version-8-0" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Implement metadata for IQM devices. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/92">#92</a></p></li>
+</ul>
+</section>
+<section id="version-7-8">
+<h2>Version 7.8<a class="headerlink" href="#version-7-8" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">iqm-client</span></code> dependency. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/91">#91</a></p></li>
+</ul>
+</section>
+<section id="version-7-7">
+<h2>Version 7.7<a class="headerlink" href="#version-7-7" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Enable mypy support. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/88">#88</a></p></li>
+</ul>
+</section>
+<section id="version-7-6">
+<h2>Version 7.6<a class="headerlink" href="#version-7-6" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Upgrade to IQMClient version 8.0.</p></li>
+<li><p>Remove <code class="docutils literal notranslate"><span class="pre">settings</span></code> parameter from <code class="docutils literal notranslate"><span class="pre">IQMSampler</span></code>.</p></li>
+</ul>
+</section>
+<section id="version-7-5">
+<h2>Version 7.5<a class="headerlink" href="#version-7-5" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Upgrade to IQMClient version 7.0.</p></li>
+</ul>
+</section>
+<section id="version-7-4">
+<h2>Version 7.4<a class="headerlink" href="#version-7-4" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cortex-cli</span></code> is now the preferred way of authentication.</p></li>
+</ul>
+</section>
+<section id="version-7-3">
+<h2>Version 7.3<a class="headerlink" href="#version-7-3" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Use cirq 1.0. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/82">#82</a></p></li>
+</ul>
+</section>
+<section id="version-7-2">
+<h2>Version 7.2<a class="headerlink" href="#version-7-2" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">IQMClient</span></code> instantiations with the changes in iqm-client 6.1. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/80">#80</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IQMSampler</span></code> now accepts an optional <code class="docutils literal notranslate"><span class="pre">calibration_set_id</span></code>. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/80">#80</a></p></li>
+<li><p>Update documentation regarding the use of Cortex CLI. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/80">#80</a></p></li>
+</ul>
+</section>
+<section id="version-7-1">
+<h2>Version 7.1<a class="headerlink" href="#version-7-1" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Support iqm-client 6.0. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/79">#79</a></p></li>
+</ul>
+</section>
+<section id="version-7-0">
+<h2>Version 7.0<a class="headerlink" href="#version-7-0" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">IQMClient</span></code> instantiations with the changes in iqm-client 5.0 <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/75">#75</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IQMSampler</span></code> now accepts <code class="docutils literal notranslate"><span class="pre">settings</span></code> as dict instead of raw string file content <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/75">#75</a></p></li>
+</ul>
+</section>
+<section id="version-6-1">
+<h2>Version 6.1<a class="headerlink" href="#version-6-1" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Support iqm-client 4.3. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/78">#78</a></p></li>
+</ul>
+</section>
+<section id="version-6-0">
+<h2>Version 6.0<a class="headerlink" href="#version-6-0" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Allow running sweeps in <code class="docutils literal notranslate"><span class="pre">IQMSampler.run_sweep</span></code> . <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/76">#76</a></p></li>
+</ul>
+</section>
+<section id="version-5-0">
+<h2>Version 5.0<a class="headerlink" href="#version-5-0" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Make <code class="docutils literal notranslate"><span class="pre">settings</span></code> an optional parameter for <code class="docutils literal notranslate"><span class="pre">IQMSampler</span></code>. Optional <code class="docutils literal notranslate"><span class="pre">settings</span></code> is now after non-optional <code class="docutils literal notranslate"><span class="pre">device</span></code> in arguments. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/73">#73</a></p></li>
+<li><p>Requires iqm-client 3.3</p></li>
+</ul>
+</section>
+<section id="version-4-1">
+<h2>Version 4.1<a class="headerlink" href="#version-4-1" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Add support for 20-qubit Apollo architecture. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/72">#72</a></p></li>
+</ul>
+</section>
+<section id="version-4-0">
+<h2>Version 4.0<a class="headerlink" href="#version-4-0" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Update user authentication to use access token. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/71">#71</a></p></li>
+<li><p>Upgrade IQMClient to version &gt;= 2.0 <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/71">#71</a></p></li>
+</ul>
+</section>
+<section id="version-3-6">
+<h2>Version 3.6<a class="headerlink" href="#version-3-6" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Update optimizers, tests and relevant Jupyter examples to fix deprecation warnings in preparation for cirq 0.15 and cirq 1.0. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/70">#70</a></p></li>
+</ul>
+</section>
+<section id="version-3-5">
+<h2>Version 3.5<a class="headerlink" href="#version-3-5" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Configure automatic tagging and releasing. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/64">#64</a></p></li>
+</ul>
+</section>
+<section id="version-3-4">
+<h2>Version 3.4<a class="headerlink" href="#version-3-4" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Add HTTP Basic auth. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/62">#62</a></p></li>
+</ul>
+</section>
+<section id="version-3-3-2021-11-15">
+<h2>Version 3.3 (2021-11-15)<a class="headerlink" href="#version-3-3-2021-11-15" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Bump the <code class="docutils literal notranslate"><span class="pre">iqm-client</span></code> dependency to 1.4, remove the strict pinning.
+Bump <code class="docutils literal notranslate"><span class="pre">build</span></code> to 0.7.0.
+<a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/58">#58</a></p></li>
+</ul>
+</section>
+<section id="version-3-2-2021-11-02">
+<h2>Version 3.2 (2021-11-02)<a class="headerlink" href="#version-3-2-2021-11-02" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Add functionality for routing circuits with multi-qubit measurements. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/56">#56</a></p></li>
+</ul>
+</section>
+<section id="version-3-1-2021-10-19">
+<h2>Version 3.1 (2021-10-19)<a class="headerlink" href="#version-3-1-2021-10-19" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Update the cirq dependency to version 0.13</p></li>
+<li><p>Remove unused argument from Circuit</p></li>
+</ul>
+</section>
+<section id="version-3-0-2021-10-12">
+<h2>Version 3.0 (2021-10-12)<a class="headerlink" href="#version-3-0-2021-10-12" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Raise an error if MeasurementGate has an <code class="docutils literal notranslate"><span class="pre">invert_mask</span></code>. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/53">#53</a></p></li>
+</ul>
+</section>
+<section id="version-2-1-2021-09-21">
+<h2>Version 2.1 (2021-09-21)<a class="headerlink" href="#version-2-1-2021-09-21" title="Permalink to this headline">#</a></h2>
+<section id="features">
+<h3>Features<a class="headerlink" href="#features" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">circuit_from_qasm</span></code> imports OpenQASM 2.0 gates <code class="docutils literal notranslate"><span class="pre">U</span></code> and <code class="docutils literal notranslate"><span class="pre">u3</span></code> of the form <code class="docutils literal notranslate"><span class="pre">U(a,</span> <span class="pre">b,</span> <span class="pre">-b)</span></code>
+as <code class="docutils literal notranslate"><span class="pre">cirq.PhasedXPowGate</span></code>. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/46">#46</a></p></li>
+<li><p>Add an equals method to IQMDevice such that all instances of the same device architecture
+are considered equivalent. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/50">#50</a></p></li>
+</ul>
+</section>
+</section>
+<section id="version-2-0-2021-09-17">
+<h2>Version 2.0 (2021-09-17)<a class="headerlink" href="#version-2-0-2021-09-17" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>The codebase is reorganized.
+<a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/46">#46</a></p></li>
+<li><p>Redundant functionality for final decompositions is removed.
+<a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/46">#46</a></p></li>
+<li><p>Support for obsolete IQM OpenQASM extension is removed.
+<a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/45">#45</a></p></li>
+</ul>
+</section>
+<section id="version-1-2-2021-09-03">
+<h2>Version 1.2 (2021-09-03)<a class="headerlink" href="#version-1-2-2021-09-03" title="Permalink to this headline">#</a></h2>
+<section id="id51">
+<h3>Features<a class="headerlink" href="#id51" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Move IQM client to a <a class="reference external" href="https://pypi.org/project/iqm-client/">separate library</a></p></li>
+<li><p>Adonis native gate set updated, Rz is not native.
+<a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/41">#41</a></p></li>
+</ul>
+</section>
+<section id="id53">
+<h3>Bugfixes<a class="headerlink" href="#id53" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>DropRZMeasurements sometimes did not remove z rotations it should have.
+<a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/41">#41</a></p></li>
+</ul>
+</section>
+</section>
+<section id="version-1-1-2021-08-13">
+<h2>Version 1.1 (2021-08-13)<a class="headerlink" href="#version-1-1-2021-08-13" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>The version of <code class="docutils literal notranslate"><span class="pre">requests</span></code> dependency is relaxed.</p></li>
+<li><p>Minor aesthetic changes in the documentation.</p></li>
+</ul>
+</section>
+<section id="version-1-0-2021-08-11">
+<h2>Version 1.0 (2021-08-11)<a class="headerlink" href="#version-1-0-2021-08-11" title="Permalink to this headline">#</a></h2>
+<section id="id55">
+<h3>Features<a class="headerlink" href="#id55" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IQMDevice</span></code> updated. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/35">#35</a></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">IQMDevice.map_circuit</span></code> removed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IQMDevice.decompose_circuit</span></code> and <code class="docutils literal notranslate"><span class="pre">IQMDevice.route_circuit</span></code> methods added.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IQMDevice.simplify_circuit</span></code> now checks if it has hit a fixed point after each iteration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IQMSampler</span></code> checks that the circuit respects the device connectivity.</p></li>
+</ul>
+</li>
+<li><p>Device qubit handling is simplified. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/34">#34</a></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">IQMSampler</span></code> can generate a trivial qubit mapping automatically.</p></li>
+<li><p>The class <code class="docutils literal notranslate"><span class="pre">IQMQubit</span></code> was removed.</p></li>
+</ul>
+</li>
+<li><p>Documentation updated. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/36">#36</a></p>
+<ul>
+<li><p>The documentation now contains a concise user guide.</p></li>
+<li><p>Documentation published online.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id59">
+<h3>Bugfixes<a class="headerlink" href="#id59" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>All the demos work again. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/35">#35</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DropRZBeforeMeasurement</span></code> had a bug where it sometimes incorrectly eliminated a z rotation
+followed by a multiqubit gate. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/35">#35</a></p></li>
+</ul>
+</section>
+</section>
+<section id="version-0-7-2021-07-07">
+<h2>Version 0.7 (2021-07-07)<a class="headerlink" href="#version-0-7-2021-07-07" title="Permalink to this headline">#</a></h2>
+<section id="id62">
+<h3>Bugfixes<a class="headerlink" href="#id62" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Off-by-one error fixed in <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/blob/a2d09dab583434c89f569e711ac35085ec371342/src/cirq_iqm/iqm_device.py#L120">IQMDevice.map_circuit</a>. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/29">#29</a></p></li>
+</ul>
+</section>
+</section>
+<section id="version-0-6-2021-07-02">
+<h2>Version 0.6 (2021-07-02)<a class="headerlink" href="#version-0-6-2021-07-02" title="Permalink to this headline">#</a></h2>
+<section id="id64">
+<h3>Features<a class="headerlink" href="#id64" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Project setup updated. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/22">#22</a></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> added.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PyScaffold</span></code> dependency removed.</p></li>
+<li><p>Sphinx bumped to version 4.0.2.</p></li>
+<li><p>API docs generated using recursive <code class="docutils literal notranslate"><span class="pre">sphinx.ext.autosummary</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tox</span></code> scripts for building docs, dist packages.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="version-0-5-2021-06-24">
+<h2>Version 0.5 (2021-06-24)<a class="headerlink" href="#version-0-5-2021-06-24" title="Permalink to this headline">#</a></h2>
+<section id="id66">
+<h3>Features<a class="headerlink" href="#id66" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Gate decomposition and circuit optimization procedure simplified. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/21">#21</a></p></li>
+<li><p>Cirq dependency bumped to 0.11. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/23">#23</a></p></li>
+</ul>
+<p>NOTE: Before installing this version, please manually uninstall Cirq 0.10. See Cirq 0.11
+release notes for more details: <a class="reference external" href="https://github.com/quantumlib/Cirq/releases/tag/v0.11.0">https://github.com/quantumlib/Cirq/releases/tag/v0.11.0</a></p>
+</section>
+</section>
+<section id="version-0-4-2021-06-23">
+<h2>Version 0.4 (2021-06-23)<a class="headerlink" href="#version-0-4-2021-06-23" title="Permalink to this headline">#</a></h2>
+<section id="id69">
+<h3>Features<a class="headerlink" href="#id69" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Convert data to IQM internal format when running requests. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/20">#20</a></p></li>
+</ul>
+</section>
+</section>
+<section id="version-0-3-2021-06-09">
+<h2>Version 0.3 (2021-06-09)<a class="headerlink" href="#version-0-3-2021-06-09" title="Permalink to this headline">#</a></h2>
+<section id="id71">
+<h3>Features<a class="headerlink" href="#id71" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Settings file support. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/17">#17</a></p></li>
+</ul>
+</section>
+</section>
+<section id="version-0-2-2021-04-23">
+<h2>Version 0.2 (2021-04-23)<a class="headerlink" href="#version-0-2-2021-04-23" title="Permalink to this headline">#</a></h2>
+<section id="id73">
+<h3>Features<a class="headerlink" href="#id73" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Adonis native gate set updated, CZ-targeting decompositions added. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/15">#15</a></p></li>
+<li><p>Circuits can be sent to be executed remotely on IQM hardware. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/13">#13</a></p></li>
+</ul>
+</section>
+</section>
+<section id="version-0-1-2021-04-22">
+<h2>Version 0.1 (2021-04-22)<a class="headerlink" href="#version-0-1-2021-04-22" title="Permalink to this headline">#</a></h2>
+<section id="id76">
+<h3>Features<a class="headerlink" href="#id76" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Supports the Adonis and Valkmusa architectures.</p></li>
+<li><p>Extends the OpenQASM language with gates native to the IQM architectures.</p></li>
+<li><p>Loads quantum circuits from OpenQASM files.</p></li>
+<li><p>Decomposes gates into the native gate set of the chosen architecture.</p></li>
+<li><p>Optimizes the circuit by merging neighboring gates, and commuting z rotations towards the end of the circuit.</p></li>
+<li><p>Circuits can be simulated using both the standard Cirq simulators and the
+<a class="reference external" href="https://quantumai.google/qsim">qsim</a> simulators.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="authors.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Contributors</p>
+        </div>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Cirq on IQM developers<br/>
+  
+      &copy; Copyright 2020–2022, Cirq on IQM developers.<br/>
+    Last updated on 2023-09-05.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
