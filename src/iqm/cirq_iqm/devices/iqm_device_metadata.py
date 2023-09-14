@@ -20,7 +20,7 @@ from typing import Optional, Union
 import cirq
 from cirq import NamedQubit, Qid, devices, ops
 from cirq.contrib.routing.router import nx
-from iqm_client import QuantumArchitectureSpecification
+from iqm.iqm_client import QuantumArchitectureSpecification
 
 # Mapping from IQM operation names to cirq operations
 _IQM_CIRQ_OP_MAP: dict[str, tuple[Union[type[cirq.Gate], cirq.Gate, cirq.GateFamily], ...]] = {

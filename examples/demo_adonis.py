@@ -18,8 +18,8 @@ the Adonis native gateset and connectivity, and then executing it on a simulator
 import cirq
 from demo_common import demo
 
-from cirq_iqm.devices import Adonis
-from cirq_iqm.extended_qasm_parser import circuit_from_qasm
+from iqm.cirq_iqm.devices import Adonis
+from iqm.cirq_iqm.extended_qasm_parser import circuit_from_qasm
 
 
 def demo_adonis(use_qsim: bool = False) -> None:

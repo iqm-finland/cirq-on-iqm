@@ -23,8 +23,8 @@ import cirq
 import cirq.linalg
 import numpy as np
 
-from cirq_iqm import IQMDevice
-from cirq_iqm.optimizers import simplify_circuit
+from iqm.cirq_iqm import IQMDevice
+from iqm.cirq_iqm.optimizers import simplify_circuit
 
 np.set_printoptions(precision=3)
 

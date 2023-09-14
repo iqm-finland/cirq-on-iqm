@@ -31,7 +31,7 @@ version = ''
 # The full version, including alpha/beta/rc tags.
 release = ''
 try:
-    from cirq_iqm import __version__ as version
+    from iqm.cirq_iqm import __version__ as version
 except ImportError:
     pass
 else:

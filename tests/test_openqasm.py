@@ -17,7 +17,7 @@ import cirq
 import numpy as np
 import pytest
 
-from cirq_iqm.extended_qasm_parser import QasmUGate, circuit_from_qasm
+from iqm.cirq_iqm.extended_qasm_parser import QasmUGate, circuit_from_qasm
 
 
 @pytest.mark.parametrize(

@@ -21,7 +21,7 @@ After installation Cirq on IQM can be imported in your Python code as follows:
 
 .. code-block:: python
 
-   import cirq_iqm
+   from iqm import cirq_iqm
 
 
 IQM's quantum devices
@@ -37,7 +37,7 @@ properties contained in its ``metadata`` property:
 
 .. code-block:: python
 
-    from cirq_iqm import Adonis
+    from iqm.cirq_iqm import Adonis
 
     adonis = Adonis()
 
@@ -115,7 +115,7 @@ and convert it into a :class:`cirq.Circuit` object using :func:`.circuit_from_qa
 
 .. code-block:: python
 
-    import cirq_iqm
+    from iqm import cirq_iqm
 
     with open('circuit.qasm', 'r') as f:
         qasm_circuit = cirq_iqm.circuit_from_qasm(f.read())
@@ -216,7 +216,7 @@ optimizations. Let us try it out on our decomposed and routed circuit above:
 
 .. code-block:: python
 
-    from cirq_iqm.optimizers import simplify_circuit
+    from iqm.cirq_iqm.optimizers import simplify_circuit
 
     simplified_circuit = simplify_circuit(routed_circuit_1)
     print(simplified_circuit)
@@ -254,7 +254,7 @@ instance and use its :meth:`~.IQMSampler.run` method to send a circuit for execu
 
 .. code-block:: python
 
-   from cirq_iqm.iqm_sampler import IQMSampler
+   from iqm.cirq_iqm.iqm_sampler import IQMSampler
 
    sampler = IQMSampler(iqm_server_url)
    result = sampler.run(routed_circuit_1, repetitions=10)
@@ -262,7 +262,7 @@ instance and use its :meth:`~.IQMSampler.run` method to send a circuit for execu
 
 
 Note that the code snippet above assumes that you have set the variable ``iqm_server_url`` to the URL
-of the IQM server. Additionally, you can pass IQM backend specific options to the :class:`.IQMSampler` class. 
+of the IQM server. Additionally, you can pass IQM backend specific options to the :class:`.IQMSampler` class.
 The below table summarises the currently available options:
 
 
@@ -313,11 +313,11 @@ and ``IQM_AUTH_PASSWORD`` environment variables, or pass them as arguments to th
 When executing a circuit that uses something other than the device qubits, you need to route it first,
 as explained in the :ref:`routing` section above.
 
-Multiple circuits can be submitted to the IQM quantum computer at once using the :meth:`~.IQMSampler.run_iqm_batch` method of :class:`.IQMSampler`. 
+Multiple circuits can be submitted to the IQM quantum computer at once using the :meth:`~.IQMSampler.run_iqm_batch` method of :class:`.IQMSampler`.
 This is often faster than executing the circuits individually. Circuits submitted in a batch are still executed sequentially.
 
 .. code-block:: python
-   
+
    circuit_list = []
 
    circuit_list.append(routed_circuit_1)

@@ -18,8 +18,8 @@ the Apollo native gateset and connectivity, and then executing it on a simulator
 import cirq
 from demo_common import demo
 
-from cirq_iqm.devices import Apollo
-from cirq_iqm.extended_qasm_parser import circuit_from_qasm
+from iqm.cirq_iqm.devices import Apollo
+from iqm.cirq_iqm.extended_qasm_parser import circuit_from_qasm
 
 
 def demo_apollo(use_qsim: bool = False) -> None:

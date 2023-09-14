@@ -16,7 +16,7 @@ import sys
 import uuid
 
 import cirq
-from iqm_client import (
+from iqm.iqm_client import (
     Circuit,
     HeraldingMode,
     Instruction,
@@ -32,8 +32,8 @@ import numpy as np
 import pytest
 import sympy  # type: ignore
 
-from cirq_iqm import Adonis
-from cirq_iqm.iqm_sampler import IQMResult, IQMSampler, ResultMetadata
+from iqm.cirq_iqm import Adonis
+from iqm.cirq_iqm.iqm_sampler import IQMResult, IQMSampler, ResultMetadata
 
 
 @pytest.fixture()

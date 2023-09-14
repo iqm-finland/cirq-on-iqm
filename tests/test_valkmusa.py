@@ -19,7 +19,7 @@ import cirq
 # pylint: disable=redefined-outer-name,no-self-use,duplicate-code
 import pytest
 
-from cirq_iqm import Valkmusa
+from iqm.cirq_iqm import Valkmusa
 
 
 @pytest.fixture(scope='module')

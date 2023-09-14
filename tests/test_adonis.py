@@ -23,7 +23,7 @@ from cirq import IdentityGate
 import numpy as np
 import pytest
 
-from cirq_iqm import Adonis
+from iqm.cirq_iqm import Adonis
 
 
 def dist(U: np.ndarray, W: np.ndarray) -> float:
