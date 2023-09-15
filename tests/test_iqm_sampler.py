@@ -16,6 +16,13 @@ import sys
 import uuid
 
 import cirq
+from mockito import ANY, mock, verify, when
+import numpy as np
+import pytest
+import sympy  # type: ignore
+
+from iqm.cirq_iqm import Adonis
+from iqm.cirq_iqm.iqm_sampler import IQMResult, IQMSampler, ResultMetadata
 from iqm.iqm_client import (
     Circuit,
     HeraldingMode,
@@ -27,13 +34,6 @@ from iqm.iqm_client import (
     RunResult,
     Status,
 )
-from mockito import ANY, mock, verify, when
-import numpy as np
-import pytest
-import sympy  # type: ignore
-
-from iqm.cirq_iqm import Adonis
-from iqm.cirq_iqm.iqm_sampler import IQMResult, IQMSampler, ResultMetadata
 
 
 @pytest.fixture()

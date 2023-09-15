@@ -13,9 +13,9 @@
 # limitations under the License.
 
 import cirq
-from iqm.iqm_client import QuantumArchitectureSpecification
 
 from iqm.cirq_iqm import IQMDeviceMetadata
+from iqm.iqm_client import QuantumArchitectureSpecification
 
 
 def test_device_metadata_from_architecture():
