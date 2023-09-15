@@ -20,6 +20,7 @@ from typing import Optional, Union
 import cirq
 from cirq import NamedQubit, Qid, devices, ops
 from cirq.contrib.routing.router import nx
+
 from iqm.iqm_client import QuantumArchitectureSpecification
 
 # Mapping from IQM operation names to cirq operations
