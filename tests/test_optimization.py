@@ -20,7 +20,7 @@ import cirq
 from cirq import ops
 import pytest
 
-from cirq_iqm.optimizers import DropRZBeforeMeasurement, MergeOneParameterGroupGates, simplify_circuit
+from iqm.cirq_iqm.optimizers import DropRZBeforeMeasurement, MergeOneParameterGroupGates, simplify_circuit
 
 TOLERANCE = 1e-10  # numerical tolerance
 

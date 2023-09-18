@@ -6,4 +6,4 @@ API Reference
    :template: autosummary-module-template.rst
    :recursive:
 
-   cirq_iqm
+   iqm.cirq_iqm

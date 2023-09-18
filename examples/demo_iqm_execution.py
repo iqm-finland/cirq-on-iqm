@@ -29,8 +29,8 @@ import os
 import cirq
 import numpy as np
 
-from cirq_iqm.iqm_sampler import IQMSampler
-from cirq_iqm.optimizers import simplify_circuit
+from iqm.cirq_iqm.iqm_sampler import IQMSampler
+from iqm.cirq_iqm.optimizers import simplify_circuit
 
 
 def fold_func(x: np.ndarray) -> str:

@@ -22,7 +22,7 @@ dependencies = [
     "numpy",
     "cirq ~= 1.2",
     "ply",  # Required by cirq.contrib.qasm_import
-    "iqm-client >= 13.0, < 14.0"
+    "iqm-client >= 14.0, < 15.0"
 ]
 
 [project.urls]
@@ -58,6 +58,10 @@ testing = [
 cicd = [
     "twine ~= 4.0"
 ]
+
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 
 [tool.setuptools_scm]
@@ -126,6 +130,7 @@ balanced_wrapping = true
 force_sort_within_sections = true
 reverse_relative = true
 group_by_package = true
+known_first_party = ["iqm"]
 
 
 [tool.mypy]

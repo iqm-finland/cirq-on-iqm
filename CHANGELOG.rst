@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 12.0
+============
+
+* Move ``cirq_iqm`` package to ``iqm`` namespace. `#119 <https://github.com/iqm-finland/cirq-on-iqm/pull/119>`_
+
 Version 11.13
 =============
 

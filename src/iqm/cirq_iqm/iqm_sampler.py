@@ -25,12 +25,12 @@ from uuid import UUID
 import warnings
 
 import cirq
-import iqm_client
-from iqm_client import HeraldingMode, IQMClient, JobAbortionError, RunRequest
 import numpy as np
 
-from cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
-from cirq_iqm.iqm_operation_mapping import map_operation
+from iqm import iqm_client
+from iqm.cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
+from iqm.cirq_iqm.iqm_operation_mapping import map_operation
+from iqm.iqm_client import HeraldingMode, IQMClient, JobAbortionError, RunRequest
 
 
 def serialize_circuit(circuit: cirq.Circuit) -> iqm_client.Circuit:
