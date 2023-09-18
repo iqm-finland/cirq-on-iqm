@@ -1,0 +1,5 @@
+<map id="inheritancecd65df5873" name="inheritancecd65df5873">
+<area shape="rect" id="node1" href="iqm.cirq_iqm.devices.apollo.Apollo.html#iqm.cirq_iqm.devices.apollo.Apollo" target="_top" title="IQM&#39;s twenty&#45;qubit transmon device." alt="" coords="267,5,339,31"/>
+<area shape="rect" id="node2" href="iqm.cirq_iqm.devices.iqm_device.IQMDevice.html#iqm.cirq_iqm.devices.iqm_device.IQMDevice" target="_top" title="ABC for the properties of a specific IQM quantum architecture." alt="" coords="125,5,219,31"/>
+<area shape="rect" id="node3" title="Hardware constraints for validating circuits." alt="" coords="5,5,77,31"/>
+</map>
