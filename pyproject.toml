@@ -53,7 +53,7 @@ testing = [
     "pytest-isort == 3.0.0",
     "pytest-mockito == 0.0.4",
     "pytest-mypy == 0.9.1",
-    "pytest-pylint == 0.18.0"
+    "pytest-pylint == 0.21.0"
 ]
 cicd = [
     "twine ~= 4.0"
