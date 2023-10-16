@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 12.1
+============
+
+* Use latest version of ``sphinx-multiversion-contrib`` to fix documentation version sorting `#120 <https://github.com/iqm-finland/cirq-on-iqm/pull/120>`_
+
 Version 12.0
 ============
 
