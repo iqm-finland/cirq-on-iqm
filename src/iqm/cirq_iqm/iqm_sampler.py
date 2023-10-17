@@ -152,7 +152,7 @@ class IQMSampler(cirq.work.Sampler):
         )
         return [IQMResult(measurements=result, metadata=metadata) for result in results]
 
-    def _send_circuits(
+    def _send_circuits(  # pylint: disable=inconsistent-return-statements
         self,
         circuits: list[cirq.Circuit],
         repetitions: int = 1,

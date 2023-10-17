@@ -160,6 +160,9 @@ disable = [
 ]
 extension-pkg-whitelist = ["pydantic"]
 
+[tool.pylint.design]
+max-args = 8
+
 [tool.pylint.format]
 max-line-length = 120
 
