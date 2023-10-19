@@ -152,7 +152,7 @@ class IQMSampler(cirq.work.Sampler):
         )
         return [IQMResult(measurements=result, metadata=metadata) for result in results]
 
-    def _send_circuits(  # pylint: disable=inconsistent-return-statements
+    def _send_circuits(
         self,
         circuits: list[cirq.Circuit],
         repetitions: int = 1,
@@ -179,16 +179,10 @@ class IQMSampler(cirq.work.Sampler):
             circuit_duration_check=self._circuit_duration_check,
             heralding_mode=self._heralding_mode,
         )
-        try:
-            timeout_arg = [self._run_sweep_timeout] if self._run_sweep_timeout is not None else []
-            results = self._client.wait_for_results(job_id, *timeout_arg)
-            if results.measurements is None:
-                raise RuntimeError('No measurements returned from IQM quantum computer.')
+        timeout_arg = [self._run_sweep_timeout] if self._run_sweep_timeout is not None else []
 
-            return (
-                [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements],
-                ResultMetadata(job_id, results.metadata.calibration_set_id, results.metadata.request),
-            )
+        try:
+            results = self._client.wait_for_results(job_id, *timeout_arg)
 
         except KeyboardInterrupt:
             try:
@@ -197,6 +191,14 @@ class IQMSampler(cirq.work.Sampler):
                 warnings.warn(f'Failed to abort job: {e}')
             finally:
                 sys.exit()
+
+        if results.measurements is None:
+            raise RuntimeError('No measurements returned from IQM quantum computer.')
+
+        return (
+            [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements],
+            ResultMetadata(job_id, results.metadata.calibration_set_id, results.metadata.request),
+        )
 
 
 @dataclass
