@@ -51,4 +51,4 @@ Copyright
 
 Cirq on IQM is free software, released under the Apache License, version 2.0.
 
-Copyright 2020–2022 Cirq on IQM developers.
+Copyright 2020–2023 Cirq on IQM developers.

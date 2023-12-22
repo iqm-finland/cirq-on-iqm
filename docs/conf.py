@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.abspath(py_path))
 # -- Project information -----------------------------------------------------
 
 project = 'Cirq on IQM'
-copyright = '2020–2022, Cirq on IQM developers'
+copyright = '2020–2023, Cirq on IQM developers'
 author = 'Cirq on IQM developers'
 
 # The short X.Y version.
@@ -41,7 +41,7 @@ else:
 # -- General configuration ---------------------------------------------------
 
 # require a recent version of Sphinx
-needs_sphinx = '4.5'
+needs_sphinx = '6.2'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -117,11 +117,9 @@ html_context = dict(display_github=False)
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {
-    'logo_only': True,
-}
+html_theme_options = {}
 
-html_sidebars = {'**': ['sidebar-logo.html', 'search-field.html', 'sbt-sidebar-nav.html', 'versioning.html']}
+html_sidebars = {'**': ['navbar-logo.html', 'search-field.html', 'sbt-sidebar-nav.html', 'versioning.html']}
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 # html_short_title = None
@@ -174,8 +172,8 @@ intersphinx_mapping = {
 }
 
 extlinks = {
-    'issue': ('https://github.com/iqm-finland/cirq-on-iqm/issues/%s', 'issue '),
-    'mr': ('https://github.com/iqm-finland/cirq-on-iqm/pull/%s', 'MR '),
+    'issue': ('https://github.com/iqm-finland/cirq-on-iqm/issues/%s', 'issue %s'),
+    'mr': ('https://github.com/iqm-finland/cirq-on-iqm/pull/%s', 'MR %s'),
 }
 
 
