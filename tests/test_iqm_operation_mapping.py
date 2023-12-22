@@ -56,7 +56,10 @@ def test_maps_to_phased_rx(qubit_1, gate, expected_angle, expected_phase):
     mapped = map_operation(operation)
     assert mapped.name == 'phased_rx'
     assert mapped.qubits == (str(qubit_1),)
+
     # The unit for angle and phase is full turns
+    # Pylint is confused here.
+    # pylint: disable=unsubscriptable-object
     assert mapped.args['angle_t'] == expected_angle
     assert mapped.args['phase_t'] == expected_phase
 
