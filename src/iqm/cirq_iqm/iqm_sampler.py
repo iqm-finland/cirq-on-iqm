@@ -194,7 +194,7 @@ class IQMSampler(cirq.work.Sampler):
         if results.measurements is None:
             raise RuntimeError('No measurements returned from IQM quantum computer.')
 
-        return (
+        return (  # pylint: disable=not-an-iterable,no-member
             [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements],
             ResultMetadata(job_id, results.metadata.calibration_set_id, results.metadata.request),
         )
