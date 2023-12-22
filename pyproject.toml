@@ -50,18 +50,12 @@ testing = [
     "mypy == 1.7.1",
     "pytest == 7.4.3",
     "pytest-cov == 4.1.0",
-    "pytest-isort == 3.1.0",
     "pytest-mockito == 0.0.4",
-    "pytest-mypy == 0.10.3",
     "pytest-pylint == 0.21.0"
 ]
 cicd = [
     "twine ~= 4.0"
 ]
-
-
-[tool.setuptools.packages.find]
-where = ["src"]
 
 
 [tool.setuptools_scm]
