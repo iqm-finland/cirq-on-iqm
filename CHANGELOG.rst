@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 12.2
+============
+
+* Require iqm-client >= 15.2. Bump dependencies and dev tools. `#121 <https://github.com/iqm-finland/cirq-on-iqm/pull/121>`_
+
+
 Version 12.1
 ============
 
