@@ -106,7 +106,6 @@ class IQMSampler(cirq.work.Sampler):
     def run_sweep(  # type: ignore[override]
         self, program: cirq.Circuit, params: cirq.Sweepable, repetitions: int = 1
     ) -> list[IQMResult]:
-
         # validate the circuit for the device
         self._device.validate_circuit(program)
 
