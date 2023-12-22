@@ -20,9 +20,9 @@ classifiers = [
 requires-python = ">=3.9, <3.12"
 dependencies = [
     "numpy",
-    "cirq ~= 1.2",
+    "cirq-core[contrib] ~= 1.2",
     "ply",  # Required by cirq.contrib.qasm_import
-    "iqm-client >= 14.0, < 15.0"
+    "iqm-client >= 15.2, < 16.0"
 ]
 
 [project.urls]
@@ -35,24 +35,24 @@ changelog = "https://github.com/iqm-finland/cirq-on-iqm/blob/main/CHANGELOG.rst"
 # Add here additional requirements for extra features, to install with:
 # `pip install cirq-iqm[dev,docs,testing,cicd]
 dev = [
-    "tox == 3.26.0"
+    "tox == 4.11.4"
 ]
 docs = [
-    "sphinx == 4.5.0",
-    "sphinx-book-theme == 0.3.3",
+    "sphinx == 6.2.1",
+    "sphinx-book-theme == 1.0.1",
     "sphinx-multiversion-contrib == 0.3.2"
 ]
 testing = [
-    "black == 22.10.0",
-    "isort == 5.10.1",
+    "black == 23.12.0",
+    "isort == 5.13.2",
     "jsons == 1.4.2",
-    "mockito == 1.2.2",
-    "mypy == 1.4.1",
-    "pytest == 7.1.2",
-    "pytest-cov == 3.0.0",
-    "pytest-isort == 3.0.0",
+    "mockito == 1.4.0",
+    "mypy == 1.7.1",
+    "pytest == 7.4.3",
+    "pytest-cov == 4.1.0",
+    "pytest-isort == 3.1.0",
     "pytest-mockito == 0.0.4",
-    "pytest-mypy == 0.9.1",
+    "pytest-mypy == 0.10.3",
     "pytest-pylint == 0.21.0"
 ]
 cicd = [
