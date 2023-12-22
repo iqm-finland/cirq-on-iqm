@@ -117,7 +117,6 @@ class TestSimplifyCircuit:
         ],
     )
     def test_simplify_circuit_eject_z(self, two_qubit_gate, qubits):
-
         q0, q1 = qubits[:2]
         c = cirq.Circuit()
         c.append(
@@ -132,7 +131,6 @@ class TestSimplifyCircuit:
         assert len(new) == 2
 
     def test_simplify_circuit_merge_one_parameter_gates(self, qubits):
-
         q0, q1 = qubits[:2]
         c = cirq.Circuit()
         c.append(
@@ -147,7 +145,6 @@ class TestSimplifyCircuit:
         assert len(new) == 1
 
     def test_simplify_circuit_drop_rz_before_measurement(self, qubits):
-
         q0, q1 = qubits[:2]
         c = cirq.Circuit()
         c.append(
@@ -165,7 +162,6 @@ class TestSimplifyCircuit:
         assert new[0].operations[0].qubits == (q1,)
 
     def test_drop_rz_before_measurement(self, qubits):
-
         q0, q1, q2 = qubits[:3]
         c = cirq.Circuit()
         c.append(
@@ -190,7 +186,6 @@ class TestSimplifyCircuit:
         assert op.qubits == (q2,)
 
     def test_drop_rz_before_measurement_drop_final(self, qubits):
-
         q0, q1, q2 = qubits[:3]
         c = cirq.Circuit()
         c.append(
@@ -212,7 +207,6 @@ class TestSimplifyCircuit:
         assert op.qubits == (q0,)
 
     def test_simplify_circuit_merge_one_qubit_gates(self, qubits):
-
         q0 = qubits[0]
         c = cirq.Circuit()
         c.append(
