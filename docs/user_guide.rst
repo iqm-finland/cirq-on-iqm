@@ -279,13 +279,12 @@ The below table summarises the currently available options:
      - "f7d9642e-b0ca-4f2d-af2a-30195bd7a76d"
      - Indicates the calibration set to use. Defaults to `None`, which means the IQM server will use the best
        available calibration set automatically.
-   * - `circuit_duration_check`
-     - bool
-     - False
-     - Enable or disable server-side circuit duration checks. The default value is `True`, which means if any job is
-       estimated to take unreasonably long compared to the coherence times of the qubits, or too long in wall-clock
-       time, the server will reject it. This option can be used to disable this behaviour. In normal use, the
-       circuit duration check should always remain enabled.
+   * - `max_circuit_duration_over_t2`
+     - float
+     - 1.0
+     - Set server-side circuit disqualification threshold. If any job is estimated to take longer than the T2 time of the qubits
+       multiplied by this value the server will reject it. Setting this value to ``0.0`` will disable circuit duration check.
+       The default value ``None`` means the server default value will be used.
    * - `heralding_mode`
      - :py:class:`~iqm_client.iqm_client.HeraldingMode`
      - "zeros"
@@ -298,7 +297,7 @@ For example if you would like to use a particular calibration set, you can provi
    sampler = IQMSampler(iqm_server_url, calibration_set_id="f7d9642e-b0ca-4f2d-af2a-30195bd7a76d")
 
 
-The same applies for `heralding_mode` and `circuit_duration_check`. The sampler will by default use an
+The same applies for `heralding_mode` and `max_circuit_duration_over_t2`. The sampler will by default use an
 :class:`.IQMDevice` created based on architecture data obtained from the server, which is then available in the
 :attr:`.IQMSampler.device` property. Alternatively, the device can be specified directly with the ``device`` argument.
 

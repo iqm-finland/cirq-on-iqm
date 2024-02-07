@@ -57,8 +57,9 @@ class IQMSampler(cirq.work.Sampler):
             ID of the calibration set to use. If ``None``, use the latest one.
         run_sweep_timeout:
             timeout to poll sweep results in seconds.
-        circuit_duration_check: whether to enable or disable server-side circuit duration check
-        heralding_mode: Heralding mode to use during execution.
+        max_circuit_duration_over_t2: Circuits are disqualified on the server if they are longer than
+            this ratio of the T2 time of the qubits. If set to 0.0, no circuits are disqualified.
+            If set to None the server default value is used.
 
     Keyword Args:
         auth_server_url (str): URL of user authentication server, if required by the IQM Cortex server.
@@ -76,7 +77,7 @@ class IQMSampler(cirq.work.Sampler):
         *,
         calibration_set_id: Optional[UUID] = None,
         run_sweep_timeout: Optional[int] = None,
-        circuit_duration_check: bool = True,
+        max_circuit_duration_over_t2: Optional[float] = None,
         heralding_mode: HeraldingMode = HeraldingMode.NONE,
         **user_auth_args,  # contains keyword args auth_server_url, username and password
     ):
@@ -88,7 +89,7 @@ class IQMSampler(cirq.work.Sampler):
             self._device = device
         self._calibration_set_id = calibration_set_id
         self._run_sweep_timeout = run_sweep_timeout
-        self._circuit_duration_check = circuit_duration_check
+        self._max_circuit_duration_over_t2 = max_circuit_duration_over_t2
         self._heralding_mode = heralding_mode
 
     @property
@@ -175,7 +176,7 @@ class IQMSampler(cirq.work.Sampler):
             serialized_circuits,
             calibration_set_id=self._calibration_set_id,
             shots=repetitions,
-            circuit_duration_check=self._circuit_duration_check,
+            max_circuit_duration_over_t2=self._max_circuit_duration_over_t2,
             heralding_mode=self._heralding_mode,
         )
         timeout_arg = [self._run_sweep_timeout] if self._run_sweep_timeout is not None else []
