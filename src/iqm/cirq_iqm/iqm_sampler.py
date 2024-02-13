@@ -60,6 +60,7 @@ class IQMSampler(cirq.work.Sampler):
         max_circuit_duration_over_t2: Circuits are disqualified on the server if they are longer than
             this ratio of the T2 time of the qubits. If set to 0.0, no circuits are disqualified.
             If set to None the server default value is used.
+        heralding_mode: Heralding mode to use during execution.
 
     Keyword Args:
         auth_server_url (str): URL of user authentication server, if required by the IQM Cortex server.
