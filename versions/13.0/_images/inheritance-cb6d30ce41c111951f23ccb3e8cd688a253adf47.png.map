@@ -1,0 +1,5 @@
+<map id="inheritance224cb9b67e" name="inheritance224cb9b67e">
+<area shape="rect" id="node1" href="iqm.cirq_iqm.devices.adonis.Adonis.html#iqm.cirq_iqm.devices.adonis.Adonis" target="_top" title="IQM&#39;s five&#45;qubit transmon device." alt="" coords="267,5,339,31"/>
+<area shape="rect" id="node2" href="iqm.cirq_iqm.devices.iqm_device.IQMDevice.html#iqm.cirq_iqm.devices.iqm_device.IQMDevice" target="_top" title="ABC for the properties of a specific IQM quantum architecture." alt="" coords="125,5,219,31"/>
+<area shape="rect" id="node3" title="Hardware constraints for validating circuits." alt="" coords="5,5,77,31"/>
+</map>
