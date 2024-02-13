@@ -2,6 +2,13 @@
 Changelog
 =========
 
+Version 13.0
+============
+
+* Require iqm-client >= 16.0.
+* Remove parameter ``circuit_duration_check`` from ``IQMSampler``.
+* Add parameter ``max_circuit_duration_over_t2`` to ``IQMSampler``.
+
 Version 12.2
 ============
 

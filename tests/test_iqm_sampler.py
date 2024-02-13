@@ -79,7 +79,7 @@ def submit_circuits_default_kwargs() -> dict:
     return {
         'calibration_set_id': None,
         'shots': 1,
-        'circuit_duration_check': True,
+        'max_circuit_duration_over_t2': None,
         'heralding_mode': HeraldingMode.NONE,
     }
 
@@ -137,7 +137,7 @@ def test_run_sweep_has_duration_check_enabled_by_default(
     client = mock(IQMClient)
     sampler = IQMSampler(base_url, Adonis())
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
-    kwargs = submit_circuits_default_kwargs | {'circuit_duration_check': True}
+    kwargs = submit_circuits_default_kwargs | {'max_circuit_duration_over_t2': None}
     when(client).submit_circuits(ANY, **kwargs).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenReturn(run_result)
 
@@ -153,9 +153,9 @@ def test_run_sweep_executes_circuit_with_duration_check_disabled(
     base_url, circuit_physical, iqm_metadata, submit_circuits_default_kwargs, job_id
 ):
     client = mock(IQMClient)
-    sampler = IQMSampler(base_url, Adonis(), circuit_duration_check=False)
+    sampler = IQMSampler(base_url, Adonis(), max_circuit_duration_over_t2=0.0)
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
-    kwargs = submit_circuits_default_kwargs | {'circuit_duration_check': False}
+    kwargs = submit_circuits_default_kwargs | {'max_circuit_duration_over_t2': 0.0}
     when(client).submit_circuits(ANY, **kwargs).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenReturn(run_result)
 
