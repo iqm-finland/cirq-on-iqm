@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 13.1
+============
+
+* Fix regex in Sphinx configuration that selects Git tags for documentation builds. `#126 <https://github.com/iqm-finland/cirq-on-iqm/pull/126>`_
+
 Version 13.0
 ============
 
