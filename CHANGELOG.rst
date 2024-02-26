@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 13.1
+============
+
+* Remove multiversion documentation. `#125 <https://github.com/iqm-finland/cirq-on-iqm/pull/125>`_
+
 Version 13.0
 ============
 
