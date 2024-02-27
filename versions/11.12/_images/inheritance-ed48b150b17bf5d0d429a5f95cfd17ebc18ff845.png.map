@@ -1,9 +1,0 @@
-<map id="inheritance83df5f52ad" name="inheritance83df5f52ad">
-<area shape="rect" id="node1" title="Helper class that provides a standard way to create an ABC using" alt="" coords="32,104,104,129"/>
-<area shape="rect" id="node6" title="The results of multiple executions of a circuit with fixed parameters." alt="" coords="194,104,266,129"/>
-<area shape="rect" id="node2" href="cirq_iqm.iqm_sampler.IQMResult.html#cirq_iqm.iqm_sampler.IQMResult" target="_top" title="Stores the results of a quantum circuit execution on an IQM device." alt="" coords="467,104,556,129"/>
-<area shape="rect" id="node3" title="A Result created from a dict mapping measurement keys to measured values." alt="" coords="329,104,419,129"/>
-<area shape="rect" id="node4" href="cirq_iqm.iqm_sampler.IQMSampler.html#cirq_iqm.iqm_sampler.IQMSampler" target="_top" title="Circuit sampler for executing quantum circuits on IQM quantum computers." alt="" coords="179,55,281,80"/>
-<area shape="rect" id="node5" title="Something capable of sampling quantum circuits. Simulator or hardware." alt="" coords="30,55,106,80"/>
-<area shape="rect" id="node7" href="cirq_iqm.iqm_sampler.ResultMetadata.html#cirq_iqm.iqm_sampler.ResultMetadata" target="_top" title="Metadata for an IQM execution result." alt="" coords="5,5,131,31"/>
-</map>

@@ -1,15 +1,14 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>iqm.cirq_iqm.iqm_sampler.IQMSampler &#8212; Cirq on IQM dev documentation</title>
+    <title>iqm.cirq_iqm.iqm_sampler.IQMSampler &#8212; Cirq on IQM 13.1 documentation</title>
   
   
   
@@ -29,19 +28,19 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=da73bb09"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/iqm.cirq_iqm.iqm_sampler.IQMSampler';</script>
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -50,7 +49,7 @@
     <link rel="prev" title="iqm.cirq_iqm.iqm_sampler.IQMResult" href="iqm.cirq_iqm.iqm_sampler.IQMResult.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="2024-02-13"/>
+    <meta name="docbuild:last-update" content="2024-02-27"/>
   </head>
   
   
@@ -137,29 +136,23 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM dev documentation - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM dev documentation - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 13.1 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 13.1 documentation - Home"/>`);</script>
   
   
 </a></div>
         <div class="sidebar-primary-item">
-<form class="bd-search d-flex align-items-center"
-      action="../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         id="search-input"
-         placeholder="Search..."
-         aria-label="Search..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User guide</a></li>
@@ -201,153 +194,13 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Contributors</a></li>
+</ul>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 
     </div>
 </nav></div>
-        <div class="sidebar-primary-item">
-<style type="text/css">
-  ul.version_list { padding-left: 0; }
-  ul.version_list li.version_item { display: inline; }
-  li.version_item a {
-    color: white;
-    background-color: #097aba;
-    padding: 0.12rem 0.45rem;
-    border-radius: 0.35rem;
-  }
-  li.version_item a:hover {
-    background-color: #064061;
-    text-decoration: none;
-  }
-  li.version_item.current_version {
-    color: white;
-    background-color: #064061;
-    padding: 0.12rem 0.45rem;
-    border-radius: 0.35rem;
-  }
-</style>
-<h3>Versions</h3>
-<ul class="version_list">
-    
-      <li class="version_item current_version">dev</li>
-    
-    
-      <li class="version_item"><a href="../versions/13.0/index.html">13.0</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/12.2/index.html">12.2</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/12.1/index.html">12.1</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/12.0/index.html">12.0</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/11.13/index.html">11.13</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/11.12/index.html">11.12</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/11.11/index.html">11.11</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/11.10/index.html">11.10</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/11.9/index.html">11.9</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/11.8/index.html">11.8</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/11.7/index.html">11.7</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/11.6/index.html">11.6</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/11.5/index.html">11.5</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/11.4/index.html">11.4</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/11.3/index.html">11.3</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/11.2/index.html">11.2</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/11.1/index.html">11.1</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/11.0/index.html">11.0</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/10.1/index.html">10.1</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/10.0/index.html">10.0</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/9.0/index.html">9.0</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/8.2/index.html">8.2</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/8.1/index.html">8.1</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/8.0/index.html">8.0</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/7.8/index.html">7.8</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/7.7/index.html">7.7</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/7.6/index.html">7.6</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/7.5/index.html">7.5</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/7.4/index.html">7.4</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/7.3/index.html">7.3</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/7.2/index.html">7.2</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/7.1/index.html">7.1</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/7.0/index.html">7.0</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/6.1/index.html">6.1</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/6.0/index.html">6.0</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/5.0/index.html">5.0</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/4.1/index.html">4.1</a></li>
-    
-    
-      <li class="version_item"><a href="../versions/4.0/index.html">4.0</a></li>
-    
-</ul>
-</div>
     </div>
   
   
@@ -511,29 +364,11 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-
-<style type="text/css">
-  .version_notice {
-    background-color: #ffc107;
-    padding: 0.5em 0.75em;
-    margin-bottom: 1em;
-  }
-</style>
-<div class="version_notice">
-  <strong>
-    
-    You're reading the documentation for a development version.
-    For the latest released version, please have a look at <a href="../versions/13.0/index.html">13.0</a>.
-    
-  </strong>
-</div>
-
-
   <section id="iqm-cirq-iqm-iqm-sampler-iqmsampler">
-<h1>iqm.cirq_iqm.iqm_sampler.IQMSampler<a class="headerlink" href="#iqm-cirq-iqm-iqm-sampler-iqmsampler" title="Permalink to this heading">#</a></h1>
+<h1>iqm.cirq_iqm.iqm_sampler.IQMSampler<a class="headerlink" href="#iqm-cirq-iqm-iqm-sampler-iqmsampler" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.iqm_sampler.IQMSampler">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.iqm_sampler.</span></span><span class="sig-name descname"><span class="pre">IQMSampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_set_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_sweep_timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_circuit_duration_over_t2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heralding_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">HeraldingMode.NONE</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">user_auth_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.iqm_sampler.</span></span><span class="sig-name descname"><span class="pre">IQMSampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_set_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_sweep_timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_circuit_duration_over_t2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heralding_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">HeraldingMode.NONE</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">user_auth_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Sampler</span></code></p>
 <p>Circuit sampler for executing quantum circuits on IQM quantum computers.</p>
 <dl class="field-list simple">
@@ -591,19 +426,19 @@ This can also be set in the IQM_AUTH_PASSWORD environment variable.</p></li>
 </table>
 <dl class="py property">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.iqm_sampler.IQMSampler.device">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">device</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="iqm.cirq_iqm.devices.iqm_device.IQMDevice.html#iqm.cirq_iqm.devices.iqm_device.IQMDevice" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice"><span class="pre">IQMDevice</span></a></em><a class="headerlink" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.device" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">device</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="iqm.cirq_iqm.devices.iqm_device.IQMDevice.html#iqm.cirq_iqm.devices.iqm_device.IQMDevice" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice"><span class="pre">IQMDevice</span></a></em><a class="headerlink" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.device" title="Link to this definition">#</a></dt>
 <dd><p>Returns the device used by the sampler.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.iqm_sampler.IQMSampler.close_client">
-<span class="sig-name descname"><span class="pre">close_client</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.close_client" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">close_client</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.close_client" title="Link to this definition">#</a></dt>
 <dd><p>Close IQMClient’s session with the user authentication server. Discard the client.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.iqm_sampler.IQMSampler.run_sweep">
-<span class="sig-name descname"><span class="pre">run_sweep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">program</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_sweep" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">run_sweep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">program</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_sweep" title="Link to this definition">#</a></dt>
 <dd><p>Samples from the given Circuit.</p>
 <p>This allows for sweeping over different parameter values,
 unlike the <cite>run</cite> method.  The <cite>params</cite> argument will provide a
@@ -624,21 +459,21 @@ related circuits efficiently.</p>
 <dd class="field-even"><p>Result list for this run; one for each possible parameter resolver.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.IQMResult.html#iqm.cirq_iqm.iqm_sampler.IQMResult" title="iqm.cirq_iqm.iqm_sampler.IQMResult">iqm.cirq_iqm.iqm_sampler.IQMResult</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.IQMResult.html#iqm.cirq_iqm.iqm_sampler.IQMResult" title="iqm.cirq_iqm.iqm_sampler.IQMResult"><em>IQMResult</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch">
-<span class="sig-name descname"><span class="pre">run_iqm_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">programs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">run_iqm_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">programs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch" title="Link to this definition">#</a></dt>
 <dd><p>Sends a batch of circuits to be executed.</p>
 <p>Running circuits in a batch is more efficient and hence completes quicker than running the circuits
 individually. Circuits run in a batch must all measure the same qubits.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>programs</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><em>cirq.circuits.circuit.Circuit</em><em>]</em>) – quantum circuits to execute</p></li>
+<li><p><strong>programs</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><em>Circuit</em><em>]</em>) – quantum circuits to execute</p></li>
 <li><p><strong>repetitions</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – number of times the circuits are sampled</p></li>
 </ul>
 </dd>
@@ -654,14 +489,14 @@ individually. Circuits run in a batch must all measure the same qubits.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.IQMResult.html#iqm.cirq_iqm.iqm_sampler.IQMResult" title="iqm.cirq_iqm.iqm_sampler.IQMResult">iqm.cirq_iqm.iqm_sampler.IQMResult</a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.IQMResult.html#iqm.cirq_iqm.iqm_sampler.IQMResult" title="iqm.cirq_iqm.iqm_sampler.IQMResult"><em>IQMResult</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.iqm_sampler.IQMSampler.run_sweep_async">
-<span class="sig-name descname"><span class="pre">run_sweep_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">program</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_sweep_async" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">run_sweep_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">program</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_sweep_async" title="Link to this definition">#</a></dt>
 <dd><p>Asynchronously samples from the given Circuit.</p>
 <p>By default, this method invokes <cite>run_sweep</cite> synchronously and simply
 exposes its result is an awaitable. Child classes that are capable of
@@ -686,7 +521,6 @@ true asynchronous sampling should override it to use other strategies.</p>
 </dd></dl>
 
 </section>
-
 
 
                 </article>
@@ -765,7 +599,7 @@ By Cirq on IQM developers
 
   <p class="copyright">
     
-      © Copyright 2020–2023, Cirq on IQM developers.
+      © Copyright 2020–2024, Cirq on IQM developers.
       <br/>
     
   </p>
@@ -774,7 +608,7 @@ By Cirq on IQM developers
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on 2024-02-13.
+  Last updated on 2024-02-27.
   <br/>
 </p>
   </div>
