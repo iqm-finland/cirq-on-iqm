@@ -40,4 +40,4 @@ jobs:
   # created by the above job create_tag_and_release. Here we trigger the said workflow manually.
   trigger_publishing:
     needs: create_tag_and_release
-    uses: ./.github/workflows/publish.yml
+    uses: uses: iqm-finland/cirq-on-iqm/.github/workflows/publish.yml@main
