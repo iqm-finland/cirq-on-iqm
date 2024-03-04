@@ -33,7 +33,7 @@ changelog = "https://github.com/iqm-finland/cirq-on-iqm/blob/main/CHANGELOG.rst"
 
 [project.optional-dependencies]
 # Add here additional requirements for extra features, to install with:
-# `pip install cirq-iqm[dev,docs,testing,cicd]
+# `pip install cirq-iqm[dev,docs,testing]
 dev = [
     "tox == 4.11.4"
 ]
@@ -51,9 +51,6 @@ testing = [
     "pytest-cov == 4.1.0",
     "pytest-mockito == 0.0.4",
     "pytest-pylint == 0.21.0"
-]
-cicd = [
-    "twine ~= 4.0"
 ]
 
 

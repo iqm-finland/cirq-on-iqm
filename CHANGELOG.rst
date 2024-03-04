@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 13.2
+============
+
+* Use GitHub Action as a Trusted Publisher to publish packages to PyPI. `#127 <https://github.com/iqm-finland/cirq-on-iqm/pull/127>`_
+
 Version 13.1
 ============
 
