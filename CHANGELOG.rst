@@ -2,11 +2,6 @@
 Changelog
 =========
 
-Version 12.99
-=============
-
-* Test "tag and Release" GitLab workflow. `#128 <https://github.com/iqm-finland/cirq-on-iqm/pull/128>`_
-
 Version 13.2
 ============
 

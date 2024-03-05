@@ -6,9 +6,6 @@ on:
   workflow_dispatch:
   workflow_call:
 
-env:
-  SETUPTOOLS_SCM_PRETEND_VERSION: 12.99
-
 jobs:
   build:
     runs-on: ubuntu-latest

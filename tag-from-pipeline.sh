@@ -25,6 +25,10 @@ function get_version_in_changelog() {
 function verify_changelog_version() {
   read -r version date < <(get_version_in_changelog)
   current_version=$(git tag -l --sort=-version:refname | grep -E "^[0-9]+(\.[0-9]){1,2}$" | head -n 1)
+  if version_gt "$current_version" "$version"; then
+    printf "\033[0;31mNew version in the changelog (%s) should be greater than the current version (%s).\n\033[0m" "$version" "$current_version";
+    return 172
+  fi
   if [ $(git tag -l "$version") ]; then
     printf "Version %s already exists.\n" "$version";
     return 172
