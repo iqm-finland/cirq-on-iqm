@@ -94,7 +94,7 @@ jobs:
           pip-licenses --format=confluence --with-urls > licenses.txt
           cat -n licenses.txt | sort -uk2 | sort -n | cut -f2- > tmp && mv tmp licenses.txt  # remove duplicate lines
       - name: Upload license information artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dependencies-licenses
           path: licenses.txt
