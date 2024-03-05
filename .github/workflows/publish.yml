@@ -6,6 +6,9 @@ on:
   workflow_dispatch:
   workflow_call:
 
+env:
+  SETUPTOOLS_SCM_PRETEND_VERSION: 12.99
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,7 +30,8 @@ jobs:
       - name: Store distribution packages
         uses: actions/upload-artifact@v4
         with:
-          path: dist/
+          name: dist
+          path: ./dist
 
   push_to_pypi:
     runs-on: ubuntu-latest
@@ -42,8 +46,6 @@ jobs:
     steps:
       - name: Download distribution packages
         uses: actions/download-artifact@v4
-        with:
-          path: dist/
       - name: Publish distribution packages to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
 
