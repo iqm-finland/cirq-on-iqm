@@ -27,9 +27,11 @@ from iqm.iqm_client import QuantumArchitectureSpecification
 _IQM_CIRQ_OP_MAP: dict[str, tuple[Union[type[cirq.Gate], cirq.Gate, cirq.GateFamily], ...]] = {
     # XPow and YPow kept for convenience, Cirq does not know how to decompose them into PhasedX
     # so we would have to add those rules...
+    'prx': (cirq.ops.PhasedXPowGate, cirq.ops.XPowGate, cirq.ops.YPowGate),
     'phased_rx': (cirq.ops.PhasedXPowGate, cirq.ops.XPowGate, cirq.ops.YPowGate),
     'cz': (cirq.ops.CZ,),
     'measurement': (cirq.ops.MeasurementGate,),
+    'measure': (cirq.ops.MeasurementGate,),
     'barrier': (),
 }
 

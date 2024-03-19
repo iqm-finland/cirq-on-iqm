@@ -54,7 +54,7 @@ def test_maps_measurement_gate(qubit_1):
 def test_maps_to_phased_rx(qubit_1, gate, expected_angle, expected_phase):
     operation = GateOperation(gate, [qubit_1])
     mapped = map_operation(operation)
-    assert mapped.name == 'phased_rx'
+    assert mapped.name == 'prx'
     assert mapped.qubits == (str(qubit_1),)
 
     # The unit for angle and phase is full turns

@@ -22,7 +22,7 @@ def test_device_metadata_from_architecture():
     qa = {
         'name': 'Valkmusa',
         'operations': [
-            'phased_rx',
+            'prx',
             'measurement',
         ],
         'qubits': ['QB1', 'QB2'],
