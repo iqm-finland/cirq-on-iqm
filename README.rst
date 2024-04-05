@@ -45,6 +45,20 @@ for a quick introduction on how to use Cirq on IQM.
 
 Take a look at the `Jupyter notebook <https://jupyter.org/>`_ with examples: ``examples/usage.ipynb``.
 
+You can build documentation for any older version locally by cloning the Git repository, checking out the 
+corresponding tag, and running the docs builder. For example, to build the documentation for version ``12.2``:
+
+.. code-block:: bash
+
+    $ git clonegit@github.com:iqm-finland/cirq-on-iqm.git
+    $ cd cirq-on-iqm
+    $ git checkout 12.2
+    $ tox docs
+
+`tox docs` will build documentation at ``./build/sphinx/html``. This command requires ``tox,``, ``sphinx`` and 
+``sphinx-book-theme`` Python packages (see optional dependency labeled ``docs`` in ``pyproject.toml`` file); 
+you can install the necessary packages with ``pip install -e ".[dev,docs]"``
+
 
 Copyright
 =========
