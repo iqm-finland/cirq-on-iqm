@@ -50,7 +50,7 @@ corresponding tag, and running the docs builder. For example, to build the docum
 
 .. code-block:: bash
 
-    $ git clonegit@github.com:iqm-finland/cirq-on-iqm.git
+    $ git clone git@github.com:iqm-finland/cirq-on-iqm.git
     $ cd cirq-on-iqm
     $ git checkout 12.2
     $ tox run -e docs
