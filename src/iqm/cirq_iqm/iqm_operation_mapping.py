@@ -16,6 +16,7 @@
 from cirq.ops import CZPowGate, MeasurementGate, Operation, PhasedXPowGate, XPowGate, YPowGate
 
 from iqm.iqm_client import Instruction
+from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 
 
 class OperationNotSupportedError(RuntimeError):
@@ -76,6 +77,13 @@ def map_operation(operation: Operation) -> Instruction:
             )
         raise OperationNotSupportedError(
             f'CZPowGate exponent was {operation.gate.exponent}, but only 1 is natively supported.'
+        )
+    
+    if isinstance(operation.gate, IQMMoveGate):
+        return Instruction(
+            name='move',
+            qubits=tuple(qubits),
+            args={},
         )
 
     raise OperationNotSupportedError(f'{type(operation.gate)} not natively supported.')

@@ -23,6 +23,7 @@ import sympy  # type: ignore
 
 from iqm.cirq_iqm import Adonis
 from iqm.cirq_iqm.iqm_sampler import IQMResult, IQMSampler, ResultMetadata
+from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.iqm_client import (
     Circuit,
     HeraldingMode,
@@ -288,6 +289,58 @@ def test_run_iqm_batch_raises_with_non_physical_names(adonis_sampler, circuit_no
     with pytest.raises(ValueError, match='Qubit not on device'):
         adonis_sampler.run_iqm_batch([circuit_non_physical])
 
+
+@pytest.mark.usefixtures('unstub')
+def test_run(adonis_sampler, iqm_metadata, submit_circuits_default_kwargs, job_id):
+    client = mock(IQMClient)
+    repetitions = 123
+    run_result = RunResult(
+        status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
+    )
+    kwargs = submit_circuits_default_kwargs | {'shots': repetitions}
+    when(client).submit_circuits(ANY, **kwargs).thenReturn(job_id)
+    when(client).wait_for_results(job_id).thenReturn(run_result)
+
+    qubit_1 = cirq.NamedQubit('QB1')
+    qubit_2 = cirq.NamedQubit('QB2')
+    circuit1 = cirq.Circuit(cirq.X(qubit_1), cirq.measure(qubit_1, qubit_2, key='result'))
+
+    adonis_sampler._client = client
+    result = adonis_sampler.run(circuit1, repetitions=repetitions)
+
+    assert isinstance(result, IQMResult)
+    assert isinstance(result.metadata, ResultMetadata)
+    np.testing.assert_array_equal(result.measurements['some stuff'], np.array([[0]]))
+
+@pytest.mark.usefixtures('unstub')
+def test_run_ndonis(device_with_resonator, base_url, iqm_metadata, submit_circuits_default_kwargs, job_id):
+    sampler = IQMSampler(base_url, device=device_with_resonator)
+    client = mock(IQMClient)
+    repetitions = 123
+    run_result = RunResult(
+        status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
+    )
+    kwargs = submit_circuits_default_kwargs | {'shots': repetitions}
+    when(client).submit_circuits(ANY, **kwargs).thenReturn(job_id)
+    when(client).wait_for_results(job_id).thenReturn(run_result)
+
+    qubit_1, qubit_2 = device_with_resonator.qubits[:2]
+    resonator = device_with_resonator.resonators[0]
+    circuit = cirq.Circuit()
+    circuit.append(device_with_resonator.decompose_operation(cirq.H(qubit_1)))
+    circuit.append(IQMMoveGate().on(qubit_1, resonator))
+    circuit.append(device_with_resonator.decompose_operation(cirq.H(qubit_2)))
+    circuit.append(cirq.CZ(resonator, qubit_2))
+    circuit.append(IQMMoveGate().on(qubit_1, resonator))
+    circuit.append(device_with_resonator.decompose_operation(cirq.H(qubit_2)))
+    circuit.append(cirq.measure(qubit_1, qubit_2, key='result'))
+
+    sampler._client = client
+    result = sampler.run(circuit, repetitions=repetitions)
+
+    assert isinstance(result, IQMResult)
+    assert isinstance(result.metadata, ResultMetadata)
+    np.testing.assert_array_equal(result.measurements['some stuff'], np.array([[0]]))
 
 @pytest.mark.usefixtures('unstub')
 def test_run_iqm_batch(adonis_sampler, iqm_metadata, submit_circuits_default_kwargs, job_id):

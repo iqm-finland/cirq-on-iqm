@@ -60,6 +60,7 @@ class IQMDevice(devices.Device):
     def __init__(self, metadata: IQMDeviceMetadata):
         self._metadata = metadata
         self.qubits = tuple(sorted(self._metadata.qubit_set))
+        self.resonators = tuple(sorted(self._metadata.resonator_set))
 
     @property
     def metadata(self) -> IQMDeviceMetadata:
@@ -265,7 +266,7 @@ class IQMDevice(devices.Device):
             raise ValueError(f'Unsupported gate type: {operation.gate!r}')
 
         for qubit in operation.qubits:
-            if qubit not in self.qubits:
+            if qubit not in self.qubits and qubit not in self.resonators:
                 raise ValueError(f'Qubit not on device: {qubit!r}')
 
         self.check_qubit_connectivity(operation)

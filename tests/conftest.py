@@ -20,6 +20,11 @@ from uuid import UUID
 
 import pytest
 
+from iqm.iqm_client import QuantumArchitectureSpecification
+from iqm.iqm_client import IQMClient
+from iqm.cirq_iqm import IQMDevice, IQMDeviceMetadata
+from mockito import mock, when, unstub
+
 existing_run = UUID('3c3fcda3-e860-46bf-92a4-bcc59fa76ce9')
 missing_run = UUID('059e4186-50a3-4e6c-ba1f-37fe6afbdfc2')
 
@@ -27,3 +32,65 @@ missing_run = UUID('059e4186-50a3-4e6c-ba1f-37fe6afbdfc2')
 @pytest.fixture()
 def base_url():
     return 'https://example.com'
+
+@pytest.fixture()
+def fake_spec_with_resonator():
+    ndonis_architecture_specification = {
+        "name": "Ndonis",
+        "operations": {
+            "cz": [
+                ["QB1", "COMP_R"],
+                ["QB2", "COMP_R"],
+                ["QB3", "COMP_R"],
+                ["QB4", "COMP_R"],
+                ["QB5", "COMP_R"],
+                ["QB6", "COMP_R"],
+            ],
+            "prx": [["QB1"], ["QB2"], ["QB3"], ["QB4"], ["QB5"], ["QB6"]],
+            "move": [
+                ["QB1", "COMP_R"],
+                ["QB2", "COMP_R"],
+                ["QB3", "COMP_R"],
+                ["QB4", "COMP_R"],
+                ["QB5", "COMP_R"],
+                ["QB6", "COMP_R"],
+            ],
+            "barrier": [],
+            "measure": [["QB1"], ["QB2"], ["QB3"], ["QB4"], ["QB5"], ["QB6"]],
+        },
+        "qubits": ["COMP_R", "QB1", "QB2", "QB3", "QB4", "QB5", "QB6"],
+        "qubit_connectivity": [
+            ["QB1", "COMP_R"],
+            ["QB2", "COMP_R"],
+            ["QB3", "COMP_R"],
+            ["QB4", "COMP_R"],
+            ["QB5", "COMP_R"],
+            ["QB6", "COMP_R"],
+        ],
+    }
+    return QuantumArchitectureSpecification(**ndonis_architecture_specification)
+
+
+@pytest.fixture
+def adonis_architecture_shuffled_names():
+    return QuantumArchitectureSpecification(
+        name='Adonis',
+        operations={
+            'prx': [['QB2'], ['QB3'], ['QB1'], ['QB5'], ['QB4']],
+            'cz': [['QB1', 'QB3'], ['QB2', 'QB3'], ['QB4', 'QB3'], ['QB5', 'QB3']],
+            'measure': [['QB2'], ['QB3'], ['QB1'], ['QB5'], ['QB4']],
+            'barrier': [],
+        },
+        qubits=['QB2', 'QB3', 'QB1', 'QB5', 'QB4'],
+        qubit_connectivity=[['QB1', 'QB3'], ['QB2', 'QB3'], ['QB4', 'QB3'], ['QB5', 'QB3']],
+    )
+
+@pytest.fixture()
+def device_without_resonator(adonis_architecture_shuffled_names):
+    """Returns device metadata object created based on architecture specification"""
+    return IQMDevice(IQMDeviceMetadata.from_architecture(adonis_architecture_shuffled_names))
+
+@pytest.fixture()
+def device_with_resonator(fake_spec_with_resonator):
+    """Returns device metadata object created based on architecture specification"""
+    return IQMDevice(IQMDeviceMetadata.from_architecture(fake_spec_with_resonator))

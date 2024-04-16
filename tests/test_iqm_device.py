@@ -12,7 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from iqm.cirq_iqm import Adonis, Apollo, Valkmusa
+from iqm.cirq_iqm import IQMDevice
 
+from cirq import NamedQid
+
+import pytest
 
 def test_equality_method():
     adonis_1 = Adonis()
@@ -27,3 +31,24 @@ def test_equality_method():
     assert valkmusa != adonis_1
     assert apollo_1 == apollo_2
     assert adonis_2 != adonis_3
+
+
+def test_device_without_resonator(device_without_resonator):
+    assert_qubit_indexing(device_without_resonator, set(zip(range(1,len(device_without_resonator.qubits)+1),device_without_resonator.qubits)))
+    assert len(device_without_resonator.resonators) == 0
+
+
+def test_device_with_resonator(device_with_resonator):
+    print(device_with_resonator.qubits)
+    # Tests for device with resonator should pass too.
+    assert_qubit_indexing(device_with_resonator, set(zip(range(1,len(device_with_resonator.qubits)+1),device_with_resonator.qubits)))
+    assert device_with_resonator.resonators[0] == NamedQid("COMP_R", device_with_resonator._metadata.RESONATOR_DIMENSION)
+
+def assert_qubit_indexing(backend:IQMDevice, correct_idx_name_associations):
+    for idx, name in correct_idx_name_associations:
+        print(idx, name, backend.get_qubit(idx), backend.get_qubit_index(name))
+    assert all(backend.get_qubit(idx) == name for idx, name in correct_idx_name_associations)
+    assert all(backend.get_qubit_index(name) == idx for idx, name in correct_idx_name_associations)
+    # Below assertions are done in Qiskit but do not make sense for Cirq.
+    #assert backend.index_to_qubit_name(7) is None
+    #assert backend.qubit_name_to_index('Alice') is None
