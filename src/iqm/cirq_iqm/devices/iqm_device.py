@@ -29,6 +29,7 @@ import cirq
 from cirq import InsertStrategy, MeasurementGate, devices, ops, protocols
 
 from .iqm_device_metadata import IQMDeviceMetadata
+from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 
 
 def _verify_unique_measurement_keys(operations: ca.Iterable[cirq.Operation]) -> None:
@@ -257,6 +258,7 @@ class IQMDevice(devices.Device):
         super().validate_circuit(circuit)
         _verify_unique_measurement_keys(circuit.all_operations())
         _validate_for_routing(circuit)
+        self.validate_moves(circuit)
 
     def validate_operation(self, operation: cirq.Operation) -> None:
         if not isinstance(operation.untagged, cirq.GateOperation):
@@ -268,8 +270,17 @@ class IQMDevice(devices.Device):
         for qubit in operation.qubits:
             if qubit not in self.qubits and qubit not in self.resonators:
                 raise ValueError(f'Qubit not on device: {qubit!r}')
+        
+        if isinstance(operation.gate, IQMMoveGate):
+            if operation.qubits[0] not in self.qubits:
+                raise ValueError(f'IQMMoveGate is only supported with a qubit register as the first argument, but got {operation.qubits[0]!r}')
+            if operation.qubits[1] not in self.resonators:
+                raise ValueError(f'IQMMoveGate is only supported with a resonator register as the second argument, but got {operation.qubits[1]!r}')
 
         self.check_qubit_connectivity(operation)
+    
+    def validate_moves(self, circuit:cirq.AbstractCircuit) -> None:
+        raise NotImplementedError()
 
     def __eq__(self, other):
         return self.__class__ == other.__class__ and self._metadata == other._metadata
