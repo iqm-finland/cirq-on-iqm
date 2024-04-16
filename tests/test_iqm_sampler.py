@@ -22,8 +22,8 @@ import pytest
 import sympy  # type: ignore
 
 from iqm.cirq_iqm import Adonis
-from iqm.cirq_iqm.iqm_sampler import IQMResult, IQMSampler, ResultMetadata
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
+from iqm.cirq_iqm.iqm_sampler import IQMResult, IQMSampler, ResultMetadata
 from iqm.iqm_client import (
     Circuit,
     HeraldingMode,
@@ -312,6 +312,7 @@ def test_run(adonis_sampler, iqm_metadata, submit_circuits_default_kwargs, job_i
     assert isinstance(result.metadata, ResultMetadata)
     np.testing.assert_array_equal(result.measurements['some stuff'], np.array([[0]]))
 
+
 @pytest.mark.usefixtures('unstub')
 def test_run_ndonis(device_with_resonator, base_url, iqm_metadata, submit_circuits_default_kwargs, job_id):
     sampler = IQMSampler(base_url, device=device_with_resonator)
@@ -341,6 +342,7 @@ def test_run_ndonis(device_with_resonator, base_url, iqm_metadata, submit_circui
     assert isinstance(result, IQMResult)
     assert isinstance(result.metadata, ResultMetadata)
     np.testing.assert_array_equal(result.measurements['some stuff'], np.array([[0]]))
+
 
 @pytest.mark.usefixtures('unstub')
 def test_run_iqm_batch(adonis_sampler, iqm_metadata, submit_circuits_default_kwargs, job_id):

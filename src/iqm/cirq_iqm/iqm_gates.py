@@ -14,10 +14,11 @@
 """ 
 Implementations for IQM specific quantum gates
 """
-from cirq import protocols, ISwapPowGate
+from cirq import CircuitDiagramInfo, CircuitDiagramInfoArgs, ISwapPowGate, protocols
+
 
 class IQMMoveGate(ISwapPowGate):
-    """The MOVE operation is a unitary population exchange operation between a qubit and a resonator.
+    r"""The MOVE operation is a unitary population exchange operation between a qubit and a resonator.
     Its effect is only defined in the invariant subspace :math:`S = \text{span}\{|00\rangle, |01\rangle, |10\rangle\}`,
     where it swaps the populations of the states :math:`|01\rangle` and :math:`|10\rangle`.
     Its effect on the orthogonal subspace is undefined.
@@ -34,12 +35,9 @@ class IQMMoveGate(ISwapPowGate):
 
     Note: At this point the locus for the move gate must be defined in the order: ``[qubit, resonator]``.
     """
+
     def __init__(self):
         super().__init__()
 
-    def _circuit_diagram_info_(
-        self, args: 'cirq.CircuitDiagramInfoArgs'
-    ) -> 'cirq.CircuitDiagramInfo':
-        return protocols.CircuitDiagramInfo(
-            wire_symbols=('MOVE(QB)', 'MOVE(Res)')
-        )
+    def _circuit_diagram_info_(self, args: CircuitDiagramInfoArgs) -> CircuitDiagramInfo:
+        return protocols.CircuitDiagramInfo(wire_symbols=('MOVE(QB)', 'MOVE(Res)'))
