@@ -270,17 +270,33 @@ class IQMDevice(devices.Device):
         for qubit in operation.qubits:
             if qubit not in self.qubits and qubit not in self.resonators:
                 raise ValueError(f'Qubit not on device: {qubit!r}')
-        
+
+        self.check_qubit_connectivity(operation)
+        self.validate_move(operation)
+    
+    def validate_move(self, operation: cirq.Operation) -> None:
         if isinstance(operation.gate, IQMMoveGate):
             if operation.qubits[0] not in self.qubits:
                 raise ValueError(f'IQMMoveGate is only supported with a qubit register as the first argument, but got {operation.qubits[0]!r}')
             if operation.qubits[1] not in self.resonators:
                 raise ValueError(f'IQMMoveGate is only supported with a resonator register as the second argument, but got {operation.qubits[1]!r}')
 
-        self.check_qubit_connectivity(operation)
-    
     def validate_moves(self, circuit:cirq.AbstractCircuit) -> None:
-        raise NotImplementedError()
+        moves = {r:[] for r in self.resonators}
+        for moment in circuit:
+            for operation in moment.operations:
+                if isinstance(operation, IQMMoveGate):
+                    moves[operation.qubits[1]].append(operation.qubits[0])
+                    self.validate_move(operation)
+        for res, qubits in moves.keys():
+            while len(qubits) > 1:
+                q1, q2, *rest = qubits
+                if q1 != q2:
+                    raise ValueError(f'IQMMoveGate({q2!r}, {res!r}) is applied between two logical qubit states.')
+                qubits = rest
+            if len(qubits) != 0:
+                raise ValueError(f'Circuit ends with a qubit state in the resonator {res!r}.')
+        
 
     def __eq__(self, other):
         return self.__class__ == other.__class__ and self._metadata == other._metadata
