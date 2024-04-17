@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import FrozenSet, Optional, Union
+from typing import FrozenSet, Optional
 
 import cirq
 from cirq import NamedQid, NamedQubit, Qid, devices, ops
@@ -25,16 +25,16 @@ from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.iqm_client import QuantumArchitectureSpecification
 
 # Mapping from IQM operation names to cirq operations
-_IQM_CIRQ_OP_MAP: dict[str, tuple[Union[type[cirq.Gate], cirq.Gate, cirq.GateFamily], ...]] = {
+_IQM_CIRQ_OP_MAP: dict[str, tuple[type[cirq.Gate], ...]] = {
     # XPow and YPow kept for convenience, Cirq does not know how to decompose them into PhasedX
     # so we would have to add those rules...
     'prx': (cirq.ops.PhasedXPowGate, cirq.ops.XPowGate, cirq.ops.YPowGate),
     'phased_rx': (cirq.ops.PhasedXPowGate, cirq.ops.XPowGate, cirq.ops.YPowGate),
-    'cz': (cirq.ops.CZ,),
+    'cz': (ops.CZPowGate,),
     'move': (IQMMoveGate,),
     'measurement': (cirq.ops.MeasurementGate,),
     'measure': (cirq.ops.MeasurementGate,),
-    'barrier': (),
+    'barrier': tuple(),
 }
 
 
@@ -58,6 +58,7 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         self,
         qubits: Iterable[NamedQubit],
         connectivity: Iterable[Iterable[Qid]],
+        operations: Optional[dict[type[cirq.Gate], list[tuple[cirq.Qid, ...]]]] = None,
         gateset: Optional[cirq.Gateset] = None,
         resonators: Iterable[Qid] = (),
     ):
@@ -70,12 +71,23 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         self._resonator_set: FrozenSet[Qid] = frozenset(resonators)
 
         if gateset is None:
-            # default gateset for IQM devices
-            self._gateset = cirq.Gateset(
-                ops.PhasedXPowGate, ops.XPowGate, ops.YPowGate, ops.MeasurementGate, ops.CZPowGate()
-            )
-        else:
-            self._gateset = gateset
+            if operations is None:
+                # default gateset for IQM devices
+                gateset = cirq.Gateset(
+                    ops.PhasedXPowGate, ops.XPowGate, ops.YPowGate, ops.MeasurementGate, ops.CZPowGate
+                )
+            else:
+                gateset = cirq.Gateset(*operations.keys())
+        self._gateset = gateset
+
+        if operations is None:
+            operations = {}
+            # for gate in [gf.gate() for gf in gateset.gates if not issubclass(gf.gate, ops.MeasurementGate)]:
+            #    if gate.num_qubits() == 1:
+            #        operations[gate] = [(q,) for q in qubits]
+            #    elif gate.num_qubits() == 2:
+            #        operations[gate] = [edge for edge in connectivity]
+        self.operations = operations
 
     @property
     def resonator_set(self) -> FrozenSet[Qid]:
@@ -104,8 +116,20 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
             )
             for edge in architecture.qubit_connectivity
         )
-        gateset = cirq.Gateset(*(cirq_op for iqm_op in architecture.operations for cirq_op in _IQM_CIRQ_OP_MAP[iqm_op]))
-        return cls(qubits, connectivity, gateset, resonators)
+        operations: dict[type[cirq.Gate], list[tuple[cirq.Qid, ...]]] = {
+            cirq_op: [
+                tuple(
+                    NamedQubit(qb)
+                    if qb.startswith(cls.QUBIT_NAME_PREFIX)
+                    else NamedQid(qb, dimension=cls.RESONATOR_DIMENSION)
+                    for qb in args
+                )
+                for args in qubits
+            ]
+            for iqm_op, qubits in architecture.operations.items()
+            for cirq_op in _IQM_CIRQ_OP_MAP[iqm_op]
+        }
+        return cls(qubits, connectivity, operations=operations, resonators=resonators)
 
     @classmethod
     def from_qubit_indices(
@@ -116,7 +140,7 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         connectivity = tuple(
             tuple(NamedQubit(f'{cls.QUBIT_NAME_PREFIX}{qb}') for qb in edge) for edge in connectivity_indices
         )
-        return cls(qubits, connectivity, gateset)
+        return cls(qubits, connectivity, gateset=gateset)
 
     @property
     def gateset(self) -> cirq.Gateset:

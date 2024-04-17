@@ -20,7 +20,7 @@ from uuid import UUID
 
 import pytest
 
-from iqm.cirq_iqm import IQMDevice, IQMDeviceMetadata
+from iqm.cirq_iqm import Adonis, Apollo, IQMDevice, IQMDeviceMetadata
 from iqm.iqm_client import QuantumArchitectureSpecification
 
 existing_run = UUID('3c3fcda3-e860-46bf-92a4-bcc59fa76ce9')
@@ -87,11 +87,17 @@ def adonis_architecture_shuffled_names():
 
 @pytest.fixture()
 def device_without_resonator(adonis_architecture_shuffled_names):
-    """Returns device metadata object created based on architecture specification"""
+    """Returns device object created based on architecture specification"""
     return IQMDevice(IQMDeviceMetadata.from_architecture(adonis_architecture_shuffled_names))
 
 
 @pytest.fixture()
 def device_with_resonator(fake_spec_with_resonator):
-    """Returns device metadata object created based on architecture specification"""
+    """Returns device object created based on architecture specification"""
     return IQMDevice(IQMDeviceMetadata.from_architecture(fake_spec_with_resonator))
+
+
+@pytest.fixture()
+def devices(device_with_resonator, device_without_resonator):
+    """Returns a list of different device objects"""
+    return [device_without_resonator, device_with_resonator, Apollo(), Adonis()]
