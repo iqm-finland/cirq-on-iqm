@@ -21,6 +21,7 @@ to use with the architecture.
 from __future__ import annotations
 
 import collections.abc as ca
+from itertools import zip_longest
 from math import pi as PI
 from typing import Optional, cast
 import uuid
@@ -63,6 +64,7 @@ class IQMDevice(devices.Device):
         self._metadata = metadata
         self.qubits = tuple(sorted(self._metadata.qubit_set))
         self.resonators = tuple(sorted(self._metadata.resonator_set))
+        self.supported_operations = self._metadata.operations
 
     @property
     def metadata(self) -> IQMDeviceMetadata:
@@ -80,9 +82,8 @@ class IQMDevice(devices.Device):
 
     def check_qubit_connectivity(self, operation: cirq.Operation) -> None:
         """Raises a ValueError if operation acts on qubits that are not connected."""
-        if len(operation.qubits) >= 2 and not isinstance(operation.gate, ops.MeasurementGate):
-            if operation.qubits not in self._metadata.nx_graph.edges:
-                raise ValueError(f'Unsupported qubit connectivity required for {operation!r}')
+        if len(operation.qubits) >= 2 and self.has_valid_operation_targets(operation):
+            raise ValueError(f'Unsupported qubit connectivity required for {operation!r}')
 
     def is_native_operation(self, op: cirq.Operation) -> bool:
         """Predicate, True iff the given operation is considered native for the architecture."""
@@ -94,6 +95,24 @@ class IQMDevice(devices.Device):
         if check and isinstance(op.gate, ops.CZPowGate):
             return op.gate.exponent == 1
         return check
+
+    def has_valid_operation_targets(self, op: cirq.Operation) -> bool:
+        """Predicate, True iff the given operation is native and it=s targets are valid."""
+        if self.supported_operations is None:
+            return True  # No operations specified so we cannot check
+        matched_support = [
+            (g, qbs)
+            for g, qbs in self.supported_operations.items()
+            if op.gate is not None and op.gate in cirq.GateFamily(g)
+        ]
+        if len(matched_support) > 0:
+            gf, valid_targets = matched_support[0]
+            if gf == cirq.MeasurementGate:  # Measurements can be done on any available qubits
+                return all(q in [q for qb in valid_targets for q in qb] for q in op.qubits)
+            if issubclass(gf, cirq.InterchangeableQubitsGate):
+                return any(len(t) == len(op.qubits) and all(q1 in t for q1 in op.qubits) for t in valid_targets)
+            return any(all(q1 == q2 for q1, q2 in zip_longest(op.qubits, t)) for t in valid_targets)
+        return False
 
     def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
         """Decomposes operations into the native operation set.
@@ -275,8 +294,8 @@ class IQMDevice(devices.Device):
             if qubit not in self.qubits and qubit not in self.resonators:
                 raise ValueError(f'Qubit not on device: {qubit!r}')
 
-        self.check_qubit_connectivity(operation)
-        self.validate_move(operation)
+        if not self.has_valid_operation_targets(operation):
+            raise ValueError(f'Unsupported operation between qubits: {operation!r}')
 
     def validate_move(self, operation: cirq.Operation) -> None:
         """Validates whether the IQMMoveGate is between qubit and resonator registers.

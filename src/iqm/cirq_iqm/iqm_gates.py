@@ -14,10 +14,13 @@
 """ 
 Implementations for IQM specific quantum gates
 """
-from cirq import CircuitDiagramInfo, CircuitDiagramInfoArgs, ISwapPowGate, protocols
+from typing import List, Tuple
+
+from cirq import CircuitDiagramInfo, CircuitDiagramInfoArgs, EigenGate
+import numpy as np
 
 
-class IQMMoveGate(ISwapPowGate):
+class IQMMoveGate(EigenGate):
     r"""The MOVE operation is a unitary population exchange operation between a qubit and a resonator.
     Its effect is only defined in the invariant subspace :math:`S = \text{span}\{|00\rangle, |01\rangle, |10\rangle\}`,
     where it swaps the populations of the states :math:`|01\rangle` and :math:`|10\rangle`.
@@ -36,8 +39,26 @@ class IQMMoveGate(ISwapPowGate):
     Note: At this point the locus for the move gate must be defined in the order: ``[qubit, resonator]``.
     """
 
-    def __init__(self):
-        super().__init__()
+    def _num_qubits_(self) -> int:
+        return 2
+
+    def _eigen_components(self) -> List[Tuple[float, np.ndarray]]:
+        # yapf: disable
+        return [
+            (0, np.diag([1, 0, 0, 1])),
+            (+0.5, np.array([[0, 0, 0, 0],
+                             [0, 0.5, 0.5, 0],
+                             [0, 0.5, 0.5, 0],
+                             [0, 0, 0, 0]])),
+            (-0.5, np.array([[0, 0, 0, 0],
+                             [0, 0.5, -0.5, 0],
+                             [0, -0.5, 0.5, 0],
+                             [0, 0, 0, 0]])),
+        ]
+        # yapf: enable
 
     def _circuit_diagram_info_(self, args: CircuitDiagramInfoArgs) -> CircuitDiagramInfo:
-        return protocols.CircuitDiagramInfo(wire_symbols=('MOVE(QB)', 'MOVE(Res)'))
+        return CircuitDiagramInfo(wire_symbols=('MOVE(QB)', 'MOVE(Res)'), exponent=self._diagram_exponent(args))
+
+    def __str__(self) -> str:
+        return 'IQM Move'

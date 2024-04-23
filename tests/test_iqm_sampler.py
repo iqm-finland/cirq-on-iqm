@@ -334,7 +334,7 @@ def test_run_ndonis(device_with_resonator, base_url, iqm_metadata, submit_circui
     circuit.append(cirq.CZ(resonator, qubit_2))
     circuit.append(IQMMoveGate().on(qubit_1, resonator))
     circuit.append(device_with_resonator.decompose_operation(cirq.H(qubit_2)))
-    circuit.append(cirq.measure(qubit_1, qubit_2, key='result'))
+    circuit.append(cirq.MeasurementGate(2, key='result').on(qubit_1, qubit_2))
 
     sampler._client = client
     result = sampler.run(circuit, repetitions=repetitions)

@@ -2,6 +2,13 @@
 Changelog
 =========
 
+Version 14.1
+============
+
+* Improved operation validation to check if it is calibrated according to the metadata rather than assuming.
+* Added IQMMoveGate class for Deneb architectures.
+* Updated IQMDevice class to support devices with resonators.
+
 Version 14.0
 ============
 

@@ -153,10 +153,10 @@ class TestOperationValidation:
 
         q0, q1 = adonis.qubits[:2]
 
-        with pytest.raises(ValueError, match='Unsupported qubit connectivity'):
+        with pytest.raises(ValueError, match='Unsupported operation between qubits'):
             adonis.validate_operation(gate(q0, q1))
 
-        with pytest.raises(ValueError, match='Unsupported qubit connectivity'):
+        with pytest.raises(ValueError, match='Unsupported operation between qubits'):
             adonis.validate_operation(gate(q1, q0))
 
 

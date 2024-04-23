@@ -76,17 +76,18 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
                 gateset = cirq.Gateset(
                     ops.PhasedXPowGate, ops.XPowGate, ops.YPowGate, ops.MeasurementGate, ops.CZPowGate
                 )
+                qb_list: list[tuple[cirq.Qid, ...]] = [(qb,) for qb in qubits]
+                operations = {
+                    ops.PhasedXPowGate: qb_list,
+                    ops.XPowGate: qb_list,
+                    ops.YPowGate: qb_list,
+                    ops.MeasurementGate: qb_list,
+                    ops.CZPowGate: list(tuple(edge) for edge in connectivity),
+                }
             else:
                 gateset = cirq.Gateset(*operations.keys())
         self._gateset = gateset
 
-        if operations is None:
-            operations = {}
-            # for gate in [gf.gate() for gf in gateset.gates if not issubclass(gf.gate, ops.MeasurementGate)]:
-            #    if gate.num_qubits() == 1:
-            #        operations[gate] = [(q,) for q in qubits]
-            #    elif gate.num_qubits() == 2:
-            #        operations[gate] = [edge for edge in connectivity]
         self.operations = operations
 
     @property

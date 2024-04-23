@@ -63,7 +63,7 @@ def assert_qubit_indexing(backend: IQMDevice, correct_idx_name_associations):
 
 def test_transpilation(devices: List[IQMDevice]):
     for device in devices:
-        if len(device.resonators) == 0: #TODO Remove to test resonator support.
+        if len(device.resonators) == 0:  # TODO Remove to test resonator support.
             print(device)
             circuit = random_circuit(device.qubits[:5], 5, 1, random_state=1337)
             print(circuit)
