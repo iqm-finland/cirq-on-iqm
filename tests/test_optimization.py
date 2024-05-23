@@ -178,10 +178,10 @@ class TestSimplifyCircuit:
         assert len(new) == 2  # still 2 Moments
         # the ZPowGate preceding the measurement has been dropped
         assert len(tuple(new.all_operations())) == 3
-        op = new[0].operations[0]
+        op = new[0].operations[0]  # pylint: disable=no-member
         assert isinstance(op.gate, cirq.XPowGate)
         assert op.qubits == (q0,)
-        op = new[0].operations[1]
+        op = new[0].operations[1]  # pylint: disable=no-member
         assert isinstance(op.gate, cirq.ZPowGate)
         assert op.qubits == (q2,)
 
@@ -202,7 +202,7 @@ class TestSimplifyCircuit:
         assert len(new) == 2  # still 2 Moments
         # both ZPowGates were dropped
         assert len(tuple(new.all_operations())) == 2
-        op = new[0].operations[0]
+        op = new[0].operations[0]  # pylint: disable=no-member
         assert isinstance(op.gate, cirq.XPowGate)
         assert op.qubits == (q0,)
 
