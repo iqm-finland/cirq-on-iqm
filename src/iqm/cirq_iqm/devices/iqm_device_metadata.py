@@ -21,21 +21,8 @@ import cirq
 from cirq import NamedQid, NamedQubit, Qid, devices, ops
 from cirq.contrib.routing.router import nx
 
-from iqm.cirq_iqm.iqm_gates import IQMMoveGate
+from iqm.cirq_iqm.iqm_operation_mapping import _IQM_CIRQ_OP_MAP
 from iqm.iqm_client import QuantumArchitectureSpecification
-
-# Mapping from IQM operation names to cirq operations
-_IQM_CIRQ_OP_MAP: dict[str, tuple[type[cirq.Gate], ...]] = {
-    # XPow and YPow kept for convenience, Cirq does not know how to decompose them into PhasedX
-    # so we would have to add those rules...
-    'prx': (cirq.ops.PhasedXPowGate, cirq.ops.XPowGate, cirq.ops.YPowGate),
-    'phased_rx': (cirq.ops.PhasedXPowGate, cirq.ops.XPowGate, cirq.ops.YPowGate),
-    'cz': (ops.CZPowGate,),
-    'move': (IQMMoveGate,),
-    'measurement': (cirq.ops.MeasurementGate,),
-    'measure': (cirq.ops.MeasurementGate,),
-    'barrier': tuple(),
-}
 
 
 @cirq.value.value_equality
@@ -110,9 +97,11 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         )
         connectivity = tuple(
             tuple(
-                NamedQubit(qb)
-                if qb.startswith(cls.QUBIT_NAME_PREFIX)
-                else NamedQid(qb, dimension=cls.RESONATOR_DIMENSION)
+                (
+                    NamedQubit(qb)
+                    if qb.startswith(cls.QUBIT_NAME_PREFIX)
+                    else NamedQid(qb, dimension=cls.RESONATOR_DIMENSION)
+                )
                 for qb in edge
             )
             for edge in architecture.qubit_connectivity
@@ -120,9 +109,11 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         operations: dict[type[cirq.Gate], list[tuple[cirq.Qid, ...]]] = {
             cirq_op: [
                 tuple(
-                    NamedQubit(qb)
-                    if qb.startswith(cls.QUBIT_NAME_PREFIX)
-                    else NamedQid(qb, dimension=cls.RESONATOR_DIMENSION)
+                    (
+                        NamedQubit(qb)
+                        if qb.startswith(cls.QUBIT_NAME_PREFIX)
+                        else NamedQid(qb, dimension=cls.RESONATOR_DIMENSION)
+                    )
                     for qb in args
                 )
                 for args in qubits
@@ -131,6 +122,21 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
             for cirq_op in _IQM_CIRQ_OP_MAP[iqm_op]
         }
         return cls(qubits, connectivity, operations=operations, resonators=resonators)
+
+    def to_architecture(self) -> QuantumArchitectureSpecification:
+        """Returns the architecture specification object created based on device metadata."""
+        qubits = tuple(qb.name for qb in self.qubit_set)
+        resonators = tuple(qb.name for qb in self.resonator_set)
+        connectivity = tuple(tuple(qb.name for qb in edge) for edge in self.nx_graph.edges())
+        operations: dict[str, list[tuple[str, ...]]] = {
+            iqm_op: [tuple(qb.name for qb in args) for args in qubits]
+            for cirq_op, qubits in self.operations.items()
+            for iqm_op, cirq_ops in _IQM_CIRQ_OP_MAP.items()
+            if cirq_op in cirq_ops
+        }
+        return QuantumArchitectureSpecification(
+            name='From Cirq object', qubits=resonators + qubits, qubit_connectivity=connectivity, operations=operations
+        )
 
     @classmethod
     def from_qubit_indices(

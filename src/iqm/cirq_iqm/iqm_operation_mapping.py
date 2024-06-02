@@ -13,10 +13,50 @@
 # limitations under the License.
 """Logic for mapping Cirq Operations to the IQM transfer format.
 """
-from cirq.ops import CZPowGate, MeasurementGate, Operation, PhasedXPowGate, XPowGate, YPowGate
+from cirq import NamedQid
+from cirq.ops import CZPowGate, Gate, MeasurementGate, Operation, PhasedXPowGate, XPowGate, YPowGate
 
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.iqm_client import Instruction
+
+# Mapping from IQM operation names to cirq operations
+_IQM_CIRQ_OP_MAP: dict[str, tuple[type[Gate], ...]] = {
+    # XPow and YPow kept for convenience, Cirq does not know how to decompose them into PhasedX
+    # so we would have to add those rules...
+    'prx': (PhasedXPowGate, XPowGate, YPowGate),
+    'phased_rx': (PhasedXPowGate, XPowGate, YPowGate),
+    'cz': (CZPowGate,),
+    'move': (IQMMoveGate,),
+    'measurement': (MeasurementGate,),
+    'measure': (MeasurementGate,),
+    'barrier': tuple(),
+}
+
+
+def instruction_to_operation(instr: Instruction) -> Operation:
+    """Convert an IQM instruction to a Cirq Operation.
+
+    Args:
+        instr: the IQM instruction
+
+    Returns:
+        Operation: the converted operation
+
+    Raises:
+        OperationNotSupportedError When the circuit contains an unsupported operation.
+
+    """
+    if instr.name not in _IQM_CIRQ_OP_MAP:
+        raise OperationNotSupportedError(f'Operation {instr.name} not supported.')
+
+    gate_type = _IQM_CIRQ_OP_MAP[instr.name][0]
+    args_map = {'angle_t': 'exponent', 'phase_t': 'phase_exponent'}
+    args = {args_map[k]: v * 2 for k, v in instr.args.items() if k in args_map}
+    if 'key' in instr.args.keys():
+        args['key'] = instr.args['key']
+        args['num_qubits'] = len(instr.qubits)
+    qubits = [NamedQid(qubit, dimension=2) for qubit in instr.qubits]
+    return gate_type(**args)(*qubits)
 
 
 class OperationNotSupportedError(RuntimeError):

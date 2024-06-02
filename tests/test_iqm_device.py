@@ -11,12 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import List
+from cirq import Circuit, HardCodedInitialMapper, NamedQid, NamedQubit, ops
+from cirq.testing import assert_circuits_have_same_unitary_given_final_permutation, assert_has_diagram, random_circuit
+import pytest
 
-from cirq import HardCodedInitialMapper, NamedQid
-from cirq.testing import assert_circuits_have_same_unitary_given_final_permutation, random_circuit
-
-from iqm.cirq_iqm import Adonis, Apollo, IQMDevice, Valkmusa
+from iqm.cirq_iqm import Adonis, Apollo, IQMDevice, IQMMoveGate, Valkmusa
 
 
 def test_equality_method():
@@ -58,31 +57,70 @@ def assert_qubit_indexing(backend: IQMDevice, correct_idx_name_associations):
     assert all(backend.get_qubit_index(name) == idx for idx, name in correct_idx_name_associations)
     # Below assertions are done in Qiskit but do not make sense for Cirq.
     # assert backend.index_to_qubit_name(7) is None
-    # assert backend.qubit_name_to_index('Alice') is None
+    # assert backend.qubit_name_to_index("Alice") is None
 
 
-def test_transpilation(devices: List[IQMDevice]):
-    for device in devices:
-        if len(device.resonators) == 0:  # TODO Remove to test resonator support.
-            print(device)
-            circuit = random_circuit(device.qubits[:5], 5, 1, random_state=1337)
-            print(circuit)
-            print("decomposing")
-            decomposed_circuit = device.decompose_circuit(circuit)
-            naive_map = {q: q for q in device.qubits}
-            print("routing")
-            routed_circuit, initial_map, final_map = device.route_circuit(
-                decomposed_circuit, initial_mapper=HardCodedInitialMapper(naive_map)
-            )
-            print("deocmposing")
-            decomposed_routed_circuit = device.decompose_circuit(routed_circuit)
-            assert initial_map == naive_map
-            print("validating")
-            device.validate_circuit(decomposed_routed_circuit)
-            print("checking equivalence")
-            qubit_map = {q1: q2 for q1, q2 in final_map.items() if q1 in decomposed_routed_circuit.all_qubits()}
-            print(decomposed_routed_circuit)
-            print(final_map)
-            assert_circuits_have_same_unitary_given_final_permutation(
-                decomposed_routed_circuit, circuit, qubit_map=qubit_map
-            )
+@pytest.mark.parametrize("device", ["device_without_resonator", "device_with_resonator", Apollo(), Adonis()])
+def test_transpilation(device: IQMDevice, request):
+    if isinstance(device, str):
+        device = request.getfixturevalue(device)
+    print(device)
+    size = 3
+    circuit = random_circuit(device.qubits[:size], size, 1, random_state=1337)
+    print(circuit)
+    print("decomposing")
+    decomposed_circuit = device.decompose_circuit(circuit)
+    naive_map = {q: q for q in device.qubits}
+    print("routing")
+    routed_circuit, initial_map, final_map = device.route_circuit(
+        decomposed_circuit, initial_mapper=HardCodedInitialMapper(naive_map)
+    )
+    assert initial_map == naive_map
+    print("decomposing")
+    decomposed_routed_circuit = device.decompose_circuit(routed_circuit)
+    print("validating")
+    device.validate_circuit(decomposed_routed_circuit)
+    print("checking equivalence")
+    qubit_map = {q1: q2 for q1, q2 in final_map.items() if q1 in decomposed_routed_circuit.all_qubits()}
+    assert_circuits_have_same_unitary_given_final_permutation(
+        decomposed_circuit, circuit, qubit_map={q: q for q in device.qubits[:size]}
+    )
+    print("Circuit qubits:", circuit.all_qubits())
+    print("Routed circuit qubits:", routed_circuit.all_qubits())
+    for q in routed_circuit.all_qubits():
+        if q not in circuit.all_qubits():
+            circuit.append(ops.IdentityGate(1)(q))
+    print("Circuit qubits after adding routing qubits:", circuit.all_qubits())
+    assert_circuits_have_same_unitary_given_final_permutation(routed_circuit, circuit, qubit_map=qubit_map)
+    assert_circuits_have_same_unitary_given_final_permutation(decomposed_routed_circuit, circuit, qubit_map=qubit_map)
+
+
+@pytest.mark.parametrize("device", ["device_without_resonator", "device_with_resonator", Apollo(), Adonis()])
+def test_qubit_connectivity(device: IQMDevice, request):
+    if isinstance(device, str):
+        device = request.getfixturevalue(device)
+    for edge in [(q1, q2) for q1 in device.qubits for q2 in device.qubits if q1 != q2]:
+        if edge in device.supported_operations[ops.CZPowGate]:
+            assert device.check_qubit_connectivity(ops.CZPowGate()(*edge))
+        else:
+            with pytest.raises(ValueError):
+                device.check_qubit_connectivity(ops.CZPowGate()(*edge))
+
+
+def test_validate_moves(device_with_resonator):
+    raise NotImplementedError("TODO: Implement this test.")
+
+
+def test_multiple_resonators():
+    raise NotImplementedError("TODO: Implement this test.")
+
+
+def test_move_gate_drawing():
+    """Check that the MOVE gate can be drawn."""
+    res = NamedQid("Resonator", dimension=2)
+    qubit = NamedQubit("Qubit")
+    gate = IQMMoveGate()(qubit, res)
+    c = Circuit(gate)
+    assert_has_diagram(c, "Qubit: ─────────────MOVE(QB)────\n                    │\nResonator (d=2): ───MOVE(Res)───")
+
+    assert str(gate) == "MOVE(Qubit, Resonator (d=2))"

@@ -37,28 +37,21 @@ class IQMMoveGate(EigenGate):
     pair of MOVE operations.
 
     Note: At this point the locus for the move gate must be defined in the order: ``[qubit, resonator]``.
+    Additionally, the matrix representation of the gate set to be a SWAP gate, even though this is not what physically
+    happens.
     """
 
     def _num_qubits_(self) -> int:
         return 2
 
     def _eigen_components(self) -> List[Tuple[float, np.ndarray]]:
-        # yapf: disable
         return [
-            (0, np.diag([1, 0, 0, 1])),
-            (+0.5, np.array([[0, 0, 0, 0],
-                             [0, 0.5, 0.5, 0],
-                             [0, 0.5, 0.5, 0],
-                             [0, 0, 0, 0]])),
-            (-0.5, np.array([[0, 0, 0, 0],
-                             [0, 0.5, -0.5, 0],
-                             [0, -0.5, 0.5, 0],
-                             [0, 0, 0, 0]])),
+            (0, np.array([[1, 0, 0, 0], [0, 0.5, 0.5, 0], [0, 0.5, 0.5, 0], [0, 0, 0, 1]])),
+            (1, np.array([[0, 0, 0, 0], [0, 0.5, -0.5, 0], [0, -0.5, 0.5, 0], [0, 0, 0, 0]])),
         ]
-        # yapf: enable
 
     def _circuit_diagram_info_(self, args: CircuitDiagramInfoArgs) -> CircuitDiagramInfo:
         return CircuitDiagramInfo(wire_symbols=('MOVE(QB)', 'MOVE(Res)'), exponent=self._diagram_exponent(args))
 
     def __str__(self) -> str:
-        return 'IQM Move'
+        return 'MOVE'

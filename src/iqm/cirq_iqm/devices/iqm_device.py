@@ -28,8 +28,10 @@ import uuid
 
 import cirq
 from cirq import InsertStrategy, MeasurementGate, devices, ops, protocols
+import networkx as nx
 
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
+from iqm.cirq_iqm.transpiler import transpile_insert_moves_into_circuit
 
 from .iqm_device_metadata import IQMDeviceMetadata
 
@@ -239,8 +241,23 @@ class IQMDevice(devices.Device):
         for q in measurement_qubits:
             modified_circuit.append(cirq.I(q).with_tags(i_tag))
 
+        if self.metadata.resonator_set:
+            move_routing = True
+            graph = nx.Graph()
+            for edge in self.metadata.nx_graph.edges:
+                q, r = edge if edge[1] in self.resonators else edge[::-1]
+                if r not in self.resonators:
+                    graph.add_edge(*edge)
+                else:
+                    for n in self.metadata.nx_graph.neighbors(r):
+                        if n != q and not graph.has_edge(q, n) and not graph.has_edge(n, q):
+                            graph.add_edge(q, n)
+        else:
+            graph = self._metadata.nx_graph
+            move_routing = False
+
         # Route the modified circuit.
-        router = cirq.RouteCQC(self._metadata.nx_graph)
+        router = cirq.RouteCQC(graph)
         routed_circuit, initial_mapping, final_mapping = router.route_circuit(
             modified_circuit, initial_mapper=initial_mapper
         )
@@ -258,6 +275,11 @@ class IQMDevice(devices.Device):
         # Remove additional identity gates.
         identity_gates = routed_circuit.findall_operations(lambda op: i_tag in op.tags)
         routed_circuit.batch_remove(identity_gates)
+        if move_routing:
+            # Decompose the SWAP  gates to the native gate set.
+            routed_circuit = self.decompose_circuit(routed_circuit)
+            # Insert IQMMoveGates into the circuit.
+            routed_circuit = transpile_insert_moves_into_circuit(routed_circuit, self)
 
         return routed_circuit, initial_mapping, final_mapping
 
