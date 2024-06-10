@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 14.1
+============
+
+* Require iqm-client >= 17.6.
+
 Version 14.0
 ============
 
