@@ -27,13 +27,12 @@ import warnings
 import cirq
 import numpy as np
 
-from iqm import iqm_client
 from iqm.cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
 from iqm.cirq_iqm.iqm_operation_mapping import map_operation
-from iqm.iqm_client import HeraldingMode, IQMClient, JobAbortionError, RunRequest
+from iqm.iqm_client import Circuit, HeraldingMode, IQMClient, JobAbortionError, RunRequest
 
 
-def serialize_circuit(circuit: cirq.Circuit) -> iqm_client.Circuit:
+def serialize_circuit(circuit: cirq.Circuit) -> Circuit:
     """Serializes a quantum circuit into the IQM data transfer format.
 
     Args:
@@ -43,7 +42,7 @@ def serialize_circuit(circuit: cirq.Circuit) -> iqm_client.Circuit:
         data transfer object representing the circuit
     """
     instructions = tuple(map(map_operation, circuit.all_operations()))
-    return iqm_client.Circuit(name='Serialized from Cirq', instructions=instructions)
+    return Circuit(name='Serialized from Cirq', instructions=instructions)
 
 
 class IQMSampler(cirq.work.Sampler):
