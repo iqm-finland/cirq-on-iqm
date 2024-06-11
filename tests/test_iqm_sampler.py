@@ -16,7 +16,7 @@ import sys
 import uuid
 
 import cirq
-from mockito import ANY, expect, mock, verify, when
+from mockito import ANY, mock, verify, when
 import numpy as np
 import pytest
 import sympy  # type: ignore
@@ -374,6 +374,8 @@ def test_close_client():
         'password': 'fake-password',
     }
     sampler = IQMSampler('http://url', Adonis(), **user_auth_args)
-    sampler._client = mock(IQMClient)
-    expect(sampler._client, times=1).close_auth_session().thenReturn(True)
+    mock_client = mock(IQMClient)
+    sampler._client = mock_client
+    when(mock_client).close_auth_session().thenReturn(True)
     sampler.close_client()
+    verify(mock_client, times=1).close_auth_session()

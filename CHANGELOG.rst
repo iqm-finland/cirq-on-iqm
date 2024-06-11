@@ -5,7 +5,7 @@ Changelog
 Version 14.1
 ============
 
-* Require iqm-client >= 17.6.
+* Require iqm-client >= 17.6. `#132 <https://github.com/iqm-finland/cirq-on-iqm/pull/132>`_
 
 Version 14.0
 ============
