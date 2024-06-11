@@ -48,7 +48,7 @@ class Valkmusa(IQMDevice):
     def __init__(self):
         qubit_count = 2
         connectivity = ({1, 2},)
-        gateset = cirq.Gateset(
+        gateset = (
             ops.PhasedXPowGate,
             # XPow and YPow kept for convenience, Cirq does not know how to decompose them into PhasedX
             # so we would have to add those rules...

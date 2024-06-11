@@ -65,7 +65,7 @@ def test_transpilation(device: IQMDevice, request):
     if isinstance(device, str):
         device = request.getfixturevalue(device)
     print(device)
-    size = 3
+    size = 5
     circuit = random_circuit(device.qubits[:size], size, 1, random_state=1337)
     print(circuit)
     print("decomposing")
@@ -95,24 +95,72 @@ def test_transpilation(device: IQMDevice, request):
     assert_circuits_have_same_unitary_given_final_permutation(decomposed_routed_circuit, circuit, qubit_map=qubit_map)
 
 
-@pytest.mark.parametrize("device", ["device_without_resonator", "device_with_resonator", Apollo(), Adonis()])
+@pytest.mark.parametrize(
+    "device",
+    ["device_without_resonator", "device_with_resonator", Apollo(), Adonis(), "device_with_multiple_resonators"],
+)
 def test_qubit_connectivity(device: IQMDevice, request):
     if isinstance(device, str):
         device = request.getfixturevalue(device)
     for edge in [(q1, q2) for q1 in device.qubits for q2 in device.qubits if q1 != q2]:
-        if edge in device.supported_operations[ops.CZPowGate]:
-            assert device.check_qubit_connectivity(ops.CZPowGate()(*edge))
+        gate = ops.CZPowGate()(*edge)
+        if (
+            edge in device.supported_operations[ops.CZPowGate]
+            or tuple(reversed(edge)) in device.supported_operations[ops.CZPowGate]
+        ):
+            assert device.check_qubit_connectivity(gate) is None
         else:
             with pytest.raises(ValueError):
-                device.check_qubit_connectivity(ops.CZPowGate()(*edge))
+                device.check_qubit_connectivity(gate)
+        with pytest.raises(ValueError):
+            device.check_qubit_connectivity(ops.SwapPowGate()(*edge))
 
 
 def test_validate_moves(device_with_resonator):
-    raise NotImplementedError("TODO: Implement this test.")
+    # Test valid MOVE sandwich
+    circuit = Circuit(
+        IQMMoveGate()(device_with_resonator.qubits[0], device_with_resonator.resonators[0]),
+        IQMMoveGate()(device_with_resonator.qubits[0], device_with_resonator.resonators[0]),
+    )
+    assert device_with_resonator.validate_moves(circuit) is None
+    # Test invalid MOVE sandwich
+    circuit = Circuit(
+        IQMMoveGate()(device_with_resonator.qubits[0], device_with_resonator.resonators[0]),
+        IQMMoveGate()(device_with_resonator.qubits[1], device_with_resonator.resonators[0]),
+    )
+    with pytest.raises(ValueError):
+        device_with_resonator.validate_moves(circuit)
 
+    circuit = Circuit(
+        IQMMoveGate()(device_with_resonator.qubits[0], device_with_resonator.resonators[0]),
+        IQMMoveGate()(device_with_resonator.qubits[0], device_with_resonator.qubits[1]),
+    )
+    with pytest.raises(ValueError):
+        device_with_resonator.validate_moves(circuit)
 
-def test_multiple_resonators():
-    raise NotImplementedError("TODO: Implement this test.")
+    circuit = Circuit(
+        IQMMoveGate()(device_with_resonator.resonators[0], device_with_resonator.qubits[1]),
+        IQMMoveGate()(device_with_resonator.resonators[0], device_with_resonator.qubits[1]),
+    )
+    with pytest.raises(ValueError):
+        device_with_resonator.validate_moves(circuit)
+
+    # Test valid MOVE without sandwich
+    circuit = Circuit(
+        IQMMoveGate()(device_with_resonator.qubits[0], device_with_resonator.resonators[0]),
+    )
+    with pytest.raises(ValueError):
+        device_with_resonator.validate_moves(circuit)
+
+    # Test no moves
+    circuit = Circuit()
+    assert device_with_resonator.validate_moves(circuit) is None
+    assert (
+        device_with_resonator.validate_move(
+            ops.CZPowGate()(device_with_resonator.qubits[0], device_with_resonator.resonators[0])
+        )
+        is None
+    )
 
 
 def test_move_gate_drawing():

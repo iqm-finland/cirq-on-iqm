@@ -84,7 +84,7 @@ class IQMDevice(devices.Device):
 
     def check_qubit_connectivity(self, operation: cirq.Operation) -> None:
         """Raises a ValueError if operation acts on qubits that are not connected."""
-        if len(operation.qubits) >= 2 and self.has_valid_operation_targets(operation):
+        if len(operation.qubits) >= 2 and not self.has_valid_operation_targets(operation):
             raise ValueError(f'Unsupported qubit connectivity required for {operation!r}')
 
     def is_native_operation(self, op: cirq.Operation) -> bool:
@@ -100,8 +100,6 @@ class IQMDevice(devices.Device):
 
     def has_valid_operation_targets(self, op: cirq.Operation) -> bool:
         """Predicate, True iff the given operation is native and it=s targets are valid."""
-        if self.supported_operations is None:
-            return True  # No operations specified so we cannot check
         matched_support = [
             (g, qbs)
             for g, qbs in self.supported_operations.items()
@@ -358,9 +356,9 @@ class IQMDevice(devices.Device):
         moves: dict[cirq.Qid, list[tuple[cirq.Qid, cirq.Qid]]] = {r: [] for r in self.resonators}
         for moment in circuit:
             for operation in moment.operations:
-                if isinstance(operation, IQMMoveGate):
-                    moves[operation.qubits[1]].append(operation.qubits[0])
+                if isinstance(operation.gate, IQMMoveGate):
                     self.validate_move(operation)
+                    moves[operation.qubits[1]].append(operation.qubits[0])
         for res, qubits in moves.items():
             while len(qubits) > 1:
                 q1, q2, *rest = qubits

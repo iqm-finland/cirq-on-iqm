@@ -140,14 +140,26 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
 
     @classmethod
     def from_qubit_indices(
-        cls, qubit_count: int, connectivity_indices: tuple[set[int], ...], gateset: Optional[cirq.Gateset] = None
+        cls, qubit_count: int, connectivity_indices: tuple[set[int], ...], gateset: Optional[tuple[cirq.Gate]] = None
     ) -> IQMDeviceMetadata:
         """Returns device metadata object created based on connectivity specified using qubit indices only."""
         qubits = tuple(NamedQubit.range(1, qubit_count + 1, prefix=cls.QUBIT_NAME_PREFIX))
         connectivity = tuple(
             tuple(NamedQubit(f'{cls.QUBIT_NAME_PREFIX}{qb}') for qb in edge) for edge in connectivity_indices
         )
-        return cls(qubits, connectivity, gateset=gateset)
+        if gateset:
+            qb_list: list[tuple[cirq.Qid, ...]] = [(qb,) for qb in qubits]
+            operations = {
+                gate: (
+                    qb_list
+                    if gate in (ops.PhasedXPowGate, ops.XPowGate, ops.YPowGate, ops.MeasurementGate)
+                    else list(tuple(edge) for edge in connectivity)
+                )
+                for gate in gateset
+            }
+        else:
+            operations = None
+        return cls(qubits, connectivity, operations=operations, gateset=cirq.Gateset(*gateset) if gateset else None)
 
     @property
     def gateset(self) -> cirq.Gateset:

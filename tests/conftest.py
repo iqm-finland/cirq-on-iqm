@@ -52,7 +52,6 @@ def fake_spec_with_resonator():
                 ['QB3', 'COMP_R'],
                 ['QB4', 'COMP_R'],
                 ['QB5', 'COMP_R'],
-                ['QB6', 'COMP_R'],
             ],
             'barrier': [],
             'measure': [['QB1'], ['QB2'], ['QB3'], ['QB4'], ['QB5'], ['QB6']],
@@ -95,3 +94,53 @@ def device_without_resonator(adonis_architecture_shuffled_names):
 def device_with_resonator(fake_spec_with_resonator):
     """Returns device object created based on architecture specification"""
     return IQMDevice(IQMDeviceMetadata.from_architecture(fake_spec_with_resonator))
+
+
+@pytest.fixture
+def device_with_multiple_resonators():
+    """Some fictional 5 qubit device with multiple resonators."""
+    multiple_resonators_specification = {
+        'name': 'MultiResonators',
+        'operations': {
+            'cz': [
+                ['QB1', 'COMP_R0'],
+                ['QB2', 'COMP_R0'],
+                ['QB2', 'COMP_R1'],
+                ['QB3', 'COMP_R1'],
+                ['QB3', 'COMP_R2'],
+                ['QB4', 'COMP_R2'],
+                ['QB4', 'COMP_R3'],
+                ['QB5', 'COMP_R3'],
+                ['QB5', 'COMP_R4'],
+                ['QB1', 'COMP_R4'],
+                ['QB1', 'QB3'],
+            ],
+            'prx': [['QB2'], ['QB3'], ['QB1'], ['QB5'], ['QB4']],
+            'move': [
+                ['QB1', 'COMP_R0'],
+                ['QB2', 'COMP_R1'],
+                ['QB3', 'COMP_R2'],
+                ['QB4', 'COMP_R3'],
+                ['QB5', 'COMP_R4'],
+            ],
+            'barrier': [],
+            'measure': [['QB2'], ['QB3'], ['QB1'], ['QB5'], ['QB4']],
+        },
+        'qubits': ['COMP_R0', 'COMP_R1', 'COMP_R2', 'COMP_R3', 'COMP_R4', 'QB1', 'QB2', 'QB3', 'QB4', 'QB5'],
+        'qubit_connectivity': [
+            ['QB1', 'COMP_R0'],
+            ['QB2', 'COMP_R0'],
+            ['QB2', 'COMP_R1'],
+            ['QB3', 'COMP_R1'],
+            ['QB3', 'COMP_R2'],
+            ['QB4', 'COMP_R2'],
+            ['QB4', 'COMP_R3'],
+            ['QB5', 'COMP_R3'],
+            ['QB5', 'COMP_R4'],
+            ['QB1', 'COMP_R4'],
+            ['QB1', 'QB3'],
+        ],
+    }
+    return IQMDevice(
+        IQMDeviceMetadata.from_architecture(QuantumArchitectureSpecification(**multiple_resonators_specification))
+    )
