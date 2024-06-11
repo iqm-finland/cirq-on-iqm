@@ -287,7 +287,7 @@ The below table summarises the currently available options:
        Setting this value to ``0.0`` will disable circuit duration check.
        The default value ``None`` means the server default value will be used.
    * - `heralding_mode`
-     - :py:class:`~iqm_client.iqm_client.HeraldingMode`
+     - :py:class:`~iqm_client.models.HeraldingMode`
      - "zeros"
      - Heralding mode to use during execution. The default value is "none", "zeros" enables heralding.
 

@@ -22,6 +22,7 @@ import pytest
 import sympy  # type: ignore
 
 from iqm.cirq_iqm import Adonis
+import iqm.cirq_iqm as module_under_test
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.cirq_iqm.iqm_sampler import IQMResult, IQMSampler, ResultMetadata
 from iqm.iqm_client import (
@@ -399,17 +400,18 @@ def test_run_iqm_batch_allows_to_override_polling_timeout(
     np.testing.assert_array_equal(results[1].measurements['some stuff'], np.array([[1]]))
 
 
+@pytest.mark.usefixtures('unstub')
 def test_credentials_are_passed_to_client():
     user_auth_args = {
         'auth_server_url': 'https://fake.auth.server.com',
         'username': 'fake-username',
         'password': 'fake-password',
     }
-    with when(IQMClient)._update_tokens():
-        sampler = IQMSampler('http://url', Adonis(), **user_auth_args)
-    assert sampler._client._credentials.auth_server_url == user_auth_args['auth_server_url']
-    assert sampler._client._credentials.username == user_auth_args['username']
-    assert sampler._client._credentials.password == user_auth_args['password']
+    when(module_under_test.iqm_sampler).IQMClient('http://url', client_signature=ANY, **user_auth_args).thenReturn(
+        mock(IQMClient)
+    )
+    IQMSampler('http://url', Adonis(), **user_auth_args)
+    verify(module_under_test.iqm_sampler, times=1).IQMClient('http://url', client_signature=ANY, **user_auth_args)
 
 
 @pytest.mark.usefixtures('unstub')
@@ -419,15 +421,16 @@ def test_client_signature_is_passed_to_client():
     assert f'cirq-iqm {version("cirq-iqm")}' in sampler._client._signature
 
 
+@pytest.mark.usefixtures('unstub')
 def test_close_client():
     user_auth_args = {
         'auth_server_url': 'https://fake.auth.server.com',
         'username': 'fake-username',
         'password': 'fake-password',
     }
-    with when(IQMClient)._update_tokens():
-        sampler = IQMSampler('http://url', Adonis(), **user_auth_args)
-    try:
-        sampler.close_client()
-    except Exception as exc:  # pylint: disable=broad-except
-        assert False, f'sampler created with credentials raised an exception {exc} on .close_client()'
+    sampler = IQMSampler('http://url', Adonis(), **user_auth_args)
+    mock_client = mock(IQMClient)
+    sampler._client = mock_client
+    when(mock_client).close_auth_session().thenReturn(True)
+    sampler.close_client()
+    verify(mock_client, times=1).close_auth_session()
