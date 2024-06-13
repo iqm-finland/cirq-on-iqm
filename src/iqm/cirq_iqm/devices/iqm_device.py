@@ -23,7 +23,7 @@ from __future__ import annotations
 import collections.abc as ca
 from itertools import zip_longest
 from math import pi as PI
-from typing import Optional, cast
+from typing import Optional, cast, Sequence
 import uuid
 
 import cirq
@@ -202,6 +202,7 @@ class IQMDevice(devices.Device):
         circuit: cirq.Circuit,
         *,
         initial_mapper: Optional[cirq.AbstractInitialMapper] = None,
+        qubit_subset: Optional[Sequence[cirq.Qid]] = None,
     ) -> tuple[cirq.Circuit, dict[cirq.Qid, cirq.Qid], dict[cirq.Qid, cirq.Qid]]:
         """Routes the given circuit to the device connectivity and qubit names.
 
@@ -253,6 +254,9 @@ class IQMDevice(devices.Device):
         else:
             graph = self._metadata.nx_graph
             move_routing = False
+
+        if qubit_subset is not None:
+            graph = graph.subgraph(qubit_subset)
 
         # Route the modified circuit.
         router = cirq.RouteCQC(graph)

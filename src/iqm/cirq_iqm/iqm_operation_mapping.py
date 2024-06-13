@@ -80,7 +80,7 @@ def map_operation(operation: Operation) -> Instruction:
 
     """
     phased_rx_name = 'prx'
-    qubits = [str(qubit) for qubit in operation.qubits]
+    qubits = [qubit.name if isinstance(qubit, NamedQid) else str(qubit) for qubit in operation.qubits]
     if isinstance(operation.gate, PhasedXPowGate):
         return Instruction(
             name=phased_rx_name,
