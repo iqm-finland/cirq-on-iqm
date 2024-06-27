@@ -27,3 +27,4 @@ finally:
     del version, PackageNotFoundError
 
 from .iqm_gates import *
+from .transpiler import transpile_insert_moves_into_circuit
