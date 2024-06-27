@@ -2,6 +2,14 @@
 Changelog
 =========
 
+Version 14.2
+============
+
+* Improved operation validation to check if it is calibrated according to the metadata rather than assuming. `#133 <https://github.com/iqm-finland/cirq-on-iqm/pull/133>`_
+* Added IQMMoveGate class for Deneb architectures. `#133 <https://github.com/iqm-finland/cirq-on-iqm/pull/133>`_
+* Updated IQMDevice class to support devices with resonators. `#133 <https://github.com/iqm-finland/cirq-on-iqm/pull/133>`_
+* Require iqm-client >= 17.8. `#133 <https://github.com/iqm-finland/cirq-on-iqm/pull/133>`_
+
 Version 14.1
 ============
 

@@ -153,10 +153,10 @@ class TestOperationValidation:
 
         q0, _, q2 = apollo.qubits[:3]
 
-        with pytest.raises(ValueError, match='Unsupported qubit connectivity'):
+        with pytest.raises(ValueError, match='Unsupported operation between qubits'):
             apollo.validate_operation(gate(q0, q2))
 
-        with pytest.raises(ValueError, match='Unsupported qubit connectivity'):
+        with pytest.raises(ValueError, match='Unsupported operation between qubits'):
             apollo.validate_operation(gate(q2, q0))
 
 
@@ -395,10 +395,16 @@ class TestCircuitRouting:
             cirq.CZ(qubits[0], qubits[4]),
             cirq.CZ(qubits[0], qubits[5]),
         )
+        print('routing started')
+        print(circuit)
         routed_circuit, _, _ = apollo.route_circuit(circuit)
+        print('decomposing')
+        print(routed_circuit)
         valid_circuit = apollo.decompose_circuit(routed_circuit)
-
+        print('validating')
+        print(valid_circuit)
         apollo.validate_circuit(valid_circuit)
+        print('done')
 
     @pytest.mark.parametrize(
         'qid',
