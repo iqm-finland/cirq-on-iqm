@@ -31,13 +31,13 @@ def transpile_insert_moves_into_circuit(
     """Transpile the circuit to insert MOVE gates where needed.
 
     Args:
-        cirq_circuit (cirq.Circuit): Circuit to transpile.
-        device (IQMDevice): Device to transpile for.
-        existing_moves (ExistingMoveHandlingOptions) : How to handle existing MOVE gates.
-        qubit_mapping (dict[str, str]): Mapping from qubit names in the circuit to the device.
+        cirq_circuit: Circuit to transpile.
+        device: Device to transpile for.
+        existing_moves: How to handle existing MOVE gates, obtained from the IQM client library.
+        qubit_mapping: Mapping from qubit names in the circuit to the device.
 
     Returns:
-        cirq.Circuit: Transpiled circuit.
+        Transpiled circuit.
     """
     iqm_client_circuit = serialize_circuit(cirq_circuit)
     new_iqm_client_circuit = transpile_insert_moves(

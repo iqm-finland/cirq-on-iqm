@@ -205,6 +205,9 @@ If you have gates involving more than two qubits you need to decompose them befo
 Since routing may add some SWAP gates to the circuit, you will need to decompose the circuit
 again after the routing, unless SWAP is a native gate for the target device.
 
+To ensure that the transpiler is restricted to a specific subset of qubits, you can provide a list of qubits in the ``qubit_subset`` argument such that ancillary qubits will not be added during routing. This is particularly useful when running Quantum Volume benchmarks.
+
+Additionally, if the target device supports MOVE gates (e.g. IQM Deneb), a final MOVE gate insertion step is performed. Under the hood, this uses the :meth:`transpile_insert_moves`method of the iqm_client library. This method is exposed through :meth:`transpile_insert_moves_into_circuit` which can also be used by advanced users to transpile circuits that have already some MOVE gates in them, or to remove existing MOVE gates from a circuit so the circuit can be reused on a device that does not support them. 
 
 Optimization
 ------------
