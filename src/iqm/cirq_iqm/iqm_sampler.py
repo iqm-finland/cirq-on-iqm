@@ -29,7 +29,7 @@ import numpy as np
 
 from iqm.cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
 from iqm.cirq_iqm.serialize import serialize_circuit
-from iqm.iqm_client import HeraldingMode, IQMClient, JobAbortionError, RunRequest
+from iqm.iqm_client import IQMClient, JobAbortionError, RunRequest, CircuitCompilationOptions
 
 
 class IQMSampler(cirq.work.Sampler):
@@ -43,10 +43,7 @@ class IQMSampler(cirq.work.Sampler):
             ID of the calibration set to use. If ``None``, use the latest one.
         run_sweep_timeout:
             timeout to poll sweep results in seconds.
-        max_circuit_duration_over_t2: Circuits are disqualified on the server if they are longer than
-            this ratio of the T2 time of the qubits. If set to 0.0, no circuits are disqualified.
-            If set to None the server default value is used.
-        heralding_mode: Heralding mode to use during execution.
+        compiler_options: The compilation options to use for the circuits as defined by IQM Client.
 
     Keyword Args:
         auth_server_url (str): URL of user authentication server, if required by the IQM Cortex server.
@@ -64,8 +61,7 @@ class IQMSampler(cirq.work.Sampler):
         *,
         calibration_set_id: Optional[UUID] = None,
         run_sweep_timeout: Optional[int] = None,
-        max_circuit_duration_over_t2: Optional[float] = None,
-        heralding_mode: HeraldingMode = HeraldingMode.NONE,
+        compiler_options: Optional[CircuitCompilationOptions] = None,
         **user_auth_args,  # contains keyword args auth_server_url, username and password
     ):
         self._client = IQMClient(url, client_signature=f'cirq-iqm {version("cirq-iqm")}', **user_auth_args)
@@ -76,8 +72,7 @@ class IQMSampler(cirq.work.Sampler):
             self._device = device
         self._calibration_set_id = calibration_set_id
         self._run_sweep_timeout = run_sweep_timeout
-        self._max_circuit_duration_over_t2 = max_circuit_duration_over_t2
-        self._heralding_mode = heralding_mode
+        self._compiler_options = compiler_options if compiler_options is not None else CircuitCompilationOptions()
 
     @property
     def device(self) -> IQMDevice:
@@ -163,8 +158,7 @@ class IQMSampler(cirq.work.Sampler):
             serialized_circuits,
             calibration_set_id=self._calibration_set_id,
             shots=repetitions,
-            max_circuit_duration_over_t2=self._max_circuit_duration_over_t2,
-            heralding_mode=self._heralding_mode,
+            options=self._compiler_options,
         )
         timeout_arg = [self._run_sweep_timeout] if self._run_sweep_timeout is not None else []
 
