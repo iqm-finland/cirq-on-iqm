@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 14.2
+============
+
+* Allow inspecting a run request before submitting it for execution. `#134 <https://github.com/iqm-finland/cirq-on-iqm/pull/134>`_
+* Require iqm-client >= 17.8. `#134 <https://github.com/iqm-finland/cirq-on-iqm/pull/134>`_
+
 Version 14.1
 ============
 

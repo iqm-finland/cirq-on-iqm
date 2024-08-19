@@ -16,7 +16,7 @@ import sys
 import uuid
 
 import cirq
-from mockito import ANY, mock, verify, when
+from mockito import ANY, captor, expect, mock, verify, verifyNoUnwantedInteractions, when
 import numpy as np
 import pytest
 import sympy  # type: ignore
@@ -379,3 +379,94 @@ def test_close_client():
     when(mock_client).close_auth_session().thenReturn(True)
     sampler.close_client()
     verify(mock_client, times=1).close_auth_session()
+
+
+@pytest.mark.usefixtures('unstub')
+def test_inspect_run_request_for_run(adonis_sampler, iqm_metadata, job_id):
+    client = mock(IQMClient)
+    adonis_sampler._client = client
+    repetitions = 123
+    run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
+
+    qubit_1 = cirq.NamedQubit('QB1')
+    qubit_2 = cirq.NamedQubit('QB2')
+    circuit = cirq.Circuit(cirq.X(qubit_1), cirq.measure(qubit_1, qubit_2, key='result'))
+
+    circuits_serialized = captor()
+    calibration_set_id = captor()
+    max_circuit_duration_over_t2 = captor()
+    heralding_mode = captor()
+
+    mock_run_request = mock(RunRequest)
+    when(client).create_run_request(
+        circuits_serialized,
+        calibration_set_id=calibration_set_id,
+        shots=repetitions,
+        max_circuit_duration_over_t2=max_circuit_duration_over_t2,
+        heralding_mode=heralding_mode,
+    ).thenReturn(mock_run_request)
+
+    run_request = adonis_sampler.create_run_request(circuit, repetitions=repetitions)
+    assert run_request == mock_run_request
+
+    # verifies that client.submit_circuits is called with exact same parameter values as client.create_run_request was
+    expect(client, times=1).submit_circuits(
+        circuits_serialized.value,
+        calibration_set_id=calibration_set_id.value,
+        shots=repetitions,
+        max_circuit_duration_over_t2=max_circuit_duration_over_t2.value,
+        heralding_mode=heralding_mode.value,
+    ).thenReturn(job_id)
+    when(client).wait_for_results(job_id).thenReturn(run_result)
+
+    adonis_sampler.run(circuit, repetitions=repetitions)
+
+    verifyNoUnwantedInteractions()
+
+
+# pylint: disable=too-many-locals
+@pytest.mark.usefixtures('unstub')
+def test_inspect_run_request_for_run_iqm_batch(adonis_sampler, iqm_metadata, job_id):
+    client = mock(IQMClient)
+    adonis_sampler._client = client
+    repetitions = 123
+    run_result = RunResult(
+        status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
+    )
+
+    qubit_1 = cirq.NamedQubit('QB1')
+    qubit_2 = cirq.NamedQubit('QB2')
+    circuit1 = cirq.Circuit(cirq.X(qubit_1), cirq.measure(qubit_1, qubit_2, key='result'))
+    circuit2 = cirq.Circuit(cirq.X(qubit_2), cirq.measure(qubit_1, qubit_2, key='result'))
+    circuits = [circuit1, circuit2]
+
+    circuits_serialized = captor()
+    calibration_set_id = captor()
+    max_circuit_duration_over_t2 = captor()
+    heralding_mode = captor()
+
+    mock_run_request = mock(RunRequest)
+    when(client).create_run_request(
+        circuits_serialized,
+        calibration_set_id=calibration_set_id,
+        shots=repetitions,
+        max_circuit_duration_over_t2=max_circuit_duration_over_t2,
+        heralding_mode=heralding_mode,
+    ).thenReturn(mock_run_request)
+
+    run_request = adonis_sampler.create_run_request(circuits, repetitions=repetitions)
+    assert run_request == mock_run_request
+
+    # verifies that client.submit_circuits is called with exact same parameter values as client.create_run_request was
+    expect(client, times=1).submit_circuits(
+        circuits_serialized.value,
+        calibration_set_id=calibration_set_id.value,
+        shots=repetitions,
+        max_circuit_duration_over_t2=max_circuit_duration_over_t2.value,
+        heralding_mode=heralding_mode.value,
+    ).thenReturn(job_id)
+    when(client).wait_for_results(job_id).thenReturn(run_result)
+
+    adonis_sampler.run_iqm_batch(circuits, repetitions=repetitions)
+
+    verifyNoUnwantedInteractions()
