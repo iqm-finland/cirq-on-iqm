@@ -163,8 +163,6 @@ class IQMSampler(cirq.work.Sampler):
 
         serialized_circuits = self._validate_and_serialize_circuits(programs)
 
-        # NOTE: make sure _client.create_run_request input is exactly the same as _client.submit_circuits input in
-        # _send_circuits
         return self._client.create_run_request(
             serialized_circuits,
             calibration_set_id=self._calibration_set_id,
@@ -188,17 +186,9 @@ class IQMSampler(cirq.work.Sampler):
         Returns:
             circuit execution results, result metadata
         """
-        serialized_circuits = self._validate_and_serialize_circuits(circuits)
+        run_request = self.create_run_request(circuits, repetitions=repetitions)
+        job_id = self._client.submit_run_request(run_request)
 
-        # NOTE: make sure _client.submit_circuits input is exactly the same as _client.create_run_request input in
-        # inspect_run_request
-        job_id = self._client.submit_circuits(
-            serialized_circuits,
-            calibration_set_id=self._calibration_set_id,
-            shots=repetitions,
-            max_circuit_duration_over_t2=self._max_circuit_duration_over_t2,
-            heralding_mode=self._heralding_mode,
-        )
         timeout_arg = [self._run_sweep_timeout] if self._run_sweep_timeout is not None else []
 
         try:
