@@ -24,8 +24,11 @@ iqm.cirq\_iqm.iqm\_sampler.IQMSampler
 
    .. autosummary::
    
+      ~IQMSampler._resolve_parameters
       ~IQMSampler._send_circuits
+      ~IQMSampler._validate_and_serialize_circuits
       ~IQMSampler.close_client
+      ~IQMSampler.create_run_request
       ~IQMSampler.run_iqm_batch
       ~IQMSampler.run_sweep
       ~IQMSampler.run_sweep_async

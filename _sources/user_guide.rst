@@ -329,6 +329,30 @@ This is often faster than executing the circuits individually. Circuits submitte
         print(result.histogram(key="m"))
 
 
+Inspecting the final circuits before submitting them for execution
+------------------------------------------------------------------
+
+It is possible to inspect the final circuits that would be submitted for execution before actually submitting them,
+which can be useful for debugging purposes. This can be done using :meth:`.IQMSampler.create_run_request`, which returns
+a :class:`~iqm.iqm_client.models.RunRequest` containing the circuits and other data. The method accepts the same
+parameters as :meth:`.IQMSampler.run` and :meth:`.IQMSampler.run_iqm_batch`, and creates the run request in the same
+way as those functions.
+
+.. code-block:: python
+
+    # inspect the run_request without submitting it for execution
+    run_request = sampler.create_run_request(routed_circuit_1, repetitions=10)
+    print(run_request)
+
+    # the following calls submit exactly the same run request for execution on the server
+    sampler.run(routed_circuit_1, repetitions=10)
+    sampler._client.submit_run_request(run_request)
+
+
+It is also possible to print a run request when it is actually submitted by setting the environment variable
+``IQM_CLIENT_DEBUG=1``.
+
+
 More examples
 -------------
 
