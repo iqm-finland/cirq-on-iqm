@@ -82,6 +82,7 @@ def create_run_request_default_kwargs() -> dict:
     return {
         'calibration_set_id': None,
         'shots': 1,
+        'options': CircuitCompilationOptions(),
     }
 
 
@@ -109,7 +110,7 @@ def test_run_sweep_executes_circuit_with_physical_names(
     # pylint: disable=too-many-arguments
     client = mock(IQMClient)
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
-    when(client).create_run_request(ANY, options=ANY, **create_run_request_default_kwargs).thenReturn(run_request)
+    when(client).create_run_request(ANY, **create_run_request_default_kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenReturn(run_result)
 
@@ -130,7 +131,7 @@ def test_run_sweep_executes_circuit_with_calibration_set_id(
     sampler = IQMSampler(base_url, Adonis(), calibration_set_id=calibration_set_id)
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     kwargs = create_run_request_default_kwargs | {'calibration_set_id': calibration_set_id}
-    when(client).create_run_request(ANY, options=ANY, **kwargs).thenReturn(run_request)
+    when(client).create_run_request(ANY, **kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenReturn(run_result)
 
@@ -150,8 +151,10 @@ def test_run_sweep_has_duration_check_enabled_by_default(
     sampler = IQMSampler(base_url, Adonis())
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     assert sampler._compiler_options.max_circuit_duration_over_t2 is None
-    kwargs = create_run_request_default_kwargs | {'max_circuit_duration_over_t2': None}
-    when(client).create_run_request(ANY, options=ANY, **kwargs).thenReturn(run_request)
+    kwargs = create_run_request_default_kwargs | {
+        'options': CircuitCompilationOptions(max_circuit_duration_over_t2=None)
+    }
+    when(client).create_run_request(ANY, **kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenReturn(run_result)
 
@@ -173,8 +176,10 @@ def test_run_sweep_executes_circuit_with_duration_check_disabled(
     )
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     assert sampler._compiler_options.max_circuit_duration_over_t2 == 0.0
-    kwargs = create_run_request_default_kwargs | {'max_circuit_duration_over_t2': 0.0}
-    when(client).create_run_request(ANY, options=ANY, **kwargs).thenReturn(run_request)
+    kwargs = create_run_request_default_kwargs | {
+        'options': CircuitCompilationOptions(max_circuit_duration_over_t2=0.0)
+    }
+    when(client).create_run_request(ANY, **kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenReturn(run_result)
 
@@ -194,7 +199,7 @@ def test_run_sweep_allows_to_override_polling_timeout(
     timeout = 123
     sampler = IQMSampler(base_url, Adonis(), run_sweep_timeout=timeout)
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
-    when(client).create_run_request(ANY, options=ANY, **create_run_request_default_kwargs).thenReturn(run_request)
+    when(client).create_run_request(ANY, **create_run_request_default_kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id, timeout).thenReturn(run_result)
 
@@ -215,7 +220,7 @@ def test_run_sweep_has_heralding_mode_none_by_default(
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     kwargs = create_run_request_default_kwargs
     assert sampler._compiler_options.heralding_mode == HeraldingMode.NONE
-    when(client).create_run_request(ANY, options=ANY, **kwargs).thenReturn(run_request)
+    when(client).create_run_request(ANY, **kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenReturn(run_result)
 
@@ -236,9 +241,11 @@ def test_run_sweep_executes_circuit_with_heralding_mode_zeros(
         base_url, Adonis(), compiler_options=CircuitCompilationOptions(heralding_mode=HeraldingMode.ZEROS)
     )
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
-    kwargs = create_run_request_default_kwargs | {'heralding_mode': HeraldingMode.ZEROS}
+    kwargs = create_run_request_default_kwargs | {
+        'options': CircuitCompilationOptions(heralding_mode=HeraldingMode.ZEROS)
+    }
     assert sampler._compiler_options.heralding_mode == HeraldingMode.ZEROS
-    when(client).create_run_request(ANY, options=ANY, **kwargs).thenReturn(run_request)
+    when(client).create_run_request(ANY, **kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenReturn(run_result)
 
@@ -257,7 +264,7 @@ def test_run_sweep_with_parameter_sweep(
     run_result = RunResult(
         status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
     )
-    when(client).create_run_request(ANY, options=ANY, **create_run_request_default_kwargs).thenReturn(run_request)
+    when(client).create_run_request(ANY, **create_run_request_default_kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenReturn(run_result)
     qubit_1 = cirq.NamedQubit('QB1')
@@ -285,7 +292,7 @@ def test_run_sweep_abort_job_successful(
 ):
     # pylint: disable=too-many-arguments
     client = mock(IQMClient)
-    when(client).create_run_request(ANY, options=ANY, **create_run_request_default_kwargs).thenReturn(run_request)
+    when(client).create_run_request(ANY, **create_run_request_default_kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenRaise(KeyboardInterrupt)
     when(client).abort_job(job_id)
@@ -305,7 +312,7 @@ def test_run_sweep_abort_job_failed(
     adonis_sampler, circuit_physical, create_run_request_default_kwargs, job_id, run_request
 ):
     client = mock(IQMClient)
-    when(client).create_run_request(ANY, options=ANY, **create_run_request_default_kwargs).thenReturn(run_request)
+    when(client).create_run_request(ANY, **create_run_request_default_kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenRaise(KeyboardInterrupt)
     when(client).abort_job(job_id).thenRaise(JobAbortionError)
@@ -327,14 +334,15 @@ def test_run_iqm_batch_raises_with_non_physical_names(adonis_sampler, circuit_no
 
 
 @pytest.mark.usefixtures('unstub')
-def test_run(adonis_sampler, iqm_metadata, submit_circuits_default_kwargs, job_id):
+def test_run(adonis_sampler, iqm_metadata, create_run_request_default_kwargs, job_id):
     client = mock(IQMClient)
     repetitions = 123
     run_result = RunResult(
         status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
     )
-    kwargs = submit_circuits_default_kwargs | {'shots': repetitions}
-    when(client).submit_circuits(ANY, options=ANY, **kwargs).thenReturn(job_id)
+    kwargs = create_run_request_default_kwargs | {'shots': repetitions}
+    when(client).create_run_request(ANY, **kwargs).thenReturn(run_request)
+    when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenReturn(run_result)
 
     qubit_1 = cirq.NamedQubit('QB1')
@@ -350,69 +358,16 @@ def test_run(adonis_sampler, iqm_metadata, submit_circuits_default_kwargs, job_i
 
 
 @pytest.mark.usefixtures('unstub')
-def test_run_ndonis(device_with_resonator, base_url, iqm_metadata, submit_circuits_default_kwargs, job_id):
+def test_run_ndonis(device_with_resonator, base_url, iqm_metadata, create_run_request_default_kwargs, job_id):
     sampler = IQMSampler(base_url, device=device_with_resonator)
     client = mock(IQMClient)
     repetitions = 123
     run_result = RunResult(
         status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
     )
-    kwargs = submit_circuits_default_kwargs | {'shots': repetitions}
-    when(client).submit_circuits(ANY, options=ANY, **kwargs).thenReturn(job_id)
-    when(client).wait_for_results(job_id).thenReturn(run_result)
-
-    qubit_1, qubit_2 = device_with_resonator.qubits[:2]
-    resonator = device_with_resonator.resonators[0]
-    circuit = cirq.Circuit()
-    circuit.append(device_with_resonator.decompose_operation(cirq.H(qubit_1)))
-    circuit.append(IQMMoveGate().on(qubit_1, resonator))
-    circuit.append(device_with_resonator.decompose_operation(cirq.H(qubit_2)))
-    circuit.append(cirq.CZ(resonator, qubit_2))
-    circuit.append(IQMMoveGate().on(qubit_1, resonator))
-    circuit.append(device_with_resonator.decompose_operation(cirq.H(qubit_2)))
-    circuit.append(cirq.MeasurementGate(2, key='result').on(qubit_1, qubit_2))
-
-    sampler._client = client
-    result = sampler.run(circuit, repetitions=repetitions)
-
-    assert isinstance(result, IQMResult)
-    assert isinstance(result.metadata, ResultMetadata)
-    np.testing.assert_array_equal(result.measurements['some stuff'], np.array([[0]]))
-
-
-@pytest.mark.usefixtures('unstub')
-def test_run(adonis_sampler, iqm_metadata, submit_circuits_default_kwargs, job_id):
-    client = mock(IQMClient)
-    repetitions = 123
-    run_result = RunResult(
-        status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
-    )
-    kwargs = submit_circuits_default_kwargs | {'shots': repetitions}
-    when(client).submit_circuits(ANY, options=ANY, **kwargs).thenReturn(job_id)
-    when(client).wait_for_results(job_id).thenReturn(run_result)
-
-    qubit_1 = cirq.NamedQubit('QB1')
-    qubit_2 = cirq.NamedQubit('QB2')
-    circuit1 = cirq.Circuit(cirq.X(qubit_1), cirq.measure(qubit_1, qubit_2, key='result'))
-
-    adonis_sampler._client = client
-    result = adonis_sampler.run(circuit1, repetitions=repetitions)
-
-    assert isinstance(result, IQMResult)
-    assert isinstance(result.metadata, ResultMetadata)
-    np.testing.assert_array_equal(result.measurements['some stuff'], np.array([[0]]))
-
-
-@pytest.mark.usefixtures('unstub')
-def test_run_ndonis(device_with_resonator, base_url, iqm_metadata, submit_circuits_default_kwargs, job_id):
-    sampler = IQMSampler(base_url, device=device_with_resonator)
-    client = mock(IQMClient)
-    repetitions = 123
-    run_result = RunResult(
-        status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
-    )
-    kwargs = submit_circuits_default_kwargs | {'shots': repetitions}
-    when(client).submit_circuits(ANY, options=ANY, **kwargs).thenReturn(job_id)
+    kwargs = create_run_request_default_kwargs | {'shots': repetitions}
+    when(client).create_run_request(ANY, **kwargs).thenReturn(run_request)
+    when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenReturn(run_result)
 
     qubit_1, qubit_2 = device_with_resonator.qubits[:2]
@@ -442,7 +397,7 @@ def test_run_iqm_batch(adonis_sampler, iqm_metadata, create_run_request_default_
         status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
     )
     kwargs = create_run_request_default_kwargs | {'shots': repetitions}
-    when(client).create_run_request(ANY, options=ANY, **kwargs).thenReturn(run_request)
+    when(client).create_run_request(ANY, **kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenReturn(run_result)
 
@@ -472,7 +427,7 @@ def test_run_iqm_batch_allows_to_override_polling_timeout(
     )
     timeout = 123
     sampler = IQMSampler(base_url, Adonis(), run_sweep_timeout=timeout)
-    when(client).create_run_request(ANY, options=ANY, **create_run_request_default_kwargs).thenReturn(run_request)
+    when(client).create_run_request(ANY, **create_run_request_default_kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id, timeout).thenReturn(run_result)
 

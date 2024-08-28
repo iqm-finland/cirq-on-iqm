@@ -29,7 +29,7 @@ import numpy as np
 
 from iqm.cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
 from iqm.cirq_iqm.serialize import serialize_circuit
-from iqm.iqm_client import CircuitCompilationOptions, IQMClient, JobAbortionError, RunRequest
+from iqm.iqm_client import Circuit, CircuitCompilationOptions, IQMClient, JobAbortionError, RunRequest
 
 
 class IQMSampler(cirq.work.Sampler):
