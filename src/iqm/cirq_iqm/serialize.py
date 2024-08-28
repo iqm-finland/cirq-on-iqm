@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Circuit sampler that executes quantum circuits on an IQM quantum computer.
+Helper functions for serializing and deserializing quantum circuits between Cirq and IQM Circuit formats.
 """
 from cirq import Circuit
 

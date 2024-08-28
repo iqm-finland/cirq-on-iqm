@@ -99,7 +99,7 @@ class IQMDevice(devices.Device):
         return check
 
     def has_valid_operation_targets(self, op: cirq.Operation) -> bool:
-        """Predicate, True iff the given operation is native and it=s targets are valid."""
+        """Predicate, True iff the given operation is native and its targets are valid."""
         matched_support = [
             (g, qbs)
             for g, qbs in self.supported_operations.items()
@@ -107,10 +107,12 @@ class IQMDevice(devices.Device):
         ]
         if len(matched_support) > 0:
             gf, valid_targets = matched_support[0]
+            valid_qubits = set(q for qb in valid_targets for q in qb)
             if gf == cirq.MeasurementGate:  # Measurements can be done on any available qubits
-                return all(q in [q for qb in valid_targets for q in qb] for q in op.qubits)
+                return all(q in valid_qubits for q in op.qubits)
             if issubclass(gf, cirq.InterchangeableQubitsGate):
-                return any(len(t) == len(op.qubits) and all(q1 in t for q1 in op.qubits) for t in valid_targets)
+                target_qubits = set(op.qubits)
+                return any(set(t) == target_qubits for t in valid_targets)
             return any(all(q1 == q2 for q1, q2 in zip_longest(op.qubits, t)) for t in valid_targets)
         return False
 

@@ -47,6 +47,7 @@ def test_device_with_resonator(device_with_resonator):
     assert_qubit_indexing(
         device_with_resonator, set(zip(range(1, len(device_with_resonator.qubits) + 1), device_with_resonator.qubits))
     )
+    assert len(device_with_resonator.resonators) == 1
     assert device_with_resonator.resonators[0] == NamedQid(
         "COMP_R", device_with_resonator._metadata.RESONATOR_DIMENSION
     )
@@ -152,6 +153,14 @@ def test_validate_moves(device_with_resonator):
     with pytest.raises(ValueError):
         device_with_resonator.validate_moves(circuit)
 
+    # Test odd valid MOVEs (incomplete sandwich)
+    circuit = Circuit(
+        IQMMoveGate()(device_with_resonator.qubits[0], device_with_resonator.resonators[0]),
+        IQMMoveGate()(device_with_resonator.qubits[0], device_with_resonator.resonators[0]),
+        IQMMoveGate()(device_with_resonator.qubits[0], device_with_resonator.resonators[0]),
+    )
+    with pytest.raises(ValueError):
+        device_with_resonator.validate_moves(circuit)
     # Test no moves
     circuit = Circuit()
     assert device_with_resonator.validate_moves(circuit) is None
