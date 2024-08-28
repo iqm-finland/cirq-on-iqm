@@ -13,12 +13,12 @@
 # limitations under the License.
 import cirq
 from cirq import CZPowGate, GateOperation, MeasurementGate, PhasedXPowGate, XPowGate, YPowGate, ZPowGate
-import pytest
 from mockito import mock
+import pytest
 
-from iqm.cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, map_operation, instruction_to_operation
-from iqm.iqm_client import Instruction
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
+from iqm.cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, instruction_to_operation, map_operation
+from iqm.iqm_client import Instruction
 
 
 @pytest.fixture()

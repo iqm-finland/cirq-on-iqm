@@ -23,12 +23,12 @@ from __future__ import annotations
 import collections.abc as ca
 from itertools import zip_longest
 from math import pi as PI
-from typing import Optional, cast, Sequence
+from typing import Optional, Sequence, cast
 import uuid
 
 import cirq
 from cirq import InsertStrategy, MeasurementGate, devices, ops, protocols
-import networkx as nx
+from cirq.contrib.routing.router import nx
 
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.cirq_iqm.transpiler import transpile_insert_moves_into_circuit
@@ -357,7 +357,7 @@ class IQMDevice(devices.Device):
         Returns:
             None if the IQMMoveGates are applied correctly.
         """
-        moves: dict[cirq.Qid, list[tuple[cirq.Qid, cirq.Qid]]] = {r: [] for r in self.resonators}
+        moves: dict[cirq.Qid, list[cirq.Qid]] = {r: [] for r in self.resonators}
         for moment in circuit:
             for operation in moment.operations:
                 if isinstance(operation.gate, IQMMoveGate):

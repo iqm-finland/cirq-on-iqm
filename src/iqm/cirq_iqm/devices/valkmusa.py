@@ -17,10 +17,9 @@ IQM's Valkmusa quantum architecture.
 from math import pi as PI
 from typing import Optional
 
-import cirq
 from cirq import ops
 
-from .iqm_device import IQMDevice, IQMDeviceMetadata
+from iqm.cirq_iqm.devices import IQMDevice, IQMDeviceMetadata
 
 PI_2 = PI / 2
 

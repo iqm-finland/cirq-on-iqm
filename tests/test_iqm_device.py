@@ -108,7 +108,7 @@ def test_qubit_connectivity(device: IQMDevice, request):
             edge in device.supported_operations[ops.CZPowGate]
             or tuple(reversed(edge)) in device.supported_operations[ops.CZPowGate]
         ):
-            assert device.check_qubit_connectivity(gate) is None
+            device.check_qubit_connectivity(gate)  # This should not raise an error
         else:
             with pytest.raises(ValueError):
                 device.check_qubit_connectivity(gate)

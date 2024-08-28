@@ -27,10 +27,10 @@ from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.cirq_iqm.iqm_sampler import IQMResult, IQMSampler, ResultMetadata
 from iqm.iqm_client import (
     Circuit,
+    CircuitCompilationOptions,
     HeraldingMode,
     Instruction,
     IQMClient,
-    CircuitCompilationOptions,
     JobAbortionError,
     Metadata,
     RunRequest,
@@ -195,7 +195,7 @@ def test_run_sweep_has_heralding_mode_none_by_default(
     sampler = IQMSampler(base_url, Adonis())
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     kwargs = submit_circuits_default_kwargs
-    assert sampler._compiler_options.heralding_mode is None
+    assert sampler._compiler_options.heralding_mode is HeraldingMode.NONE
     when(client).submit_circuits(ANY, options=ANY, **kwargs).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenReturn(run_result)
 

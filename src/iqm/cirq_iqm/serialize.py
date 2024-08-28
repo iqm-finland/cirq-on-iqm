@@ -45,7 +45,7 @@ def deserialize_circuit(circuit: iqm_client.Circuit) -> Circuit:
     """
     return Circuit(
         map(
-            lambda instr: instruction_to_operation(instr),
+            instruction_to_operation,
             circuit.instructions,
         )
     )

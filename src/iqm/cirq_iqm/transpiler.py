@@ -14,17 +14,20 @@
 """Helper functions for IQM specific transpilation needs."""
 from __future__ import annotations
 
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from cirq import Circuit
 
 from iqm.cirq_iqm.serialize import deserialize_circuit, serialize_circuit
 from iqm.iqm_client import ExistingMoveHandlingOptions, transpile_insert_moves
 
+if TYPE_CHECKING:
+    from iqm.cirq_iqm.devices import IQMDevice
+
 
 def transpile_insert_moves_into_circuit(
     cirq_circuit: Circuit,
-    device: "IQMDevice",
+    device: IQMDevice,
     existing_moves: Optional[ExistingMoveHandlingOptions] = None,
     qubit_mapping: Optional[dict[str, str]] = None,
 ) -> Circuit:
