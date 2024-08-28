@@ -89,13 +89,7 @@ class IQMSampler(cirq.work.Sampler):
     def run_sweep(  # type: ignore[override]
         self, program: cirq.Circuit, params: cirq.Sweepable, repetitions: int = 1
     ) -> list[IQMResult]:
-        # validate the circuit for the device
-        self._device.validate_circuit(program)
-
-        resolvers = list(cirq.to_resolvers(params))
-
-        circuits = [cirq.protocols.resolve_parameters(program, res) for res in resolvers] if resolvers else [program]
-
+        circuits, resolvers = self._resolve_parameters(program, params)
         results, metadata = self._send_circuits(
             circuits,
             repetitions=repetitions,
@@ -124,15 +118,39 @@ class IQMSampler(cirq.work.Sampler):
             APITimeoutError: server did not return the results in the allocated time
             RuntimeError: IQM client session has been closed
         """
-        # validate each circuit for the device
-        for program in programs:
-            self._device.validate_circuit(program)
-
         results, metadata = self._send_circuits(
             programs,
             repetitions=repetitions,
         )
         return [IQMResult(measurements=result, metadata=metadata) for result in results]
+
+    def create_run_request(
+        self, programs: cirq.Circuit | list[cirq.Circuit], *, params: cirq.Sweepable = None, repetitions: int = 1
+    ) -> RunRequest:
+        """Creates a run request without submitting it for execution.
+
+        This takes the same parameters as :meth:`run` and :meth:`run_iqm_batch`, and can be used to check the
+        run request that would be sent when calling those functions.
+
+        Args:
+            programs: quantum circuit(s) that would be executed when submitting the run request
+            params: same as ``params`` for :meth:`run`, used only if ``programs`` is not a list
+            repetitions: number of times the circuits are sampled
+
+        Returns:
+            the created run request
+        """
+        if isinstance(programs, cirq.Circuit):
+            programs, _ = self._resolve_parameters(programs, params)
+
+        serialized_circuits = self._validate_and_serialize_circuits(programs)
+
+        return self._client.create_run_request(
+            serialized_circuits,
+            calibration_set_id=self._calibration_set_id,
+            shots=repetitions,
+            options=self._compiler_options,
+        )
 
     def _send_circuits(
         self,
@@ -149,17 +167,9 @@ class IQMSampler(cirq.work.Sampler):
         Returns:
             circuit execution results, result metadata
         """
+        run_request = self.create_run_request(circuits, repetitions=repetitions)
+        job_id = self._client.submit_run_request(run_request)
 
-        if not self._client:
-            raise RuntimeError('Cannot submit circuits since session to IQM client has been closed.')
-        serialized_circuits = [serialize_circuit(circuit) for circuit in circuits]
-
-        job_id = self._client.submit_circuits(
-            serialized_circuits,
-            calibration_set_id=self._calibration_set_id,
-            shots=repetitions,
-            options=self._compiler_options,
-        )
         timeout_arg = [self._run_sweep_timeout] if self._run_sweep_timeout is not None else []
 
         try:
@@ -180,6 +190,21 @@ class IQMSampler(cirq.work.Sampler):
             [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements],
             ResultMetadata(job_id, results.metadata.calibration_set_id, results.metadata.request),
         )
+
+    @staticmethod
+    def _resolve_parameters(
+        program: cirq.Circuit, params: cirq.Sweepable
+    ) -> tuple[list[cirq.Circuit], list[cirq.ParamResolver]]:
+        resolvers = list(cirq.to_resolvers(params))
+        circuits = [cirq.protocols.resolve_parameters(program, res) for res in resolvers] if resolvers else [program]
+        return circuits, resolvers
+
+    def _validate_and_serialize_circuits(self, circuits: list[cirq.Circuit]) -> list[Circuit]:
+        if not self._client:
+            raise RuntimeError('Cannot submit circuits since session to IQM client has been closed.')
+        for circuit in circuits:
+            self._device.validate_circuit(circuit)
+        return [serialize_circuit(circuit) for circuit in circuits]
 
 
 @dataclass
