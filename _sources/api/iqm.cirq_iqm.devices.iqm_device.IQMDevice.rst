@@ -30,10 +30,13 @@ iqm.cirq\_iqm.devices.iqm\_device.IQMDevice
       ~IQMDevice.decompose_operation
       ~IQMDevice.get_qubit
       ~IQMDevice.get_qubit_index
+      ~IQMDevice.has_valid_operation_targets
       ~IQMDevice.is_native_operation
       ~IQMDevice.operation_decomposer
       ~IQMDevice.route_circuit
       ~IQMDevice.validate_circuit
+      ~IQMDevice.validate_move
+      ~IQMDevice.validate_moves
       ~IQMDevice.validate_operation
    
    

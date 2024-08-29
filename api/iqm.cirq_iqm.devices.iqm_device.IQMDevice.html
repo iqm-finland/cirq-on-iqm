@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>iqm.cirq_iqm.devices.iqm_device.IQMDevice &#8212; Cirq on IQM 14.2 documentation</title>
+    <title>iqm.cirq_iqm.devices.iqm_device.IQMDevice &#8212; Cirq on IQM 14.3 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../_static/documentation_options.js?v=5692b828"></script>
+    <script src="../_static/documentation_options.js?v=ed6e3a35"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -49,7 +49,7 @@
     <link rel="prev" title="iqm.cirq_iqm.devices.iqm_device" href="iqm.cirq_iqm.devices.iqm_device.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="2024-08-26"/>
+    <meta name="docbuild:last-update" content="2024-08-29"/>
   </head>
   
   
@@ -139,8 +139,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.2 documentation - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.2 documentation - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.3 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.3 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -173,13 +173,17 @@
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.extended_qasm_parser.circuit_from_qasm.html">iqm.cirq_iqm.extended_qasm_parser.circuit_from_qasm</a></li>
 </ul>
 </details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="iqm.cirq_iqm.iqm_gates.html">iqm.cirq_iqm.iqm_gates</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_gates.IQMMoveGate.html">iqm.cirq_iqm.iqm_gates.IQMMoveGate</a></li>
+</ul>
+</details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="iqm.cirq_iqm.iqm_operation_mapping.html">iqm.cirq_iqm.iqm_operation_mapping</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_operation_mapping.instruction_to_operation.html">iqm.cirq_iqm.iqm_operation_mapping.instruction_to_operation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_operation_mapping.map_operation.html">iqm.cirq_iqm.iqm_operation_mapping.map_operation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_operation_mapping.OperationNotSupportedError.html">iqm.cirq_iqm.iqm_operation_mapping.OperationNotSupportedError</a></li>
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.html">iqm.cirq_iqm.iqm_sampler</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.serialize_circuit.html">iqm.cirq_iqm.iqm_sampler.serialize_circuit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.IQMResult.html">iqm.cirq_iqm.iqm_sampler.IQMResult</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.IQMSampler.html">iqm.cirq_iqm.iqm_sampler.IQMSampler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.ResultMetadata.html">iqm.cirq_iqm.iqm_sampler.ResultMetadata</a></li>
@@ -189,6 +193,15 @@
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.optimizers.simplify_circuit.html">iqm.cirq_iqm.optimizers.simplify_circuit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.optimizers.DropRZBeforeMeasurement.html">iqm.cirq_iqm.optimizers.DropRZBeforeMeasurement</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.optimizers.MergeOneParameterGroupGates.html">iqm.cirq_iqm.optimizers.MergeOneParameterGroupGates</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="iqm.cirq_iqm.serialize.html">iqm.cirq_iqm.serialize</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.serialize.deserialize_circuit.html">iqm.cirq_iqm.serialize.deserialize_circuit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.serialize.serialize_circuit.html">iqm.cirq_iqm.serialize.serialize_circuit</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="iqm.cirq_iqm.transpiler.html">iqm.cirq_iqm.transpiler</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit.html">iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit</a></li>
 </ul>
 </details></li>
 </ul>
@@ -354,12 +367,15 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.get_qubit"><code class="docutils literal notranslate"><span class="pre">IQMDevice.get_qubit()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.check_qubit_connectivity"><code class="docutils literal notranslate"><span class="pre">IQMDevice.check_qubit_connectivity()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.is_native_operation"><code class="docutils literal notranslate"><span class="pre">IQMDevice.is_native_operation()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.has_valid_operation_targets"><code class="docutils literal notranslate"><span class="pre">IQMDevice.has_valid_operation_targets()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.operation_decomposer"><code class="docutils literal notranslate"><span class="pre">IQMDevice.operation_decomposer()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.decompose_operation"><code class="docutils literal notranslate"><span class="pre">IQMDevice.decompose_operation()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.route_circuit"><code class="docutils literal notranslate"><span class="pre">IQMDevice.route_circuit()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.decompose_circuit"><code class="docutils literal notranslate"><span class="pre">IQMDevice.decompose_circuit()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_circuit"><code class="docutils literal notranslate"><span class="pre">IQMDevice.validate_circuit()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_operation"><code class="docutils literal notranslate"><span class="pre">IQMDevice.validate_operation()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_move"><code class="docutils literal notranslate"><span class="pre">IQMDevice.validate_move()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_moves"><code class="docutils literal notranslate"><span class="pre">IQMDevice.validate_moves()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -417,19 +433,28 @@ optimizing circuits and mapping qubits.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.get_qubit_index" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice.get_qubit_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_qubit_index</span></code></a>(qubit)</p></td>
 <td><p>The numeric index of the given qubit on the device.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.is_native_operation" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice.is_native_operation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_native_operation</span></code></a>(op)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.has_valid_operation_targets" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice.has_valid_operation_targets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_valid_operation_targets</span></code></a>(op)</p></td>
+<td><p>Predicate, True iff the given operation is native and its targets are valid.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.is_native_operation" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice.is_native_operation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_native_operation</span></code></a>(op)</p></td>
 <td><p>Predicate, True iff the given operation is considered native for the architecture.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.operation_decomposer" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice.operation_decomposer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">operation_decomposer</span></code></a>(op)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.operation_decomposer" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice.operation_decomposer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">operation_decomposer</span></code></a>(op)</p></td>
 <td><p>Decomposes operations into the native operation set.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice.route_circuit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">route_circuit</span></code></a>(circuit, *[, initial_mapper])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice.route_circuit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">route_circuit</span></code></a>(circuit, *[, initial_mapper, ...])</p></td>
 <td><p>Routes the given circuit to the device connectivity and qubit names.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_circuit" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_circuit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_circuit</span></code></a>(circuit)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_circuit" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_circuit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_circuit</span></code></a>(circuit)</p></td>
 <td><p>Raises an exception if a circuit is not valid.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_operation" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_operation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_operation</span></code></a>(operation)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_move" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_move"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_move</span></code></a>(operation)</p></td>
+<td><p>Validates whether the IQMMoveGate is between qubit and resonator registers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_moves" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_moves"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_moves</span></code></a>(circuit)</p></td>
+<td><p>Validates whether the IQMMoveGates are correctly applied in the circuit.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_operation" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_operation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_operation</span></code></a>(operation)</p></td>
 <td><p>Raises an exception if an operation is not valid.</p></td>
 </tr>
 </tbody>
@@ -498,6 +523,20 @@ optimizing circuits and mapping qubits.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.has_valid_operation_targets">
+<span class="sig-name descname"><span class="pre">has_valid_operation_targets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.has_valid_operation_targets" title="Link to this definition">#</a></dt>
+<dd><p>Predicate, True iff the given operation is native and its targets are valid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>op</strong> (<em>Operation</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.operation_decomposer">
 <span class="sig-name descname"><span class="pre">operation_decomposer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.operation_decomposer" title="Link to this definition">#</a></dt>
 <dd><p>Decomposes operations into the native operation set.</p>
@@ -531,7 +570,7 @@ optimizing circuits and mapping qubits.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.route_circuit">
-<span class="sig-name descname"><span class="pre">route_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_mapper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">route_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_mapper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qubit_subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="Link to this definition">#</a></dt>
 <dd><p>Routes the given circuit to the device connectivity and qubit names.</p>
 <p>The routed circuit uses the device qubits, and may have additional SWAP gates inserted to perform the qubit
 routing. The transformer <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.RouterCQC</span></code> is used for routing.
@@ -542,6 +581,7 @@ Note that only gates of one or two qubits, and measurement operations of arbitra
 <li><p><strong>circuit</strong> (<em>Circuit</em>) – circuit to route</p></li>
 <li><p><strong>initial_mapper</strong> (<em>AbstractInitialMapper</em><em> | </em><em>None</em>) – Initial mapping from <code class="docutils literal notranslate"><span class="pre">circuit</span></code> qubits to device qubits, to serve as
 the starting point of the routing. <code class="docutils literal notranslate"><span class="pre">None</span></code> means it will be generated automatically.</p></li>
+<li><p><strong>qubit_subset</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><em>Sequence</em></a><em>[</em><em>Qid</em><em>] </em><em>| </em><em>None</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -613,6 +653,47 @@ the starting point of the routing. <code class="docutils literal notranslate"><s
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_move">
+<span class="sig-name descname"><span class="pre">validate_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_move" title="Link to this definition">#</a></dt>
+<dd><p>Validates whether the IQMMoveGate is between qubit and resonator registers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>operation</strong> (<em>cirq.Operation</em>) – Operation to check</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – In case the the first argument of the IQMMoveGate is not a qubit,
+    or if the second argument is not a resonator on this device.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None when the IQMMoveGate is used correctly.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_moves">
+<span class="sig-name descname"><span class="pre">validate_moves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_moves" title="Link to this definition">#</a></dt>
+<dd><p>Validates whether the IQMMoveGates are correctly applied in the circuit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>circuit</strong> (<em>cirq.AbstractCircuit</em>) – The circuit to validate.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If the IQMMoveGate is applied incorrectly.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None if the IQMMoveGates are applied correctly.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -668,12 +749,15 @@ the starting point of the routing. <code class="docutils literal notranslate"><s
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.get_qubit"><code class="docutils literal notranslate"><span class="pre">IQMDevice.get_qubit()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.check_qubit_connectivity"><code class="docutils literal notranslate"><span class="pre">IQMDevice.check_qubit_connectivity()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.is_native_operation"><code class="docutils literal notranslate"><span class="pre">IQMDevice.is_native_operation()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.has_valid_operation_targets"><code class="docutils literal notranslate"><span class="pre">IQMDevice.has_valid_operation_targets()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.operation_decomposer"><code class="docutils literal notranslate"><span class="pre">IQMDevice.operation_decomposer()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.decompose_operation"><code class="docutils literal notranslate"><span class="pre">IQMDevice.decompose_operation()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.route_circuit"><code class="docutils literal notranslate"><span class="pre">IQMDevice.route_circuit()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.decompose_circuit"><code class="docutils literal notranslate"><span class="pre">IQMDevice.decompose_circuit()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_circuit"><code class="docutils literal notranslate"><span class="pre">IQMDevice.validate_circuit()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_operation"><code class="docutils literal notranslate"><span class="pre">IQMDevice.validate_operation()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_move"><code class="docutils literal notranslate"><span class="pre">IQMDevice.validate_move()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_moves"><code class="docutils literal notranslate"><span class="pre">IQMDevice.validate_moves()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -709,7 +793,7 @@ By Cirq on IQM developers
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on 2024-08-26.
+  Last updated on 2024-08-29.
   <br/>
 </p>
   </div>

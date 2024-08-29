@@ -14,6 +14,7 @@ iqm.cirq\_iqm.iqm\_operation\_mapping
    .. autosummary::
       :toctree:
    
+      instruction_to_operation
       map_operation
    
    

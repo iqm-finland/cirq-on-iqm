@@ -9,13 +9,6 @@ iqm.cirq\_iqm.iqm\_sampler
 
    
    
-   .. rubric:: Functions
-
-   .. autosummary::
-      :toctree:
-   
-      serialize_circuit
-   
    
 
    

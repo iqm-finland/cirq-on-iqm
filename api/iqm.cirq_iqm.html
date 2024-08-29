@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>iqm.cirq_iqm &#8212; Cirq on IQM 14.2 documentation</title>
+    <title>iqm.cirq_iqm &#8212; Cirq on IQM 14.3 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../_static/documentation_options.js?v=5692b828"></script>
+    <script src="../_static/documentation_options.js?v=ed6e3a35"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -49,7 +49,7 @@
     <link rel="prev" title="API Reference" href="../API.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="2024-08-26"/>
+    <meta name="docbuild:last-update" content="2024-08-29"/>
   </head>
   
   
@@ -139,8 +139,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.2 documentation - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.2 documentation - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.3 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.3 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -173,13 +173,17 @@
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.extended_qasm_parser.circuit_from_qasm.html">iqm.cirq_iqm.extended_qasm_parser.circuit_from_qasm</a></li>
 </ul>
 </details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="iqm.cirq_iqm.iqm_gates.html">iqm.cirq_iqm.iqm_gates</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_gates.IQMMoveGate.html">iqm.cirq_iqm.iqm_gates.IQMMoveGate</a></li>
+</ul>
+</details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="iqm.cirq_iqm.iqm_operation_mapping.html">iqm.cirq_iqm.iqm_operation_mapping</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_operation_mapping.instruction_to_operation.html">iqm.cirq_iqm.iqm_operation_mapping.instruction_to_operation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_operation_mapping.map_operation.html">iqm.cirq_iqm.iqm_operation_mapping.map_operation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_operation_mapping.OperationNotSupportedError.html">iqm.cirq_iqm.iqm_operation_mapping.OperationNotSupportedError</a></li>
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.html">iqm.cirq_iqm.iqm_sampler</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.serialize_circuit.html">iqm.cirq_iqm.iqm_sampler.serialize_circuit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.IQMResult.html">iqm.cirq_iqm.iqm_sampler.IQMResult</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.IQMSampler.html">iqm.cirq_iqm.iqm_sampler.IQMSampler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.ResultMetadata.html">iqm.cirq_iqm.iqm_sampler.ResultMetadata</a></li>
@@ -189,6 +193,15 @@
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.optimizers.simplify_circuit.html">iqm.cirq_iqm.optimizers.simplify_circuit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.optimizers.DropRZBeforeMeasurement.html">iqm.cirq_iqm.optimizers.DropRZBeforeMeasurement</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.optimizers.MergeOneParameterGroupGates.html">iqm.cirq_iqm.optimizers.MergeOneParameterGroupGates</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="iqm.cirq_iqm.serialize.html">iqm.cirq_iqm.serialize</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.serialize.deserialize_circuit.html">iqm.cirq_iqm.serialize.deserialize_circuit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.serialize.serialize_circuit.html">iqm.cirq_iqm.serialize.serialize_circuit</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="iqm.cirq_iqm.transpiler.html">iqm.cirq_iqm.transpiler</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit.html">iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit</a></li>
 </ul>
 </details></li>
 </ul>
@@ -362,14 +375,23 @@ document.write(`
 <tr class="row-even"><td><p><a class="reference internal" href="iqm.cirq_iqm.extended_qasm_parser.html#module-iqm.cirq_iqm.extended_qasm_parser" title="iqm.cirq_iqm.extended_qasm_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extended_qasm_parser</span></code></a></p></td>
 <td><p>Imports OpenQASM 2.0 programs in a way that preserves gates native to the IQM architectures.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="iqm.cirq_iqm.iqm_operation_mapping.html#module-iqm.cirq_iqm.iqm_operation_mapping" title="iqm.cirq_iqm.iqm_operation_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iqm_operation_mapping</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="iqm.cirq_iqm.iqm_gates.html#module-iqm.cirq_iqm.iqm_gates" title="iqm.cirq_iqm.iqm_gates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iqm_gates</span></code></a></p></td>
+<td><p>Implementations for IQM specific quantum gates</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="iqm.cirq_iqm.iqm_operation_mapping.html#module-iqm.cirq_iqm.iqm_operation_mapping" title="iqm.cirq_iqm.iqm_operation_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iqm_operation_mapping</span></code></a></p></td>
 <td><p>Logic for mapping Cirq Operations to the IQM transfer format.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.html#module-iqm.cirq_iqm.iqm_sampler" title="iqm.cirq_iqm.iqm_sampler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iqm_sampler</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.html#module-iqm.cirq_iqm.iqm_sampler" title="iqm.cirq_iqm.iqm_sampler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iqm_sampler</span></code></a></p></td>
 <td><p>Circuit sampler that executes quantum circuits on an IQM quantum computer.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="iqm.cirq_iqm.optimizers.html#module-iqm.cirq_iqm.optimizers" title="iqm.cirq_iqm.optimizers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">optimizers</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="iqm.cirq_iqm.optimizers.html#module-iqm.cirq_iqm.optimizers" title="iqm.cirq_iqm.optimizers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">optimizers</span></code></a></p></td>
 <td><p>Circuit optimization classes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="iqm.cirq_iqm.serialize.html#module-iqm.cirq_iqm.serialize" title="iqm.cirq_iqm.serialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize</span></code></a></p></td>
+<td><p>Helper functions for serializing and deserializing quantum circuits between Cirq and IQM Circuit formats.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="iqm.cirq_iqm.transpiler.html#module-iqm.cirq_iqm.transpiler" title="iqm.cirq_iqm.transpiler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transpiler</span></code></a></p></td>
+<td><p>Helper functions for IQM specific transpilation needs.</p></td>
 </tr>
 </tbody>
 </table>
@@ -440,7 +462,7 @@ By Cirq on IQM developers
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on 2024-08-26.
+  Last updated on 2024-08-29.
   <br/>
 </p>
   </div>

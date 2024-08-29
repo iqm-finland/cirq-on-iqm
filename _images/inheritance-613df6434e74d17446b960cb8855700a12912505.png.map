@@ -1,0 +1,5 @@
+<map id="inheritanceffa9886818" name="inheritanceffa9886818">
+<area shape="rect" id="node1" title="A gate with a known eigendecomposition." alt="" coords="125,5,215,31"/>
+<area shape="rect" id="node3" href="iqm.cirq_iqm.iqm_gates.IQMMoveGate.html#iqm.cirq_iqm.iqm_gates.IQMMoveGate" target="_top" title="The MOVE operation is a unitary population exchange operation between a qubit and a resonator." alt="" coords="263,5,377,31"/>
+<area shape="rect" id="node2" title="An operation type that can be applied to a collection of qubits." alt="" coords="5,5,77,31"/>
+</map>
