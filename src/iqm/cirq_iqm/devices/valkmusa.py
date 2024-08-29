@@ -17,10 +17,9 @@ IQM's Valkmusa quantum architecture.
 from math import pi as PI
 from typing import Optional
 
-import cirq
 from cirq import ops
 
-from .iqm_device import IQMDevice, IQMDeviceMetadata
+from iqm.cirq_iqm.devices import IQMDevice, IQMDeviceMetadata
 
 PI_2 = PI / 2
 
@@ -48,7 +47,7 @@ class Valkmusa(IQMDevice):
     def __init__(self):
         qubit_count = 2
         connectivity = ({1, 2},)
-        gateset = cirq.Gateset(
+        gateset = (
             ops.PhasedXPowGate,
             # XPow and YPow kept for convenience, Cirq does not know how to decompose them into PhasedX
             # so we would have to add those rules...

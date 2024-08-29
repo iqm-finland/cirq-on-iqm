@@ -13,9 +13,11 @@
 # limitations under the License.
 import cirq
 from cirq import CZPowGate, GateOperation, MeasurementGate, PhasedXPowGate, XPowGate, YPowGate, ZPowGate
+from mockito import mock
 import pytest
 
-from iqm.cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, map_operation
+from iqm.cirq_iqm.iqm_gates import IQMMoveGate
+from iqm.cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, instruction_to_operation, map_operation
 from iqm.iqm_client import Instruction
 
 
@@ -81,3 +83,34 @@ def test_raises_error_for_non_trivial_invert_mask(qubit_1, qubit_2):
     operation = GateOperation(MeasurementGate(2, 'measurement key', invert_mask=(True, False)), [qubit_1, qubit_2])
     with pytest.raises(OperationNotSupportedError):
         map_operation(operation)
+
+
+def test_instruction_to_operation():
+    instruction = Instruction(name='prx', qubits=('QB1',), args={'angle_t': 0.5, 'phase_t': 0.25})
+    operation = instruction_to_operation(instruction)
+    assert isinstance(operation.gate, PhasedXPowGate)
+    assert operation.qubits == (cirq.NamedQubit('QB1'),)
+    assert operation.gate.exponent == 1.0
+    assert operation.gate.phase_exponent == 0.5
+
+    instruction = Instruction(name='cz', qubits=('QB1', 'QB2'), args={})
+    operation = instruction_to_operation(instruction)
+    assert isinstance(operation.gate, CZPowGate)
+    assert operation.qubits == (cirq.NamedQubit('QB1'), cirq.NamedQubit('QB2'))
+    assert operation.gate.exponent == 1.0
+    assert operation.gate.global_shift == 0.0
+
+    instruction = Instruction(name='measurement', qubits=('QB1',), args={'key': 'test key'})
+    operation = instruction_to_operation(instruction)
+    assert isinstance(operation.gate, MeasurementGate)
+    assert operation.qubits == (cirq.NamedQubit('QB1'),)
+    assert operation.gate.key == 'test key'
+
+    instruction = mock({'name': 'unsupported', 'qubits': ('QB1',), 'args': {}}, spec=Instruction)
+    with pytest.raises(OperationNotSupportedError):
+        operation = instruction_to_operation(instruction)
+
+    instruction = Instruction(name='move', qubits=('QB1', 'COMP_R'), args={})
+    operation = instruction_to_operation(instruction)
+    assert isinstance(operation.gate, IQMMoveGate)
+    assert operation.qubits == (cirq.NamedQubit('QB1'), cirq.NamedQid('COMP_R', dimension=2))

@@ -21,12 +21,17 @@ to use with the architecture.
 from __future__ import annotations
 
 import collections.abc as ca
+from itertools import zip_longest
 from math import pi as PI
-from typing import Optional, cast
+from typing import Optional, Sequence, cast
 import uuid
 
 import cirq
 from cirq import InsertStrategy, MeasurementGate, devices, ops, protocols
+from cirq.contrib.routing.router import nx
+
+from iqm.cirq_iqm.iqm_gates import IQMMoveGate
+from iqm.cirq_iqm.transpiler import transpile_insert_moves_into_circuit
 
 from .iqm_device_metadata import IQMDeviceMetadata
 
@@ -60,6 +65,8 @@ class IQMDevice(devices.Device):
     def __init__(self, metadata: IQMDeviceMetadata):
         self._metadata = metadata
         self.qubits = tuple(sorted(self._metadata.qubit_set))
+        self.resonators = tuple(sorted(self._metadata.resonator_set))
+        self.supported_operations = self._metadata.operations
 
     @property
     def metadata(self) -> IQMDeviceMetadata:
@@ -77,17 +84,37 @@ class IQMDevice(devices.Device):
 
     def check_qubit_connectivity(self, operation: cirq.Operation) -> None:
         """Raises a ValueError if operation acts on qubits that are not connected."""
-        if len(operation.qubits) >= 2 and not isinstance(operation.gate, ops.MeasurementGate):
-            if operation.qubits not in self._metadata.nx_graph.edges:
-                raise ValueError(f'Unsupported qubit connectivity required for {operation!r}')
+        if len(operation.qubits) >= 2 and not self.has_valid_operation_targets(operation):
+            raise ValueError(f'Unsupported qubit connectivity required for {operation!r}')
 
     def is_native_operation(self, op: cirq.Operation) -> bool:
         """Predicate, True iff the given operation is considered native for the architecture."""
-        return (
+        check = (
             isinstance(op, (ops.GateOperation, ops.TaggedOperation))
             and (op.gate is not None)
             and (op.gate in self._metadata.gateset)
         )
+        if check and isinstance(op.gate, ops.CZPowGate):
+            return op.gate.exponent == 1
+        return check
+
+    def has_valid_operation_targets(self, op: cirq.Operation) -> bool:
+        """Predicate, True iff the given operation is native and its targets are valid."""
+        matched_support = [
+            (g, qbs)
+            for g, qbs in self.supported_operations.items()
+            if op.gate is not None and op.gate in cirq.GateFamily(g)
+        ]
+        if len(matched_support) > 0:
+            gf, valid_targets = matched_support[0]
+            valid_qubits = set(q for qb in valid_targets for q in qb)
+            if gf == cirq.MeasurementGate:  # Measurements can be done on any available qubits
+                return all(q in valid_qubits for q in op.qubits)
+            if issubclass(gf, cirq.InterchangeableQubitsGate):
+                target_qubits = set(op.qubits)
+                return any(set(t) == target_qubits for t in valid_targets)
+            return any(all(q1 == q2 for q1, q2 in zip_longest(op.qubits, t)) for t in valid_targets)
+        return False
 
     def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
         """Decomposes operations into the native operation set.
@@ -177,6 +204,7 @@ class IQMDevice(devices.Device):
         circuit: cirq.Circuit,
         *,
         initial_mapper: Optional[cirq.AbstractInitialMapper] = None,
+        qubit_subset: Optional[Sequence[cirq.Qid]] = None,
     ) -> tuple[cirq.Circuit, dict[cirq.Qid, cirq.Qid], dict[cirq.Qid, cirq.Qid]]:
         """Routes the given circuit to the device connectivity and qubit names.
 
@@ -214,8 +242,26 @@ class IQMDevice(devices.Device):
         for q in measurement_qubits:
             modified_circuit.append(cirq.I(q).with_tags(i_tag))
 
+        if self.metadata.resonator_set:
+            move_routing = True
+            graph = nx.Graph()
+            for edge in self.metadata.nx_graph.edges:
+                q, r = edge if edge[1] in self.resonators else edge[::-1]
+                if r not in self.resonators:
+                    graph.add_edge(*edge)
+                else:
+                    for n in self.metadata.nx_graph.neighbors(r):
+                        if n != q and not graph.has_edge(q, n) and not graph.has_edge(n, q):
+                            graph.add_edge(q, n)
+        else:
+            graph = self._metadata.nx_graph
+            move_routing = False
+
+        if qubit_subset is not None:
+            graph = graph.subgraph(qubit_subset)
+
         # Route the modified circuit.
-        router = cirq.RouteCQC(self._metadata.nx_graph)
+        router = cirq.RouteCQC(graph)
         routed_circuit, initial_mapping, final_mapping = router.route_circuit(
             modified_circuit, initial_mapper=initial_mapper
         )
@@ -233,6 +279,11 @@ class IQMDevice(devices.Device):
         # Remove additional identity gates.
         identity_gates = routed_circuit.findall_operations(lambda op: i_tag in op.tags)
         routed_circuit.batch_remove(identity_gates)
+        if move_routing:
+            # Decompose the SWAP  gates to the native gate set.
+            routed_circuit = self.decompose_circuit(routed_circuit)
+            # Insert IQMMoveGates into the circuit.
+            routed_circuit = transpile_insert_moves_into_circuit(routed_circuit, self)
 
         return routed_circuit, initial_mapping, final_mapping
 
@@ -256,6 +307,7 @@ class IQMDevice(devices.Device):
         super().validate_circuit(circuit)
         _verify_unique_measurement_keys(circuit.all_operations())
         _validate_for_routing(circuit)
+        self.validate_moves(circuit)
 
     def validate_operation(self, operation: cirq.Operation) -> None:
         if not isinstance(operation.untagged, cirq.GateOperation):
@@ -265,10 +317,62 @@ class IQMDevice(devices.Device):
             raise ValueError(f'Unsupported gate type: {operation.gate!r}')
 
         for qubit in operation.qubits:
-            if qubit not in self.qubits:
+            if qubit not in self.qubits and qubit not in self.resonators:
                 raise ValueError(f'Qubit not on device: {qubit!r}')
 
-        self.check_qubit_connectivity(operation)
+        if not self.has_valid_operation_targets(operation):
+            raise ValueError(f'Unsupported operation between qubits: {operation!r}')
+
+    def validate_move(self, operation: cirq.Operation) -> None:
+        """Validates whether the IQMMoveGate is between qubit and resonator registers.
+
+        Args:
+            operation (cirq.Operation): Operation to check
+
+        Raises:
+            ValueError: In case the the first argument of the IQMMoveGate is not a qubit,
+                        or if the second argument is not a resonator on this device.
+
+        Returns:
+            None when the IQMMoveGate is used correctly.
+        """
+        if isinstance(operation.gate, IQMMoveGate):
+            if operation.qubits[0] not in self.qubits:
+                raise ValueError(
+                    f'IQMMoveGate is only supported with a qubit register as the first argument, \
+                    but got {operation.qubits[0]!r}'
+                )
+            if operation.qubits[1] not in self.resonators:
+                raise ValueError(
+                    f'IQMMoveGate is only supported with a resonator register as the second argument, \
+                    but got {operation.qubits[1]!r}'
+                )
+
+    def validate_moves(self, circuit: cirq.AbstractCircuit) -> None:
+        """Validates whether the IQMMoveGates are correctly applied in the circuit.
+
+        Args:
+            circuit (cirq.AbstractCircuit): The circuit to validate.
+
+        Raises:
+            ValueError: If the IQMMoveGate is applied incorrectly.
+        Returns:
+            None if the IQMMoveGates are applied correctly.
+        """
+        moves: dict[cirq.Qid, list[cirq.Qid]] = {r: [] for r in self.resonators}
+        for moment in circuit:
+            for operation in moment.operations:
+                if isinstance(operation.gate, IQMMoveGate):
+                    self.validate_move(operation)
+                    moves[operation.qubits[1]].append(operation.qubits[0])
+        for res, qubits in moves.items():
+            while len(qubits) > 1:
+                q1, q2, *rest = qubits
+                if q1 != q2:
+                    raise ValueError(f'IQMMoveGate({q2!r}, {res!r}) is applied between two logical qubit states.')
+                qubits = rest
+            if len(qubits) != 0:
+                raise ValueError(f'Circuit ends with a qubit state in the resonator {res!r}.')
 
     def __eq__(self, other):
         return self.__class__ == other.__class__ and self._metadata == other._metadata
