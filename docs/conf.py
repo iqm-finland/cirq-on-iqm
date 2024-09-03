@@ -162,6 +162,7 @@ intersphinx_mapping = {
     'matplotlib': ('https://matplotlib.org/stable', None),
     'numpy': ('https://numpy.org/doc/stable', None),
     'scipy': ('https://docs.scipy.org/doc/scipy', None),
+    'iqm_client': ('https://iqm-finland.github.io/iqm-client', None),
 }
 
 extlinks = {
