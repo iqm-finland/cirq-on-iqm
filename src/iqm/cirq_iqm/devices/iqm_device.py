@@ -47,11 +47,6 @@ def _verify_unique_measurement_keys(operations: ca.Iterable[cirq.Operation]) -> 
             seen_keys.add(key)
 
 
-def _validate_for_routing(circuit: cirq.AbstractCircuit) -> None:
-    if not circuit.are_all_measurements_terminal():
-        raise ValueError('Non-terminal measurements are not supported')
-
-
 class IQMDevice(devices.Device):
     """ABC for the properties of a specific IQM quantum architecture.
 
@@ -228,8 +223,6 @@ class IQMDevice(devices.Device):
         Raises:
             ValueError: routing is impossible
         """
-        _validate_for_routing(circuit)
-
         # Remove all measurement gates and replace them with 1-qubit identity gates so they don't
         # disappear from the final swap network if no other operations remain. We will add them back after routing the
         # rest of the network. This is done to prevent measurements becoming non-terminal during routing.
@@ -306,7 +299,6 @@ class IQMDevice(devices.Device):
     def validate_circuit(self, circuit: cirq.AbstractCircuit) -> None:
         super().validate_circuit(circuit)
         _verify_unique_measurement_keys(circuit.all_operations())
-        _validate_for_routing(circuit)
         self.validate_moves(circuit)
 
     def validate_operation(self, operation: cirq.Operation) -> None:

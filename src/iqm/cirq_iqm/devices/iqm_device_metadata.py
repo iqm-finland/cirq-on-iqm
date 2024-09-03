@@ -30,9 +30,11 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
     """Hardware metadata for IQM devices.
 
     Args:
-        qubits: qubits that exist on the device
+        qubits: qubits on the device
         connectivity: qubit connectivity graph of the device
+        operations: Supported quantum operations of the device, mapping op types to their possible loci.
         gateset: Native gateset of the device. If None, a default IQM device gateset will be used.
+        resonators: computational resonators of the device
     """
 
     QUBIT_NAME_PREFIX: str = 'QB'
