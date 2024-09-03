@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 14.4
+============
+
+* Broken example code fixed. `#134 <https://github.com/iqm-finland/cirq-on-iqm/pull/134>`_
+
 Version 14.3
 ============
 
