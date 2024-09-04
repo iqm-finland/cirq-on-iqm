@@ -63,7 +63,6 @@ class IQMSampler(cirq.work.Sampler):
         calibration_set_id: Optional[UUID] = None,
         run_sweep_timeout: Optional[int] = None,
         compiler_options: Optional[CircuitCompilationOptions] = None,
-        compiler_options: Optional[CircuitCompilationOptions] = None,
         **user_auth_args,  # contains keyword args auth_server_url, username and password
     ):
         self._client = IQMClient(url, client_signature=f'cirq-iqm {version("cirq-iqm")}', **user_auth_args)
@@ -74,7 +73,6 @@ class IQMSampler(cirq.work.Sampler):
             self._device = device
         self._calibration_set_id = calibration_set_id
         self._run_sweep_timeout = run_sweep_timeout
-        self._compiler_options = compiler_options if compiler_options is not None else CircuitCompilationOptions()
         self._compiler_options = compiler_options if compiler_options is not None else CircuitCompilationOptions()
 
     @property
