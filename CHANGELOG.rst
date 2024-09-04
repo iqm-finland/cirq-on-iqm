@@ -5,7 +5,7 @@ Changelog
 Version 14.4
 ============
 
-* Bugfix: Fixed issue where `cirq_iqm` would ignore the MOVE gate validation options in CircuitCompilationOptions.
+* Bugfix COMP-1491: Fixed issue where `cirq_iqm` would ignore the MOVE gate validation options in CircuitCompilationOptions. `#136 <https://github.com/iqm-finland/cirq-on-iqm/pull/136>`_
 * Removed `cirq_iqm` circuit validation when submitting to an IQM device because `iqm-client` already validates the circuit. 
 * Added `isort` formatting to `tox -e format`.
 
