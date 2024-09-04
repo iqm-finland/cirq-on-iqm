@@ -29,7 +29,7 @@ import numpy as np
 
 from iqm.cirq_iqm.devices.iqm_device import IQMDevice, IQMDeviceMetadata
 from iqm.cirq_iqm.serialize import serialize_circuit
-from iqm.iqm_client import Circuit, CircuitCompilationOptions, IQMClient, JobAbortionError, RunRequest
+from iqm.iqm_client import CircuitCompilationOptions, IQMClient, JobAbortionError, RunRequest
 
 
 class IQMSampler(cirq.work.Sampler):
@@ -143,7 +143,10 @@ class IQMSampler(cirq.work.Sampler):
         if isinstance(programs, cirq.Circuit):
             programs, _ = self._resolve_parameters(programs, params)
 
-        serialized_circuits = self._validate_and_serialize_circuits(programs)
+        serialized_circuits = [serialize_circuit(circuit) for circuit in programs]
+
+        if not self._client:
+            raise RuntimeError('Cannot submit circuits since session to IQM client has been closed.')
 
         return self._client.create_run_request(
             serialized_circuits,
@@ -198,13 +201,6 @@ class IQMSampler(cirq.work.Sampler):
         resolvers = list(cirq.to_resolvers(params))
         circuits = [cirq.protocols.resolve_parameters(program, res) for res in resolvers] if resolvers else [program]
         return circuits, resolvers
-
-    def _validate_and_serialize_circuits(self, circuits: list[cirq.Circuit]) -> list[Circuit]:
-        if not self._client:
-            raise RuntimeError('Cannot submit circuits since session to IQM client has been closed.')
-        for circuit in circuits:
-            self._device.validate_circuit(circuit)
-        return [serialize_circuit(circuit) for circuit in circuits]
 
 
 @dataclass

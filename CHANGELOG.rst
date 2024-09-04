@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 14.4
+============
+
+* Removed `cirq_iqm` circuit validation when submitting to an IQM device because `iqm-client` already validates the circuit. 
+* Added `isort` formatting to `tox -e format`.
+
 Version 14.3
 ============
 

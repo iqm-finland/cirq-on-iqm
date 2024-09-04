@@ -16,7 +16,7 @@ import sys
 import uuid
 
 import cirq
-from mockito import ANY, expect, mock, verify, verifyNoUnwantedInteractions, when
+from mockito import ANY, expect, mock, unstub, verify, verifyNoUnwantedInteractions, when
 import numpy as np
 import pytest
 import sympy  # type: ignore
@@ -28,6 +28,7 @@ from iqm.cirq_iqm.iqm_sampler import IQMResult, IQMSampler, ResultMetadata, seri
 from iqm.iqm_client import (
     Circuit,
     CircuitCompilationOptions,
+    CircuitExecutionError,
     HeraldingMode,
     Instruction,
     IQMClient,
@@ -99,7 +100,10 @@ def run_request():
 
 @pytest.mark.usefixtures('unstub')
 def test_run_sweep_raises_with_non_physical_names(adonis_sampler, circuit_non_physical):
-    with pytest.raises(ValueError, match='Qubit not on device'):
+    when(adonis_sampler._client).get_quantum_architecture().thenReturn(
+        adonis_sampler._device.metadata.to_architecture()
+    )
+    with pytest.raises(CircuitExecutionError, match='Qubit Alice is not allowed as locus for measure'):
         adonis_sampler.run_sweep(circuit_non_physical, None)
 
 
@@ -329,8 +333,14 @@ def test_run_sweep_abort_job_failed(
 
 @pytest.mark.usefixtures('unstub')
 def test_run_iqm_batch_raises_with_non_physical_names(adonis_sampler, circuit_non_physical):
-    with pytest.raises(ValueError, match='Qubit not on device'):
+    when(adonis_sampler._client).get_quantum_architecture().thenReturn(
+        adonis_sampler._device.metadata.to_architecture()
+    )
+    with pytest.raises(CircuitExecutionError, match='Qubit Alice is not allowed as locus for measure'):
         adonis_sampler.run_iqm_batch([circuit_non_physical])
+
+    verifyNoUnwantedInteractions()
+    unstub()
 
 
 @pytest.mark.usefixtures('unstub')
