@@ -24,7 +24,6 @@ import sympy  # type: ignore
 from iqm.cirq_iqm import Adonis
 import iqm.cirq_iqm as module_under_test
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
-from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.cirq_iqm.iqm_sampler import IQMResult, IQMSampler, ResultMetadata, serialize_circuit
 from iqm.iqm_client import (
     Circuit,

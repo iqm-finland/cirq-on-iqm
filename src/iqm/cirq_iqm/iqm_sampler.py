@@ -154,7 +154,6 @@ class IQMSampler(cirq.work.Sampler):
             calibration_set_id=self._calibration_set_id,
             shots=repetitions,
             options=self._compiler_options,
-            options=self._compiler_options,
         )
 
     def _send_circuits(
