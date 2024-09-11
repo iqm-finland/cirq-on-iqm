@@ -129,7 +129,7 @@ and convert it into a :class:`cirq.Circuit` object using :func:`.circuit_from_qa
 
 :func:`.circuit_from_qasm` uses the OpenQASM 2.0 parser in :mod:`cirq.contrib.qasm_import`.
 
-After a circuit has been constructed, it can be decomposed and routed against a particular ``IQMDevice``.
+After a circuit has been constructed, it can be decomposed and routed against a particular :class:`.IQMDevice`.
 
 
 Decomposition
@@ -218,7 +218,7 @@ For these devices a final MOVE gate insertion step must be performed, which intr
 the computational resonators to the circuit, and routes the two-qubit gates through them using MOVEs.
 
 Under the hood, this uses the :func:`~iqm.iqm_client.transpile.transpile_insert_moves` function of the
-:mod:`iqm_client` library. This method is exposed through :func:`.transpile_insert_moves_into_circuit` which
+:mod:`~iqm.iqm_client` library. This method is exposed through :func:`.transpile_insert_moves_into_circuit` which
 can also be used by advanced users to transpile circuits that have already some MOVE gates in them,
 or to remove existing MOVE gates from a circuit so the circuit can be reused on a device that does
 not support them.
@@ -295,8 +295,8 @@ The below table summarises the currently available options:
    * - :attr:`calibration_set_id`
      - :class:`uuid.UUID`
      - "f7d9642e-b0ca-4f2d-af2a-30195bd7a76d"
-     - Indicates the calibration set to use. Defaults to ``None``, which means the IQM server will use the best
-       available calibration set automatically.
+     - Indicates the calibration set to use. Defaults to ``None``, which means the IQM server will use the
+       current default calibration set automatically.
    * - :attr:`compiler_options`
      - :class:`~iqm.iqm_client.models.CircuitCompilationOptions`
      - see below
@@ -340,16 +340,30 @@ The sampler will by default use an :class:`.IQMDevice` created based on architec
 from the server, which is then available in the :attr:`.IQMSampler.device` property. Alternatively,
 the device can be specified directly with the :attr:`device` argument.
 
-If the IQM server you are connecting to requires authentication, you will also have to use
-`Cortex CLI <https://github.com/iqm-finland/cortex-cli>`_ to retrieve and automatically refresh access tokens,
-then set the :envvar:`IQM_TOKENS_FILE` environment variable to use those tokens.
-See Cortex CLI's `documentation <https://iqm-finland.github.io/cortex-cli/readme.html>`_ for details.
-Alternatively, you can authenticate yourself using the :envvar:`IQM_AUTH_SERVER`, :envvar:`IQM_AUTH_USERNAME`
-and :envvar:`IQM_AUTH_PASSWORD` environment variables, or pass them as arguments to the constructor of
-:class:`.IQMProvider`, but this approach is less secure and considered deprecated.
-
 When executing a circuit that uses something other than the device qubits, you need to route it first,
 as explained in the :ref:`routing` section above.
+
+
+Authentication
+^^^^^^^^^^^^^^
+
+If the IQM server you are connecting to requires authentication, you may use
+`Cortex CLI <https://github.com/iqm-finland/cortex-cli>`_ to retrieve and automatically refresh access tokens,
+then set the :envvar:`IQM_TOKENS_FILE` environment variable, as instructed, to point to the tokens file.
+See Cortex CLI's `documentation <https://iqm-finland.github.io/cortex-cli/readme.html>`__ for details.
+
+Alternatively, you may authenticate yourself using the :envvar:`IQM_AUTH_SERVER`,
+:envvar:`IQM_AUTH_USERNAME` and :envvar:`IQM_AUTH_PASSWORD` environment variables, or pass them as
+arguments to :class:`.IQMSampler`, but this approach is less secure and
+considered deprecated.
+
+Finally, if you are using ``IQM Resonance``, authentication is handled differently.
+Use the :envvar:`IQM_TOKEN` environment variable to provide the API Token obtained
+from the server dashboard.
+
+
+Batch execution
+^^^^^^^^^^^^^^^
 
 Multiple circuits can be submitted to the IQM quantum computer at once using the
 :meth:`~.IQMSampler.run_iqm_batch` method of :class:`.IQMSampler`.  This is often faster than
@@ -369,7 +383,7 @@ executing the circuits individually. Circuits submitted in a batch are still exe
 
 
 Inspecting the final circuits before submitting them for execution
-------------------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It is possible to inspect the final circuits that would be submitted for execution before actually submitting them,
 which can be useful for debugging purposes. This can be done using :meth:`.IQMSampler.create_run_request`, which returns
