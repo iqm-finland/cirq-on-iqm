@@ -30,8 +30,8 @@ def demo_adonis(use_qsim: bool = False) -> None:
     qasm_program = """
         OPENQASM 2.0;
         include "qelib1.inc";
-        qreg q[3];
 
+        qreg q[3];
         creg a[2];
         creg b[1];
 

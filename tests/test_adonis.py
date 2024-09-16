@@ -19,7 +19,6 @@
 from __future__ import annotations
 
 import cirq
-from cirq import IdentityGate
 import numpy as np
 import pytest
 
@@ -298,6 +297,13 @@ class TestCircuitDecomposition:
         assert len(new) == 31
 
 
+def check_measurement(op, key: str) -> None:
+    """Check that the given operation is a measurement with the expected key."""
+    assert isinstance(op.gate, cirq.MeasurementGate)
+    assert op.gate.key == key
+    assert len(op.qubits) == 1
+
+
 class TestCircuitRouting:
     @pytest.fixture(scope='class')
     def qubits(self):
@@ -417,14 +423,14 @@ class TestCircuitRouting:
         assert circuit.are_all_measurements_terminal()
         assert circuit.all_measurement_key_names() == {'mk0', 'mk1', 'mk2'}
 
-        # Check that measurements in the routed circuit are mapped to correct qubits
+        # Check that final measurements in the routed circuit are mapped to correct qubits
         measurements = [op for _, op, _ in circuit.findall_operations_with_gate_type(cirq.MeasurementGate)]
         mk_to_physical = {op.gate.key: cirq.NamedQubit(op.qubits[0].name) for op in measurements}
         routed_physical_to_logical_mapping = {final_mapping[v]: k for k, v in initial_mapping.items()}
         assert all(len(op.qubits) == 1 for op in measurements)
-        assert routed_physical_to_logical_mapping[mk_to_physical['mk0']].name == 'Alice'
-        assert routed_physical_to_logical_mapping[mk_to_physical['mk1']].name == 'Bob'
-        assert routed_physical_to_logical_mapping[mk_to_physical['mk2']].name == 'Charlie'
+        assert routed_physical_to_logical_mapping[mk_to_physical['mk0']] == qubits[0]
+        assert routed_physical_to_logical_mapping[mk_to_physical['mk1']] == qubits[1]
+        assert routed_physical_to_logical_mapping[mk_to_physical['mk2']] == qubits[2]
 
     def test_routing_with_multi_qubit_measurements(self, adonis, qubits):
         circuit = cirq.Circuit(
@@ -439,11 +445,41 @@ class TestCircuitRouting:
         assert new.all_qubits() == set(adonis.qubits)
         # Test that all measurements exist.
         assert new.all_measurement_key_names() == {'m1', 'm2'}
-        # Test that temporary identity gates have been removed
-        assert not list(new.findall_operations_with_gate_type(IdentityGate))
 
-    def test_routing_with_nonterminal_measurements_raises_error(self, adonis):
-        q = cirq.NamedQubit('q1')
-        circuit = cirq.Circuit(cirq.measure(q, key='m'), cirq.Y(q))
-        with pytest.raises(ValueError, match='Non-terminal measurements are not supported'):
-            adonis.route_circuit(circuit)
+    def test_routing_with_mid_circuit_measurements(self, adonis, qubits):
+        circuit = cirq.Circuit(
+            cirq.X(qubits[0]),
+            cirq.measure(qubits[0], key='mid'),
+            cirq.Y(qubits[0]),
+            cirq.measure(qubits[0], key='final'),
+        )
+
+        new, _, _ = adonis.route_circuit(circuit)
+
+        # just one qubit used
+        assert len(new.all_qubits()) == 1
+        # Test that all measurements exist.
+        assert new.all_measurement_key_names() == {'mid', 'final'}
+
+        check_measurement(new[1].operations[0], key='mid')
+        check_measurement(new[3].operations[0], key='final')
+
+    def test_routing_with_mid_circuit_measurements_triangle(self, adonis, qubits):
+        circuit = cirq.Circuit(
+            # triangle of CZs, which on star graph requires SWAPs
+            cirq.CZ(*qubits[0:2]),
+            cirq.measure(qubits[0], key='m0'),
+            cirq.measure(qubits[1], key='m1'),
+            cirq.CZ(*qubits[1:3]),
+            cirq.measure(qubits[2], key='m2'),
+            cirq.CZ(qubits[0], qubits[2]),
+        )
+        new, _, _ = adonis.route_circuit(circuit)
+
+        # three qubits used
+        assert len(new.all_qubits()) == 3
+        assert new.all_qubits() <= set(adonis.qubits)
+        # Test that all measurements exist.
+        assert new.all_measurement_key_names() == {'m0', 'm1', 'm2'}
+        # minimum depth
+        assert len(new) >= 5

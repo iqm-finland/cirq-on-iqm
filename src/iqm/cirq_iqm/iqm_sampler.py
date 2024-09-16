@@ -38,12 +38,12 @@ class IQMSampler(cirq.work.Sampler):
     Args:
         url: Endpoint for accessing the server interface. Has to start with http or https.
         device: Device to execute the circuits on. If ``None``, the device will be created based
-            on the quantum architecture obtained from :class:`.IQMClient`.
+            on the quantum architecture obtained from :class:`~iqm.iqm_client.iqm_client.IQMClient`.
         calibration_set_id:
             ID of the calibration set to use. If ``None``, use the latest one.
         run_sweep_timeout:
-            timeout to poll sweep results in seconds.
-        compiler_options: The compilation options to use for the circuits as defined by IQM Client.
+            Timeout for polling sweep results, in seconds. If ``None``, use the client default value.
+        compiler_options: The compilation options to use for the circuits, as defined by IQM Client.
 
     Keyword Args:
         auth_server_url (str): URL of user authentication server, if required by the IQM Cortex server.

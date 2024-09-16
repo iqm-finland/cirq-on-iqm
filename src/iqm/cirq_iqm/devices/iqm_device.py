@@ -24,10 +24,9 @@ import collections.abc as ca
 from itertools import zip_longest
 from math import pi as PI
 from typing import Optional, Sequence, cast
-import uuid
 
 import cirq
-from cirq import InsertStrategy, MeasurementGate, devices, ops, protocols
+from cirq import devices, ops, protocols
 from cirq.contrib.routing.router import nx
 
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
@@ -45,11 +44,6 @@ def _verify_unique_measurement_keys(operations: ca.Iterable[cirq.Operation]) -> 
             if key in seen_keys:
                 raise ValueError(f'Measurement key {key} repeated')
             seen_keys.add(key)
-
-
-def _validate_for_routing(circuit: cirq.AbstractCircuit) -> None:
-    if not circuit.are_all_measurements_terminal():
-        raise ValueError('Non-terminal measurements are not supported')
 
 
 class IQMDevice(devices.Device):
@@ -213,36 +207,24 @@ class IQMDevice(devices.Device):
         Note that only gates of one or two qubits, and measurement operations of arbitrary size are supported.
 
         Args:
-            circuit: circuit to route
+            circuit: Circuit to route.
             initial_mapper: Initial mapping from ``circuit`` qubits to device qubits, to serve as
                 the starting point of the routing. ``None`` means it will be generated automatically.
+            qubit_subset: Restrict the routing to this subset of the device qubits. If ``None``,
+                use the entire device.
 
         Returns:
-            The routed circuit.
-
-            The initial mapping before inserting SWAP gates, see docstring of :func:`cirq.RouterCQC.route_circuit`
-
-            The final mapping from physical qubits to physical qubits,
-                see docstring of :func:`cirq.RouterCQC.route_circuit`
+            routed circuit, initial mapping before inserting SWAP gates (see :func:`cirq.RouterCQC.route_circuit`),
+            final mapping from physical qubits to physical qubits (see :func:`cirq.RouterCQC.route_circuit`)
 
         Raises:
             ValueError: routing is impossible
         """
-        _validate_for_routing(circuit)
-
-        # Remove all measurement gates and replace them with 1-qubit identity gates so they don't
-        # disappear from the final swap network if no other operations remain. We will add them back after routing the
-        # rest of the network. This is done to prevent measurements becoming non-terminal during routing.
-        measurement_ops = list(circuit.findall_operations_with_gate_type(MeasurementGate))
-        measurement_qubits = set().union(*[op.qubits for _, op, _ in measurement_ops])
-
         modified_circuit = circuit.copy()
-        modified_circuit.batch_remove([(ind, op) for ind, op, _ in measurement_ops])
-        i_tag = uuid.uuid4()
-        for q in measurement_qubits:
-            modified_circuit.append(cirq.I(q).with_tags(i_tag))
 
         if self.metadata.resonator_set:
+            # If the device has computational resonators, we use a modified connection graph for routing
+            # by adding edges between all qubits connected to the same resonator.
             move_routing = True
             graph = nx.Graph()
             for edge in self.metadata.nx_graph.edges:
@@ -266,19 +248,10 @@ class IQMDevice(devices.Device):
             modified_circuit, initial_mapper=initial_mapper
         )
         routed_circuit = cast(cirq.Circuit, routed_circuit)
+        # TODO routing can apply SWAP gates even after formerly terminal single-qubit measurements.
+        # It would make sense to commute single-qubit measurements through SWAPs as far towards the
+        # end of the circuit as possible.
 
-        # Return measurements to the circuit with potential qubit swaps.
-        new_measurements = []
-        for _, op, gate in measurement_ops:
-            new_qubits = [final_mapping[initial_mapping[q]] for q in op.qubits]
-            new_measurement = cirq.measure(*new_qubits, key=gate.key)
-            new_measurements.append(new_measurement)
-
-        routed_circuit.append(new_measurements, InsertStrategy.NEW_THEN_INLINE)
-
-        # Remove additional identity gates.
-        identity_gates = routed_circuit.findall_operations(lambda op: i_tag in op.tags)
-        routed_circuit.batch_remove(identity_gates)
         if move_routing:
             # Decompose the SWAP  gates to the native gate set.
             routed_circuit = self.decompose_circuit(routed_circuit)
@@ -306,7 +279,6 @@ class IQMDevice(devices.Device):
     def validate_circuit(self, circuit: cirq.AbstractCircuit) -> None:
         super().validate_circuit(circuit)
         _verify_unique_measurement_keys(circuit.all_operations())
-        _validate_for_routing(circuit)
         self.validate_moves(circuit)
 
     def validate_operation(self, operation: cirq.Operation) -> None:

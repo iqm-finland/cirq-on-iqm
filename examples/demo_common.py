@@ -161,7 +161,7 @@ def demo(device: IQMDevice, circuit: cirq.Circuit, *, use_qsim: bool = False) ->
     pause()
 
     # map the circuit qubits to device qubits
-    circuit_mapped = device.route_circuit(circuit_simplified)
+    circuit_mapped, initial_mapping, final_mapping = device.route_circuit(circuit_simplified)
 
     print('\nRouted simplified circuit:')
     print(circuit_mapped)
