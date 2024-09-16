@@ -5,8 +5,8 @@ Changelog
 Version 14.4
 ============
 
-* Broken example code fixed. `#135 <https://github.com/iqm-finland/cirq-on-iqm/pull/135>`_
 * Allow mid-circuit measurements. `#135 <https://github.com/iqm-finland/cirq-on-iqm/pull/135>`_
+* Broken example code fixed. `#135 <https://github.com/iqm-finland/cirq-on-iqm/pull/135>`_
 
 Version 14.3
 ============
