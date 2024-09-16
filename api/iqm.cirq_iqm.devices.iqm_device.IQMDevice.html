@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>iqm.cirq_iqm.devices.iqm_device.IQMDevice &#8212; Cirq on IQM 14.3 documentation</title>
+    <title>iqm.cirq_iqm.devices.iqm_device.IQMDevice &#8212; Cirq on IQM 14.4 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../_static/documentation_options.js?v=ed6e3a35"></script>
+    <script src="../_static/documentation_options.js?v=787bb8e4"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -49,7 +49,7 @@
     <link rel="prev" title="iqm.cirq_iqm.devices.iqm_device" href="iqm.cirq_iqm.devices.iqm_device.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="2024-08-29"/>
+    <meta name="docbuild:last-update" content="2024-09-16"/>
   </head>
   
   
@@ -139,8 +139,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.3 documentation - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.3 documentation - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.4 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.4 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -393,7 +393,7 @@ document.write(`
 <h1>iqm.cirq_iqm.devices.iqm_device.IQMDevice<a class="headerlink" href="#iqm-cirq-iqm-devices-iqm-device-iqmdevice" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.devices.iqm_device.</span></span><span class="sig-name descname"><span class="pre">IQMDevice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.devices.iqm_device.</span></span><span class="sig-name descname"><span class="pre">IQMDevice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="iqm.cirq_iqm.devices.iqm_device_metadata.IQMDeviceMetadata.html#iqm.cirq_iqm.devices.iqm_device_metadata.IQMDeviceMetadata" title="iqm.cirq_iqm.devices.iqm_device_metadata.IQMDeviceMetadata"><span class="pre">IQMDeviceMetadata</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Device</span></code></p>
 <p>ABC for the properties of a specific IQM quantum architecture.</p>
 <p>Adds extra functionality on top of the basic <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.Device</span></code> class for decomposing gates,
@@ -468,7 +468,7 @@ optimizing circuits and mapping qubits.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.get_qubit_index">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_qubit_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qubit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.get_qubit_index" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_qubit_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qubit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">NamedQubit</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.get_qubit_index" title="Link to this definition">#</a></dt>
 <dd><p>The numeric index of the given qubit on the device.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -482,7 +482,7 @@ optimizing circuits and mapping qubits.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.get_qubit">
-<span class="sig-name descname"><span class="pre">get_qubit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.get_qubit" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_qubit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Qid</span></span></span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.get_qubit" title="Link to this definition">#</a></dt>
 <dd><p>The device qubit corresponding to the given numeric index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -496,7 +496,7 @@ optimizing circuits and mapping qubits.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.check_qubit_connectivity">
-<span class="sig-name descname"><span class="pre">check_qubit_connectivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.check_qubit_connectivity" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">check_qubit_connectivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Operation</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.check_qubit_connectivity" title="Link to this definition">#</a></dt>
 <dd><p>Raises a ValueError if operation acts on qubits that are not connected.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -510,7 +510,7 @@ optimizing circuits and mapping qubits.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.is_native_operation">
-<span class="sig-name descname"><span class="pre">is_native_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.is_native_operation" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">is_native_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Operation</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#bool" title="(in Python v3.9)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.is_native_operation" title="Link to this definition">#</a></dt>
 <dd><p>Predicate, True iff the given operation is considered native for the architecture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -524,7 +524,7 @@ optimizing circuits and mapping qubits.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.has_valid_operation_targets">
-<span class="sig-name descname"><span class="pre">has_valid_operation_targets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.has_valid_operation_targets" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">has_valid_operation_targets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Operation</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#bool" title="(in Python v3.9)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.has_valid_operation_targets" title="Link to this definition">#</a></dt>
 <dd><p>Predicate, True iff the given operation is native and its targets are valid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -538,7 +538,7 @@ optimizing circuits and mapping qubits.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.operation_decomposer">
-<span class="sig-name descname"><span class="pre">operation_decomposer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.operation_decomposer" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">operation_decomposer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Operation</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#list" title="(in Python v3.9)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Operation</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.operation_decomposer" title="Link to this definition">#</a></dt>
 <dd><p>Decomposes operations into the native operation set.</p>
 <p>All the decompositions below keep track of global phase (required for decomposing controlled gates).</p>
 <dl class="field-list simple">
@@ -556,7 +556,7 @@ optimizing circuits and mapping qubits.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.decompose_operation">
-<span class="sig-name descname"><span class="pre">decompose_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.decompose_operation" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">decompose_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Operation</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Operation</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">OpTree</span></span></span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.decompose_operation" title="Link to this definition">#</a></dt>
 <dd><p>Decompose a single quantum operation into the native operation set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -570,7 +570,7 @@ optimizing circuits and mapping qubits.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.route_circuit">
-<span class="sig-name descname"><span class="pre">route_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_mapper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qubit_subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">route_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Circuit</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_mapper</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AbstractInitialMapper</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qubit_subset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Qid</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#tuple" title="(in Python v3.9)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Circuit</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#dict" title="(in Python v3.9)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Qid</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Qid</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#dict" title="(in Python v3.9)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Qid</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Qid</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.route_circuit" title="Link to this definition">#</a></dt>
 <dd><p>Routes the given circuit to the device connectivity and qubit names.</p>
 <p>The routed circuit uses the device qubits, and may have additional SWAP gates inserted to perform the qubit
 routing. The transformer <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.RouterCQC</span></code> is used for routing.
@@ -578,20 +578,16 @@ Note that only gates of one or two qubits, and measurement operations of arbitra
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>circuit</strong> (<em>Circuit</em>) – circuit to route</p></li>
+<li><p><strong>circuit</strong> (<em>Circuit</em>) – Circuit to route.</p></li>
 <li><p><strong>initial_mapper</strong> (<em>AbstractInitialMapper</em><em> | </em><em>None</em>) – Initial mapping from <code class="docutils literal notranslate"><span class="pre">circuit</span></code> qubits to device qubits, to serve as
 the starting point of the routing. <code class="docutils literal notranslate"><span class="pre">None</span></code> means it will be generated automatically.</p></li>
-<li><p><strong>qubit_subset</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><em>Sequence</em></a><em>[</em><em>Qid</em><em>] </em><em>| </em><em>None</em>) – </p></li>
+<li><p><strong>qubit_subset</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><em>Sequence</em></a><em>[</em><em>Qid</em><em>] </em><em>| </em><em>None</em>) – Restrict the routing to this subset of the device qubits. If <code class="docutils literal notranslate"><span class="pre">None</span></code>,
+use the entire device.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>The routed circuit.</p>
-<p>The initial mapping before inserting SWAP gates, see docstring of <code class="xref py py-func docutils literal notranslate"><span class="pre">cirq.RouterCQC.route_circuit()</span></code></p>
-<dl class="simple">
-<dt>The final mapping from physical qubits to physical qubits,</dt><dd><p>see docstring of <code class="xref py py-func docutils literal notranslate"><span class="pre">cirq.RouterCQC.route_circuit()</span></code></p>
-</dd>
-</dl>
-</p>
+<dd class="field-even"><p>routed circuit, initial mapping before inserting SWAP gates (see <code class="xref py py-func docutils literal notranslate"><span class="pre">cirq.RouterCQC.route_circuit()</span></code>),
+final mapping from physical qubits to physical qubits (see <code class="xref py py-func docutils literal notranslate"><span class="pre">cirq.RouterCQC.route_circuit()</span></code>)</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – routing is impossible</p>
@@ -604,7 +600,7 @@ the starting point of the routing. <code class="docutils literal notranslate"><s
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.decompose_circuit">
-<span class="sig-name descname"><span class="pre">decompose_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.decompose_circuit" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">decompose_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Circuit</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Circuit</span></span></span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.decompose_circuit" title="Link to this definition">#</a></dt>
 <dd><p>Decomposes the given circuit to the native gate set of the device.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -621,7 +617,7 @@ the starting point of the routing. <code class="docutils literal notranslate"><s
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_circuit">
-<span class="sig-name descname"><span class="pre">validate_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_circuit" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">validate_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AbstractCircuit</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_circuit" title="Link to this definition">#</a></dt>
 <dd><p>Raises an exception if a circuit is not valid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -638,7 +634,7 @@ the starting point of the routing. <code class="docutils literal notranslate"><s
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_operation">
-<span class="sig-name descname"><span class="pre">validate_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_operation" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">validate_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Operation</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_operation" title="Link to this definition">#</a></dt>
 <dd><p>Raises an exception if an operation is not valid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -655,7 +651,7 @@ the starting point of the routing. <code class="docutils literal notranslate"><s
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_move">
-<span class="sig-name descname"><span class="pre">validate_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_move" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">validate_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Operation</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_move" title="Link to this definition">#</a></dt>
 <dd><p>Validates whether the IQMMoveGate is between qubit and resonator registers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -676,7 +672,7 @@ the starting point of the routing. <code class="docutils literal notranslate"><s
 
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_moves">
-<span class="sig-name descname"><span class="pre">validate_moves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_moves" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">validate_moves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AbstractCircuit</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#iqm.cirq_iqm.devices.iqm_device.IQMDevice.validate_moves" title="Link to this definition">#</a></dt>
 <dd><p>Validates whether the IQMMoveGates are correctly applied in the circuit.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -793,7 +789,7 @@ By Cirq on IQM developers
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on 2024-08-29.
+  Last updated on 2024-09-16.
   <br/>
 </p>
   </div>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>User guide &#8212; Cirq on IQM 14.3 documentation</title>
+    <title>User guide &#8212; Cirq on IQM 14.4 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=ed6e3a35"></script>
+    <script src="_static/documentation_options.js?v=787bb8e4"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -49,7 +49,7 @@
     <link rel="prev" title="Cirq on IQM" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="2024-08-29"/>
+    <meta name="docbuild:last-update" content="2024-09-16"/>
   </head>
   
   
@@ -139,8 +139,8 @@
       
     
     
-    <img src="_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.3 documentation - Home"/>
-    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.3 documentation - Home"/>`);</script>
+    <img src="_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.4 documentation - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.4 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -369,10 +369,17 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#decomposition">Decomposition</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#routing">Routing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#routing">Routing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm-star-architecture">IQM Star architecture</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization">Optimization</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-on-a-real-quantum-computer">Running on a real quantum computer</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspecting-the-final-circuits-before-submitting-them-for-execution">Inspecting the final circuits before submitting them for execution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-on-a-real-quantum-computer">Running on a real quantum computer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authentication">Authentication</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-execution">Batch execution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspecting-the-final-circuits-before-submitting-them-for-execution">Inspecting the final circuits before submitting them for execution</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-examples">More examples</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-develop-and-contribute">How to develop and contribute</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tagging-and-releasing">Tagging and releasing</a></li>
@@ -487,7 +494,7 @@ q_1: ───H───X───M(&#39;m_1&#39;)───
 </pre></div>
 </div>
 <p><a class="reference internal" href="api/iqm.cirq_iqm.extended_qasm_parser.circuit_from_qasm.html#iqm.cirq_iqm.extended_qasm_parser.circuit_from_qasm" title="iqm.cirq_iqm.extended_qasm_parser.circuit_from_qasm"><code class="xref py py-func docutils literal notranslate"><span class="pre">circuit_from_qasm()</span></code></a> uses the OpenQASM 2.0 parser in <code class="xref py py-mod docutils literal notranslate"><span class="pre">cirq.contrib.qasm_import</span></code>.</p>
-<p>After a circuit has been constructed, it can be decomposed and routed against a particular <code class="docutils literal notranslate"><span class="pre">IQMDevice</span></code>.</p>
+<p>After a circuit has been constructed, it can be decomposed and routed against a particular <a class="reference internal" href="api/iqm.cirq_iqm.devices.iqm_device.IQMDevice.html#iqm.cirq_iqm.devices.iqm_device.IQMDevice" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a>.</p>
 </section>
 </section>
 <section id="decomposition">
@@ -547,8 +554,21 @@ It works on single- and two-qubit gates, and measurement operations of arbitrary
 If you have gates involving more than two qubits you need to decompose them before routing.
 Since routing may add some SWAP gates to the circuit, you will need to decompose the circuit
 again after the routing, unless SWAP is a native gate for the target device.</p>
-<p>To ensure that the transpiler is restricted to a specific subset of qubits, you can provide a list of qubits in the <code class="docutils literal notranslate"><span class="pre">qubit_subset</span></code> argument such that ancillary qubits will not be added during routing. This is particularly useful when running Quantum Volume benchmarks.</p>
-<p>Additionally, if the target device supports MOVE gates (e.g. IQM Deneb), a final MOVE gate insertion step is performed. Under the hood, this uses the <code class="xref py py-meth docutils literal notranslate"><span class="pre">transpile_insert_moves`method</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">iqm_client</span> <span class="pre">library.</span> <span class="pre">This</span> <span class="pre">method</span> <span class="pre">is</span> <span class="pre">exposed</span> <span class="pre">through</span> <span class="pre">:meth:`transpile_insert_moves_into_circuit()</span></code> which can also be used by advanced users to transpile circuits that have already some MOVE gates in them, or to remove existing MOVE gates from a circuit so the circuit can be reused on a device that does not support them.</p>
+<p>To ensure that the transpiler is restricted to a specific subset of qubits, you can provide a list
+of qubits in the <code class="docutils literal notranslate"><span class="pre">qubit_subset</span></code> argument such that ancillary qubits will not be added during
+routing. This is particularly useful when running Quantum Volume benchmarks.</p>
+<section id="iqm-star-architecture">
+<h3>IQM Star architecture<a class="headerlink" href="#iqm-star-architecture" title="Link to this heading">#</a></h3>
+<p>Devices that have the IQM Star architecture (e.g. IQM Deneb) support MOVE gates that are used
+to move quantum states between qubits and computational resonators.
+For these devices a final MOVE gate insertion step must be performed, which introduces
+the computational resonators to the circuit, and routes the two-qubit gates through them using MOVEs.</p>
+<p>Under the hood, this uses the <a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.transpile.transpile_insert_moves.html#iqm.iqm_client.transpile.transpile_insert_moves" title="(in IQM client v18.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">transpile_insert_moves()</span></code></a> function of the
+<a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.html#module-iqm.iqm_client" title="(in IQM client v18.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">iqm_client</span></code></a> library. This method is exposed through <a class="reference internal" href="api/iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit.html#iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit" title="iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit"><code class="xref py py-func docutils literal notranslate"><span class="pre">transpile_insert_moves_into_circuit()</span></code></a> which
+can also be used by advanced users to transpile circuits that have already some MOVE gates in them,
+or to remove existing MOVE gates from a circuit so the circuit can be reused on a device that does
+not support them.</p>
+</section>
 </section>
 <section id="optimization">
 <h2>Optimization<a class="headerlink" href="#optimization" title="Link to this heading">#</a></h2>
@@ -579,11 +599,12 @@ decomposition once again after the simplification.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>At the moment IQM does not provide a quantum computing service open to the general public.
-Please contact our <a class="reference external" href="https://www.meetiqm.com/contact/">sales team</a> to set up your access to an IQM quantum computer.</p>
+Please contact our <a class="reference external" href="https://www.meetiqm.com/contact-us/">sales team</a> to set up your access to
+an IQM quantum computer.</p>
 </div>
 <p>Cirq contains various simulators which you can use to simulate the circuits constructed above.
 In this subsection we demonstrate how to run them on an IQM quantum computer.</p>
-<p>Cirq on IQM implements <a class="reference internal" href="api/iqm.cirq_iqm.iqm_sampler.IQMSampler.html#iqm.cirq_iqm.iqm_sampler.IQMSampler" title="iqm.cirq_iqm.iqm_sampler.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a>, a subclass of <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.work.Sampler</span></code>, which is used
+<p>Cirq on IQM provides <a class="reference internal" href="api/iqm.cirq_iqm.iqm_sampler.IQMSampler.html#iqm.cirq_iqm.iqm_sampler.IQMSampler" title="iqm.cirq_iqm.iqm_sampler.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a>, a subclass of <code class="xref py py-class docutils literal notranslate"><span class="pre">cirq.work.Sampler</span></code>, which is used
 to execute quantum circuits. Once you have access to an IQM server you can create an <a class="reference internal" href="api/iqm.cirq_iqm.iqm_sampler.IQMSampler.html#iqm.cirq_iqm.iqm_sampler.IQMSampler" title="iqm.cirq_iqm.iqm_sampler.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a>
 instance and use its <code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code> method to send a circuit for execution and retrieve the results:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">iqm.cirq_iqm.iqm_sampler</span> <span class="kn">import</span> <span class="n">IQMSampler</span>
@@ -611,24 +632,53 @@ The below table summarises the currently available options:</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><cite>calibration_set_id</cite></p></td>
-<td><p>str</p></td>
+<tr class="row-even"><td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">calibration_set_id</span></code></p></td>
+<td><p><a class="reference external" href="https://docs.python.org/3.9/library/uuid.html#uuid.UUID" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">uuid.UUID</span></code></a></p></td>
 <td><p>“f7d9642e-b0ca-4f2d-af2a-30195bd7a76d”</p></td>
-<td><p>Indicates the calibration set to use. Defaults to <cite>None</cite>, which means the IQM server will use the best
-available calibration set automatically.</p></td>
+<td><p>Indicates the calibration set to use. Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>, which means the IQM server will use the
+current default calibration set automatically.</p></td>
 </tr>
-<tr class="row-odd"><td><p><cite>max_circuit_duration_over_t2</cite></p></td>
-<td><p>float</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">compiler_options</span></code></p></td>
+<td><p><a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.CircuitCompilationOptions.html#iqm.iqm_client.models.CircuitCompilationOptions" title="(in IQM client v18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CircuitCompilationOptions</span></code></a></p></td>
+<td><p>see below</p></td>
+<td><p>Contains various options that affect the compilation of the quantum circuit into an
+instruction schedule.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.CircuitCompilationOptions.html#iqm.iqm_client.models.CircuitCompilationOptions" title="(in IQM client v18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CircuitCompilationOptions</span></code></a> class contains the following attributes (in addition to some
+advanced options described in the API documentation):</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 14.7%" />
+<col style="width: 11.8%" />
+<col style="width: 14.7%" />
+<col style="width: 58.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Example value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">max_circuit_duration_over_t2</span></code></p></td>
+<td><p><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#float" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <code class="xref py py-class docutils literal notranslate"><span class="pre">None</span></code></p></td>
 <td><p>1.0</p></td>
 <td><p>Set server-side circuit disqualification threshold. If any circuit in a job is estimated to take longer than the
 shortest T2 time of any qubit used in the circuit multiplied by this value, the server will reject the job.
 Setting this value to <code class="docutils literal notranslate"><span class="pre">0.0</span></code> will disable circuit duration check.
 The default value <code class="docutils literal notranslate"><span class="pre">None</span></code> means the server default value will be used.</p></td>
 </tr>
-<tr class="row-even"><td><p><cite>heralding_mode</cite></p></td>
-<td><p><code class="xref py py-class docutils literal notranslate"><span class="pre">HeraldingMode</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">heralding_mode</span></code></p></td>
+<td><p><a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.HeraldingMode.html#iqm.iqm_client.models.HeraldingMode" title="(in IQM client v18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">HeraldingMode</span></code></a></p></td>
 <td><p>“zeros”</p></td>
-<td><p>Heralding mode to use during execution. The default value is “none”, “zeros” enables heralding.</p></td>
+<td><p>Heralding mode to use during execution. The default value is “none”, “zeros” enables
+all-zeros heralding where the circuit qubits are measured before the circuit begins, and the
+server post-selects and returns only those shots where the heralding measurement yields zeros
+for all the qubits.</p></td>
 </tr>
 </tbody>
 </table>
@@ -637,20 +687,30 @@ The default value <code class="docutils literal notranslate"><span class="pre">N
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sampler</span> <span class="o">=</span> <span class="n">IQMSampler</span><span class="p">(</span><span class="n">iqm_server_url</span><span class="p">,</span> <span class="n">calibration_set_id</span><span class="o">=</span><span class="s2">&quot;f7d9642e-b0ca-4f2d-af2a-30195bd7a76d&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The same applies for <cite>heralding_mode</cite> and <cite>max_circuit_duration_over_t2</cite>. The sampler will by default use an
-<a class="reference internal" href="api/iqm.cirq_iqm.devices.iqm_device.IQMDevice.html#iqm.cirq_iqm.devices.iqm_device.IQMDevice" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a> created based on architecture data obtained from the server, which is then available in the
-<a class="reference internal" href="api/iqm.cirq_iqm.iqm_sampler.IQMSampler.html#iqm.cirq_iqm.iqm_sampler.IQMSampler.device" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.device"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IQMSampler.device</span></code></a> property. Alternatively, the device can be specified directly with the <code class="docutils literal notranslate"><span class="pre">device</span></code> argument.</p>
-<p>If the IQM server you are connecting to requires authentication, you will also have to use
-<a class="reference external" href="https://github.com/iqm-finland/cortex-cli">Cortex CLI</a> to retrieve and automatically refresh access tokens,
-then set the <code class="docutils literal notranslate"><span class="pre">IQM_TOKENS_FILE</span></code> environment variable to use those tokens.
-See Cortex CLI’s <a class="reference external" href="https://iqm-finland.github.io/cortex-cli/readme.html">documentation</a> for details.
-Alternatively, you can authenticate yourself using the <code class="docutils literal notranslate"><span class="pre">IQM_AUTH_SERVER</span></code>, <code class="docutils literal notranslate"><span class="pre">IQM_AUTH_USERNAME</span></code>
-and <code class="docutils literal notranslate"><span class="pre">IQM_AUTH_PASSWORD</span></code> environment variables, or pass them as arguments to the constructor of
-<code class="xref py py-class docutils literal notranslate"><span class="pre">IQMProvider</span></code>, but this approach is less secure and considered deprecated.</p>
+<p>The sampler will by default use an <a class="reference internal" href="api/iqm.cirq_iqm.devices.iqm_device.IQMDevice.html#iqm.cirq_iqm.devices.iqm_device.IQMDevice" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a> created based on architecture data obtained
+from the server, which is then available in the <a class="reference internal" href="api/iqm.cirq_iqm.iqm_sampler.IQMSampler.html#iqm.cirq_iqm.iqm_sampler.IQMSampler.device" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.device"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IQMSampler.device</span></code></a> property. Alternatively,
+the device can be specified directly with the <code class="xref py py-attr docutils literal notranslate"><span class="pre">device</span></code> argument.</p>
 <p>When executing a circuit that uses something other than the device qubits, you need to route it first,
 as explained in the <a class="reference internal" href="#routing"><span class="std std-ref">Routing</span></a> section above.</p>
-<p>Multiple circuits can be submitted to the IQM quantum computer at once using the <a class="reference internal" href="api/iqm.cirq_iqm.iqm_sampler.IQMSampler.html#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run_iqm_batch()</span></code></a> method of <a class="reference internal" href="api/iqm.cirq_iqm.iqm_sampler.IQMSampler.html#iqm.cirq_iqm.iqm_sampler.IQMSampler" title="iqm.cirq_iqm.iqm_sampler.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a>.
-This is often faster than executing the circuits individually. Circuits submitted in a batch are still executed sequentially.</p>
+<section id="authentication">
+<h3>Authentication<a class="headerlink" href="#authentication" title="Link to this heading">#</a></h3>
+<p>If the IQM server you are connecting to requires authentication, you may use
+<a class="reference external" href="https://github.com/iqm-finland/cortex-cli">Cortex CLI</a> to retrieve and automatically refresh access tokens,
+then set the <span class="target" id="index-0"></span><code class="xref std std-envvar docutils literal notranslate"><span class="pre">IQM_TOKENS_FILE</span></code> environment variable, as instructed, to point to the tokens file.
+See Cortex CLI’s <a class="reference external" href="https://iqm-finland.github.io/cortex-cli/readme.html">documentation</a> for details.</p>
+<p>Alternatively, you may authenticate yourself using the <span class="target" id="index-1"></span><code class="xref std std-envvar docutils literal notranslate"><span class="pre">IQM_AUTH_SERVER</span></code>,
+<span class="target" id="index-2"></span><code class="xref std std-envvar docutils literal notranslate"><span class="pre">IQM_AUTH_USERNAME</span></code> and <span class="target" id="index-3"></span><code class="xref std std-envvar docutils literal notranslate"><span class="pre">IQM_AUTH_PASSWORD</span></code> environment variables, or pass them as
+arguments to <a class="reference internal" href="api/iqm.cirq_iqm.iqm_sampler.IQMSampler.html#iqm.cirq_iqm.iqm_sampler.IQMSampler" title="iqm.cirq_iqm.iqm_sampler.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a>, but this approach is less secure and
+considered deprecated.</p>
+<p>Finally, if you are using <code class="docutils literal notranslate"><span class="pre">IQM</span> <span class="pre">Resonance</span></code>, authentication is handled differently.
+Use the <span class="target" id="index-4"></span><code class="xref std std-envvar docutils literal notranslate"><span class="pre">IQM_TOKEN</span></code> environment variable to provide the API Token obtained
+from the server dashboard.</p>
+</section>
+<section id="batch-execution">
+<h3>Batch execution<a class="headerlink" href="#batch-execution" title="Link to this heading">#</a></h3>
+<p>Multiple circuits can be submitted to the IQM quantum computer at once using the
+<a class="reference internal" href="api/iqm.cirq_iqm.iqm_sampler.IQMSampler.html#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run_iqm_batch()</span></code></a> method of <a class="reference internal" href="api/iqm.cirq_iqm.iqm_sampler.IQMSampler.html#iqm.cirq_iqm.iqm_sampler.IQMSampler" title="iqm.cirq_iqm.iqm_sampler.IQMSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMSampler</span></code></a>.  This is often faster than
+executing the circuits individually. Circuits submitted in a batch are still executed sequentially.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circuit_list</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="n">circuit_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">routed_circuit_1</span><span class="p">)</span>
@@ -664,10 +724,10 @@ This is often faster than executing the circuits individually. Circuits submitte
 </div>
 </section>
 <section id="inspecting-the-final-circuits-before-submitting-them-for-execution">
-<h2>Inspecting the final circuits before submitting them for execution<a class="headerlink" href="#inspecting-the-final-circuits-before-submitting-them-for-execution" title="Link to this heading">#</a></h2>
+<h3>Inspecting the final circuits before submitting them for execution<a class="headerlink" href="#inspecting-the-final-circuits-before-submitting-them-for-execution" title="Link to this heading">#</a></h3>
 <p>It is possible to inspect the final circuits that would be submitted for execution before actually submitting them,
 which can be useful for debugging purposes. This can be done using <a class="reference internal" href="api/iqm.cirq_iqm.iqm_sampler.IQMSampler.html#iqm.cirq_iqm.iqm_sampler.IQMSampler.create_run_request" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.create_run_request"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMSampler.create_run_request()</span></code></a>, which returns
-a <code class="xref py py-class docutils literal notranslate"><span class="pre">RunRequest</span></code> containing the circuits and other data. The method accepts the same
+a <a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.RunRequest.html#iqm.iqm_client.models.RunRequest" title="(in IQM client v18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunRequest</span></code></a> containing the circuits and other data. The method accepts the same
 parameters as <code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMSampler.run()</span></code> and <a class="reference internal" href="api/iqm.cirq_iqm.iqm_sampler.IQMSampler.html#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMSampler.run_iqm_batch()</span></code></a>, and creates the run request in the same
 way as those functions.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># inspect the run_request without submitting it for execution</span>
@@ -680,7 +740,8 @@ way as those functions.</p>
 </pre></div>
 </div>
 <p>It is also possible to print a run request when it is actually submitted by setting the environment variable
-<code class="docutils literal notranslate"><span class="pre">IQM_CLIENT_DEBUG=1</span></code>.</p>
+<span class="target" id="index-5"></span><code class="xref std std-envvar docutils literal notranslate"><span class="pre">IQM_CLIENT_DEBUG=1</span></code>.</p>
+</section>
 </section>
 <section id="more-examples">
 <h2>More examples<a class="headerlink" href="#more-examples" title="Link to this heading">#</a></h2>
@@ -782,10 +843,17 @@ be created automatically based on the latest version definition in the CHANGELOG
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#decomposition">Decomposition</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#routing">Routing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#routing">Routing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm-star-architecture">IQM Star architecture</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization">Optimization</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-on-a-real-quantum-computer">Running on a real quantum computer</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspecting-the-final-circuits-before-submitting-them-for-execution">Inspecting the final circuits before submitting them for execution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-on-a-real-quantum-computer">Running on a real quantum computer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authentication">Authentication</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-execution">Batch execution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspecting-the-final-circuits-before-submitting-them-for-execution">Inspecting the final circuits before submitting them for execution</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-examples">More examples</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-develop-and-contribute">How to develop and contribute</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tagging-and-releasing">Tagging and releasing</a></li>
@@ -822,7 +890,7 @@ By Cirq on IQM developers
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on 2024-08-29.
+  Last updated on 2024-09-16.
   <br/>
 </p>
   </div>

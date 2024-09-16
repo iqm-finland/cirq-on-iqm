@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>iqm.cirq_iqm.optimizers.MergeOneParameterGroupGates &#8212; Cirq on IQM 14.3 documentation</title>
+    <title>iqm.cirq_iqm.optimizers.MergeOneParameterGroupGates &#8212; Cirq on IQM 14.4 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../_static/documentation_options.js?v=ed6e3a35"></script>
+    <script src="../_static/documentation_options.js?v=787bb8e4"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -49,7 +49,7 @@
     <link rel="prev" title="iqm.cirq_iqm.optimizers.DropRZBeforeMeasurement" href="iqm.cirq_iqm.optimizers.DropRZBeforeMeasurement.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="2024-08-29"/>
+    <meta name="docbuild:last-update" content="2024-09-16"/>
   </head>
   
   
@@ -139,8 +139,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.3 documentation - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.3 documentation - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.4 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.4 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -380,20 +380,12 @@ document.write(`
 <h1>iqm.cirq_iqm.optimizers.MergeOneParameterGroupGates<a class="headerlink" href="#iqm-cirq-iqm-optimizers-mergeoneparametergroupgates" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.optimizers.MergeOneParameterGroupGates">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.optimizers.</span></span><span class="sig-name descname"><span class="pre">MergeOneParameterGroupGates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">post_clean_up=&lt;function</span> <span class="pre">PointOptimizer.&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.optimizers.MergeOneParameterGroupGates" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.optimizers.</span></span><span class="sig-name descname"><span class="pre">MergeOneParameterGroupGates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">post_clean_up:</span> <span class="pre">~typing.Callable[[~typing.Sequence[cirq.Operation]],</span> <span class="pre">cirq.OP_TREE]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">PointOptimizer.&lt;lambda&gt;&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.optimizers.MergeOneParameterGroupGates" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PointOptimizer</span></code></p>
 <p>Merges adjacent gates belonging to the same parametrized gate family.</p>
 <p>The merged gates have to act on the same sequence of qubits.
 This optimizer only works with gate families that are known to be one-parameter groups.</p>
 <p>For now, all the families are assumed to be periodic with a period of 4.</p>
-<p>Inits PointOptimizer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>post_clean_up</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Callable" title="(in Python v3.9)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><em>Sequence</em></a><em>[</em><em>cirq.Operation</em><em>]</em><em>]</em><em>, </em><em>cirq.OP_TREE</em><em>]</em>) – This function is called on each set of optimized
-operations before they are put into the circuit to replace the
-old operations.</p>
-</dd>
-</dl>
 <p class="rubric">Attributes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
@@ -421,9 +413,14 @@ old operations.</p>
 </tbody>
 </table>
 </div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>post_clean_up</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Callable" title="(in Python v3.9)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><em>Sequence</em></a><em>[</em><em>cirq.Operation</em><em>]</em><em>]</em><em>, </em><em>cirq.OP_TREE</em><em>]</em>) – </p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.optimizers.MergeOneParameterGroupGates.optimization_at">
-<span class="sig-name descname"><span class="pre">optimization_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.optimizers.MergeOneParameterGroupGates.optimization_at" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">optimization_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Circuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Operation</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">PointOptimizationSummary</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#iqm.cirq_iqm.optimizers.MergeOneParameterGroupGates.optimization_at" title="Link to this definition">#</a></dt>
 <dd><p>Describes how to change operations near the given location.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -529,7 +526,7 @@ By Cirq on IQM developers
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on 2024-08-29.
+  Last updated on 2024-09-16.
   <br/>
 </p>
   </div>

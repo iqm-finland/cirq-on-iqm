@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>iqm.cirq_iqm.iqm_gates.IQMMoveGate &#8212; Cirq on IQM 14.3 documentation</title>
+    <title>iqm.cirq_iqm.iqm_gates.IQMMoveGate &#8212; Cirq on IQM 14.4 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../_static/documentation_options.js?v=ed6e3a35"></script>
+    <script src="../_static/documentation_options.js?v=787bb8e4"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -51,7 +51,7 @@
     <link rel="prev" title="iqm.cirq_iqm.iqm_gates" href="iqm.cirq_iqm.iqm_gates.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="2024-08-29"/>
+    <meta name="docbuild:last-update" content="2024-09-16"/>
   </head>
   
   
@@ -141,8 +141,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.3 documentation - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.3 documentation - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.4 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.4 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -382,7 +382,7 @@ document.write(`
 <h1>iqm.cirq_iqm.iqm_gates.IQMMoveGate<a class="headerlink" href="#iqm-cirq-iqm-iqm-gates-iqmmovegate" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.iqm_gates.IQMMoveGate">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.iqm_gates.</span></span><span class="sig-name descname"><span class="pre">IQMMoveGate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.iqm_gates.IQMMoveGate" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.iqm_gates.</span></span><span class="sig-name descname"><span class="pre">IQMMoveGate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#float" title="(in Python v3.9)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Expr</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_shift</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#float" title="(in Python v3.9)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.iqm_gates.IQMMoveGate" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">EigenGate</span></code></p>
 <p>The MOVE operation is a unitary population exchange operation between a qubit and a resonator.
 Its effect is only defined in the invariant subspace <span class="math notranslate nohighlight">\(S = \text{span}\{|00\rangle, |01\rangle, |10\rangle\}\)</span>,
@@ -398,32 +398,6 @@ pair of MOVE operations.</p>
 <p>Note: At this point the locus for the move gate must be defined in the order: <code class="docutils literal notranslate"><span class="pre">[qubit,</span> <span class="pre">resonator]</span></code>.
 Additionally, the matrix representation of the gate set to be a SWAP gate, even though this is not what physically
 happens.</p>
-<p>Initializes the parameters used to compute the gate’s matrix.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>exponent</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em> | </em><em>Expr</em>) – The t in gate**t. Determines how much the eigenvalues of
-the gate are phased by. For example, eigenvectors phased by -1
-when <cite>gate**1</cite> is applied will gain a relative phase of
-e^{i pi exponent} when <cite>gate**exponent</cite> is applied (relative to
-eigenvectors unaffected by <cite>gate**1</cite>).</p></li>
-<li><p><strong>global_shift</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – <p>Offsets the eigenvalues of the gate at exponent=1.
-In effect, this controls a global phase factor on the gate’s
-unitary matrix. The factor is:</p>
-<blockquote>
-<div><p>exp(i * pi * global_shift * exponent)</p>
-</div></blockquote>
-<p>For example, <cite>cirq.X**t</cite> uses a <cite>global_shift</cite> of 0 but
-<cite>cirq.rx(t)</cite> uses a <cite>global_shift</cite> of -0.5, which is why
-<cite>cirq.unitary(cirq.rx(pi))</cite> equals -iX instead of X.</p>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If the supplied exponent is a complex number with an
-    imaginary component.</p>
-</dd>
-</dl>
 <p class="rubric">Attributes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
@@ -454,9 +428,17 @@ unitary matrix. The factor is:</p>
 </tbody>
 </table>
 </div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>exponent</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em> | </em><em>Expr</em>) – </p></li>
+<li><p><strong>global_shift</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.iqm_gates.IQMMoveGate.num_qubits">
-<span class="sig-name descname"><span class="pre">num_qubits</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.iqm_gates.IQMMoveGate.num_qubits" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">num_qubits</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#iqm.cirq_iqm.iqm_gates.IQMMoveGate.num_qubits" title="Link to this definition">#</a></dt>
 <dd><p>The number of qubits this gate acts on.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -551,7 +533,7 @@ By Cirq on IQM developers
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on 2024-08-29.
+  Last updated on 2024-09-16.
   <br/>
 </p>
   </div>
