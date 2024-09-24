@@ -107,7 +107,7 @@ def test_run_sweep_raises_with_non_physical_names(adonis_sampler, circuit_non_ph
 def test_run_sweep_executes_circuit_with_physical_names(
     adonis_sampler, circuit_physical, iqm_metadata, create_run_request_default_kwargs, job_id, run_request
 ):
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     when(client).create_run_request(ANY, **create_run_request_default_kwargs).thenReturn(run_request)
@@ -125,7 +125,7 @@ def test_run_sweep_executes_circuit_with_physical_names(
 def test_run_sweep_executes_circuit_with_calibration_set_id(
     base_url, circuit_physical, iqm_metadata, create_run_request_default_kwargs, job_id, run_request
 ):
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
     calibration_set_id = uuid.uuid4()
     sampler = IQMSampler(base_url, Adonis(), calibration_set_id=calibration_set_id)
@@ -146,7 +146,7 @@ def test_run_sweep_executes_circuit_with_calibration_set_id(
 def test_run_sweep_has_duration_check_enabled_by_default(
     base_url, circuit_physical, iqm_metadata, create_run_request_default_kwargs, job_id, run_request
 ):
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
     sampler = IQMSampler(base_url, Adonis())
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
@@ -169,7 +169,7 @@ def test_run_sweep_has_duration_check_enabled_by_default(
 def test_run_sweep_executes_circuit_with_duration_check_disabled(
     base_url, circuit_physical, iqm_metadata, create_run_request_default_kwargs, job_id, run_request
 ):
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
     sampler = IQMSampler(
         base_url, Adonis(), compiler_options=CircuitCompilationOptions(max_circuit_duration_over_t2=0.0)
@@ -194,7 +194,7 @@ def test_run_sweep_executes_circuit_with_duration_check_disabled(
 def test_run_sweep_allows_to_override_polling_timeout(
     base_url, circuit_physical, create_run_request_default_kwargs, iqm_metadata, job_id, run_request
 ):
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
     timeout = 123
     sampler = IQMSampler(base_url, Adonis(), run_sweep_timeout=timeout)
@@ -214,7 +214,7 @@ def test_run_sweep_allows_to_override_polling_timeout(
 def test_run_sweep_has_heralding_mode_none_by_default(
     base_url, circuit_physical, iqm_metadata, create_run_request_default_kwargs, job_id, run_request
 ):
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
     sampler = IQMSampler(base_url, Adonis())
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
@@ -235,7 +235,7 @@ def test_run_sweep_has_heralding_mode_none_by_default(
 def test_run_sweep_executes_circuit_with_heralding_mode_zeros(
     base_url, circuit_physical, iqm_metadata, create_run_request_default_kwargs, job_id, run_request
 ):
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
     sampler = IQMSampler(
         base_url, Adonis(), compiler_options=CircuitCompilationOptions(heralding_mode=HeraldingMode.ZEROS)
@@ -290,7 +290,7 @@ def test_run_sweep_with_parameter_sweep(
 def test_run_sweep_abort_job_successful(
     adonis_sampler, circuit_physical, create_run_request_default_kwargs, job_id, recwarn, run_request
 ):
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
     when(client).create_run_request(ANY, **create_run_request_default_kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
