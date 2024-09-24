@@ -47,6 +47,7 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         self,
         qubits: Iterable[NamedQid],
         connectivity: Iterable[Iterable[NamedQid]],
+        *,
         operations: Optional[dict[type[cirq.Gate], list[tuple[cirq.NamedQid, ...]]]] = None,
         gateset: Optional[cirq.Gateset] = None,
         resonators: Iterable[NamedQid] = (),
