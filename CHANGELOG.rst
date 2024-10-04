@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 14.5
+============
+
+* Remove unnecessary build files when publishing documentation. `#138 <https://github.com/iqm-finland/iqm-client/pull/138>`_
+
 Version 14.4
 ============
 
