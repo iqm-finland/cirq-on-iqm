@@ -2,19 +2,30 @@
 Changelog
 =========
 
-Version 14.4
+Version 14.6
 ============
 
 * Bugfix COMP-1491: Fixed issue where `cirq_iqm` would ignore the MOVE gate validation options in CircuitCompilationOptions. `#136 <https://github.com/iqm-finland/cirq-on-iqm/pull/136>`_
 * Removed `cirq_iqm` circuit validation when submitting to an IQM device because `iqm-client` already validates the circuit. 
 * Added `isort` formatting to `tox -e format`.
 
+Version 14.5
+============
+
+* Remove unnecessary build files when publishing documentation. `#138 <https://github.com/iqm-finland/iqm-client/pull/138>`_
+
+Version 14.4
+============
+
+* Allow mid-circuit measurements. `#135 <https://github.com/iqm-finland/cirq-on-iqm/pull/135>`_
+* Broken example code fixed. `#135 <https://github.com/iqm-finland/cirq-on-iqm/pull/135>`_
+
 Version 14.3
 ============
 
 * Improved operation validation to check if it is calibrated according to the metadata rather than assuming. `#133 <https://github.com/iqm-finland/cirq-on-iqm/pull/133>`_
-* Added IQMMoveGate class for Deneb architectures. `#133 <https://github.com/iqm-finland/cirq-on-iqm/pull/133>`_
-* Updated IQMDevice class to support devices with resonators. `#133 <https://github.com/iqm-finland/cirq-on-iqm/pull/133>`_
+* Added :class:`IQMMoveGate` class for Deneb architectures. `#133 <https://github.com/iqm-finland/cirq-on-iqm/pull/133>`_
+* Updated :class:`IQMDevice` class to support devices with resonators. `#133 <https://github.com/iqm-finland/cirq-on-iqm/pull/133>`_
 * Support for :class:`CircuitCompilationOptions` from ``iqm-client`` when submitting a circuit to an IQM device.
 * Require iqm-client >= 18.0. `#133 <https://github.com/iqm-finland/cirq-on-iqm/pull/133>`_
 
