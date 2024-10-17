@@ -28,7 +28,7 @@ from iqm.cirq_iqm.iqm_sampler import IQMResult, IQMSampler, ResultMetadata, seri
 from iqm.iqm_client import (
     Circuit,
     CircuitCompilationOptions,
-    CircuitExecutionError,
+    CircuitValidationError,
     HeraldingMode,
     Instruction,
     IQMClient,
@@ -104,7 +104,7 @@ def test_run_sweep_raises_with_non_physical_names(adonis_sampler, circuit_non_ph
         adonis_sampler._device.metadata.to_architecture()
     )
     # Note that validation is done in iqm_client, so this is now an integration test.
-    with pytest.raises(CircuitExecutionError, match='Qubit Alice is not allowed as locus for measure'):
+    with pytest.raises(CircuitValidationError, match='Qubit Alice is not allowed as locus for measure'):
         adonis_sampler.run_sweep(circuit_non_physical, None)
 
 
@@ -342,7 +342,7 @@ def test_run_iqm_batch_raises_with_non_physical_names(adonis_sampler, circuit_no
         adonis_sampler._device.metadata.to_architecture()
     )
     # Note that validation is done in iqm_client, so this is now an integration test.
-    with pytest.raises(CircuitExecutionError, match='Qubit Alice is not allowed as locus for measure'):
+    with pytest.raises(CircuitValidationError, match='Qubit Alice is not allowed as locus for measure'):
         adonis_sampler.run_iqm_batch([circuit_non_physical])
 
     verifyNoUnwantedInteractions()

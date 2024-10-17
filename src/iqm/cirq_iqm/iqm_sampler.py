@@ -191,7 +191,7 @@ class IQMSampler(cirq.work.Sampler):
 
         return (  # pylint: disable=not-an-iterable,no-member
             [{k: np.array(v) for k, v in measurements.items()} for measurements in results.measurements],
-            ResultMetadata(job_id, results.metadata.calibration_set_id, results.metadata.request),
+            ResultMetadata(job_id, results.metadata.calibration_set_id, run_request),
         )
 
     @staticmethod
