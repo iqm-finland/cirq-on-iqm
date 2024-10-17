@@ -103,6 +103,7 @@ def test_run_sweep_raises_with_non_physical_names(adonis_sampler, circuit_non_ph
     when(adonis_sampler._client).get_quantum_architecture().thenReturn(
         adonis_sampler._device.metadata.to_architecture()
     )
+    # Note that validation is done in iqm_client, so this is now an integration test.
     with pytest.raises(CircuitExecutionError, match='Qubit Alice is not allowed as locus for measure'):
         adonis_sampler.run_sweep(circuit_non_physical, None)
 
@@ -340,6 +341,7 @@ def test_run_iqm_batch_raises_with_non_physical_names(adonis_sampler, circuit_no
     when(adonis_sampler._client).get_quantum_architecture().thenReturn(
         adonis_sampler._device.metadata.to_architecture()
     )
+    # Note that validation is done in iqm_client, so this is now an integration test.
     with pytest.raises(CircuitExecutionError, match='Qubit Alice is not allowed as locus for measure'):
         adonis_sampler.run_iqm_batch([circuit_non_physical])
 
