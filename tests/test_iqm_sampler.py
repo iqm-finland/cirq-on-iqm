@@ -224,8 +224,6 @@ def test_run_sweep_has_heralding_mode_none_by_default(
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     kwargs = create_run_request_default_kwargs
     assert sampler._compiler_options.heralding_mode == HeraldingMode.NONE
-    kwargs = create_run_request_default_kwargs
-    assert sampler._compiler_options.heralding_mode == HeraldingMode.NONE
     when(client).create_run_request(ANY, **kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenReturn(run_result)
@@ -243,9 +241,6 @@ def test_run_sweep_executes_circuit_with_heralding_mode_zeros(
 ):
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
-    sampler = IQMSampler(
-        base_url, Adonis(), compiler_options=CircuitCompilationOptions(heralding_mode=HeraldingMode.ZEROS)
-    )
     sampler = IQMSampler(
         base_url, Adonis(), compiler_options=CircuitCompilationOptions(heralding_mode=HeraldingMode.ZEROS)
     )
