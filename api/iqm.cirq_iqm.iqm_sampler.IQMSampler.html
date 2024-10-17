@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>iqm.cirq_iqm.iqm_sampler.IQMSampler &#8212; Cirq on IQM 14.5 documentation</title>
+    <title>iqm.cirq_iqm.iqm_sampler.IQMSampler &#8212; Cirq on IQM 14.6 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../_static/documentation_options.js?v=c3873af9"></script>
+    <script src="../_static/documentation_options.js?v=d4f3ba9f"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -49,7 +49,7 @@
     <link rel="prev" title="iqm.cirq_iqm.iqm_sampler.IQMResult" href="iqm.cirq_iqm.iqm_sampler.IQMResult.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="2024-10-04"/>
+    <meta name="docbuild:last-update" content="2024-10-17"/>
   </head>
   
   
@@ -139,8 +139,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.5 documentation - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.5 documentation - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.6 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.6 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -385,7 +385,7 @@ document.write(`
 <h1>iqm.cirq_iqm.iqm_sampler.IQMSampler<a class="headerlink" href="#iqm-cirq-iqm-iqm-sampler-iqmsampler" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.iqm_sampler.IQMSampler">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.iqm_sampler.</span></span><span class="sig-name descname"><span class="pre">IQMSampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="iqm.cirq_iqm.devices.iqm_device.IQMDevice.html#iqm.cirq_iqm.devices.iqm_device.IQMDevice" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice"><span class="pre">IQMDevice</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_set_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/uuid.html#uuid.UUID" title="(in Python v3.9)"><span class="pre">UUID</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_sweep_timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compiler_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.CircuitCompilationOptions.html#iqm.iqm_client.models.CircuitCompilationOptions" title="(in IQM client v18.4)"><span class="pre">CircuitCompilationOptions</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">user_auth_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.iqm_sampler.</span></span><span class="sig-name descname"><span class="pre">IQMSampler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="iqm.cirq_iqm.devices.iqm_device.IQMDevice.html#iqm.cirq_iqm.devices.iqm_device.IQMDevice" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice"><span class="pre">IQMDevice</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_set_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/uuid.html#uuid.UUID" title="(in Python v3.9)"><span class="pre">UUID</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_sweep_timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compiler_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.CircuitCompilationOptions.html#iqm.iqm_client.models.CircuitCompilationOptions" title="(in IQM client v18.8)"><span class="pre">CircuitCompilationOptions</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">user_auth_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Sampler</span></code></p>
 <p>Circuit sampler for executing quantum circuits on IQM quantum computers.</p>
 <dl class="field-list simple">
@@ -393,7 +393,7 @@ document.write(`
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Endpoint for accessing the server interface. Has to start with http or https.</p></li>
 <li><p><strong>device</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="iqm.cirq_iqm.devices.iqm_device.IQMDevice.html#iqm.cirq_iqm.devices.iqm_device.IQMDevice" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice"><em>IQMDevice</em></a><em>]</em>) – Device to execute the circuits on. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the device will be created based
-on the quantum architecture obtained from <a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.iqm_client.IQMClient.html#iqm.iqm_client.iqm_client.IQMClient" title="(in IQM client v18.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMClient</span></code></a>.</p></li>
+on the quantum architecture obtained from <a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.iqm_client.IQMClient.html#iqm.iqm_client.iqm_client.IQMClient" title="(in IQM client v18.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMClient</span></code></a>.</p></li>
 <li><p><strong>calibration_set_id</strong> (<em>Optional</em><em>[</em><em>UUID</em><em>]</em>) – ID of the calibration set to use. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, use the latest one.</p></li>
 <li><p><strong>run_sweep_timeout</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>]</em>) – Timeout for polling sweep results, in seconds. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, use the client default value.</p></li>
 <li><p><strong>compiler_options</strong> (<em>Optional</em><em>[</em><em>CircuitCompilationOptions</em><em>]</em>) – The compilation options to use for the circuits, as defined by IQM Client.</p></li>
@@ -428,22 +428,19 @@ This can also be set in the IQM_AUTH_PASSWORD environment variable.</p></li>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_send_circuits</span></code>(circuits[, repetitions])</p></td>
 <td><p>Sends a batch of circuits to be executed and retrieves the results.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_validate_and_serialize_circuits</span></code>(circuits)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.close_client" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.close_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close_client</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.close_client" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.close_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close_client</span></code></a>()</p></td>
 <td><p>Close IQMClient's session with the user authentication server.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.create_run_request" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.create_run_request"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_run_request</span></code></a>(programs, *[, params, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.create_run_request" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.create_run_request"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_run_request</span></code></a>(programs, *[, params, ...])</p></td>
 <td><p>Creates a run request without submitting it for execution.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_iqm_batch</span></code></a>(programs[, repetitions])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_iqm_batch</span></code></a>(programs[, repetitions])</p></td>
 <td><p>Sends a batch of circuits to be executed.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_sweep" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.run_sweep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_sweep</span></code></a>(program, params[, repetitions])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_sweep" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.run_sweep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_sweep</span></code></a>(program, params[, repetitions])</p></td>
 <td><p>Samples from the given Circuit.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_sweep_async" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.run_sweep_async"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_sweep_async</span></code></a>(program, params[, repetitions])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_sweep_async" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.run_sweep_async"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_sweep_async</span></code></a>(program, params[, repetitions])</p></td>
 <td><p>Asynchronously samples from the given Circuit.</p></td>
 </tr>
 </tbody>
@@ -657,7 +654,7 @@ By Cirq on IQM developers
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on 2024-10-04.
+  Last updated on 2024-10-17.
   <br/>
 </p>
   </div>

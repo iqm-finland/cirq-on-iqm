@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Changelog &#8212; Cirq on IQM 14.5 documentation</title>
+    <title>Changelog &#8212; Cirq on IQM 14.6 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=c3873af9"></script>
+    <script src="_static/documentation_options.js?v=d4f3ba9f"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -48,7 +48,7 @@
     <link rel="prev" title="Contributors" href="authors.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="2024-10-04"/>
+    <meta name="docbuild:last-update" content="2024-10-17"/>
   </head>
   
   
@@ -138,8 +138,8 @@
       
     
     
-    <img src="_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.5 documentation - Home"/>
-    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.5 documentation - Home"/>`);</script>
+    <img src="_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.6 documentation - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.6 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -360,6 +360,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-14-6">Version 14.6</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-14-5">Version 14.5</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-14-4">Version 14.4</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-14-3">Version 14.3</a></li>
@@ -422,42 +423,42 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-2-0-2021-09-17">Version 2.0 (2021-09-17)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-1-2-2021-09-03">Version 1.2 (2021-09-03)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id67">Features</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id69">Bugfixes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id68">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id70">Bugfixes</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-1-1-2021-08-13">Version 1.1 (2021-08-13)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-1-0-2021-08-11">Version 1.0 (2021-08-11)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id71">Features</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id75">Bugfixes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id72">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id76">Bugfixes</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0-7-2021-07-07">Version 0.7 (2021-07-07)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id78">Bugfixes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id79">Bugfixes</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0-6-2021-07-02">Version 0.6 (2021-07-02)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id80">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id81">Features</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0-5-2021-06-24">Version 0.5 (2021-06-24)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id82">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id83">Features</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0-4-2021-06-23">Version 0.4 (2021-06-23)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id85">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id86">Features</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0-3-2021-06-09">Version 0.3 (2021-06-09)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id87">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id88">Features</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0-2-2021-04-23">Version 0.2 (2021-04-23)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id89">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id90">Features</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0-1-2021-04-22">Version 0.1 (2021-04-22)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id92">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id93">Features</a></li>
 </ul>
 </li>
 </ul>
@@ -473,6 +474,14 @@ document.write(`
                   
   <section id="changelog">
 <span id="changes"></span><h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">#</a></h1>
+<section id="version-14-6">
+<h2>Version 14.6<a class="headerlink" href="#version-14-6" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Bugfix COMP-1491: Fixed issue where <cite>cirq_iqm</cite> would ignore the MOVE gate validation options in CircuitCompilationOptions. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/136">#136</a></p></li>
+<li><p>Removed <cite>cirq_iqm</cite> circuit validation when submitting to an IQM device because <cite>iqm-client</cite> already validates the circuit.</p></li>
+<li><p>Added <cite>isort</cite> formatting to <cite>tox -e format</cite>.</p></li>
+</ul>
+</section>
 <section id="version-14-5">
 <h2>Version 14.5<a class="headerlink" href="#version-14-5" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -845,16 +854,16 @@ are considered equivalent. <a class="reference external" href="https://github.co
 </section>
 <section id="version-1-2-2021-09-03">
 <h2>Version 1.2 (2021-09-03)<a class="headerlink" href="#version-1-2-2021-09-03" title="Link to this heading">#</a></h2>
-<section id="id67">
-<h3>Features<a class="headerlink" href="#id67" title="Link to this heading">#</a></h3>
+<section id="id68">
+<h3>Features<a class="headerlink" href="#id68" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Move IQM client to a <a class="reference external" href="https://pypi.org/project/iqm-client/">separate library</a></p></li>
 <li><p>Adonis native gate set updated, Rz is not native.
 <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/41">#41</a></p></li>
 </ul>
 </section>
-<section id="id69">
-<h3>Bugfixes<a class="headerlink" href="#id69" title="Link to this heading">#</a></h3>
+<section id="id70">
+<h3>Bugfixes<a class="headerlink" href="#id70" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>DropRZMeasurements sometimes did not remove z rotations it should have.
 <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/41">#41</a></p></li>
@@ -870,8 +879,8 @@ are considered equivalent. <a class="reference external" href="https://github.co
 </section>
 <section id="version-1-0-2021-08-11">
 <h2>Version 1.0 (2021-08-11)<a class="headerlink" href="#version-1-0-2021-08-11" title="Link to this heading">#</a></h2>
-<section id="id71">
-<h3>Features<a class="headerlink" href="#id71" title="Link to this heading">#</a></h3>
+<section id="id72">
+<h3>Features<a class="headerlink" href="#id72" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">IQMDevice</span></code> updated. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/35">#35</a></p>
 <ul>
@@ -895,8 +904,8 @@ are considered equivalent. <a class="reference external" href="https://github.co
 </li>
 </ul>
 </section>
-<section id="id75">
-<h3>Bugfixes<a class="headerlink" href="#id75" title="Link to this heading">#</a></h3>
+<section id="id76">
+<h3>Bugfixes<a class="headerlink" href="#id76" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>All the demos work again. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/35">#35</a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">DropRZBeforeMeasurement</span></code> had a bug where it sometimes incorrectly eliminated a z rotation
@@ -906,8 +915,8 @@ followed by a multiqubit gate. <a class="reference external" href="https://githu
 </section>
 <section id="version-0-7-2021-07-07">
 <h2>Version 0.7 (2021-07-07)<a class="headerlink" href="#version-0-7-2021-07-07" title="Link to this heading">#</a></h2>
-<section id="id78">
-<h3>Bugfixes<a class="headerlink" href="#id78" title="Link to this heading">#</a></h3>
+<section id="id79">
+<h3>Bugfixes<a class="headerlink" href="#id79" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Off-by-one error fixed in <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/blob/a2d09dab583434c89f569e711ac35085ec371342/src/cirq_iqm/iqm_device.py#L120">IQMDevice.map_circuit</a>. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/29">#29</a></p></li>
 </ul>
@@ -915,8 +924,8 @@ followed by a multiqubit gate. <a class="reference external" href="https://githu
 </section>
 <section id="version-0-6-2021-07-02">
 <h2>Version 0.6 (2021-07-02)<a class="headerlink" href="#version-0-6-2021-07-02" title="Link to this heading">#</a></h2>
-<section id="id80">
-<h3>Features<a class="headerlink" href="#id80" title="Link to this heading">#</a></h3>
+<section id="id81">
+<h3>Features<a class="headerlink" href="#id81" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Project setup updated. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/22">#22</a></p>
 <ul>
@@ -932,8 +941,8 @@ followed by a multiqubit gate. <a class="reference external" href="https://githu
 </section>
 <section id="version-0-5-2021-06-24">
 <h2>Version 0.5 (2021-06-24)<a class="headerlink" href="#version-0-5-2021-06-24" title="Link to this heading">#</a></h2>
-<section id="id82">
-<h3>Features<a class="headerlink" href="#id82" title="Link to this heading">#</a></h3>
+<section id="id83">
+<h3>Features<a class="headerlink" href="#id83" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Gate decomposition and circuit optimization procedure simplified. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/21">#21</a></p></li>
 <li><p>Cirq dependency bumped to 0.11. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/23">#23</a></p></li>
@@ -944,8 +953,8 @@ release notes for more details: <a class="github reference external" href="https
 </section>
 <section id="version-0-4-2021-06-23">
 <h2>Version 0.4 (2021-06-23)<a class="headerlink" href="#version-0-4-2021-06-23" title="Link to this heading">#</a></h2>
-<section id="id85">
-<h3>Features<a class="headerlink" href="#id85" title="Link to this heading">#</a></h3>
+<section id="id86">
+<h3>Features<a class="headerlink" href="#id86" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Convert data to IQM internal format when running requests. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/20">#20</a></p></li>
 </ul>
@@ -953,8 +962,8 @@ release notes for more details: <a class="github reference external" href="https
 </section>
 <section id="version-0-3-2021-06-09">
 <h2>Version 0.3 (2021-06-09)<a class="headerlink" href="#version-0-3-2021-06-09" title="Link to this heading">#</a></h2>
-<section id="id87">
-<h3>Features<a class="headerlink" href="#id87" title="Link to this heading">#</a></h3>
+<section id="id88">
+<h3>Features<a class="headerlink" href="#id88" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Settings file support. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/17">#17</a></p></li>
 </ul>
@@ -962,8 +971,8 @@ release notes for more details: <a class="github reference external" href="https
 </section>
 <section id="version-0-2-2021-04-23">
 <h2>Version 0.2 (2021-04-23)<a class="headerlink" href="#version-0-2-2021-04-23" title="Link to this heading">#</a></h2>
-<section id="id89">
-<h3>Features<a class="headerlink" href="#id89" title="Link to this heading">#</a></h3>
+<section id="id90">
+<h3>Features<a class="headerlink" href="#id90" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Adonis native gate set updated, CZ-targeting decompositions added. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/15">#15</a></p></li>
 <li><p>Circuits can be sent to be executed remotely on IQM hardware. <a class="reference external" href="https://github.com/iqm-finland/cirq-on-iqm/pull/13">#13</a></p></li>
@@ -972,8 +981,8 @@ release notes for more details: <a class="github reference external" href="https
 </section>
 <section id="version-0-1-2021-04-22">
 <h2>Version 0.1 (2021-04-22)<a class="headerlink" href="#version-0-1-2021-04-22" title="Link to this heading">#</a></h2>
-<section id="id92">
-<h3>Features<a class="headerlink" href="#id92" title="Link to this heading">#</a></h3>
+<section id="id93">
+<h3>Features<a class="headerlink" href="#id93" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Supports the Adonis and Valkmusa architectures.</p></li>
 <li><p>Extends the OpenQASM language with gates native to the IQM architectures.</p></li>
@@ -1023,6 +1032,7 @@ release notes for more details: <a class="github reference external" href="https
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-14-6">Version 14.6</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-14-5">Version 14.5</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-14-4">Version 14.4</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-14-3">Version 14.3</a></li>
@@ -1085,42 +1095,42 @@ release notes for more details: <a class="github reference external" href="https
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-2-0-2021-09-17">Version 2.0 (2021-09-17)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-1-2-2021-09-03">Version 1.2 (2021-09-03)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id67">Features</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id69">Bugfixes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id68">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id70">Bugfixes</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-1-1-2021-08-13">Version 1.1 (2021-08-13)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-1-0-2021-08-11">Version 1.0 (2021-08-11)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id71">Features</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id75">Bugfixes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id72">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id76">Bugfixes</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0-7-2021-07-07">Version 0.7 (2021-07-07)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id78">Bugfixes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id79">Bugfixes</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0-6-2021-07-02">Version 0.6 (2021-07-02)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id80">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id81">Features</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0-5-2021-06-24">Version 0.5 (2021-06-24)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id82">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id83">Features</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0-4-2021-06-23">Version 0.4 (2021-06-23)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id85">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id86">Features</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0-3-2021-06-09">Version 0.3 (2021-06-09)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id87">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id88">Features</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0-2-2021-04-23">Version 0.2 (2021-04-23)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id89">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id90">Features</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0-1-2021-04-22">Version 0.1 (2021-04-22)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id92">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id93">Features</a></li>
 </ul>
 </li>
 </ul>
@@ -1156,7 +1166,7 @@ By Cirq on IQM developers
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on 2024-10-04.
+  Last updated on 2024-10-17.
   <br/>
 </p>
   </div>

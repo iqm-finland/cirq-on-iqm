@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>User guide &#8212; Cirq on IQM 14.5 documentation</title>
+    <title>User guide &#8212; Cirq on IQM 14.6 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=c3873af9"></script>
+    <script src="_static/documentation_options.js?v=d4f3ba9f"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -49,7 +49,7 @@
     <link rel="prev" title="Cirq on IQM" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="2024-10-04"/>
+    <meta name="docbuild:last-update" content="2024-10-17"/>
   </head>
   
   
@@ -139,8 +139,8 @@
       
     
     
-    <img src="_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.5 documentation - Home"/>
-    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.5 documentation - Home"/>`);</script>
+    <img src="_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 14.6 documentation - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Cirq on IQM 14.6 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -563,8 +563,8 @@ routing. This is particularly useful when running Quantum Volume benchmarks.</p>
 to move quantum states between qubits and computational resonators.
 For these devices a final MOVE gate insertion step must be performed, which introduces
 the computational resonators to the circuit, and routes the two-qubit gates through them using MOVEs.</p>
-<p>Under the hood, this uses the <a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.transpile.transpile_insert_moves.html#iqm.iqm_client.transpile.transpile_insert_moves" title="(in IQM client v18.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">transpile_insert_moves()</span></code></a> function of the
-<a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.html#module-iqm.iqm_client" title="(in IQM client v18.4)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">iqm_client</span></code></a> library. This method is exposed through <a class="reference internal" href="api/iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit.html#iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit" title="iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit"><code class="xref py py-func docutils literal notranslate"><span class="pre">transpile_insert_moves_into_circuit()</span></code></a> which
+<p>Under the hood, this uses the <a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.transpile.transpile_insert_moves.html#iqm.iqm_client.transpile.transpile_insert_moves" title="(in IQM client v18.8)"><code class="xref py py-func docutils literal notranslate"><span class="pre">transpile_insert_moves()</span></code></a> function of the
+<a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.html#module-iqm.iqm_client" title="(in IQM client v18.8)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">iqm_client</span></code></a> library. This method is exposed through <a class="reference internal" href="api/iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit.html#iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit" title="iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit"><code class="xref py py-func docutils literal notranslate"><span class="pre">transpile_insert_moves_into_circuit()</span></code></a> which
 can also be used by advanced users to transpile circuits that have already some MOVE gates in them,
 or to remove existing MOVE gates from a circuit so the circuit can be reused on a device that does
 not support them.</p>
@@ -639,7 +639,7 @@ The below table summarises the currently available options:</p>
 current default calibration set automatically.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">compiler_options</span></code></p></td>
-<td><p><a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.CircuitCompilationOptions.html#iqm.iqm_client.models.CircuitCompilationOptions" title="(in IQM client v18.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CircuitCompilationOptions</span></code></a></p></td>
+<td><p><a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.CircuitCompilationOptions.html#iqm.iqm_client.models.CircuitCompilationOptions" title="(in IQM client v18.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CircuitCompilationOptions</span></code></a></p></td>
 <td><p>see below</p></td>
 <td><p>Contains various options that affect the compilation of the quantum circuit into an
 instruction schedule.</p></td>
@@ -647,7 +647,7 @@ instruction schedule.</p></td>
 </tbody>
 </table>
 </div>
-<p>The <a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.CircuitCompilationOptions.html#iqm.iqm_client.models.CircuitCompilationOptions" title="(in IQM client v18.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CircuitCompilationOptions</span></code></a> class contains the following attributes (in addition to some
+<p>The <a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.CircuitCompilationOptions.html#iqm.iqm_client.models.CircuitCompilationOptions" title="(in IQM client v18.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CircuitCompilationOptions</span></code></a> class contains the following attributes (in addition to some
 advanced options described in the API documentation):</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
@@ -673,7 +673,7 @@ Setting this value to <code class="docutils literal notranslate"><span class="pr
 The default value <code class="docutils literal notranslate"><span class="pre">None</span></code> means the server default value will be used.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">heralding_mode</span></code></p></td>
-<td><p><a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.HeraldingMode.html#iqm.iqm_client.models.HeraldingMode" title="(in IQM client v18.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">HeraldingMode</span></code></a></p></td>
+<td><p><a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.HeraldingMode.html#iqm.iqm_client.models.HeraldingMode" title="(in IQM client v18.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">HeraldingMode</span></code></a></p></td>
 <td><p>“zeros”</p></td>
 <td><p>Heralding mode to use during execution. The default value is “none”, “zeros” enables
 all-zeros heralding where the circuit qubits are measured before the circuit begins, and the
@@ -727,7 +727,7 @@ executing the circuits individually. Circuits submitted in a batch are still exe
 <h3>Inspecting the final circuits before submitting them for execution<a class="headerlink" href="#inspecting-the-final-circuits-before-submitting-them-for-execution" title="Link to this heading">#</a></h3>
 <p>It is possible to inspect the final circuits that would be submitted for execution before actually submitting them,
 which can be useful for debugging purposes. This can be done using <a class="reference internal" href="api/iqm.cirq_iqm.iqm_sampler.IQMSampler.html#iqm.cirq_iqm.iqm_sampler.IQMSampler.create_run_request" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.create_run_request"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMSampler.create_run_request()</span></code></a>, which returns
-a <a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.RunRequest.html#iqm.iqm_client.models.RunRequest" title="(in IQM client v18.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunRequest</span></code></a> containing the circuits and other data. The method accepts the same
+a <a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.RunRequest.html#iqm.iqm_client.models.RunRequest" title="(in IQM client v18.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunRequest</span></code></a> containing the circuits and other data. The method accepts the same
 parameters as <code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMSampler.run()</span></code> and <a class="reference internal" href="api/iqm.cirq_iqm.iqm_sampler.IQMSampler.html#iqm.cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch" title="iqm.cirq_iqm.iqm_sampler.IQMSampler.run_iqm_batch"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IQMSampler.run_iqm_batch()</span></code></a>, and creates the run request in the same
 way as those functions.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># inspect the run_request without submitting it for execution</span>
@@ -890,7 +890,7 @@ By Cirq on IQM developers
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on 2024-10-04.
+  Last updated on 2024-10-17.
   <br/>
 </p>
   </div>
