@@ -49,6 +49,7 @@ def simplify_circuit(
     Returns:
         simplified circuit
     """
+    calset_id = getattr(circuit, 'iqm_calibration_set_id', None)
     c = circuit.copy()
 
     # the optimizers cause the immediate decomposition of any gates they insert into the Circuit
@@ -72,6 +73,7 @@ def simplify_circuit(
 
     DropRZBeforeMeasurement(drop_final=drop_final_rz).optimize_circuit(c)
     c = cirq.drop_empty_moments(c)
+    c.iqm_calibration_set_id = calset_id  # type: ignore
 
     return c
 

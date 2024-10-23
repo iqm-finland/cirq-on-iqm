@@ -11,26 +11,46 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from uuid import UUID
 
 import cirq
 
 from iqm.cirq_iqm import IQMDeviceMetadata
-from iqm.iqm_client import QuantumArchitectureSpecification
+from iqm.iqm_client import DynamicQuantumArchitecture, GateImplementationInfo, GateInfo
 
 
 def test_device_metadata_from_architecture():
-    qa = {
-        'name': 'Valkmusa',
-        'operations': [
-            'prx',
-            'measurement',
-        ],
-        'qubits': ['QB1', 'QB2'],
-        'qubit_connectivity': [
-            ['QB1', 'QB2'],
-        ],
-    }
-    metadata = IQMDeviceMetadata.from_architecture(QuantumArchitectureSpecification(**qa))
+    arch = DynamicQuantumArchitecture(
+        calibration_set_id=UUID('26c5e70f-bea0-43af-bd37-6212ec7d04cb'),
+        qubits=['QB1', 'QB2'],
+        computational_resonators=[],
+        gates={
+            'prx': GateInfo(
+                implementations={
+                    'drag_gaussian': GateImplementationInfo(loci=(('QB1',), ('QB2',))),
+                },
+                default_implementation='drag_gaussian',
+                override_default_implementation={},
+            ),
+            'cz': GateInfo(
+                implementations={
+                    'tgss': GateImplementationInfo(loci=(('QB1', 'QB2'),)),
+                },
+                default_implementation='tgss',
+                override_default_implementation={},
+            ),
+            'measure': GateInfo(
+                implementations={
+                    'constant': GateImplementationInfo(loci=(('QB1',), ('QB2',))),
+                },
+                default_implementation='constant',
+                override_default_implementation={},
+            ),
+        },
+    )
+    metadata = IQMDeviceMetadata.from_architecture(arch)
     assert metadata.qubit_set == {cirq.NamedQubit('QB1'), cirq.NamedQubit('QB2')}
     assert [set(e) for e in metadata.nx_graph.edges] == [{cirq.NamedQubit('QB1'), cirq.NamedQubit('QB2')}]
-    assert metadata.gateset == cirq.Gateset(cirq.PhasedXPowGate, cirq.XPowGate, cirq.YPowGate, cirq.MeasurementGate)
+    assert metadata.gateset == cirq.Gateset(
+        cirq.PhasedXPowGate, cirq.XPowGate, cirq.YPowGate, cirq.MeasurementGate, cirq.CZPowGate
+    )

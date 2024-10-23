@@ -38,9 +38,10 @@ class IQMSampler(cirq.work.Sampler):
     Args:
         url: Endpoint for accessing the server interface. Has to start with http or https.
         device: Device to execute the circuits on. If ``None``, the device will be created based
-            on the quantum architecture obtained from :class:`~iqm.iqm_client.iqm_client.IQMClient`.
+            on the calibration-specific dynamic quantum architecture obtained from
+            :class:`~iqm.iqm_client.iqm_client.IQMClient`.
         calibration_set_id:
-            ID of the calibration set to use. If ``None``, use the latest one.
+            ID of the calibration set to use. If ``None``, use the default one.
         run_sweep_timeout:
             Timeout for polling sweep results, in seconds. If ``None``, use the client default value.
         compiler_options: The compilation options to use for the circuits, as defined by IQM Client.
@@ -65,12 +66,20 @@ class IQMSampler(cirq.work.Sampler):
         **user_auth_args,  # contains keyword args auth_server_url, username and password
     ):
         self._client = IQMClient(url, client_signature=f'cirq-iqm {version("cirq-iqm")}', **user_auth_args)
+        self._use_default_calibration_set = False
         if device is None:
-            device_metadata = IQMDeviceMetadata.from_architecture(self._client.get_quantum_architecture())
+            device_metadata = IQMDeviceMetadata.from_architecture(
+                self._client.get_dynamic_quantum_architecture(calibration_set_id)
+            )
             self._device = IQMDevice(device_metadata)
+            if calibration_set_id is None:
+                self._use_default_calibration_set = True
         else:
             self._device = device
-        self._calibration_set_id = calibration_set_id
+        if self._device.metadata.architecture is None:
+            self._calibration_set_id = calibration_set_id
+        else:
+            self._calibration_set_id = self._device.metadata.architecture.calibration_set_id
         self._run_sweep_timeout = run_sweep_timeout
         self._compiler_options = compiler_options if compiler_options is not None else CircuitCompilationOptions()
 
@@ -147,6 +156,29 @@ class IQMSampler(cirq.work.Sampler):
 
         if not self._client:
             raise RuntimeError('Cannot submit circuits since session to IQM client has been closed.')
+
+        if self._calibration_set_id is not None:
+            different_calset_ids = set()
+            for circuit in programs:
+                if hasattr(circuit, 'iqm_calibration_set_id'):
+                    if circuit.iqm_calibration_set_id != self._calibration_set_id:
+                        different_calset_ids.add(circuit.iqm_calibration_set_id)
+                else:
+                    different_calset_ids.add(None)
+            if different_calset_ids:
+                warnings.warn(
+                    f'Circuits have been decomposed/routed using calibration set(s) {different_calset_ids}, '
+                    f'different than the current calibration set {self._calibration_set_id} of this sampler. '
+                    f'Decompose/route the circuits using this sampler to ensure successful execution.'
+                )
+            if self._use_default_calibration_set:
+                default_calset_id = self._client.get_dynamic_quantum_architecture(None).calibration_set_id
+                if self._calibration_set_id != default_calset_id:
+                    warnings.warn(
+                        f'Server default calibration set has changed from {self._calibration_set_id} '
+                        f'to {default_calset_id}. Use a new IQMSampler to decompose/route the circuits using '
+                        f'the new calibration set.'
+                    )
 
         return self._client.create_run_request(
             serialized_circuits,

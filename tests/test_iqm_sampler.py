@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from importlib.metadata import version
+import re
 import sys
 import uuid
+import warnings
 
 import cirq
 from mockito import ANY, expect, mock, unstub, verify, verifyNoUnwantedInteractions, when
@@ -21,7 +23,7 @@ import numpy as np
 import pytest
 import sympy  # type: ignore
 
-from iqm.cirq_iqm import Adonis
+from iqm.cirq_iqm import Adonis, IQMDevice, IQMDeviceMetadata
 import iqm.cirq_iqm as module_under_test
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.cirq_iqm.iqm_sampler import IQMResult, IQMSampler, ResultMetadata, serialize_circuit
@@ -29,6 +31,9 @@ from iqm.iqm_client import (
     Circuit,
     CircuitCompilationOptions,
     CircuitValidationError,
+    DynamicQuantumArchitecture,
+    GateImplementationInfo,
+    GateInfo,
     HeraldingMode,
     Instruction,
     IQMClient,
@@ -65,7 +70,7 @@ def iqm_metadata():
                 Circuit(
                     name='circuit_1',
                     instructions=(
-                        Instruction(name='measurement', implementation=None, qubits=('QB1',), args={'key': 'm1'}),
+                        Instruction(name='measure', implementation=None, qubits=('QB1',), args={'key': 'm1'}),
                     ),
                 )
             ],
@@ -76,6 +81,45 @@ def iqm_metadata():
 @pytest.fixture()
 def adonis_sampler(base_url):
     return IQMSampler(base_url, Adonis())
+
+
+@pytest.fixture()
+def adonis_architecture():
+    return DynamicQuantumArchitecture(
+        calibration_set_id=uuid.UUID('26c5e70f-bea0-43af-bd37-6212ec7d04cb'),
+        qubits=['QB1', 'QB2', 'QB3', 'QB4', 'QB5'],
+        computational_resonators=[],
+        gates={
+            'prx': GateInfo(
+                implementations={
+                    'drag_gaussian': GateImplementationInfo(loci=(('QB1',), ('QB2',), ('QB3',), ('QB4',), ('QB5',))),
+                },
+                default_implementation='drag_gaussian',
+                override_default_implementation={},
+            ),
+            'cz': GateInfo(
+                implementations={
+                    'tgss': GateImplementationInfo(
+                        loci=(('QB1', 'QB3'), ('QB2', 'QB3'), ('QB4', 'QB3'), ('QB5', 'QB3'))
+                    ),
+                },
+                default_implementation='tgss',
+                override_default_implementation={},
+            ),
+            'measure': GateInfo(
+                implementations={
+                    'constant': GateImplementationInfo(loci=(('QB1',), ('QB2',), ('QB3',), ('QB4',), ('QB5',))),
+                },
+                default_implementation='constant',
+                override_default_implementation={},
+            ),
+        },
+    )
+
+
+@pytest.fixture()
+def adonis_sampler_from_architecture(base_url, adonis_architecture):
+    return IQMSampler(base_url, IQMDevice(IQMDeviceMetadata.from_architecture(adonis_architecture)))
 
 
 @pytest.fixture
@@ -99,13 +143,37 @@ def run_request():
 
 
 @pytest.mark.usefixtures('unstub')
-def test_run_sweep_raises_with_non_physical_names(adonis_sampler, circuit_non_physical):
-    when(adonis_sampler._client).get_quantum_architecture().thenReturn(
-        adonis_sampler._device.metadata.to_architecture()
+def test_init_default(base_url, adonis_architecture):
+    when(IQMClient).get_dynamic_quantum_architecture(None).thenReturn(adonis_architecture)
+    sampler = IQMSampler(base_url)
+    assert sampler.device == IQMDevice(IQMDeviceMetadata.from_architecture(adonis_architecture))
+    assert sampler._calibration_set_id == adonis_architecture.calibration_set_id
+
+
+@pytest.mark.usefixtures('unstub')
+def test_init_with_calset_id(base_url, adonis_architecture):
+    calset_id = uuid.uuid4()
+    arch = DynamicQuantumArchitecture(
+        calibration_set_id=calset_id,
+        qubits=adonis_architecture.qubits,
+        computational_resonators=adonis_architecture.computational_resonators,
+        gates=adonis_architecture.gates,
+    )
+    when(IQMClient).get_dynamic_quantum_architecture(calset_id).thenReturn(arch)
+    sampler = IQMSampler(base_url, calibration_set_id=calset_id)
+    assert sampler.device == IQMDevice(IQMDeviceMetadata.from_architecture(arch))
+    assert sampler._calibration_set_id == calset_id
+
+
+@pytest.mark.usefixtures('unstub')
+def test_run_sweep_raises_with_non_physical_names(adonis_sampler_from_architecture, circuit_non_physical):
+    sampler = adonis_sampler_from_architecture
+    when(sampler._client).get_dynamic_quantum_architecture(sampler._calibration_set_id).thenReturn(
+        sampler.device.metadata.architecture
     )
     # Note that validation is done in iqm_client, so this is now an integration test.
     with pytest.raises(CircuitValidationError, match='Qubit Alice is not allowed as locus for measure'):
-        adonis_sampler.run_sweep(circuit_non_physical, None)
+        sampler.run_sweep(circuit_non_physical, None)
 
 
 @pytest.mark.usefixtures('unstub')
@@ -128,7 +196,12 @@ def test_run_sweep_executes_circuit_with_physical_names(
 
 @pytest.mark.usefixtures('unstub')
 def test_run_sweep_executes_circuit_with_calibration_set_id(
-    base_url, circuit_physical, iqm_metadata, create_run_request_default_kwargs, job_id, run_request
+    base_url,
+    circuit_physical,
+    iqm_metadata,
+    create_run_request_default_kwargs,
+    job_id,
+    run_request,
 ):
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
@@ -337,13 +410,14 @@ def test_run_sweep_abort_job_failed(
 
 
 @pytest.mark.usefixtures('unstub')
-def test_run_iqm_batch_raises_with_non_physical_names(adonis_sampler, circuit_non_physical):
-    when(adonis_sampler._client).get_quantum_architecture().thenReturn(
-        adonis_sampler._device.metadata.to_architecture()
+def test_run_iqm_batch_raises_with_non_physical_names(adonis_sampler_from_architecture, circuit_non_physical):
+    sampler = adonis_sampler_from_architecture
+    when(sampler._client).get_dynamic_quantum_architecture(sampler._calibration_set_id).thenReturn(
+        sampler.device.metadata.architecture
     )
     # Note that validation is done in iqm_client, so this is now an integration test.
     with pytest.raises(CircuitValidationError, match='Qubit Alice is not allowed as locus for measure'):
-        adonis_sampler.run_iqm_batch([circuit_non_physical])
+        sampler.run_iqm_batch([circuit_non_physical])
 
     verifyNoUnwantedInteractions()
     unstub()
@@ -381,7 +455,10 @@ def test_run_ndonis(device_with_resonator, base_url, iqm_metadata, create_run_re
     run_result = RunResult(
         status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
     )
-    kwargs = create_run_request_default_kwargs | {'shots': repetitions}
+    kwargs = create_run_request_default_kwargs | {
+        'shots': repetitions,
+        'calibration_set_id': device_with_resonator.metadata.architecture.calibration_set_id,
+    }
     when(client).create_run_request(ANY, **kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id).thenReturn(run_result)
@@ -403,6 +480,109 @@ def test_run_ndonis(device_with_resonator, base_url, iqm_metadata, create_run_re
     assert isinstance(result, IQMResult)
     assert isinstance(result.metadata, ResultMetadata)
     np.testing.assert_array_equal(result.measurements['some stuff'], np.array([[0]]))
+
+
+@pytest.mark.usefixtures('unstub')
+def test_run_does_not_warn(
+    base_url,
+    adonis_architecture,
+    circuit_physical,
+    iqm_metadata,
+    create_run_request_default_kwargs,
+    job_id,
+    run_request,
+):  # pylint: disable=too-many-arguments,too-many-positional-arguments
+    when(IQMClient).get_dynamic_quantum_architecture(None).thenReturn(adonis_architecture)
+    kwargs = create_run_request_default_kwargs | {'calibration_set_id': adonis_architecture.calibration_set_id}
+    when(IQMClient).create_run_request(ANY, **kwargs).thenReturn(run_request)
+    when(IQMClient).submit_run_request(run_request).thenReturn(job_id)
+    when(IQMClient).wait_for_results(job_id).thenReturn(
+        RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
+    )
+
+    sampler = IQMSampler(base_url)
+    routed_circuit, _, _ = sampler.device.route_circuit(circuit_physical)
+
+    with warnings.catch_warnings(category=UserWarning):
+        warnings.simplefilter('error')
+        sampler.run(routed_circuit)
+
+
+@pytest.mark.usefixtures('unstub')
+def test_run_warns_if_default_calset_changed(
+    base_url,
+    adonis_architecture,
+    circuit_physical,
+    iqm_metadata,
+    create_run_request_default_kwargs,
+    job_id,
+    run_request,
+):  # pylint: disable=too-many-arguments,too-many-positional-arguments
+    new_default_architecture = DynamicQuantumArchitecture(
+        calibration_set_id=uuid.uuid4(),
+        qubits=adonis_architecture.qubits,
+        computational_resonators=adonis_architecture.computational_resonators,
+        gates=adonis_architecture.gates,
+    )
+    when(IQMClient).get_dynamic_quantum_architecture(None).thenReturn(adonis_architecture).thenReturn(
+        new_default_architecture
+    )
+    kwargs = create_run_request_default_kwargs | {'calibration_set_id': adonis_architecture.calibration_set_id}
+    when(IQMClient).create_run_request(ANY, **kwargs).thenReturn(run_request)
+    when(IQMClient).submit_run_request(run_request).thenReturn(job_id)
+    when(IQMClient).wait_for_results(job_id).thenReturn(
+        RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
+    )
+
+    sampler = IQMSampler(base_url)
+    routed_circuit, _, _ = sampler.device.route_circuit(circuit_physical)
+
+    with pytest.warns(
+        UserWarning,
+        match=f'default calibration set has changed '
+        f'from {adonis_architecture.calibration_set_id} to {new_default_architecture.calibration_set_id}',
+    ):
+        sampler.run(routed_circuit)
+
+
+@pytest.mark.usefixtures('unstub')
+def test_run_warns_if_circuits_routed_with_different_calset_id(
+    base_url,
+    adonis_architecture,
+    circuit_physical,
+    iqm_metadata,
+    create_run_request_default_kwargs,
+    job_id,
+    run_request,
+):  # pylint: disable=too-many-arguments,too-many-positional-arguments
+    other_calset_id = uuid.uuid4()
+    other_architecture = DynamicQuantumArchitecture(
+        calibration_set_id=other_calset_id,
+        qubits=adonis_architecture.qubits,
+        computational_resonators=adonis_architecture.computational_resonators,
+        gates=adonis_architecture.gates,
+    )
+    when(IQMClient).get_dynamic_quantum_architecture(None).thenReturn(adonis_architecture)
+    when(IQMClient).get_dynamic_quantum_architecture(other_calset_id).thenReturn(other_architecture)
+    kwargs = create_run_request_default_kwargs | {'calibration_set_id': other_calset_id}
+    when(IQMClient).create_run_request(ANY, **kwargs).thenReturn(run_request)
+    when(IQMClient).submit_run_request(run_request).thenReturn(job_id)
+    when(IQMClient).wait_for_results(job_id).thenReturn(
+        RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
+    )
+
+    sampler = IQMSampler(base_url)
+    routed_circuit, _, _ = sampler.device.route_circuit(circuit_physical)
+    other_sampler = IQMSampler(base_url, calibration_set_id=other_calset_id)
+
+    with pytest.warns(
+        UserWarning,
+        match=re.escape(
+            f'routed using calibration set(s) {set({adonis_architecture.calibration_set_id})}, '
+            f'different than the current calibration set {other_calset_id}'
+        ),
+    ):
+        other_sampler.run(routed_circuit)
 
 
 @pytest.mark.usefixtures('unstub')

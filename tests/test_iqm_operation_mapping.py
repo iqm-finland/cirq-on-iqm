@@ -41,7 +41,7 @@ def test_maps_measurement_gate(qubit_1):
     key = 'test measurement'
     operation = GateOperation(MeasurementGate(1, key), [qubit_1])
     mapped = map_operation(operation)
-    expected = Instruction(name='measurement', qubits=(str(qubit_1),), args={'key': key})
+    expected = Instruction(name='measure', qubits=(str(qubit_1),), args={'key': key})
     assert expected == mapped
 
 
@@ -100,7 +100,7 @@ def test_instruction_to_operation():
     assert operation.gate.exponent == 1.0
     assert operation.gate.global_shift == 0.0
 
-    instruction = Instruction(name='measurement', qubits=('QB1',), args={'key': 'test key'})
+    instruction = Instruction(name='measure', qubits=('QB1',), args={'key': 'test key'})
     operation = instruction_to_operation(instruction)
     assert isinstance(operation.gate, MeasurementGate)
     assert operation.qubits == (cirq.NamedQubit('QB1'),)

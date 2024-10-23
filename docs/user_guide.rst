@@ -267,15 +267,20 @@ Cirq contains various simulators which you can use to simulate the circuits cons
 In this subsection we demonstrate how to run them on an IQM quantum computer.
 
 Cirq on IQM provides :class:`.IQMSampler`, a subclass of :class:`cirq.work.Sampler`, which is used
-to execute quantum circuits. Once you have access to an IQM server you can create an :class:`.IQMSampler`
-instance and use its :meth:`~.IQMSampler.run` method to send a circuit for execution and retrieve the results:
+to execute quantum circuits and decompose/route them for the architecture of the quantum computer.
+Once you have access to an IQM server you can create an :class:`.IQMSampler` instance and use its
+:meth:`~.IQMSampler.run` method to send a circuit for execution and retrieve the results:
 
 .. code-block:: python
 
    from iqm.cirq_iqm.iqm_sampler import IQMSampler
 
+   # circuit = ...
+
    sampler = IQMSampler(iqm_server_url)
-   result = sampler.run(routed_circuit_1, repetitions=10)
+   decomposed_circuit = sampler.device.decompose_circuit(circuit)
+   routed_circuit, _, _ = sampler.device.route_circuit(decomposed_circuit)
+   result = sampler.run(routed_circuit, repetitions=10)
    print(result.measurements['m'])
 
 
@@ -337,8 +342,10 @@ For example if you would like to use a particular calibration set, you can provi
 
 
 The sampler will by default use an :class:`.IQMDevice` created based on architecture data obtained
-from the server, which is then available in the :attr:`.IQMSampler.device` property. Alternatively,
-the device can be specified directly with the :attr:`device` argument.
+from the server, which is then available in the :attr:`.IQMSampler.device` property. The architecture
+data depends on the calibration set used by the sampler, so one should usually use different sampler
+instances for different calibration sets. Alternatively, the device can be specified directly with
+the :attr:`device` argument, but this is not recommended when running on a real quantum computer.
 
 When executing a circuit that uses something other than the device qubits, you need to route it first,
 as explained in the :ref:`routing` section above.

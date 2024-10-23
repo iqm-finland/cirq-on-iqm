@@ -24,10 +24,8 @@ _IQM_CIRQ_OP_MAP: dict[str, tuple[type[Gate], ...]] = {
     # XPow and YPow kept for convenience, Cirq does not know how to decompose them into PhasedX
     # so we would have to add those rules...
     'prx': (PhasedXPowGate, XPowGate, YPowGate),
-    'phased_rx': (PhasedXPowGate, XPowGate, YPowGate),
     'cz': (CZPowGate,),
     'move': (IQMMoveGate,),
-    'measurement': (MeasurementGate,),
     'measure': (MeasurementGate,),
     'barrier': tuple(),
 }
@@ -104,7 +102,7 @@ def map_operation(operation: Operation) -> Instruction:
             raise OperationNotSupportedError('Invert mask not supported')
 
         return Instruction(
-            name='measurement',
+            name='measure',
             qubits=tuple(qubits),
             args={'key': operation.gate.key},
         )

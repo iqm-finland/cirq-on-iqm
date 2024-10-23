@@ -11,3 +11,4 @@ Contributors
 * Olli Tyrkkö <otyrkko@meetiqm.com>
 * Rakhim Davletkaliyev <rakhim.davletkaliyev@meetiqm.com>
 * Jake Muff <jake.muff@vtt.fi>
+* Janne Kotilahti <janne@meetiqm.com>
