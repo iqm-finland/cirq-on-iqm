@@ -151,7 +151,7 @@ class TestSimplifyCircuit:
             [
                 cirq.ZPowGate(exponent=0.1)(q0),
                 cirq.ZPowGate(exponent=0.2)(q1),
-                cirq.MeasurementGate(1, key='measurement')(q0),
+                cirq.MeasurementGate(1, key='measure')(q0),
             ]
         )
         new = simplify_circuit(c)
@@ -168,7 +168,7 @@ class TestSimplifyCircuit:
             [
                 (cirq.X**0.4)(q0),
                 cirq.ZPowGate(exponent=0.1)(q1),
-                cirq.MeasurementGate(1, key='measurement')(q1),
+                cirq.MeasurementGate(1, key='measure')(q1),
                 cirq.ZPowGate(exponent=0.2)(q2),
             ]
         )
@@ -196,7 +196,7 @@ class TestSimplifyCircuit:
             [
                 (cirq.X**0.4)(q0),
                 cirq.ZPowGate(exponent=0.1)(q1),  # Rz followed by measurement
-                cirq.MeasurementGate(1, key='measurement')(q1),
+                cirq.MeasurementGate(1, key='measure')(q1),
                 cirq.ZPowGate(exponent=0.2)(q2),  # final Rz
             ]
         )

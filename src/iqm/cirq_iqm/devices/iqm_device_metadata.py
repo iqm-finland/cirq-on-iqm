@@ -22,7 +22,7 @@ from cirq import Gate, NamedQid, devices, ops
 from cirq.contrib.routing.router import nx
 
 from iqm.cirq_iqm.iqm_operation_mapping import _IQM_CIRQ_OP_MAP
-from iqm.iqm_client import QuantumArchitectureSpecification
+from iqm.iqm_client import DynamicQuantumArchitecture
 
 
 @cirq.value.value_equality
@@ -35,6 +35,7 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         operations: Supported quantum operations of the device, mapping op types to their possible loci.
         gateset: Native gateset of the device. If None, a default IQM device gateset will be used.
         resonators: computational resonators of the device
+        architecture: architecture from which values of the other arguments were obtained
     """
 
     QUBIT_NAME_PREFIX: str = 'QB'
@@ -51,6 +52,7 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         operations: Optional[dict[type[cirq.Gate], list[tuple[cirq.NamedQid, ...]]]] = None,
         gateset: Optional[cirq.Gateset] = None,
         resonators: Iterable[NamedQid] = (),
+        architecture: Optional[DynamicQuantumArchitecture] = None,
     ):
         """Construct an IQMDeviceMetadata object."""
         nx_graph = nx.Graph()
@@ -79,6 +81,8 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
             raise ValueError('Operations must be provided if a gateset is provided, it cannot be reconstructed.')
         self.operations = operations
 
+        self.architecture = architecture
+
     @property
     def resonator_set(self) -> FrozenSet[NamedQid]:
         """Returns the set of resonators on the device.
@@ -89,55 +93,46 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         return self._resonator_set
 
     @classmethod
-    def from_architecture(cls, architecture: QuantumArchitectureSpecification) -> IQMDeviceMetadata:
-        """Returns device metadata object created based on architecture specification"""
-        qubits = tuple(NamedQid(qb, dimension=2) for qb in architecture.qubits if qb.startswith(cls.QUBIT_NAME_PREFIX))
+    def from_architecture(cls, architecture: DynamicQuantumArchitecture) -> IQMDeviceMetadata:
+        """Returns device metadata object created based on dynamic quantum architecture"""
+        qubits = tuple(NamedQid(qb, dimension=2) for qb in architecture.qubits)
         resonators = tuple(
-            NamedQid(qb, dimension=cls.RESONATOR_DIMENSION)
-            for qb in architecture.qubits
-            if not qb.startswith(cls.QUBIT_NAME_PREFIX)
+            NamedQid(cr, dimension=cls.RESONATOR_DIMENSION) for cr in architecture.computational_resonators
         )
         connectivity = tuple(
             tuple(
                 (
-                    NamedQid(qb, dimension=2)
-                    if qb.startswith(cls.QUBIT_NAME_PREFIX)
-                    else NamedQid(qb, dimension=cls.RESONATOR_DIMENSION)
+                    NamedQid(component, dimension=2)
+                    if component in qubits
+                    else NamedQid(component, dimension=cls.RESONATOR_DIMENSION)
                 )
-                for qb in edge
+                for component in locus
             )
-            for edge in architecture.qubit_connectivity
+            for gate_name, gate_info in architecture.gates.items()
+            for locus in gate_info.loci
+            if len(locus) > 1
         )
         operations: dict[type[cirq.Gate], list[tuple[NamedQid, ...]]] = {
             cirq_op: [
                 tuple(
                     (
-                        NamedQid(qb, dimension=2)
-                        if qb.startswith(cls.QUBIT_NAME_PREFIX)
-                        else NamedQid(qb, dimension=cls.RESONATOR_DIMENSION)
+                        NamedQid(component, dimension=2)
+                        if component in qubits
+                        else NamedQid(component, dimension=cls.RESONATOR_DIMENSION)
                     )
-                    for qb in args
+                    for component in locus
                 )
-                for args in qubits
+                for locus in gate_info.loci
             ]
-            for iqm_op, qubits in architecture.operations.items()
-            for cirq_op in _IQM_CIRQ_OP_MAP[iqm_op]
+            for gate_name, gate_info in architecture.gates.items()
+            for cirq_op in _IQM_CIRQ_OP_MAP[gate_name]
         }
-        return cls(qubits, connectivity, operations=operations, resonators=resonators)
-
-    def to_architecture(self) -> QuantumArchitectureSpecification:
-        """Returns the architecture specification object created based on device metadata."""
-        qubits = tuple(qb.name for qb in self._qubit_set)
-        resonators = tuple(qb.name for qb in self.resonator_set)
-        connectivity = tuple(tuple(qb.name for qb in edge) for edge in self.nx_graph.edges())
-        operations: dict[str, list[tuple[str, ...]]] = {
-            iqm_op: [tuple(qb.name for qb in args) for args in qubits]
-            for cirq_op, qubits in self.operations.items()
-            for iqm_op, cirq_ops in _IQM_CIRQ_OP_MAP.items()
-            if cirq_op in cirq_ops
-        }
-        return QuantumArchitectureSpecification(
-            name='From Cirq object', qubits=resonators + qubits, qubit_connectivity=connectivity, operations=operations
+        return cls(
+            qubits,
+            connectivity,
+            operations=operations,
+            resonators=resonators,
+            architecture=architecture,
         )
 
     @classmethod

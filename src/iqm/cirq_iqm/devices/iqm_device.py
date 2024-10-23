@@ -206,6 +206,9 @@ class IQMDevice(devices.Device):
         routing. The transformer :class:`cirq.RouterCQC` is used for routing.
         Note that only gates of one or two qubits, and measurement operations of arbitrary size are supported.
 
+        Adds the attribute ``iqm_calibration_set_id`` to the routed circuit, with value taken from
+        ``self.metadata.architecture.calibration_set_id`` if available, otherwise None.
+
         Args:
             circuit: Circuit to route.
             initial_mapper: Initial mapping from ``circuit`` qubits to device qubits, to serve as
@@ -258,10 +261,17 @@ class IQMDevice(devices.Device):
             # Insert IQMMoveGates into the circuit.
             routed_circuit = transpile_insert_moves_into_circuit(routed_circuit, self)
 
+        routed_circuit.iqm_calibration_set_id = (  # type: ignore
+            self._metadata.architecture.calibration_set_id if self._metadata.architecture is not None else None
+        )
+
         return routed_circuit, initial_mapping, final_mapping
 
     def decompose_circuit(self, circuit: cirq.Circuit) -> cirq.Circuit:
         """Decomposes the given circuit to the native gate set of the device.
+
+        Adds the attribute ``iqm_calibration_set_id`` to the decomposed circuit, with value taken from
+        ``self.metadata.architecture.calibration_set_id`` if available, otherwise None.
 
         Args:
             circuit: circuit to decompose
@@ -274,7 +284,11 @@ class IQMDevice(devices.Device):
             self.decompose_operation,
             preserve_moments=False,
         )
-        return cirq.Circuit(moments)
+        decomposed_circuit = cirq.Circuit(moments)
+        decomposed_circuit.iqm_calibration_set_id = (  # type: ignore
+            self._metadata.architecture.calibration_set_id if self._metadata.architecture is not None else None
+        )
+        return decomposed_circuit
 
     def validate_circuit(self, circuit: cirq.AbstractCircuit) -> None:
         super().validate_circuit(circuit)
