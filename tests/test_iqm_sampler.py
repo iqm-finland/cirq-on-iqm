@@ -172,7 +172,7 @@ def test_run_sweep_raises_with_non_physical_names(adonis_sampler_from_architectu
         sampler.device.metadata.architecture
     )
     # Note that validation is done in iqm_client, so this is now an integration test.
-    with pytest.raises(CircuitValidationError, match='Qubit Alice is not allowed as locus for measure'):
+    with pytest.raises(CircuitValidationError, match="Alice is not allowed as locus for 'measure'"):
         sampler.run_sweep(circuit_non_physical, None)
 
 
@@ -416,11 +416,10 @@ def test_run_iqm_batch_raises_with_non_physical_names(adonis_sampler_from_archit
         sampler.device.metadata.architecture
     )
     # Note that validation is done in iqm_client, so this is now an integration test.
-    with pytest.raises(CircuitValidationError, match='Qubit Alice is not allowed as locus for measure'):
+    with pytest.raises(CircuitValidationError, match="Alice is not allowed as locus for 'measure'"):
         sampler.run_iqm_batch([circuit_non_physical])
 
     verifyNoUnwantedInteractions()
-    unstub()
 
 
 @pytest.mark.usefixtures('unstub')
