@@ -57,10 +57,9 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         """Construct an IQMDeviceMetadata object."""
         nx_graph = nx.Graph()
         for edge in connectivity:
-            edge_qubits = list(edge)
-            if len(edge_qubits) != 2:
+            if len(edge) != 2:
                 raise ValueError('Connectivity must be an iterable of 2-tuples.')
-            nx_graph.add_edge(edge_qubits[0], edge_qubits[1])
+            nx_graph.add_edge(edge[0], edge[1])
         super().__init__(qubits, nx_graph)
         self._qubit_set: FrozenSet[NamedQid] = frozenset(qubits)
         self._resonator_set: FrozenSet[NamedQid] = frozenset(resonators)
