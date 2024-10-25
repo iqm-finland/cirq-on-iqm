@@ -14,6 +14,7 @@
 from uuid import UUID
 
 import cirq
+import pytest
 
 from iqm.cirq_iqm import IQMDeviceMetadata
 from iqm.iqm_client import DynamicQuantumArchitecture, GateImplementationInfo, GateInfo
@@ -54,3 +55,14 @@ def test_device_metadata_from_architecture():
     assert metadata.gateset == cirq.Gateset(
         cirq.PhasedXPowGate, cirq.XPowGate, cirq.YPowGate, cirq.MeasurementGate, cirq.CZPowGate
     )
+
+
+def test_device_metadata_qubit_indices_bad_connectivity():
+    with pytest.raises(ValueError, match='connectivity_indices must be an iterable of 2-sets'):
+        IQMDeviceMetadata.from_qubit_indices(3, [{1, 2}, {2, 3}, {1, 2, 3}])
+
+
+def test_device_metadata_init_bad_connectivity():
+    qubits = [cirq.NamedQubit(f'QB{q}') for q in range(3)]
+    with pytest.raises(ValueError, match='Connectivity must be an iterable of 2-tuples'):
+        IQMDeviceMetadata(qubits, [(qubits[0], qubits[1]), (qubits[0], qubits[1], qubits[2])])

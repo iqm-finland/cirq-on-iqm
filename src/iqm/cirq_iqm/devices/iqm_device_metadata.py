@@ -47,7 +47,7 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
     def __init__(
         self,
         qubits: Iterable[NamedQid],
-        connectivity: Iterable[Iterable[NamedQid]],
+        connectivity: Iterable[tuple[NamedQid, ...]],
         *,
         operations: Optional[dict[type[cirq.Gate], list[tuple[cirq.NamedQid, ...]]]] = None,
         gateset: Optional[cirq.Gateset] = None,
@@ -58,6 +58,8 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         nx_graph = nx.Graph()
         for edge in connectivity:
             edge_qubits = list(edge)
+            if len(edge_qubits) != 2:
+                raise ValueError('Connectivity must be an iterable of 2-tuples.')
             nx_graph.add_edge(edge_qubits[0], edge_qubits[1])
         super().__init__(qubits, nx_graph)
         self._qubit_set: FrozenSet[NamedQid] = frozenset(qubits)
@@ -99,8 +101,10 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         resonators = tuple(
             NamedQid(cr, dimension=cls.RESONATOR_DIMENSION) for cr in architecture.computational_resonators
         )
-        connectivity = tuple(
-            tuple(
+
+        def get_qid_locus(locus: Iterable[str]) -> tuple[NamedQid, ...]:
+            """Converts locus component names to Qids."""
+            return tuple(
                 (
                     NamedQid(component, dimension=2)
                     if component in qubits
@@ -108,22 +112,16 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
                 )
                 for component in locus
             )
-            for gate_name, gate_info in architecture.gates.items()
+
+        # connectivity consists of all arity-2 gate loci in the DQA
+        connectivity = tuple(
+            get_qid_locus(locus)
+            for gate_info in architecture.gates.values()
             for locus in gate_info.loci
-            if len(locus) > 1
+            if len(locus) == 2
         )
         operations: dict[type[cirq.Gate], list[tuple[NamedQid, ...]]] = {
-            cirq_op: [
-                tuple(
-                    (
-                        NamedQid(component, dimension=2)
-                        if component in qubits
-                        else NamedQid(component, dimension=cls.RESONATOR_DIMENSION)
-                    )
-                    for component in locus
-                )
-                for locus in gate_info.loci
-            ]
+            cirq_op: [get_qid_locus(locus) for locus in gate_info.loci]
             for gate_name, gate_info in architecture.gates.items()
             for cirq_op in _IQM_CIRQ_OP_MAP[gate_name]
         }
@@ -139,11 +137,13 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
     def from_qubit_indices(
         cls,
         qubit_count: int,
-        connectivity_indices: tuple[set[int], ...],
+        connectivity_indices: Iterable[set[int]],
         gateset: Optional[tuple[type[cirq.Gate]]] = None,
     ) -> IQMDeviceMetadata:
         """Returns device metadata object created based on connectivity specified using qubit indices only."""
         qubits = tuple(NamedQid.range(1, qubit_count + 1, prefix=cls.QUBIT_NAME_PREFIX, dimension=2))
+        if set(map(len, connectivity_indices)) != {2}:
+            raise ValueError('connectivity_indices must be an iterable of 2-sets.')
         connectivity = tuple(
             tuple(NamedQid(f'{cls.QUBIT_NAME_PREFIX}{qb}', dimension=2) for qb in edge) for edge in connectivity_indices
         )
