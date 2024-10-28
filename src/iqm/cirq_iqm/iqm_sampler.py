@@ -58,8 +58,8 @@ class IQMSampler(cirq.work.Sampler):
     def __init__(
         self,
         url: str,
-        device: Optional[IQMDevice] = None,
         *,
+        device: Optional[IQMDevice] = None,
         calibration_set_id: Optional[UUID] = None,
         run_sweep_timeout: Optional[int] = None,
         compiler_options: Optional[CircuitCompilationOptions] = None,

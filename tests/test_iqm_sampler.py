@@ -80,7 +80,7 @@ def iqm_metadata():
 
 @pytest.fixture()
 def adonis_sampler(base_url):
-    return IQMSampler(base_url, Adonis())
+    return IQMSampler(base_url, device=Adonis())
 
 
 @pytest.fixture()
@@ -119,7 +119,7 @@ def adonis_architecture():
 
 @pytest.fixture()
 def adonis_sampler_from_architecture(base_url, adonis_architecture):
-    return IQMSampler(base_url, IQMDevice(IQMDeviceMetadata.from_architecture(adonis_architecture)))
+    return IQMSampler(base_url, device=IQMDevice(IQMDeviceMetadata.from_architecture(adonis_architecture)))
 
 
 @pytest.fixture
@@ -206,7 +206,7 @@ def test_run_sweep_executes_circuit_with_calibration_set_id(
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
     calibration_set_id = uuid.uuid4()
-    sampler = IQMSampler(base_url, Adonis(), calibration_set_id=calibration_set_id)
+    sampler = IQMSampler(base_url, device=Adonis(), calibration_set_id=calibration_set_id)
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     kwargs = create_run_request_default_kwargs | {'calibration_set_id': calibration_set_id}
     when(client).create_run_request(ANY, **kwargs).thenReturn(run_request)
@@ -226,7 +226,7 @@ def test_run_sweep_has_duration_check_enabled_by_default(
 ):
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
-    sampler = IQMSampler(base_url, Adonis())
+    sampler = IQMSampler(base_url, device=Adonis())
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     assert sampler._compiler_options.max_circuit_duration_over_t2 is None
     kwargs = create_run_request_default_kwargs | {
@@ -250,7 +250,7 @@ def test_run_sweep_executes_circuit_with_duration_check_disabled(
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
     sampler = IQMSampler(
-        base_url, Adonis(), compiler_options=CircuitCompilationOptions(max_circuit_duration_over_t2=0.0)
+        base_url, device=Adonis(), compiler_options=CircuitCompilationOptions(max_circuit_duration_over_t2=0.0)
     )
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     assert sampler._compiler_options.max_circuit_duration_over_t2 == 0.0
@@ -275,7 +275,7 @@ def test_run_sweep_allows_to_override_polling_timeout(
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
     timeout = 123
-    sampler = IQMSampler(base_url, Adonis(), run_sweep_timeout=timeout)
+    sampler = IQMSampler(base_url, device=Adonis(), run_sweep_timeout=timeout)
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     when(client).create_run_request(ANY, **create_run_request_default_kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
@@ -294,7 +294,7 @@ def test_run_sweep_has_heralding_mode_none_by_default(
 ):
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
-    sampler = IQMSampler(base_url, Adonis())
+    sampler = IQMSampler(base_url, device=Adonis())
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     kwargs = create_run_request_default_kwargs
     assert sampler._compiler_options.heralding_mode == HeraldingMode.NONE
@@ -316,7 +316,7 @@ def test_run_sweep_executes_circuit_with_heralding_mode_zeros(
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
     sampler = IQMSampler(
-        base_url, Adonis(), compiler_options=CircuitCompilationOptions(heralding_mode=HeraldingMode.ZEROS)
+        base_url, device=Adonis(), compiler_options=CircuitCompilationOptions(heralding_mode=HeraldingMode.ZEROS)
     )
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     kwargs = create_run_request_default_kwargs | {
@@ -621,7 +621,7 @@ def test_run_iqm_batch_allows_to_override_polling_timeout(
         status=Status.READY, measurements=[{'some stuff': [[0]]}, {'some stuff': [[1]]}], metadata=iqm_metadata
     )
     timeout = 123
-    sampler = IQMSampler(base_url, Adonis(), run_sweep_timeout=timeout)
+    sampler = IQMSampler(base_url, device=Adonis(), run_sweep_timeout=timeout)
     when(client).create_run_request(ANY, **create_run_request_default_kwargs).thenReturn(run_request)
     when(client).submit_run_request(run_request).thenReturn(job_id)
     when(client).wait_for_results(job_id, timeout).thenReturn(run_result)
@@ -651,14 +651,14 @@ def test_credentials_are_passed_to_client():
     when(module_under_test.iqm_sampler).IQMClient('http://url', client_signature=ANY, **user_auth_args).thenReturn(
         mock(IQMClient)
     )
-    IQMSampler('http://url', Adonis(), **user_auth_args)
+    IQMSampler('http://url', device=Adonis(), **user_auth_args)
     verify(module_under_test.iqm_sampler, times=1).IQMClient('http://url', client_signature=ANY, **user_auth_args)
 
 
 @pytest.mark.usefixtures('unstub')
 def test_client_signature_is_passed_to_client():
     """Test that IQMSampler set client signature"""
-    sampler = IQMSampler('http://some-url.iqm.fi', Adonis())
+    sampler = IQMSampler('http://some-url.iqm.fi', device=Adonis())
     assert f'cirq-iqm {version("cirq-iqm")}' in sampler._client._signature
 
 
@@ -669,7 +669,7 @@ def test_close_client():
         'username': 'fake-username',
         'password': 'fake-password',
     }
-    sampler = IQMSampler('http://url', Adonis(), **user_auth_args)
+    sampler = IQMSampler('http://url', device=Adonis(), **user_auth_args)
     mock_client = mock(IQMClient)
     sampler._client = mock_client
     when(mock_client).close_auth_session().thenReturn(True)
