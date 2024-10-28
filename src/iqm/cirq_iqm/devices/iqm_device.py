@@ -21,7 +21,6 @@ to use with the architecture.
 from __future__ import annotations
 
 import collections.abc as ca
-from itertools import zip_longest
 from math import pi as PI
 from typing import Optional, Sequence, cast
 

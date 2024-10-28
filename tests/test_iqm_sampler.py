@@ -18,7 +18,7 @@ import uuid
 import warnings
 
 import cirq
-from mockito import ANY, expect, mock, unstub, verify, verifyNoUnwantedInteractions, when
+from mockito import ANY, expect, mock, verify, verifyNoUnwantedInteractions, when
 import numpy as np
 import pytest
 import sympy  # type: ignore
