@@ -177,7 +177,7 @@ class IQMSampler(cirq.work.Sampler):
                     warnings.warn(
                         f'Server default calibration set has changed from {self._calibration_set_id} '
                         f'to {default_calset_id}. Use a new IQMSampler to decompose/route the circuits using '
-                        f'the new calibration set.'
+                        'the new calibration set to ensure successful execution.'
                     )
 
         return self._client.create_run_request(
