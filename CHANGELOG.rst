@@ -7,6 +7,7 @@ Version 15.0
 
 * Use dynamic quantum architecture for circuit decomposition and routing. `#139 <https://github.com/iqm-finland/cirq-on-iqm/pull/139>`_
 * Require iqm-client >= 20.0. `#139 <https://github.com/iqm-finland/cirq-on-iqm/pull/139>`_
+* Disable attestations on ``gh-action-pypi-publish`` to fix failing PyPI publishing. `#139 <https://github.com/iqm-finland/cirq-on-iqm/pull/139>`_
 
 Version 14.6
 ============
