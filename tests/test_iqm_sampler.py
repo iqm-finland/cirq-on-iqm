@@ -502,7 +502,7 @@ def test_run_does_not_warn(
     sampler = IQMSampler(base_url)
     routed_circuit, _, _ = sampler.device.route_circuit(circuit_physical)
 
-    with warnings.catch_warnings(category=UserWarning):
+    with warnings.catch_warnings():
         warnings.simplefilter('error')
         sampler.run(routed_circuit)
 
