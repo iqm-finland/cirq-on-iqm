@@ -75,6 +75,13 @@ class IQMSampler(cirq.work.Sampler):
             if calibration_set_id is None:
                 self._use_default_calibration_set = True
         else:
+            if calibration_set_id is not None:
+                # validate device compatibility with the given calibration set
+                device_metadata = IQMDeviceMetadata.from_architecture(
+                    self._client.get_dynamic_quantum_architecture(calibration_set_id)
+                )
+                if device.metadata != device_metadata:  # checks equality using device.metadata._value_equality_values_
+                    raise ValueError(f"The given 'device' is not compatible with calibration set {calibration_set_id}.")
             self._device = device
         if self._device.metadata.architecture is None:
             self._calibration_set_id = calibration_set_id

@@ -152,17 +152,28 @@ def test_init_default(base_url, adonis_architecture):
 
 @pytest.mark.usefixtures('unstub')
 def test_init_with_calset_id(base_url, adonis_architecture):
-    calset_id = uuid.uuid4()
-    arch = DynamicQuantumArchitecture(
-        calibration_set_id=calset_id,
-        qubits=adonis_architecture.qubits,
-        computational_resonators=adonis_architecture.computational_resonators,
-        gates=adonis_architecture.gates,
-    )
-    when(IQMClient).get_dynamic_quantum_architecture(calset_id).thenReturn(arch)
+    calset_id = adonis_architecture.calibration_set_id
+    when(IQMClient).get_dynamic_quantum_architecture(calset_id).thenReturn(adonis_architecture)
     sampler = IQMSampler(base_url, calibration_set_id=calset_id)
-    assert sampler.device == IQMDevice(IQMDeviceMetadata.from_architecture(arch))
+    assert sampler.device == IQMDevice(IQMDeviceMetadata.from_architecture(adonis_architecture))
     assert sampler._calibration_set_id == calset_id
+
+
+@pytest.mark.usefixtures('unstub')
+def test_init_with_calset_id_and_device(base_url, adonis_architecture):
+    calset_id = adonis_architecture.calibration_set_id
+    when(IQMClient).get_dynamic_quantum_architecture(calset_id).thenReturn(adonis_architecture)
+    sampler = IQMSampler(base_url, device=Adonis(), calibration_set_id=calset_id)
+    assert sampler.device.metadata == IQMDeviceMetadata.from_architecture(adonis_architecture)
+    assert sampler._calibration_set_id == calset_id
+
+
+@pytest.mark.usefixtures('unstub')
+def test_init_warns_if_device_not_compatible_with_calset(base_url, fake_arch_with_resonator):
+    calset_id = uuid.uuid4()
+    when(IQMClient).get_dynamic_quantum_architecture(calset_id).thenReturn(fake_arch_with_resonator)
+    with pytest.raises(ValueError, match=f"'device' is not compatible with calibration set {calset_id}"):
+        IQMSampler(base_url, device=Adonis(), calibration_set_id=calset_id)
 
 
 @pytest.mark.usefixtures('unstub')
@@ -197,6 +208,7 @@ def test_run_sweep_executes_circuit_with_physical_names(
 @pytest.mark.usefixtures('unstub')
 def test_run_sweep_executes_circuit_with_calibration_set_id(
     base_url,
+    adonis_architecture,
     circuit_physical,
     iqm_metadata,
     create_run_request_default_kwargs,
@@ -205,8 +217,9 @@ def test_run_sweep_executes_circuit_with_calibration_set_id(
 ):
     # pylint: disable=too-many-arguments,too-many-positional-arguments
     client = mock(IQMClient)
-    calibration_set_id = uuid.uuid4()
-    sampler = IQMSampler(base_url, device=Adonis(), calibration_set_id=calibration_set_id)
+    calibration_set_id = adonis_architecture.calibration_set_id
+    when(IQMClient).get_dynamic_quantum_architecture(calibration_set_id).thenReturn(adonis_architecture)
+    sampler = IQMSampler(base_url, calibration_set_id=calibration_set_id)
     run_result = RunResult(status=Status.READY, measurements=[{'some stuff': [[0], [1]]}], metadata=iqm_metadata)
     kwargs = create_run_request_default_kwargs | {'calibration_set_id': calibration_set_id}
     when(client).create_run_request(ANY, **kwargs).thenReturn(run_request)
