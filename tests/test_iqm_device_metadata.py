@@ -20,7 +20,7 @@ from iqm.iqm_client import QuantumArchitectureSpecification
 
 def test_device_metadata_from_architecture():
     qa = {
-        'name': 'Valkmusa',
+        'name': 'Adonis',
         'operations': [
             'prx',
             'measurement',

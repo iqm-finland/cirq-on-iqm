@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 14.7
+============
+
+* Drop support for Valkmusa architecture.
+
 Version 14.6
 ============
 
