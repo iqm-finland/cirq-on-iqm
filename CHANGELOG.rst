@@ -5,7 +5,7 @@ Changelog
 Version 15.1
 ============
 
-* Add support for classically controlled gates.
+* Bugfix: Accept unknown gates in the DQA.
   `#141 <https://github.com/iqm-finland/qiskit-on-iqm/pull/141>`_
 
 Version 15.0
