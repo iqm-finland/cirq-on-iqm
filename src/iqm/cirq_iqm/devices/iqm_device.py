@@ -21,7 +21,6 @@ to use with the architecture.
 from __future__ import annotations
 
 import collections.abc as ca
-from itertools import zip_longest
 from math import pi as PI
 from typing import Optional, Sequence, cast
 
@@ -95,19 +94,18 @@ class IQMDevice(devices.Device):
     def has_valid_operation_targets(self, op: cirq.Operation) -> bool:
         """Predicate, True iff the given operation is native and its targets are valid."""
         matched_support = [
-            (g, qbs)
-            for g, qbs in self.supported_operations.items()
+            (g, loci)
+            for g, loci in self.supported_operations.items()
             if op.gate is not None and op.gate in cirq.GateFamily(g)
         ]
         if len(matched_support) > 0:
-            gf, valid_targets = matched_support[0]
-            valid_qubits = set(q for qb in valid_targets for q in qb)
+            gf, valid_loci = matched_support[0]
             if gf == cirq.MeasurementGate:  # Measurements can be done on any available qubits
+                valid_qubits = set(q for locus in valid_loci for q in locus)
                 return all(q in valid_qubits for q in op.qubits)
             if issubclass(gf, cirq.InterchangeableQubitsGate):
-                target_qubits = set(op.qubits)
-                return any(set(t) == target_qubits for t in valid_targets)
-            return any(all(q1 == q2 for q1, q2 in zip_longest(op.qubits, t)) for t in valid_targets)
+                return any(set(t) == set(op.qubits) for t in valid_loci)
+            return op.qubits in valid_loci
         return False
 
     def operation_decomposer(self, op: cirq.Operation) -> Optional[list[cirq.Operation]]:
@@ -206,6 +204,9 @@ class IQMDevice(devices.Device):
         routing. The transformer :class:`cirq.RouterCQC` is used for routing.
         Note that only gates of one or two qubits, and measurement operations of arbitrary size are supported.
 
+        Adds the attribute ``iqm_calibration_set_id`` to the routed circuit, with value taken from
+        ``self.metadata.architecture.calibration_set_id`` if available, otherwise None.
+
         Args:
             circuit: Circuit to route.
             initial_mapper: Initial mapping from ``circuit`` qubits to device qubits, to serve as
@@ -258,10 +259,17 @@ class IQMDevice(devices.Device):
             # Insert IQMMoveGates into the circuit.
             routed_circuit = transpile_insert_moves_into_circuit(routed_circuit, self)
 
+        routed_circuit.iqm_calibration_set_id = (  # type: ignore
+            self._metadata.architecture.calibration_set_id if self._metadata.architecture is not None else None
+        )
+
         return routed_circuit, initial_mapping, final_mapping
 
     def decompose_circuit(self, circuit: cirq.Circuit) -> cirq.Circuit:
         """Decomposes the given circuit to the native gate set of the device.
+
+        Adds the attribute ``iqm_calibration_set_id`` to the decomposed circuit, with value taken from
+        ``self.metadata.architecture.calibration_set_id`` if available, otherwise None.
 
         Args:
             circuit: circuit to decompose
@@ -274,7 +282,11 @@ class IQMDevice(devices.Device):
             self.decompose_operation,
             preserve_moments=False,
         )
-        return cirq.Circuit(moments)
+        decomposed_circuit = cirq.Circuit(moments)
+        decomposed_circuit.iqm_calibration_set_id = (  # type: ignore
+            self._metadata.architecture.calibration_set_id if self._metadata.architecture is not None else None
+        )
+        return decomposed_circuit
 
     def validate_circuit(self, circuit: cirq.AbstractCircuit) -> None:
         super().validate_circuit(circuit)

@@ -38,9 +38,10 @@ class IQMSampler(cirq.work.Sampler):
     Args:
         url: Endpoint for accessing the server interface. Has to start with http or https.
         device: Device to execute the circuits on. If ``None``, the device will be created based
-            on the quantum architecture obtained from :class:`~iqm.iqm_client.iqm_client.IQMClient`.
+            on the calibration-specific dynamic quantum architecture obtained from
+            :class:`~iqm.iqm_client.iqm_client.IQMClient`.
         calibration_set_id:
-            ID of the calibration set to use. If ``None``, use the latest one.
+            ID of the calibration set to use. If ``None``, use the default one.
         run_sweep_timeout:
             Timeout for polling sweep results, in seconds. If ``None``, use the client default value.
         compiler_options: The compilation options to use for the circuits, as defined by IQM Client.
@@ -57,20 +58,30 @@ class IQMSampler(cirq.work.Sampler):
     def __init__(
         self,
         url: str,
-        device: Optional[IQMDevice] = None,
         *,
+        device: Optional[IQMDevice] = None,
         calibration_set_id: Optional[UUID] = None,
         run_sweep_timeout: Optional[int] = None,
         compiler_options: Optional[CircuitCompilationOptions] = None,
         **user_auth_args,  # contains keyword args auth_server_url, username and password
     ):
         self._client = IQMClient(url, client_signature=f'cirq-iqm {version("cirq-iqm")}', **user_auth_args)
+        dqa = self._client.get_dynamic_quantum_architecture(calibration_set_id)
+        server_device_metadata = IQMDeviceMetadata.from_architecture(dqa)
+        self._use_default_calibration_set = calibration_set_id is None
+        self._calibration_set_id = dqa.calibration_set_id
         if device is None:
-            device_metadata = IQMDeviceMetadata.from_architecture(self._client.get_quantum_architecture())
-            self._device = IQMDevice(device_metadata)
+            self._device = IQMDevice(server_device_metadata)
         else:
+            # validate device compatibility with the calibration set
+            if device.metadata != server_device_metadata:
+                if self._use_default_calibration_set:
+                    raise ValueError(
+                        "The given 'device' is not compatible with the server default calibration set "
+                        f'{self._calibration_set_id}.'
+                    )
+                raise ValueError(f"The given 'device' is not compatible with calibration set {calibration_set_id}.")
             self._device = device
-        self._calibration_set_id = calibration_set_id
         self._run_sweep_timeout = run_sweep_timeout
         self._compiler_options = compiler_options if compiler_options is not None else CircuitCompilationOptions()
 
@@ -147,6 +158,28 @@ class IQMSampler(cirq.work.Sampler):
 
         if not self._client:
             raise RuntimeError('Cannot submit circuits since session to IQM client has been closed.')
+
+        different_calset_ids = set()
+        for circuit in programs:
+            if hasattr(circuit, 'iqm_calibration_set_id'):
+                if circuit.iqm_calibration_set_id != self._calibration_set_id:
+                    different_calset_ids.add(circuit.iqm_calibration_set_id)
+            else:
+                different_calset_ids.add(None)
+        if different_calset_ids:
+            warnings.warn(
+                f'Circuits have been decomposed/routed using calibration set(s) {different_calset_ids}, '
+                f'different than the current calibration set {self._calibration_set_id} of this sampler. '
+                f'Decompose/route the circuits using this sampler to ensure successful execution.'
+            )
+        if self._use_default_calibration_set:
+            default_calset_id = self._client.get_dynamic_quantum_architecture(None).calibration_set_id
+            if self._calibration_set_id != default_calset_id:
+                warnings.warn(
+                    f'Server default calibration set has changed from {self._calibration_set_id} '
+                    f'to {default_calset_id}. Use a new IQMSampler to decompose/route the circuits using '
+                    'the new calibration set to ensure successful execution.'
+                )
 
         return self._client.create_run_request(
             serialized_circuits,
