@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 15.1
+============
+
+* Add support for classically controlled ``cc_prx`` operation.
+  `#141 <https://github.com/iqm-finland/qiskit-on-iqm/pull/141>`_
+
 Version 15.0
 ============
 

@@ -28,6 +28,7 @@ _IQM_CIRQ_OP_MAP: dict[str, tuple[type[Gate], ...]] = {
     'move': (IQMMoveGate,),
     'measure': (MeasurementGate,),
     'barrier': tuple(),
+    'cc_prx': tuple(),
 }
 
 
