@@ -34,6 +34,5 @@ iqm.cirq\_iqm.devices.iqm\_device\_metadata.IQMDeviceMetadata
       ~IQMDeviceMetadata._value_equality_values_cls_
       ~IQMDeviceMetadata.from_architecture
       ~IQMDeviceMetadata.from_qubit_indices
-      ~IQMDeviceMetadata.to_architecture
    
    
