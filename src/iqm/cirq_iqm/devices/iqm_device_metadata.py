@@ -122,6 +122,7 @@ class IQMDeviceMetadata(devices.DeviceMetadata):
         operations: dict[type[cirq.Gate], list[tuple[NamedQid, ...]]] = {
             cirq_op: [get_qid_locus(locus) for locus in gate_info.loci]
             for gate_name, gate_info in architecture.gates.items()
+            if gate_name in _IQM_CIRQ_OP_MAP
             for cirq_op in _IQM_CIRQ_OP_MAP[gate_name]
         }
         return cls(
