@@ -42,10 +42,12 @@ def transpile_insert_moves_into_circuit(
     Returns:
         Transpiled circuit.
     """
+    if device.metadata.architecture is None:
+        raise ValueError("MOVE transpilation only supported for devices created from a dynamic quantum architecture.")
     iqm_client_circuit = serialize_circuit(cirq_circuit)
     new_iqm_client_circuit = transpile_insert_moves(
         iqm_client_circuit,
-        device.metadata.to_architecture(),
+        device.metadata.architecture,
         existing_moves=existing_moves,
         qubit_mapping=qubit_mapping,
     )

@@ -2,10 +2,23 @@
 Changelog
 =========
 
-Version 14.7
+Version 15.2
 ============
 
-* Drop support for Valkmusa architecture.
+* Drop support for Valkmusa architecture. `#140 <https://github.com/iqm-finland/qiskit-on-iqm/pull/140>`_
+
+Version 15.1
+============
+
+* Bugfix: Accept unknown gates in the DQA.
+  `#141 <https://github.com/iqm-finland/qiskit-on-iqm/pull/141>`_
+
+Version 15.0
+============
+
+* Use dynamic quantum architecture for circuit decomposition and routing. `#139 <https://github.com/iqm-finland/cirq-on-iqm/pull/139>`_
+* Require iqm-client >= 20.0. `#139 <https://github.com/iqm-finland/cirq-on-iqm/pull/139>`_
+* Disable attestations on ``gh-action-pypi-publish`` to fix failing PyPI publishing. `#139 <https://github.com/iqm-finland/cirq-on-iqm/pull/139>`_
 
 Version 14.6
 ============

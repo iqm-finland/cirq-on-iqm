@@ -92,6 +92,15 @@ def test_transpilation(device: IQMDevice, request):
     print("Circuit qubits after adding routing qubits:", circuit.all_qubits())
     assert_circuits_have_same_unitary_given_final_permutation(routed_circuit, circuit, qubit_map=qubit_map)
     assert_circuits_have_same_unitary_given_final_permutation(decomposed_routed_circuit, circuit, qubit_map=qubit_map)
+    if device.metadata.architecture is not None:
+        assert routed_circuit.iqm_calibration_set_id == device.metadata.architecture.calibration_set_id  # type: ignore
+        assert (
+            decomposed_routed_circuit.iqm_calibration_set_id  # type: ignore
+            == device.metadata.architecture.calibration_set_id
+        )
+    else:
+        assert routed_circuit.iqm_calibration_set_id is None  # type: ignore
+        assert decomposed_routed_circuit.iqm_calibration_set_id is None  # type: ignore
 
 
 @pytest.mark.parametrize(
