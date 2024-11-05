@@ -15,7 +15,7 @@ from cirq import Circuit, HardCodedInitialMapper, NamedQid, NamedQubit, ops
 from cirq.testing import assert_circuits_have_same_unitary_given_final_permutation, assert_has_diagram, random_circuit
 import pytest
 
-from iqm.cirq_iqm import Adonis, Apollo, IQMDevice, IQMMoveGate, Valkmusa
+from iqm.cirq_iqm import Adonis, Apollo, IQMDevice, IQMMoveGate
 
 
 def test_equality_method():
@@ -24,11 +24,9 @@ def test_equality_method():
     adonis_3 = Adonis()
     apollo_1 = Apollo()
     apollo_2 = Apollo()
-    valkmusa = Valkmusa()
-    adonis_3._metadata = valkmusa.metadata
+    adonis_3._metadata = apollo_1.metadata
 
     assert adonis_1 == adonis_2
-    assert valkmusa != adonis_1
     assert apollo_1 == apollo_2
     assert adonis_2 != adonis_3
 

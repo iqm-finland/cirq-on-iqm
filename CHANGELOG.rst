@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 15.2
+============
+
+* Drop support for Valkmusa architecture. `#140 <https://github.com/iqm-finland/qiskit-on-iqm/pull/140>`_
+
 Version 15.1
 ============
 
