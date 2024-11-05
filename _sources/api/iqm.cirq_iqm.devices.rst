@@ -32,7 +32,6 @@ iqm.cirq\_iqm.devices
    ~iqm.cirq_iqm.devices.apollo
    ~iqm.cirq_iqm.devices.iqm_device
    ~iqm.cirq_iqm.devices.iqm_device_metadata
-   ~iqm.cirq_iqm.devices.valkmusa
 
 
 
