@@ -753,7 +753,8 @@ def test_client_signature_is_passed_to_client(adonis_architecture):
     """Test that IQMSampler set client signature"""
     when(IQMClient).get_dynamic_quantum_architecture(None).thenReturn(adonis_architecture)
     sampler = IQMSampler('http://some-url.iqm.fi', device=Adonis())
-    assert f'cirq-iqm {version("cirq-iqm")}' in sampler._client._signature
+    vers = version('cirq-iqm')
+    assert f'cirq-iqm {vers}' in sampler._client._signature
 
 
 @pytest.mark.usefixtures('unstub')

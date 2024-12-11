@@ -65,7 +65,8 @@ class IQMSampler(cirq.work.Sampler):
         compiler_options: Optional[CircuitCompilationOptions] = None,
         **user_auth_args,  # contains keyword args auth_server_url, username and password
     ):
-        self._client = IQMClient(url, client_signature=f'cirq-iqm {version("cirq-iqm")}', **user_auth_args)
+        version_string = 'cirq-iqm'
+        self._client = IQMClient(url, client_signature=f'cirq-iqm {version(version_string)}', **user_auth_args)
         dqa = self._client.get_dynamic_quantum_architecture(calibration_set_id)
         server_device_metadata = IQMDeviceMetadata.from_architecture(dqa)
         self._use_default_calibration_set = calibration_set_id is None
