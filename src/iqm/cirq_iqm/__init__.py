@@ -31,6 +31,5 @@ finally:
 from .iqm_gates import *
 from .transpiler import transpile_insert_moves_into_circuit
 
-
 if sys.version_info < (3, 10):
-    warnings.warn(DeprecationWarning("Python 3.9 will no longer be supported in a later release of cirq-iqm."))
+    warnings.warn(DeprecationWarning('Python 3.9 will no longer be supported in a later release of cirq-iqm.'))
