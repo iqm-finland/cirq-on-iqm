@@ -14,6 +14,8 @@
 """Types for representing and methods for manipulating operations on IQM's quantum computers.
 """
 from importlib.metadata import PackageNotFoundError, version
+import sys
+import warnings
 
 from .devices import *
 from .extended_qasm_parser import circuit_from_qasm
@@ -28,3 +30,6 @@ finally:
 # pylint: disable=wrong-import-position
 from .iqm_gates import *
 from .transpiler import transpile_insert_moves_into_circuit
+
+if sys.version_info < (3, 10):
+    warnings.warn(DeprecationWarning('Python 3.9 will no longer be supported in a later release of cirq-iqm.'))

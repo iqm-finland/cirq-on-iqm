@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 15.3
+============
+
+* Added Python 3.12 support `#143 <https://github.com/iqm-finland/cirq-on-iqm/pull/143>`_
+* Python 3.9 support is deprecated and will be removed in the future
+
 Version 15.2
 ============
 
