@@ -47,12 +47,14 @@ class IQMSampler(cirq.work.Sampler):
         compiler_options: The compilation options to use for the circuits, as defined by IQM Client.
 
     Keyword Args:
-        auth_server_url (str): URL of user authentication server, if required by the IQM Cortex server.
+        auth_server_url (str): URL of user authentication server, if required by the IQM Cortex server. It is not required for IQM Resonance.
             This can also be set in the IQM_AUTH_SERVER environment variable.
-        username (str): Username, if required by the IQM Cortex server.
+        username (str): Username, if required by the IQM Cortex server. It is not required for IQM Resonance.
             This can also be set in the IQM_AUTH_USERNAME environment variable.
         password (str): Password, if required by the IQM Cortex server.
-            This can also be set in the IQM_AUTH_PASSWORD environment variable.
+            This can also be set in the IQM_AUTH_PASSWORD environment variable. It is not required for IQM Resonance.
+        token: API token retrieved from IQM Resonance, not required for on-premise quantum computers.
+            Can also be set in the ``IQM_TOKEN`` environment variable.
     """
 
     def __init__(
