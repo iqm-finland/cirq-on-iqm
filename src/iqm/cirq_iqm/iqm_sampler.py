@@ -35,8 +35,13 @@ from iqm.iqm_client import CircuitCompilationOptions, IQMClient, JobAbortionErro
 class IQMSampler(cirq.work.Sampler):
     """Circuit sampler for executing quantum circuits on IQM quantum computers.
 
+    IQMSampler connects to a quantum computer through an IQM server.
+    If the server requires user authentication, you can provide it either using environment
+    variables, or as keyword arguments to IQMSampler. The user authentication kwargs are passed
+    through to :class:`~iqm.iqm_client.iqm_client.IQMClient` as is, and are documented there.
+
     Args:
-        url: Endpoint for accessing the server interface. Has to start with http or https.
+        url: URL of the IQM server. Has to start with http or https.
         device: Device to execute the circuits on. If ``None``, the device will be created based
             on the calibration-specific dynamic quantum architecture obtained from
             :class:`~iqm.iqm_client.iqm_client.IQMClient`.
@@ -45,16 +50,6 @@ class IQMSampler(cirq.work.Sampler):
         run_sweep_timeout:
             Timeout for polling sweep results, in seconds. If ``None``, use the client default value.
         compiler_options: The compilation options to use for the circuits, as defined by IQM Client.
-
-    Keyword Args:
-        auth_server_url (str): URL of user authentication server, if required by the IQM Cortex server. It is not required for IQM Resonance.
-            This can also be set in the IQM_AUTH_SERVER environment variable.
-        username (str): Username, if required by the IQM Cortex server. It is not required for IQM Resonance.
-            This can also be set in the IQM_AUTH_USERNAME environment variable.
-        password (str): Password, if required by the IQM Cortex server.
-            This can also be set in the IQM_AUTH_PASSWORD environment variable. It is not required for IQM Resonance.
-        token: API token retrieved from IQM Resonance, not required for on-premise quantum computers.
-            Can also be set in the ``IQM_TOKEN`` environment variable.
     """
 
     def __init__(
