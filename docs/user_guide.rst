@@ -259,9 +259,8 @@ Running on a real quantum computer
 
 .. note::
 
-   At the moment IQM does not provide a quantum computing service open to the general public.
-   Please contact our `sales team <https://www.meetiqm.com/contact-us/>`_ to set up your access to
-   an IQM quantum computer.
+   You can access IQM quantum computers via `IQM Resonance <https://www.meetiqm.com/products/iqm-resonance>`_
+   or use one of the IQM quantum computers deployed at HPC centers and research institutions around the globe.
 
 Cirq contains various simulators which you can use to simulate the circuits constructed above.
 In this subsection we demonstrate how to run them on an IQM quantum computer.
@@ -354,6 +353,18 @@ as explained in the :ref:`routing` section above.
 Authentication
 ^^^^^^^^^^^^^^
 
+IQM Resonance
+"""""""""""""
+
+If you are using IQM Resonance, you have two options to authenticate:
+
+1. Set the :envvar:`IQM_TOKEN` environment variable with the API token obtained from the Resonance dashboard.
+2. Pass the ``token`` parameter to :class:`.IQMSampler`. This will be forwarded to
+   :class:`~iqm.iqm_client.iqm_client.IQMClient`.
+
+On-premises devices
+"""""""""""""""""""
+
 If the IQM server you are connecting to requires authentication, you may use
 `Cortex CLI <https://github.com/iqm-finland/cortex-cli>`_ to retrieve and automatically refresh access tokens,
 then set the :envvar:`IQM_TOKENS_FILE` environment variable, as instructed, to point to the tokens file.
@@ -363,10 +374,6 @@ Alternatively, you may authenticate yourself using the :envvar:`IQM_AUTH_SERVER`
 :envvar:`IQM_AUTH_USERNAME` and :envvar:`IQM_AUTH_PASSWORD` environment variables, or pass them as
 arguments to :class:`.IQMSampler`, but this approach is less secure and
 considered deprecated.
-
-Finally, if you are using ``IQM Resonance``, authentication is handled differently.
-Use the :envvar:`IQM_TOKEN` environment variable to provide the API Token obtained
-from the server dashboard.
 
 
 Batch execution

@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 15.4
+============
+
+* Updated the documentation. `#144 <https://github.com/iqm-finland/cirq-on-iqm/pull/144>`_
+
 Version 15.3
 ============
 
