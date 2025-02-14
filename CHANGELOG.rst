@@ -6,6 +6,7 @@ Version 15.5
 ============
 
 * Require ``iqm-client`` >= 22.0. `#146 <https://github.com/iqm-finland/cirq-on-iqm/pull/146>`_
+* Python 3.9 support is removed.
 
 Version 15.4
 ============
@@ -40,7 +41,7 @@ Version 14.6
 ============
 
 * Bugfix COMP-1491: Fixed issue where `cirq_iqm` would ignore the MOVE gate validation options in CircuitCompilationOptions. `#136 <https://github.com/iqm-finland/cirq-on-iqm/pull/136>`_
-* Removed `cirq_iqm` circuit validation when submitting to an IQM device because `iqm-client` already validates the circuit. 
+* Removed `cirq_iqm` circuit validation when submitting to an IQM device because `iqm-client` already validates the circuit.
 * Added `isort` formatting to `tox -e format`.
 
 Version 14.5
