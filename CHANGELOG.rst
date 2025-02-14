@@ -5,7 +5,7 @@ Changelog
 Version 15.5
 ============
 
-* Bump ``iqm-client`` version. `#146 <https://github.com/iqm-finland/cirq-on-iqm/pull/146>`_
+* Require ``iqm-client`` >= 22.0. `#146 <https://github.com/iqm-finland/cirq-on-iqm/pull/146>`_
 
 Version 15.4
 ============
