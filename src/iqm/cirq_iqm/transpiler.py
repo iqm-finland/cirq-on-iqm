@@ -28,7 +28,7 @@ if TYPE_CHECKING:
 def transpile_insert_moves_into_circuit(
     cirq_circuit: Circuit,
     device: IQMDevice,
-    existing_moves: Optional[ExistingMoveHandlingOptions] = None,
+    existing_moves: ExistingMoveHandlingOptions = ExistingMoveHandlingOptions.KEEP,
     qubit_mapping: Optional[dict[str, str]] = None,
 ) -> Circuit:
     """Transpile the circuit to insert MOVE gates where needed.
