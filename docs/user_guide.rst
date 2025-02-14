@@ -212,16 +212,23 @@ routing. This is particularly useful when running Quantum Volume benchmarks.
 IQM Star architecture
 ^^^^^^^^^^^^^^^^^^^^^
 
-Devices that have the IQM Star architecture (e.g. IQM Deneb) support MOVE gates that are used
-to move quantum states between qubits and computational resonators.
-For these devices a final MOVE gate insertion step must be performed, which introduces
-the computational resonators to the circuit, and routes the two-qubit gates through them using MOVEs.
+Devices that have the IQM Star architecture (e.g. IQM Deneb) contain
+computational resonators in addition to qubits, and use qubit-resonator gates instead of two-qubit
+gates. These include the MOVE gate which moves qubit states to and from the resonators.
+There are two main supported workflows for the Star architecture:
 
-Under the hood, this uses the :func:`~iqm.iqm_client.transpile.transpile_insert_moves` function of the
-:mod:`~iqm.iqm_client` library. This method is exposed through :func:`.transpile_insert_moves_into_circuit` which
-can also be used by advanced users to transpile circuits that have already some MOVE gates in them,
-or to remove existing MOVE gates from a circuit so the circuit can be reused on a device that does
-not support them.
+1. Construct your circuit as you would for a regular qubits-only device, decompose (and optimize)
+   it to native gates, and then route it using :meth:`.IQMDevice.route_circuit`.
+   This will attempt to route all the (fictional) two-qubit gates in the circuit through the
+   resonator(s) using the native gates, adding MOVE gates as necessary.
+   Under the hood, this uses the :func:`~iqm.iqm_client.transpile.transpile_insert_moves` function of the
+   :mod:`~iqm.iqm_client` library.
+
+2. Construct your circuit directly using the device qubits, resonators, and qubit-resonator gates,
+   routing it manually.
+
+Advanced users can use :func:`.transpile_insert_moves_into_circuit` to transpile circuits that
+have some MOVE gates in them in addition to fictional qubit-qubit gates.
 
 Optimization
 ------------
