@@ -6,6 +6,8 @@ Version 15.5
 ============
 
 * Require ``iqm-client`` >= 22.0. `#146 <https://github.com/iqm-finland/cirq-on-iqm/pull/146>`_
+* ``transpile_insert_moves_into_circuit`` uses ``ExistingMoveHandlingOptions.KEEP`` as the default value for
+  ``existing_moves`` parameter.
 * Python 3.9 support is removed.
 
 Version 15.4
