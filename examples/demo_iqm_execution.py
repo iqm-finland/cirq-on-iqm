@@ -50,9 +50,9 @@ def demo_run_circuit() -> None:
 
     sampler = IQMSampler(os.environ['IQM_SERVER_URL'])
 
-    circuit_decomposed = sampler.device.decompose_circuit(circuit)
-    circuit_routed, _, _ = sampler.device.route_circuit(circuit_decomposed)
-    circuit = simplify_circuit(circuit_routed)
+    circuit_routed, _, _ = sampler.device.route_circuit(circuit)
+    circuit_decomposed = sampler.device.decompose_circuit(circuit_routed)
+    circuit = simplify_circuit(circuit_decomposed)
     print('\nTranspiled and routed circuit:\n')
     print(circuit)
     print('\n')
