@@ -2,6 +2,14 @@
 Changelog
 =========
 
+Version 16.0
+============
+
+* Require ``iqm-client`` >= 22.0. `#146 <https://github.com/iqm-finland/cirq-on-iqm/pull/146>`_
+* ``transpile_insert_moves_into_circuit`` uses ``ExistingMoveHandlingOptions.KEEP`` as the default value for
+  ``existing_moves`` parameter.
+* Python 3.9 support is removed.
+
 Version 15.4
 ============
 
@@ -11,7 +19,7 @@ Version 15.3
 ============
 
 * Added Python 3.12 support `#143 <https://github.com/iqm-finland/cirq-on-iqm/pull/143>`_
-* Python 3.9 support is deprecated and will be removed in the future
+* Python 3.9 support is deprecated and will be removed in the future.
 
 Version 15.2
 ============
@@ -34,9 +42,10 @@ Version 15.0
 Version 14.6
 ============
 
-* Bugfix COMP-1491: Fixed issue where `cirq_iqm` would ignore the MOVE gate validation options in CircuitCompilationOptions. `#136 <https://github.com/iqm-finland/cirq-on-iqm/pull/136>`_
-* Removed `cirq_iqm` circuit validation when submitting to an IQM device because `iqm-client` already validates the circuit. 
-* Added `isort` formatting to `tox -e format`.
+* Bugfix COMP-1491: Fixed issue where ``cirq_iqm`` would ignore the MOVE gate validation options in
+  :class:`CircuitCompilationOptions`. `#136 <https://github.com/iqm-finland/cirq-on-iqm/pull/136>`_
+* Removed ``cirq_iqm`` circuit validation when submitting to an IQM device because ``iqm-client`` already validates the circuit.
+* Added ``isort`` formatting to ``tox -e format``.
 
 Version 14.5
 ============
