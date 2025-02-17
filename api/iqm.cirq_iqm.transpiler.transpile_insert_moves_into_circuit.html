@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit &#8212; Cirq on IQM 15.4 documentation</title>
+    <title>iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit &#8212; Cirq on IQM 16.0 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=84a18d08"></script>
+    <script src="../_static/documentation_options.js?v=d8dfd7ca"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -52,8 +52,8 @@
     <link rel="prev" title="iqm.cirq_iqm.transpiler" href="iqm.cirq_iqm.transpiler.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="15.4" />
-    <meta name="docbuild:last-update" content="2025-02-07"/>
+  <meta name="docsearch:version" content="16.0" />
+    <meta name="docbuild:last-update" content="2025-02-17"/>
   </head>
   
   
@@ -132,8 +132,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 15.4 documentation - Home"/>
-    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Cirq on IQM 15.4 documentation - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 16.0 documentation - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Cirq on IQM 16.0 documentation - Home"/>
   
   
 </a></div>
@@ -362,15 +362,15 @@
 <h1>iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit<a class="headerlink" href="#iqm-cirq-iqm-transpiler-transpile-insert-moves-into-circuit" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit">
-<span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.transpiler.</span></span><span class="sig-name descname"><span class="pre">transpile_insert_moves_into_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cirq_circuit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Circuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="iqm.cirq_iqm.devices.iqm_device.IQMDevice.html#iqm.cirq_iqm.devices.iqm_device.IQMDevice" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice"><span class="pre">IQMDevice</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">existing_moves</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ExistingMoveHandlingOptions</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qubit_mapping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#dict" title="(in Python v3.9)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Circuit</span></span></span><a class="headerlink" href="#iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.transpiler.</span></span><span class="sig-name descname"><span class="pre">transpile_insert_moves_into_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cirq_circuit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Circuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="iqm.cirq_iqm.devices.iqm_device.IQMDevice.html#iqm.cirq_iqm.devices.iqm_device.IQMDevice" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice"><span class="pre">IQMDevice</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">existing_moves</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ExistingMoveHandlingOptions</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">ExistingMoveHandlingOptions.KEEP</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qubit_mapping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.12/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Circuit</span></span></span><a class="headerlink" href="#iqm.cirq_iqm.transpiler.transpile_insert_moves_into_circuit" title="Link to this definition">#</a></dt>
 <dd><p>Transpile the circuit to insert MOVE gates where needed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cirq_circuit</strong> (<em>Circuit</em>) – Circuit to transpile.</p></li>
 <li><p><strong>device</strong> (<a class="reference internal" href="iqm.cirq_iqm.devices.iqm_device.IQMDevice.html#iqm.cirq_iqm.devices.iqm_device.IQMDevice" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice"><em>IQMDevice</em></a>) – Device to transpile for.</p></li>
-<li><p><strong>existing_moves</strong> (<em>Optional</em><em>[</em><em>ExistingMoveHandlingOptions</em><em>]</em>) – How to handle existing MOVE gates, obtained from the IQM client library.</p></li>
-<li><p><strong>qubit_mapping</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em><em>]</em>) – Mapping from qubit names in the circuit to the device.</p></li>
+<li><p><strong>existing_moves</strong> (<em>ExistingMoveHandlingOptions</em>) – How to handle existing MOVE gates, obtained from the IQM client library.</p></li>
+<li><p><strong>qubit_mapping</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>]</em><em>]</em>) – Mapping from qubit names in the circuit to the device.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -464,7 +464,7 @@ By Cirq on IQM developers
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on 2025-02-07.
+  Last updated on 2025-02-17.
   <br/>
 </p>
   </div>

@@ -1,5 +1,5 @@
 <map id="inheritance97c180fdfc" name="inheritance97c180fdfc">
-<area shape="rect" id="node1" href="https://docs.python.org/3.9/library/abc.html#abc.ABC" target="_top" title="Helper class that provides a standard way to create an ABC using" alt="" coords="32,104,104,129"/>
+<area shape="rect" id="node1" href="https://docs.python.org/3.12/library/abc.html#abc.ABC" target="_top" title="Helper class that provides a standard way to create an ABC using" alt="" coords="32,104,104,129"/>
 <area shape="rect" id="node6" title="The results of multiple executions of a circuit with fixed parameters." alt="" coords="194,104,266,129"/>
 <area shape="rect" id="node2" href="iqm.cirq_iqm.iqm_sampler.IQMResult.html#iqm.cirq_iqm.iqm_sampler.IQMResult" target="_top" title="Stores the results of a quantum circuit execution on an IQM device." alt="" coords="467,104,556,129"/>
 <area shape="rect" id="node3" title="A Result created from a dict mapping measurement keys to measured values." alt="" coords="329,104,419,129"/>
