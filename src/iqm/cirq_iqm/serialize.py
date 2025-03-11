@@ -15,7 +15,10 @@
 """
 Helper functions for serializing and deserializing quantum circuits between Cirq and IQM Circuit formats.
 """
-from cirq import Circuit
+from dis import Instruction
+
+import cirq
+from cirq import Circuit, PhasedXPowGate, XPowGate, YPowGate
 
 from iqm import iqm_client
 from iqm.cirq_iqm.iqm_operation_mapping import instruction_to_operation, map_operation
@@ -30,7 +33,17 @@ def serialize_circuit(circuit: Circuit) -> iqm_client.Circuit:
     Returns:
         data transfer object representing the circuit
     """
-    instructions = tuple(map(map_operation, circuit.all_operations()))
+    total_ops_list = [op for moment in circuit for op in moment]
+    instructions = list(map(map_operation,total_ops_list))
+    for idx,op in enumerate(total_ops_list):
+        if isinstance(op, cirq.ClassicallyControlledOperation):
+            if isinstance(op._sub_operation.gate, PhasedXPowGate):
+                instruction = Instruction(
+                    name='cc_prx',
+                    qubits= op.qubits,
+                    args = {'angle_t': op.gate.exponent / 2, 'phase_t': op.gate.phase_exponent / 2,
+                            'feedback_key': op._conditions[0].keys[0].__str__()}
+            )
     return iqm_client.Circuit(name='Serialized from Cirq', instructions=instructions)
 
 

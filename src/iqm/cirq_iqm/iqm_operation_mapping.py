@@ -13,6 +13,7 @@
 # limitations under the License.
 """Logic for mapping Cirq Operations to the IQM transfer format.
 """
+import cirq
 from cirq import NamedQid
 from cirq.ops import CZPowGate, Gate, MeasurementGate, Operation, PhasedXPowGate, XPowGate, YPowGate
 
@@ -122,5 +123,14 @@ def map_operation(operation: Operation) -> Instruction:
             qubits=tuple(qubits),
             args={},
         )
+    #catch errors, but do not serialize instructions here, as you need full circuit information to discern
+    #feedback_qubit
+    if isinstance(operation, cirq.ClassicallyControlledOperation):
+        if not isinstance(operation._sub_operation.gate, (PhasedXPowGate, XPowGate, YPowGate)):
+            raise OperationNotSupportedError(f'{type(operation._sub_operation.gate)} not natively supported using '
+                                             f'classical controls')
+        if len(operation._conditions) > 1:
+            raise OperationNotSupportedError("Classically controlled prx gates can only have one condition")
+        pass
 
     raise OperationNotSupportedError(f'{type(operation.gate)} not natively supported.')
