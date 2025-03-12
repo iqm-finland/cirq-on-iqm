@@ -15,13 +15,13 @@
 """
 Helper functions for serializing and deserializing quantum circuits between Cirq and IQM Circuit formats.
 """
-from dis import Instruction
 
 import cirq
 from cirq import Circuit, PhasedXPowGate, XPowGate, YPowGate
 
 from iqm import iqm_client
-from iqm.cirq_iqm.iqm_operation_mapping import instruction_to_operation, map_operation
+from iqm.cirq_iqm.iqm_operation_mapping import (Instruction, instruction_to_operation,
+                                                map_operation, OperationNotSupportedError)
 
 
 def serialize_circuit(circuit: Circuit) -> iqm_client.Circuit:
@@ -41,9 +41,36 @@ def serialize_circuit(circuit: Circuit) -> iqm_client.Circuit:
                 instruction = Instruction(
                     name='cc_prx',
                     qubits= op.qubits,
-                    args = {'angle_t': op.gate.exponent / 2, 'phase_t': op.gate.phase_exponent / 2,
-                            'feedback_key': op._conditions[0].keys[0].__str__()}
+                    args = {'phase_t': op.gate.phase_exponent / 2,
+                            }
             )
+            if isinstance(op._sub_operation.gate, XPowGate):
+                instruction = Instruction(
+                    name='cc_prx',
+                    qubits=op.qubits,
+                    args={'phase_t': 0,
+                          }
+                )
+            if isinstance(op._sub_operation.gate, YPowGate):
+                instruction = Instruction(
+                    name='cc_prx',
+                    qubits=op.qubits,
+                    args={'phase_t': 0.25,
+                          }
+                )
+            feedback_key = op._conditions[0].keys[0].__str__()
+            instruction.args['angle_t'] = op._sub_operation.gate.exponent/2
+            instruction.args['feedback_key': feedback_key]
+            measurement_already_used = False #flags if multiple measurements have the same key
+            for i in instructions:
+                if i.name == "measure" and i.args["key"] == feedback_key:
+                    if measurement_already_used: #raise error if measurement has already been used as condition
+                        raise OperationNotSupportedError("Measurement condition for cc_prx must only be from one qubit")
+                    measurement_already_used=True #change the flag to True now that measurement is used
+                    if len(i.qubits) > 1:
+                        raise OperationNotSupportedError("Measurement condition for cc_prx must only be from one qubit")
+                    instruction.args['feedback_qubit'] = i.qubits[0]
+        instructions.insert(idx, instruction)
     return iqm_client.Circuit(name='Serialized from Cirq', instructions=instructions)
 
 
