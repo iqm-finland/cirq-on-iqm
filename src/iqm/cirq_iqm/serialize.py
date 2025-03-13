@@ -36,12 +36,6 @@ def serialize_circuit(circuit: iqm_client.Circuit) -> Circuit:
     instructions = list(map(map_operation, total_ops_list))
     for idx, op in enumerate(total_ops_list):
         if isinstance(op, cirq.ClassicallyControlledOperation):
-            if isinstance(op._sub_operation.gate, cirq.PhasedXPowGate):
-                phase_t = op._sub_operation.gate.phase_exponent / 2
-            if isinstance(op._sub_operation.gate, cirq.YPowGate):
-                phase_t = 0.25
-            if isinstance(op._sub_operation.gate, cirq.XPowGate):
-                phase_t = 0
             feedback_key = str(op._conditions[0].keys[0])
             measurement_already_used = False
             for m_idx, i in enumerate(instructions):
@@ -56,7 +50,6 @@ def serialize_circuit(circuit: iqm_client.Circuit) -> Circuit:
                     feedback_qubit = i.qubits[0]
                     instructions[idx].args["feedback_key"] = feedback_key
                     instructions[idx].args["feedback_qubit"] = feedback_qubit
-                    instructions[idx].args["phase_t"] = phase_t
     return iqm_client.Circuit(name="Serialized from Cirq", instructions=instructions)
 
 
