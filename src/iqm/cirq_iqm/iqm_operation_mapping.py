@@ -11,8 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Logic for mapping Cirq Operations to the IQM transfer format.
-"""
+"""Logic for mapping Cirq Operations to the IQM transfer format."""
 import cirq
 from cirq import NamedQid
 from cirq.ops import CZPowGate, Gate, MeasurementGate, Operation, PhasedXPowGate, XPowGate, YPowGate
@@ -134,21 +133,35 @@ def map_operation(operation: Operation) -> Instruction:
             return Instruction(
                 name='cc_prx',
                 qubits=tuple(qubits),
-                args={'angle_t': operation._sub_operation.gate.exponent / 2,
-                      'phase_t': operation._sub_operation.gate.phase_exponent / 2,
-                      'feedback_qubit': 'n/a', 'feedback_key': 'n/a'})
+                args={
+                    'angle_t': operation._sub_operation.gate.exponent / 2,
+                    'phase_t': operation._sub_operation.gate.phase_exponent / 2,
+                    'feedback_qubit': 'n/a',
+                    'feedback_key': 'n/a',
+                },
+            )
         if isinstance(operation._sub_operation.gate, XPowGate):
             return Instruction(
                 name='cc_prx',
                 qubits=tuple(qubits),
-                args={'angle_t': operation._sub_operation.gate.exponent / 2, 'phase_t': 0,
-                      'feedback_qubit': 'n/a', 'feedback_key': 'n/a'})
+                args={
+                    'angle_t': operation._sub_operation.gate.exponent / 2,
+                    'phase_t': 0,
+                    'feedback_qubit': 'n/a',
+                    'feedback_key': 'n/a',
+                },
+            )
         if isinstance(operation._sub_operation.gate, YPowGate):
             return Instruction(
                 name='cc_prx',
                 qubits=tuple(qubits),
-                args={'angle_t': operation._sub_operation.gate.exponent / 2, 'phase_t': 0.25,
-                      'feedback_qubit': 'n/a', 'feedback_key': 'n/a'})
+                args={
+                    'angle_t': operation._sub_operation.gate.exponent / 2,
+                    'phase_t': 0.25,
+                    'feedback_qubit': 'n/a',
+                    'feedback_key': 'n/a',
+                },
+            )
 
         # skipping feedback_qubit and feedback_key information until total circuit serialization
 
