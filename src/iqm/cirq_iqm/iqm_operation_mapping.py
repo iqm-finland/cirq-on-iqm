@@ -130,15 +130,15 @@ def map_operation(operation: Operation) -> Instruction:
         if len(operation._conditions) > 1:
             raise OperationNotSupportedError('Classically controlled prx gates can only have one condition')
         return Instruction(
-                name='cc_prx',
-                qubits=tuple(qubits),
-                args={
-                    'angle_t': operation._sub_operation.gate.exponent / 2,
-                    'phase_t': 'n/a',
-                    'feedback_qubit': 'n/a',
-                    'feedback_key': 'n/a',
-                },
-            )
+            name='cc_prx',
+            qubits=tuple(qubits),
+            args={
+                'angle_t': operation._sub_operation.gate.exponent / 2,
+                'phase_t': 'n/a',
+                'feedback_qubit': 'n/a',
+                'feedback_key': 'n/a',
+            },
+        )
 
         # skipping feedback_qubit and feedback_key information until total circuit serialization
 
