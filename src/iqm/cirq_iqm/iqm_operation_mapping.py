@@ -62,6 +62,7 @@ def instruction_to_operation(instr: Instruction) -> Operation:
 class OperationNotSupportedError(RuntimeError):
     """Raised when a given operation is not supported by the IQM server."""
 
+
 def determine_phase_exponent(gate: Gate) -> float:
     """
     Since Cirq cannot decompose XPowGate and YPowGate into PhasedXPowGate,
