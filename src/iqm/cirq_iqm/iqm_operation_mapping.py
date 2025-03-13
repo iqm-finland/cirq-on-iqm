@@ -117,16 +117,17 @@ def map_operation(operation: Operation) -> Instruction:
     if isinstance(operation, cirq.ClassicallyControlledOperation):
         if len(operation._conditions) > 1:
             raise OperationNotSupportedError('Classically controlled prx gates can only have one condition')
-        return Instruction(
-            name='cc_prx',
-            qubits=tuple(qubits),
-            args={
-                'angle_t': operation._sub_operation.gate.exponent / 2,
-                'phase_t': operation._sub_operation.gate.phase_exponent / 2,
-                'feedback_qubit': 'n/a',
-                'feedback_key': 'n/a',
-            },
-        )
+        if isinstance(operation._sub_operation.gate, (PhasedXPowGate, XPowGate, YPowGate)):
+            return Instruction(
+                name='cc_prx',
+                qubits=tuple(qubits),
+                args={
+                    'angle_t': operation._sub_operation.gate.exponent / 2,
+                    'phase_t': operation._sub_operation.gate.phase_exponent / 2,
+                    'feedback_qubit': 'n/a',
+                    'feedback_key': 'n/a',
+                },
+            )
 
         # skipping feedback_qubit and feedback_key information until total circuit serialization
 

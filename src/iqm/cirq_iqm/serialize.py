@@ -23,7 +23,7 @@ from iqm import iqm_client
 from iqm.cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, instruction_to_operation, map_operation
 
 
-def serialize_circuit(circuit: iqm_client.Circuit) -> Circuit:
+def serialize_circuit(circuit: Circuit) -> iqm_client.Circuit:
     """Serializes a quantum circuit into the IQM data transfer format.
 
     Args:
