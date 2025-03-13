@@ -278,6 +278,7 @@ The classical control can be applied on a circuit operation using :meth:`~cirq.O
     circuit = cirq.Circuit(cirq.X(q1), cirq.measure(q1, key = 'Alices_Measurement_Register'),
               cirq.X(q2).with_classical_controls('Alices_Measurement_Register'), cirq.measure(q2))
     circuit
+::
 
 Alice: ─────────────────────────X───M───────────
                                     ║
