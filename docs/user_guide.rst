@@ -282,11 +282,11 @@ The classical control can be applied on a circuit operation using :meth:`~cirq.O
 
 ::
 
-Alice: ─────────────────────────X───M───────────
-                                    ║
-Bob: ───────────────────────────────╫───X───M───
-                                    ║   ║
-Alices_Measurement_Register: ═══════@═══^═══════
+    Alice: ─────────────────────────X───M───────────
+                                        ║
+    Bob: ───────────────────────────────╫───X───M───
+                                        ║   ║
+    Alices_Measurement_Register: ═══════@═══^═══════
 
 After an `X` gate is applied onto Alice, the measurement is stored
 in Alice's_Measurement_Register. If the result is 1 (which it should always be in this case),
