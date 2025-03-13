@@ -22,13 +22,12 @@ from cirq import (
     ZPowGate,
     ClassicallyControlledOperation,
 )
-from iqm.cirq_iqm.serialize import serialize_circuit
-from mockito import mock
-import pytest
-
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, instruction_to_operation, map_operation
+from iqm.cirq_iqm.serialize import serialize_circuit
 from iqm.iqm_client import Instruction
+from mockito import mock
+import pytest
 
 
 @pytest.fixture()
