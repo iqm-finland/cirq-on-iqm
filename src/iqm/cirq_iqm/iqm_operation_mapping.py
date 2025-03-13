@@ -28,6 +28,7 @@ _IQM_CIRQ_OP_MAP: dict[str, tuple[type[Gate], ...]] = {
     'cz': (CZPowGate,),
     'move': (IQMMoveGate,),
     'measure': (MeasurementGate,),
+    'cc_prx': (PhasedXPowGate, XPowGate, YPowGate),
 }
 
 
@@ -54,6 +55,8 @@ def instruction_to_operation(instr: Instruction) -> Operation:
         args['key'] = instr.args['key']
         args['num_qubits'] = len(instr.qubits)
     qubits = [NamedQid(qubit, dimension=2) for qubit in instr.qubits]
+    if instr.name == "cc_prx":
+        return gate_type(**args)(*qubits).with_classical_controls(instr.args['feedback_key'])
     return gate_type(**args)(*qubits)
 
 
@@ -123,14 +126,30 @@ def map_operation(operation: Operation) -> Instruction:
             qubits=tuple(qubits),
             args={},
         )
-    #catch errors, but do not serialize instructions here, as you need full circuit information to discern
-    #feedback_qubit
+
     if isinstance(operation, cirq.ClassicallyControlledOperation):
-        if not isinstance(operation._sub_operation.gate, (PhasedXPowGate, XPowGate, YPowGate)):
-            raise OperationNotSupportedError(f'{type(operation._sub_operation.gate)} not natively supported using '
-                                             f'classical controls')
         if len(operation._conditions) > 1:
             raise OperationNotSupportedError("Classically controlled prx gates can only have one condition")
-        pass
+        if isinstance(operation._sub_operation.gate, PhasedXPowGate):
+            return Instruction(
+                name='cc_prx',
+                qubits=tuple(qubits),
+                args={'angle_t': operation._sub_operation.gate.exponent / 2,
+                      'phase_t': operation._sub_operation.gate.phase_exponent / 2,
+                      'feedback_qubit': 'n/a', 'feedback_key': 'n/a'})
+        if isinstance(operation._sub_operation.gate, XPowGate):
+            return Instruction(
+                name='cc_prx',
+                qubits=tuple(qubits),
+                args={'angle_t': operation._sub_operation.gate.exponent / 2, 'phase_t': 0,
+                      'feedback_qubit': 'n/a', 'feedback_key': 'n/a'})
+        if isinstance(operation._sub_operation.gate, YPowGate):
+            return Instruction(
+                name='cc_prx',
+                qubits=tuple(qubits),
+                args={'angle_t': operation._sub_operation.gate.exponent / 2, 'phase_t': 0.25,
+                      'feedback_qubit': 'n/a', 'feedback_key': 'n/a'})
+
+        # skipping feedback_qubit and feedback_key information until total circuit serialization
 
     raise OperationNotSupportedError(f'{type(operation.gate)} not natively supported.')
