@@ -63,24 +63,6 @@ class OperationNotSupportedError(RuntimeError):
     """Raised when a given operation is not supported by the IQM server."""
 
 
-def determine_phase_exponent(gate: Gate) -> float:
-    """
-    Since Cirq cannot decompose XPowGate and YPowGate into PhasedXPowGate,
-    this function returns the desired phase exponent for the IQM Instruction
-    prx gate
-    Args:
-        gate: a Cirq Gate
-    Returns:
-        The phase exponent to use in the converted IQM Instruction
-    """
-    if isinstance(gate, PhasedXPowGate):
-        return gate.phase_exponent / 2
-    if isinstance(gate, YPowGate):
-        return 0.25
-    if isinstance(gate, XPowGate):
-        return 0
-
-
 def map_operation(operation: Operation) -> Instruction:
     """Map a Cirq Operation to the IQM data transfer format.
 
@@ -103,7 +85,7 @@ def map_operation(operation: Operation) -> Instruction:
         return Instruction(
             name=phased_rx_name,
             qubits=tuple(qubits),
-            args={'angle_t': operation.gate.exponent / 2, 'phase_t': determine_phase_exponent(operation.gate)},
+            args={'angle_t': operation.gate.exponent / 2, 'phase_t': operation.gate.phase_exponent / 2},
         )
     if isinstance(operation.gate, MeasurementGate):
         if any(operation.gate.full_invert_mask()):
@@ -140,7 +122,7 @@ def map_operation(operation: Operation) -> Instruction:
             qubits=tuple(qubits),
             args={
                 'angle_t': operation._sub_operation.gate.exponent / 2,
-                'phase_t': determine_phase_exponent(operation._sub_operation.gate),
+                'phase_t': operation._sub_operation.gate.phase_exponent / 2,
                 'feedback_qubit': 'n/a',
                 'feedback_key': 'n/a',
             },
