@@ -273,11 +273,13 @@ support currently has several limitations:
 The classical control can be applied on a circuit operation using :meth:`~cirq.Operation.with_classical_controls`:
 
 .. code-block:: python
+
     import cirq
     q1, q2 = cirq.NamedQubit('Alice'), cirq.NamedQubit('Bob')
     circuit = cirq.Circuit(cirq.X(q1), cirq.measure(q1, key = 'Alices_Measurement_Register'),
               cirq.X(q2).with_classical_controls('Alices_Measurement_Register'), cirq.measure(q2))
     circuit
+
 ::
 
 Alice: ─────────────────────────X───M───────────
