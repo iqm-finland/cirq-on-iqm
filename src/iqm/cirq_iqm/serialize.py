@@ -18,8 +18,9 @@ Helper functions for serializing and deserializing quantum circuits between Cirq
 
 import cirq
 from cirq import Circuit
+
 from iqm import iqm_client
-from iqm.cirq_iqm.iqm_operation_mapping import instruction_to_operation, map_operation, OperationNotSupportedError
+from iqm.cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, instruction_to_operation, map_operation
 
 
 def serialize_circuit(circuit: iqm_client.Circuit) -> Circuit:
