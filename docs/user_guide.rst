@@ -278,13 +278,12 @@ The classical control can be applied on a circuit operation using :meth:`~cirq.O
     circuit = cirq.Circuit(cirq.X(q1), cirq.measure(q1, key = 'Alices_Measurement_Register'),
               cirq.X(q2).with_classical_controls('Alices_Measurement_Register'), cirq.measure(q2))
     circuit
-::
 
-    Alice: ─────────────────────────X───M───────────
-                                        ║
-    Bob: ───────────────────────────────╫───X───M───
-                                        ║   ║
-    Alices_Measurement_Register: ═══════@═══^═══════
+Alice: ─────────────────────────X───M───────────
+                                    ║
+Bob: ───────────────────────────────╫───X───M───
+                                    ║   ║
+Alices_Measurement_Register: ═══════@═══^═══════
 
 After an `X` gate is applied onto Alice, the measurement is stored
 in Alice's_Measurement_Register. If the result is 1 (which it should always be in this case),
