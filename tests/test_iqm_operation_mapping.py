@@ -129,7 +129,7 @@ def test_instruction_to_operation():
 def test_cc_prx_operation():
     instruction = Instruction(
         name='cc_prx',
-        qubits=('QB1'),
+        qubits=('QB1',),
         args={'angle_t': 0.5, 'phase_t': 0.25, 'feedback_qubit': 'COMP_R', 'feedback_key': 'test key'},
     )
     operation = instruction_to_operation(instruction)
@@ -138,36 +138,37 @@ def test_cc_prx_operation():
 
 
 def test_cc_prx_error_circuits():
+    qubits = cirq.LineQubit.range(2)
     late_measurement_circuit = cirq.Circuit(
-        cirq.X(qubit_2()).with_classical_controls('f'), cirq.measure(qubit_1(), key='f')
+        cirq.X(qubits[1]).with_classical_controls('f'), cirq.measure(qubits[0], key='f')
     )
-    with pytest.raises(OperationNotSupportedError, match="Measurement condition must precede cc_prx operation"):
+    with pytest.raises(OperationNotSupportedError, match='Measurement condition must precede cc_prx operation'):
         serialize_circuit(late_measurement_circuit)
 
     multiple_measures_same_key = cirq.Circuit(
-        cirq.measure(qubit_1(), key='f'),
-        cirq.measure(qubit_2(), key='f'),
-        cirq.X(qubit_2()).with_classical_controls('f'),
+        cirq.measure(qubits[0], key='f'),
+        cirq.measure(qubits[1], key='f'),
+        cirq.X(qubits[1]).with_classical_controls('f'),
     )
     with pytest.raises(
-        OperationNotSupportedError, match="Measurement condition for cc_prx must only be from one qubit"
+        OperationNotSupportedError, match='Measurement condition for cc_prx must only be from one qubit'
     ):
         serialize_circuit(multiple_measures_same_key)
 
     multiple_conditions = cirq.Circuit(
-        cirq.measure(qubit_1(), key='f'),
-        cirq.measure(qubit_2(), key='g'),
-        cirq.X(qubit_2()).with_classical_controls('f', 'g'),
+        cirq.measure(qubits[0], key='f'),
+        cirq.measure(qubits[1], key='g'),
+        cirq.X(qubits[1]).with_classical_controls('f', 'g'),
     )
     with pytest.raises(
-        OperationNotSupportedError, match="Classically controlled prx gates can only have one condition"
+        OperationNotSupportedError, match='Classically controlled prx gates can only have one condition'
     ):
         serialize_circuit(multiple_conditions)
 
     long_measurement = cirq.Circuit(
-        cirq.measure(qubit_1(), qubit_2(), key='f'), cirq.X(qubit_2()).with_classical_controls('f')
+        cirq.measure(qubits[0], qubits[1], key='f'), cirq.X(qubits[1]).with_classical_controls('f')
     )
     with pytest.raises(
-        OperationNotSupportedError, match="Measurement condition for cc_prx must only be from one qubit"
+        OperationNotSupportedError, match='Measurement condition for cc_prx must only be from one qubit'
     ):
         serialize_circuit(long_measurement)
