@@ -115,7 +115,7 @@ def test_instruction_to_operation():
     assert isinstance(operation.gate, IQMMoveGate)
     assert operation.qubits == (cirq.NamedQubit('QB1'), cirq.NamedQid('COMP_R', dimension=2))
 
-    instruction = Instruction(name='reset', qubits=('QB1'))
+    instruction = Instruction(name='reset', qubits=('QB1',))
     operation = instruction_to_operation(instruction)
     assert isinstance(operation.gate, ResetChannel)
     assert operation.qubits == (cirq.NamedQubit('QB1'))
