@@ -357,6 +357,29 @@ When executing a circuit that uses something other than the device qubits, you n
 as explained in the :ref:`routing` section above.
 
 
+Resetting Qubits
+-----------------
+
+The :class:`cirq.R` operation can be used to reset qubits to the :math:`|0\rangle` state.
+It is currently implemented as a (projective) measurement followed by a classically controlled X
+gate conditioned on the result, and is only available if the quantum computer supports
+classically controlled gates.
+
+.. code-block:: python
+
+    import cirq
+    q1 = cirq.NamedQubit('q1')
+    circuit = cirq.Circuit(cirq.X(q1), cirq.R(q1), cirq.measure(q1))
+    circuit
+
+::
+
+    q1: ───X───R───M───
+
+In the above example, the X gate prepares the qubit `q1` in a :math:`|1\rangle` state,
+and the reset then collapses it back into the :math:`|0\rangle` state.
+Executing the circuit should result in (mostly) zeros being measured.
+
 Authentication
 ^^^^^^^^^^^^^^
 
