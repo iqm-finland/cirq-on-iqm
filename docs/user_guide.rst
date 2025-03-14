@@ -293,7 +293,7 @@ in `Alices_Measurement_Register`. If the result is 1 (which it should always be 
 another `X` gate is subsequently applied onto `Bob`. If it is zero, an identity gate of corresponding
 duration is applied instead.
 
-Executing the above circuit should always return `11`, even though Alice and Bob are never
+Executing the above circuit should always return `11`, even though `Alice` and `Bob` are never
 actually entangled.
 
 .. note::
