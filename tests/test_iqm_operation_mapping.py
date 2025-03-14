@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import cirq
-from cirq import CZPowGate, GateOperation, MeasurementGate, PhasedXPowGate, XPowGate, YPowGate, ZPowGate
+from cirq import CZPowGate, GateOperation, MeasurementGate, PhasedXPowGate, XPowGate, YPowGate, ZPowGate, ResetChannel
 from mockito import mock
 import pytest
 
@@ -114,3 +114,8 @@ def test_instruction_to_operation():
     operation = instruction_to_operation(instruction)
     assert isinstance(operation.gate, IQMMoveGate)
     assert operation.qubits == (cirq.NamedQubit('QB1'), cirq.NamedQid('COMP_R', dimension=2))
+
+    instruction = Instruction(name='reset', qubits=('QB1'))
+    operation = instruction_to_operation(instruction)
+    assert isinstance(operation.gate, ResetChannel)
+    assert operation.qubits == (cirq.NamedQubit('QB1'))
