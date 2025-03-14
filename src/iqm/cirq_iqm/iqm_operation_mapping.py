@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Logic for mapping Cirq Operations to the IQM transfer format."""
-import cirq
+
 from cirq import NamedQid
-from cirq.ops import CZPowGate, Gate, MeasurementGate, Operation, PhasedXPowGate, XPowGate, YPowGate
+from cirq.ops import ClassicallyControlledOperation, CZPowGate, Gate, MeasurementGate, Operation, PhasedXPowGate, XPowGate, YPowGate
 
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.iqm_client import Instruction
@@ -114,7 +114,7 @@ def map_operation(operation: Operation) -> Instruction:
             args={},
         )
 
-    if isinstance(operation, cirq.ClassicallyControlledOperation):
+    if isinstance(operation, ClassicallyControlledOperation):
         if len(operation._conditions) > 1:
             raise OperationNotSupportedError('Classically controlled prx gates can only have one condition')
         if isinstance(operation._sub_operation.gate, (PhasedXPowGate, XPowGate, YPowGate)):

@@ -130,7 +130,7 @@ def test_cc_prx_operation():
     instruction = Instruction(
         name='cc_prx',
         qubits=('QB1',),
-        args={'angle_t': 0.5, 'phase_t': 0.25, 'feedback_qubit': 'COMP_R', 'feedback_key': 'test key'},
+        args={'angle_t': 0.5, 'phase_t': 0.75, 'feedback_qubit': 'COMP_R', 'feedback_key': 'test key'},
     )
     operation = instruction_to_operation(instruction)
     assert isinstance(operation, ClassicallyControlledOperation)
