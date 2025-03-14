@@ -289,7 +289,7 @@ The classical control can be applied on a circuit operation using :meth:`~cirq.O
     Alices_Measurement_Register: ═══════@═══^═══════
 
 After an `X` gate is applied onto Alice, the measurement is stored
-in Alice's_Measurement_Register. If the result is 1 (which it should always be in this case),
+in `Alices_Measurement_Register`. If the result is 1 (which it should always be in this case),
 another `X` gate is subsequently applied onto Bob. If it is zero, an identity gate of corresponding
 duration is applied instead.
 
