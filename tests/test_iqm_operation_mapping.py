@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import cirq
-from cirq import CZPowGate, GateOperation, MeasurementGate, PhasedXPowGate, XPowGate, YPowGate, ZPowGate, ResetChannel
+from cirq import CZPowGate, GateOperation, MeasurementGate, PhasedXPowGate, ResetChannel, XPowGate, YPowGate, ZPowGate
 from mockito import mock
 import pytest
 

@@ -11,10 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Logic for mapping Cirq Operations to the IQM transfer format.
-"""
+"""Logic for mapping Cirq Operations to the IQM transfer format."""
 from cirq import NamedQid
-from cirq.ops import CZPowGate, Gate, MeasurementGate, Operation, PhasedXPowGate, XPowGate, YPowGate, ResetChannel
+from cirq.ops import CZPowGate, Gate, MeasurementGate, Operation, PhasedXPowGate, ResetChannel, XPowGate, YPowGate
 
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.iqm_client import Instruction
@@ -27,7 +26,7 @@ _IQM_CIRQ_OP_MAP: dict[str, tuple[type[Gate], ...]] = {
     'cz': (CZPowGate,),
     'move': (IQMMoveGate,),
     'measure': (MeasurementGate,),
-    'reset': (ResetChannel,)
+    'reset': (ResetChannel,),
 }
 
 
@@ -125,9 +124,6 @@ def map_operation(operation: Operation) -> Instruction:
         )
 
     if isinstance(operation.gate, ResetChannel):
-        return Instruction(
-            name='reset',
-            qubits=tuple(qubits)
-        )
+        return Instruction(name='reset', qubits=tuple(qubits))
 
     raise OperationNotSupportedError(f'{type(operation.gate)} not natively supported.')
