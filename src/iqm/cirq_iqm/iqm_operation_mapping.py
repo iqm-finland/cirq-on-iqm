@@ -14,7 +14,16 @@
 """Logic for mapping Cirq Operations to the IQM transfer format."""
 
 from cirq import NamedQid
-from cirq.ops import ClassicallyControlledOperation, CZPowGate, Gate, MeasurementGate, Operation, PhasedXPowGate, XPowGate, YPowGate
+from cirq.ops import (
+    ClassicallyControlledOperation,
+    CZPowGate,
+    Gate,
+    MeasurementGate,
+    Operation,
+    PhasedXPowGate,
+    XPowGate,
+    YPowGate,
+)
 
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.iqm_client import Instruction
