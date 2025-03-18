@@ -124,7 +124,7 @@ def map_operation(operation: Operation) -> Instruction:
 
     if isinstance(operation, ClassicallyControlledOperation):
         if len(operation._conditions) > 1:
-            raise OperationNotSupportedError('Classically controlled prx gates can only have one condition')
+            raise OperationNotSupportedError('Classically controlled gates can currently only have one condition.')
         if isinstance(operation._sub_operation.gate, (PhasedXPowGate, XPowGate, YPowGate)):
             return Instruction(
                 name='cc_prx',
