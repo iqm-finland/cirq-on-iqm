@@ -29,6 +29,8 @@ from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, instruction_to_operation, map_operation
 from iqm.cirq_iqm.serialize import serialize_circuit
 from iqm.iqm_client import Instruction
+from sympy import symbols, Eq
+
 
 
 @pytest.fixture()
@@ -162,3 +164,22 @@ def test_cc_prx_error_circuits():
         OperationNotSupportedError, match='Measurement condition for cc_prx must only be from one qubit'
     ):
         serialize_circuit(long_measurement)
+
+    f = symbols('f')
+    condition = Eq(f, 0)
+    sympy_circuit = cirq.Circuit(
+        cirq.measure(qubits[0], key='f'), cirq.X(qubits[1]).with_classical_controls(condition)
+    )
+    with pytest.raises(
+        OperationNotSupportedError, match='Only KeyConditions are supported as classical controls'
+    ):
+        serialize_circuit(sympy_circuit)
+
+    cc_z_circuit = cirq.Circuit(
+        cirq.measure(qubits[0], key='f'), cirq.Z(qubits[1]).with_classical_controls('f')
+    )
+    with pytest.raises(
+        OperationNotSupportedError, match="Classical control on the Z gate is not natively supported"
+    ):
+        serialize_circuit(cc_z_circuit)
+

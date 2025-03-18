@@ -13,7 +13,7 @@
 # limitations under the License.
 """Logic for mapping Cirq Operations to the IQM transfer format."""
 
-from cirq import NamedQid, SympyCondition
+from cirq import NamedQid, KeyCondition
 from cirq.ops import (
     ClassicallyControlledOperation,
     CZPowGate,
@@ -125,8 +125,8 @@ def map_operation(operation: Operation) -> Instruction:
     if isinstance(operation, ClassicallyControlledOperation):
         if len(operation._conditions) > 1:
             raise OperationNotSupportedError('Classically controlled gates can currently only have one condition.')
-        if isinstance(operation._conditions[0], (SympyCondition)):
-            raise OperationNotSupportedError('SympyConditions are not natively supported')
+        if not isinstance(operation._conditions[0], KeyCondition):
+            raise OperationNotSupportedError('Only KeyConditions are supported as classical controls')
         if isinstance(operation._sub_operation.gate, (PhasedXPowGate, XPowGate, YPowGate)):
             return Instruction(
                 name='cc_prx',
@@ -139,7 +139,7 @@ def map_operation(operation: Operation) -> Instruction:
                 },
             )
         raise OperationNotSupportedError(
-            f'Classical control on the' f' {type(operation._sub_operation.gate)} is not natively supported'
+            f'Classical control on the {operation._sub_operation.gate} gate is not natively supported'
         )
 
         # skipping feedback_qubit and feedback_key information until total circuit serialization
