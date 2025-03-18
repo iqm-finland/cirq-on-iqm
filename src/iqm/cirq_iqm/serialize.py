@@ -28,10 +28,10 @@ from cirq.ops import (
     YPowGate,
 )
 
-from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm import iqm_client
-from iqm.iqm_client import Instruction
+from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, instruction_to_operation, map_operation
+from iqm.iqm_client import Instruction
 
 # Mapping from IQM operation names to cirq operations
 _IQM_CIRQ_OP_MAP: dict[str, tuple[type[Gate], ...]] = {
@@ -150,6 +150,7 @@ def map_operation(operation: Operation) -> Instruction:
         # skipping feedback_qubit and feedback_key information until total circuit serialization
 
     raise OperationNotSupportedError(f'{type(operation.gate)} not natively supported.')
+
 
 def serialize_circuit(circuit: Circuit) -> iqm_client.Circuit:
     """Serializes a quantum circuit into the IQM data transfer format.
