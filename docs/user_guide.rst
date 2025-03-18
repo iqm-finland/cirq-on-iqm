@@ -267,8 +267,8 @@ conditionally depending on the result of a measurement preceding them in the qua
 support currently has several limitations:
 
 * Only the ``PhasedXPowGate``, ``XPowGate`` and ``YPowGate`` gates can be classically controlled.
-* The gates can only be conditioned on one classical bit, and the only control available is to
-  apply the gate if the bit is 1, and apply an identity gate if the bit is 0.
+* The gates can only be conditioned on the measurement result of a single qubit, and the only control available is to
+  apply the gate if the result is 1, and apply an identity gate if the result is 0.
 * The availability of the controlled gates depends on the instrumentation of the quantum computer.
 
 The classical control can be applied on an operation using :meth:`~cirq.Operation.with_classical_controls`:
