@@ -13,7 +13,7 @@
 # limitations under the License.
 """Logic for mapping Cirq Operations to the IQM transfer format."""
 
-from cirq import NamedQid, KeyCondition
+from cirq import KeyCondition, NamedQid
 from cirq.ops import (
     ClassicallyControlledOperation,
     CZPowGate,
