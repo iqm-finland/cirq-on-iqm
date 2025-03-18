@@ -266,7 +266,7 @@ Some IQM quantum computers support classically-controlled gates, that is, gates 
 conditionally depending on the result of a measurement preceding them in the quantum circuit. This
 support currently has several limitations:
 
-* Only the ``x``, ``y``, ``rx``, ``ry`` and ``r`` gates can be classically controlled.
+* Only the ``PhasedXPowGate``, ``XPowGate`` and ``YPowGate`` gates can be classically controlled.
 * The gates can only be conditioned on one classical bit, and the only control available is to
   apply the gate if the bit is 1, and apply an identity gate if the bit is 0.
 * The availability of the controlled gates depends on the instrumentation of the quantum computer.
