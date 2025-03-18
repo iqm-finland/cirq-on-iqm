@@ -303,10 +303,8 @@ actually entangled.
 
 .. note::
 
-   Because the gates can only take feedback from one classical bit you must place the measurement result
-   in a 1-bit classical register, ``Alices_Measurement_Register`` in the above example. The measurement
-   key used as the classical control must also be unique - running a classically controlled operation
-   where the condition is a key that is used to measure multiple qubits will result in an error.
+   Because classically controlled gates can currently only take feedback from one classical bit you must condition
+   them on a measurement key that only measures a single qubit.
 
 
 Running on a real quantum computer
