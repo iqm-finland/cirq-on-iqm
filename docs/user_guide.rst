@@ -287,11 +287,11 @@ The classical control can be applied on an operation using :meth:`~cirq.Operatio
 
 ::
 
-    Alice: ─────────────────────────X───M───────────
-                                        ║
-    Bob: ───────────────────────────────╫───X───M───
-                                        ║   ║
-    Alices_Measurement_Register: ═══════@═══^═══════
+    Alice: ───X───M───────M('final')───
+                  ║       │
+    Bob: ─────────╫───X───M────────────
+                  ║   ║
+    A: ═══════════@═══^════════════════
 
 After an ``X`` gate is applied on ``Alice``, the qubit is measured and the result is stored
 in the key `A`. If the result is one (which it should always be in this case),
