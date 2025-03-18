@@ -88,11 +88,10 @@ def map_operation(operation: Operation) -> Instruction:
         OperationNotSupportedError When the circuit contains an unsupported operation.
 
     """
-    phased_rx_name = 'prx'
     qubits = [qubit.name if isinstance(qubit, NamedQid) else str(qubit) for qubit in operation.qubits]
     if isinstance(operation.gate, (PhasedXPowGate, XPowGate, YPowGate)):
         return Instruction(
-            name=phased_rx_name,
+            name='prx',
             qubits=tuple(qubits),
             args={'angle_t': operation.gate.exponent / 2, 'phase_t': operation.gate.phase_exponent / 2},
         )
