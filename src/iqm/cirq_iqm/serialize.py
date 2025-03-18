@@ -36,10 +36,9 @@ def serialize_circuit(circuit: Circuit) -> iqm_client.Circuit:
     instructions = list(map(map_operation, total_ops_list))
     for idx, op in enumerate(total_ops_list):
         if isinstance(op, cirq.ClassicallyControlledOperation):
-            feedback_key = str(op._conditions[0].keys[0])
             measurement_already_used = False
             for m_idx, i in enumerate(instructions):
-                if i.name == "measure" and i.args["key"] == feedback_key:
+                if i.name == "measure" and i.args["key"] == instructions[idx].args["feedback_key"]:
                     if m_idx > idx:
                         raise OperationNotSupportedError("Measurement condition must precede cc_prx operation")
                     if measurement_already_used:  # raise error if measurement has already been used as condition
@@ -48,7 +47,6 @@ def serialize_circuit(circuit: Circuit) -> iqm_client.Circuit:
                     if len(i.qubits) > 1:
                         raise OperationNotSupportedError("Measurement condition for cc_prx must only be from one qubit")
                     feedback_qubit = i.qubits[0]
-                    instructions[idx].args["feedback_key"] = feedback_key
                     instructions[idx].args["feedback_qubit"] = feedback_qubit
     return iqm_client.Circuit(name="Serialized from Cirq", instructions=instructions)
 
