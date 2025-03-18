@@ -271,7 +271,7 @@ support currently has several limitations:
   apply the gate if the bit is 1, and apply an identity gate if the bit is 0.
 * The availability of the controlled gates depends on the instrumentation of the quantum computer.
 
-The classical control can be applied on a circuit operation using :meth:`~cirq.Operation.with_classical_controls`:
+The classical control can be applied on an operation using :meth:`~cirq.Operation.with_classical_controls`:
 
 .. code-block:: python
 
