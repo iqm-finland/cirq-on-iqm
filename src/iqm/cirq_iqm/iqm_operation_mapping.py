@@ -125,7 +125,7 @@ def map_operation(operation: Operation) -> Instruction:
     if isinstance(operation, ClassicallyControlledOperation):
         if len(operation._conditions) > 1:
             raise OperationNotSupportedError('Classically controlled gates can currently only have one condition.')
-        if isinstance(operation._conditions[0], SympyCondition):
+        if isinstance(operation._conditions[0], (SympyCondition)):
             raise OperationNotSupportedError('SympyConditions are not natively supported')
         if isinstance(operation._sub_operation.gate, (PhasedXPowGate, XPowGate, YPowGate)):
             return Instruction(
