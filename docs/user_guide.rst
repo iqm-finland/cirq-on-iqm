@@ -298,7 +298,7 @@ in the key `A`. If the result is one (which it should always be in this case),
 another `X` gate is subsequently applied on `Bob`. If it is zero, an identity gate of corresponding
 duration is applied instead.
 
-Executing the above circuit should always return `11`, even though `Alice` and `Bob` are never
+The `final` measurement in the above circuit should always return `11`, even though `Alice` and `Bob` are never
 actually entangled.
 
 .. note::
