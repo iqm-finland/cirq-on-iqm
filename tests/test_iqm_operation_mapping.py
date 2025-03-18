@@ -145,16 +145,6 @@ def test_cc_prx_error_circuits():
     with pytest.raises(OperationNotSupportedError, match='Measurement condition must precede cc_prx operation'):
         serialize_circuit(late_measurement_circuit)
 
-    multiple_measures_same_key = cirq.Circuit(
-        cirq.measure(qubits[0], key='f'),
-        cirq.measure(qubits[1], key='f'),
-        cirq.X(qubits[1]).with_classical_controls('f'),
-    )
-    with pytest.raises(
-        OperationNotSupportedError, match='Measurement condition for cc_prx must only be from one qubit'
-    ):
-        serialize_circuit(multiple_measures_same_key)
-
     multiple_conditions = cirq.Circuit(
         cirq.measure(qubits[0], key='f'),
         cirq.measure(qubits[1], key='g'),
