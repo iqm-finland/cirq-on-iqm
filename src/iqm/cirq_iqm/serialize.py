@@ -16,8 +16,7 @@
 Helper functions for serializing and deserializing quantum circuits between Cirq and IQM Circuit formats.
 """
 
-import cirq
-from cirq import Circuit
+from cirq import Circuit, ClassicallyControlledOperation
 
 from iqm import iqm_client
 from iqm.cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, instruction_to_operation, map_operation
@@ -32,22 +31,34 @@ def serialize_circuit(circuit: Circuit) -> iqm_client.Circuit:
     Returns:
         data transfer object representing the circuit
     """
-    total_ops_list = [op for moment in circuit for op in moment]
+    total_ops_list = []
+    cc_prx_support = False
+    for moment in circuit:
+        for op in moment:
+            if isinstance(op, ClassicallyControlledOperation):
+                cc_prx_support = True
+            total_ops_list.append(op)
     instructions = list(map(map_operation, total_ops_list))
-    for idx, op in enumerate(total_ops_list):
-        if isinstance(op, cirq.ClassicallyControlledOperation):
-            measurement_already_used = False
-            for m_idx, i in enumerate(instructions):
-                if i.name == "measure" and i.args["key"] == instructions[idx].args["feedback_key"]:
-                    if m_idx > idx:
-                        raise OperationNotSupportedError("Measurement condition must precede cc_prx operation")
-                    if measurement_already_used:  # raise error if measurement has already been used as condition
-                        raise OperationNotSupportedError("Measurement condition for cc_prx must only be from one qubit")
-                    measurement_already_used = True  # change the flag to True now that measurement is used
-                    if len(i.qubits) > 1:
-                        raise OperationNotSupportedError("Measurement condition for cc_prx must only be from one qubit")
-                    feedback_qubit = i.qubits[0]
-                    instructions[idx].args["feedback_qubit"] = feedback_qubit
+
+    if cc_prx_support:
+        measurement_dict = {}
+        cc_prx_dict = {}
+
+        for idx, inst in enumerate(instructions):
+            if inst.name == "cc_prx":
+                cc_prx_dict[inst] = idx
+            if inst.name == "measure":
+                measurement_dict[inst.args["key"]] = (inst.qubits, idx)
+
+        for op, idx in cc_prx_dict.items():
+            m_idx = measurement_dict[op.args["feedback_key"]][1]
+            feedback_qubit = measurement_dict[op.args["feedback_key"]][0][0]
+            if len(feedback_qubit) > 1:
+                raise OperationNotSupportedError("Measurement condition for cc_prx must only be from one qubit")
+            if idx < m_idx:
+                raise OperationNotSupportedError("Measurement condition must precede cc_prx operation")
+            op.args["feedback_qubit"] = feedback_qubit[0]
+
     return iqm_client.Circuit(name="Serialized from Cirq", instructions=instructions)
 
 
