@@ -261,6 +261,7 @@ optimizations. Let us try it out on our decomposed and routed circuit above:
 
 Classical control
 -----------------
+
 Some IQM quantum computers support classically-controlled gates, that is, gates that are executed
 conditionally depending on the result of a measurement preceding them in the quantum circuit. This
 support currently has several limitations:
