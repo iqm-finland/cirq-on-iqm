@@ -179,7 +179,9 @@ def serialize_circuit(circuit: Circuit) -> iqm_client.Circuit:
                 feedback_key = inst.args["feedback_key"]
                 measurement = mkey_to_measurement.get(feedback_key)
                 if measurement is None:
-                    raise OperationNotSupportedError(f"cc_prx has feedback_key {feedback_key}, but no measure operation with that key precedes it.")
+                    raise OperationNotSupportedError(
+                        f"cc_prx has feedback_key {feedback_key}, but no measure operation with that key precedes it."
+                    )
                 if len(measurement.qubits) != 1:
                     raise OperationNotSupportedError("cc_prx must depend on the measurement result of a single qubit.")
                 inst.args["feedback_qubit"] = measurement.qubits[0]
