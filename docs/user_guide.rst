@@ -293,9 +293,9 @@ The classical control can be applied on an operation using :meth:`~cirq.Operatio
                                         ║   ║
     Alices_Measurement_Register: ═══════@═══^═══════
 
-After an `X` gate is applied onto `Alice`, the measurement is stored
-in `Alices_Measurement_Register`. If the result is 1 (which it should always be in this case),
-another `X` gate is subsequently applied onto `Bob`. If it is zero, an identity gate of corresponding
+After an `X` gate is applied on `Alice`, the qubit is measured and the result is stored
+in the key `A`. If the result is one (which it should always be in this case),
+another `X` gate is subsequently applied on `Bob`. If it is zero, an identity gate of corresponding
 duration is applied instead.
 
 Executing the above circuit should always return `11`, even though `Alice` and `Bob` are never
