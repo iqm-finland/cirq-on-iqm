@@ -277,9 +277,13 @@ The classical control can be applied on an operation using :meth:`~cirq.Operatio
 
     import cirq
     q1, q2 = cirq.NamedQubit('Alice'), cirq.NamedQubit('Bob')
-    circuit = cirq.Circuit(cirq.X(q1), cirq.measure(q1, key = 'Alices_Measurement_Register'),
-              cirq.X(q2).with_classical_controls('Alices_Measurement_Register'), cirq.measure(q2))
-    circuit
+    circuit = cirq.Circuit(
+        cirq.X(q1),
+        cirq.measure(q1, key='A'),
+        cirq.X(q2).with_classical_controls('A'),
+        cirq.measure(q1, q2, key='final'),
+    )
+    print(circuit)
 
 ::
 
