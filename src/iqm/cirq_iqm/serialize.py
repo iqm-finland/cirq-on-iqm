@@ -50,14 +50,14 @@ def serialize_circuit(circuit: Circuit) -> iqm_client.Circuit:
             if inst.name == "measure":
                 measurement_dict[inst.args["key"]] = (inst.qubits, idx)
 
-        for op, idx in cc_prx_dict.items():
-            m_idx = measurement_dict[op.args["feedback_key"]][1]
-            feedback_qubit = measurement_dict[op.args["feedback_key"]][0][0]
+        for inst, idx in cc_prx_dict.items():
+            m_idx = measurement_dict[inst.args["feedback_key"]][1]
+            feedback_qubit = measurement_dict[inst.args["feedback_key"]][0][0]
             if len(feedback_qubit) > 1:
                 raise OperationNotSupportedError("Measurement condition for cc_prx must only be from one qubit")
             if idx < m_idx:
                 raise OperationNotSupportedError("Measurement condition must precede cc_prx operation")
-            op.args["feedback_qubit"] = feedback_qubit[0]
+            inst.args["feedback_qubit"] = feedback_qubit[0]
 
     return iqm_client.Circuit(name="Serialized from Cirq", instructions=instructions)
 
