@@ -148,7 +148,7 @@ def test_cc_prx_error_circuits():
     )
     with pytest.raises(
         OperationNotSupportedError,
-        match= 'cc_prx has feedback_key f, but no measure operation with that key precedes it.',
+        match='cc_prx has feedback_key f, but no measure operation with that key precedes it.',
     ):
         serialize_circuit(late_measurement_circuit)
 
