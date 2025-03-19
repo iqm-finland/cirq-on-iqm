@@ -158,7 +158,7 @@ def test_cc_prx_error_circuits():
         cirq.X(qubits[1]).with_classical_controls('f', 'g'),
     )
     with pytest.raises(
-        OperationNotSupportedError, match='Classically controlled prx gates can only have one condition'
+        OperationNotSupportedError, match='Classically controlled prx gates can currently only have one condition'
     ):
         serialize_circuit(multiple_conditions)
 
