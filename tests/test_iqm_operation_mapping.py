@@ -182,8 +182,6 @@ def test_cc_prx_error_circuits():
 
     f = symbols('f')
     condition = Eq(f, 0)
-    condition
-
     wrong_condition_circuit = cirq.Circuit(
         cirq.measure(qubits[0], key='f'), cirq.X(qubits[1]).with_classical_controls(condition)
     )
