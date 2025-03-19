@@ -24,6 +24,7 @@ from cirq import (
 )
 from mockito import mock
 import pytest
+from sympy import Eq, symbols
 
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.cirq_iqm.serialize import (
@@ -179,8 +180,12 @@ def test_cc_prx_error_circuits():
     ):
         serialize_circuit(long_measurement)
 
+    m = symbols('f')
+    condition = Eq(f, 0)
+    condition
+
     wrong_condition_circuit = cirq.Circuit(
-        cirq.measure(qubits[0], key='f'), cirq.X(qubits[1]).with_classical_controls(2)
+        cirq.measure(qubits[0], key='f'), cirq.X(qubits[1]).with_classical_controls(condition)
     )
     with pytest.raises(OperationNotSupportedError, match='Only KeyConditions are supported as classical controls'):
         serialize_circuit(wrong_condition_circuit)
