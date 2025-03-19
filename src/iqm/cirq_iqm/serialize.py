@@ -188,6 +188,7 @@ def serialize_circuit(circuit: Circuit) -> iqm_client.Circuit:
                 if len(measurement.qubits) != 1:
                     raise OperationNotSupportedError('cc_prx must depend on the measurement result of a single qubit.')
                 inst.args['feedback_qubit'] = measurement.qubits[0]
+                measurement['feedback_key'] = feedback_key
 
     return iqm_client.Circuit(name='Serialized from Cirq', instructions=instructions)
 
