@@ -15,6 +15,7 @@
 """
 
 from .adonis import Adonis
+from .aphrodite import Aphrodite
 from .apollo import Apollo
 from .iqm_device import IQMDevice
 from .iqm_device_metadata import IQMDeviceMetadata

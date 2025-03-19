@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 16.1
+============
+
+* Added a new FakeIQMDevice :class:`Aphrodite` for our new 54 qubit devices. `#149 <https://github.com/iqm-finland/cirq-on-iqm/pull/149>``
+
+
 Version 16.0
 ============
 
