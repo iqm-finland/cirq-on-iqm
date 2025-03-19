@@ -24,7 +24,7 @@ from cirq import (
 )
 from mockito import mock
 import pytest
-from sympy import Eq, symbols
+from sympy import Eq, symbols  # type: ignore
 
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
 from iqm.cirq_iqm.serialize import (
