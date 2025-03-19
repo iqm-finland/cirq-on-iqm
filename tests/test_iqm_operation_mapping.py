@@ -26,8 +26,12 @@ from mockito import mock
 import pytest
 
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
-from iqm.cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, instruction_to_operation, map_operation
-from iqm.cirq_iqm.serialize import serialize_circuit
+from iqm.cirq_iqm.serialize import (
+    OperationNotSupportedError,
+    instruction_to_operation,
+    map_operation,
+    serialize_circuit,
+)
 from iqm.iqm_client import Instruction
 
 
@@ -157,6 +161,15 @@ def test_cc_prx_error_circuits():
         OperationNotSupportedError, match='Classically controlled prx gates can only have one condition'
     ):
         serialize_circuit(multiple_conditions)
+
+    same_key_circuit = cirq.Circuit(
+        cirq.measure(qubits[0], key='f'),
+        cirq.measure(qubits[1], key='f'),
+        cirq.X(qubits[1]).with_classical_controls('f'),
+    )
+
+    with pytest.raises(OperationNotSupportedError, match='Cannot use the same key for multiple measurements'):
+        serialize_circuit(same_key_circuit)
 
     long_measurement = cirq.Circuit(
         cirq.measure(qubits[0], qubits[1], key='f'), cirq.X(qubits[1]).with_classical_controls('f')

@@ -30,7 +30,6 @@ from cirq.ops import (
 
 from iqm import iqm_client
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
-from iqm.cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, instruction_to_operation, map_operation
 from iqm.iqm_client import Instruction
 
 # Mapping from IQM operation names to cirq operations
@@ -172,21 +171,25 @@ def serialize_circuit(circuit: Circuit) -> iqm_client.Circuit:
 
     if cc_prx_support:
         mkey_to_measurement = {}
+        used_keys = set()
         for inst in instructions:
-            if inst.name == "measure":
-                mkey_to_measurement[inst.args["key"]] = inst
-            elif inst.name == "cc_prx":
-                feedback_key = inst.args["feedback_key"]
+            if inst.name == 'measure':
+                if inst.args['key'] in used_keys:
+                    raise OperationNotSupportedError('Cannot use the same key for multiple measurements')
+                mkey_to_measurement[inst.args['key']] = inst
+                used_keys.add(inst.args['key'])
+            elif inst.name == 'cc_prx':
+                feedback_key = inst.args['feedback_key']
                 measurement = mkey_to_measurement.get(feedback_key)
                 if measurement is None:
                     raise OperationNotSupportedError(
-                        f"cc_prx has feedback_key {feedback_key}, but no measure operation with that key precedes it."
+                        f'cc_prx has feedback_key {feedback_key}, but no measure operation with that key precedes it.'
                     )
                 if len(measurement.qubits) != 1:
-                    raise OperationNotSupportedError("cc_prx must depend on the measurement result of a single qubit.")
-                inst.args["feedback_qubit"] = measurement.qubits[0]
+                    raise OperationNotSupportedError('cc_prx must depend on the measurement result of a single qubit.')
+                inst.args['feedback_qubit'] = measurement.qubits[0]
 
-    return iqm_client.Circuit(name="Serialized from Cirq", instructions=instructions)
+    return iqm_client.Circuit(name='Serialized from Cirq', instructions=instructions)
 
 
 def deserialize_circuit(circuit: iqm_client.Circuit) -> Circuit:
