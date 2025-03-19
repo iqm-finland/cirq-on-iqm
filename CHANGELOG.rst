@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 16.1
+============
+
+* Added a new FakeIQMDevice :class:`Aphrodite` for our new 54 qubit devices.
+
+
 Version 16.0
 ============
 
