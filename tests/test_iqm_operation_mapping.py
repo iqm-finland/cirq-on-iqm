@@ -180,7 +180,7 @@ def test_cc_prx_error_circuits():
     ):
         serialize_circuit(long_measurement)
 
-    m = symbols('f')
+    f = symbols('f')
     condition = Eq(f, 0)
     condition
 
