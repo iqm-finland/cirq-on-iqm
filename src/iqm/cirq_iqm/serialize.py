@@ -143,7 +143,7 @@ def map_operation(operation: Operation) -> Instruction:
                 },
             )
         raise OperationNotSupportedError(
-            f'Classical control on the {operation._sub_operation.gate} gate is not natively supported'
+            f'Classical control on the {operation._sub_operation.gate} gate is not supported.'
         )
 
         # skipping feedback_qubit and feedback_key information until total circuit serialization
