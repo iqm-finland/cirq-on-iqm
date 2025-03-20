@@ -160,13 +160,8 @@ def serialize_circuit(circuit: Circuit) -> iqm_client.Circuit:
     Returns:
         data transfer object representing the circuit
     """
-    total_ops_list = []
-    cc_prx_support = False
-    for moment in circuit:
-        for op in moment:
-            if isinstance(op, ClassicallyControlledOperation):
-                cc_prx_support = True
-            total_ops_list.append(op)
+    total_ops_list = [op for moment in circuit for op in moment]
+    cc_prx_support = any(isinstance(op, ClassicallyControlledOperation) for op in total_ops_list)
     instructions = list(map(map_operation, total_ops_list))
 
     if cc_prx_support:
