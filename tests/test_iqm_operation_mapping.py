@@ -159,7 +159,7 @@ def test_cc_prx_error_circuits():
         cirq.X(qubits[1]).with_classical_controls('f', 'g'),
     )
     with pytest.raises(
-        OperationNotSupportedError, match='Classically controlled prx gates can currently only have one condition'
+        OperationNotSupportedError, match='Classically controlled gates can currently only have one condition.'
     ):
         serialize_circuit(multiple_conditions)
 
@@ -169,7 +169,7 @@ def test_cc_prx_error_circuits():
         cirq.X(qubits[1]).with_classical_controls('f'),
     )
 
-    with pytest.raises(OperationNotSupportedError, match='Cannot use the same key for multiple measurements'):
+    with pytest.raises(OperationNotSupportedError, match='Cannot use the same key for multiple measurements.'):
         serialize_circuit(same_key_circuit)
 
     long_measurement = cirq.Circuit(
@@ -185,9 +185,9 @@ def test_cc_prx_error_circuits():
     wrong_condition_circuit = cirq.Circuit(
         cirq.measure(qubits[0], key='f'), cirq.X(qubits[1]).with_classical_controls(condition)
     )
-    with pytest.raises(OperationNotSupportedError, match='Only KeyConditions are supported as classical controls'):
+    with pytest.raises(OperationNotSupportedError, match='Only KeyConditions are supported as classical controls.'):
         serialize_circuit(wrong_condition_circuit)
 
     cc_z_circuit = cirq.Circuit(cirq.measure(qubits[0], key='f'), cirq.Z(qubits[1]).with_classical_controls('f'))
-    with pytest.raises(OperationNotSupportedError, match='Classical control on the Z gate is not natively supported'):
+    with pytest.raises(OperationNotSupportedError, match='Classical control on the Z gate is not natively supported.'):
         serialize_circuit(cc_z_circuit)

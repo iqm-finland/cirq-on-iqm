@@ -174,7 +174,7 @@ def serialize_circuit(circuit: Circuit) -> iqm_client.Circuit:
         for inst in instructions:
             if inst.name == 'measure':
                 if inst.args['key'] in mkey_to_measurement:
-                    raise OperationNotSupportedError('Cannot use the same key for multiple measurements')
+                    raise OperationNotSupportedError('Cannot use the same key for multiple measurements.')
                 mkey_to_measurement[inst.args['key']] = inst
             elif inst.name == 'cc_prx':
                 feedback_key = inst.args['feedback_key']
