@@ -63,11 +63,11 @@ def instruction_to_operation(instr: Instruction) -> Operation:
     gate_type = _IQM_CIRQ_OP_MAP[instr.name][0]
     args_map = {'angle_t': 'exponent', 'phase_t': 'phase_exponent'}
     args = {args_map[k]: v * 2 for k, v in instr.args.items() if k in args_map}
-    if 'key' in instr.args.keys():
+    qubits = [NamedQid(qubit, dimension=2) for qubit in instr.qubits]
+    if instr.name == 'measure':
         args['key'] = instr.args['key']
         args['num_qubits'] = len(instr.qubits)
-    qubits = [NamedQid(qubit, dimension=2) for qubit in instr.qubits]
-    if instr.name == 'cc_prx':
+    elif instr.name == 'cc_prx':
         return gate_type(**args)(*qubits).with_classical_controls(instr.args['feedback_key'])
     return gate_type(**args)(*qubits)
 
