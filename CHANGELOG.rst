@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 16.1
+============
+
+* Support for the classically controlled prx gate `#147 <https://github.com/iqm-finland/cirq-on-iqm/pull/147>`_
+
 Version 16.0
 ============
 

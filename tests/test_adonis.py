@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tests for the Adonis device.
-"""
+"""Tests for the Adonis device."""
 # pylint: disable=redefined-outer-name,no-self-use,duplicate-code
 
 from __future__ import annotations

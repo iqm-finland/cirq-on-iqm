@@ -11,8 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Definitions for varios IQM quantum devices for the Cirq framework.
-"""
+"""Definitions for various IQM quantum devices for the Cirq framework."""
 
 from .adonis import Adonis
 from .apollo import Apollo

@@ -259,6 +259,52 @@ optimizations. Let us try it out on our decomposed and routed circuit above:
     gates for a particular device. In the example above we don't have them, however it is generally a good idea to run
     decomposition once again after the simplification.
 
+Classical control
+-----------------
+
+Some IQM quantum computers support classically-controlled gates, that is, gates that are executed
+conditionally depending on the result of a measurement preceding them in the quantum circuit. This
+support currently has several limitations:
+
+* Only the ``PhasedXPowGate``, ``XPowGate`` and ``YPowGate`` gates can be classically controlled.
+* The gates can only be conditioned on the measurement result of a single qubit, and the only control available is to
+  apply the gate if the result is 1, and apply an identity gate if the result is 0.
+* The availability of the controlled gates depends on the instrumentation of the quantum computer.
+
+The classical control can be applied on an operation using :meth:`~cirq.Operation.with_classical_controls`:
+
+.. code-block:: python
+
+    import cirq
+    q1, q2 = cirq.NamedQubit('Alice'), cirq.NamedQubit('Bob')
+    circuit = cirq.Circuit(
+        cirq.X(q1),
+        cirq.measure(q1, key='A'),
+        cirq.X(q2).with_classical_controls('A'),
+        cirq.measure(q1, q2, key='final'),
+    )
+    print(circuit)
+
+::
+
+    Alice: ───X───M───────M('final')───
+                  ║       │
+    Bob: ─────────╫───X───M────────────
+                  ║   ║
+    A: ═══════════@═══^════════════════
+
+After an ``X`` gate is applied on ``Alice``, the qubit is measured and the result is stored
+in the key ``A``. If the result is 1 (which it should always be in this case),
+another ``X`` gate is subsequently applied on ``Bob``. If it is 0, an identity gate of corresponding
+duration is applied instead.
+
+The ``final`` measurement in the above circuit should always return `11`, even though ``Alice`` and ``Bob`` are never
+actually entangled.
+
+.. note::
+
+   Because classically controlled gates can currently only take feedback from one classical bit you must condition
+   them on a measurement key that only measures a single qubit.
 
 
 Running on a real quantum computer
