@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>iqm.cirq_iqm.serialize.serialize_circuit &#8212; Cirq on IQM 16.0 documentation</title>
+    <title>iqm.cirq_iqm.serialize.serialize_circuit &#8212; Cirq on IQM 16.1 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=d8dfd7ca"></script>
+    <script src="../_static/documentation_options.js?v=632355d7"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
@@ -48,12 +48,12 @@
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="iqm.cirq_iqm.transpiler" href="iqm.cirq_iqm.transpiler.html" />
-    <link rel="prev" title="iqm.cirq_iqm.serialize.deserialize_circuit" href="iqm.cirq_iqm.serialize.deserialize_circuit.html" />
+    <link rel="next" title="iqm.cirq_iqm.serialize.OperationNotSupportedError" href="iqm.cirq_iqm.serialize.OperationNotSupportedError.html" />
+    <link rel="prev" title="iqm.cirq_iqm.serialize.map_operation" href="iqm.cirq_iqm.serialize.map_operation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="16.0" />
-    <meta name="docbuild:last-update" content="2025-02-17"/>
+  <meta name="docsearch:version" content="16.1" />
+    <meta name="docbuild:last-update" content="2025-03-21"/>
   </head>
   
   
@@ -132,8 +132,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 16.0 documentation - Home"/>
-    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Cirq on IQM 16.0 documentation - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Cirq on IQM 16.1 documentation - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Cirq on IQM 16.1 documentation - Home"/>
   
   
 </a></div>
@@ -165,12 +165,6 @@
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_gates.IQMMoveGate.html">iqm.cirq_iqm.iqm_gates.IQMMoveGate</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="iqm.cirq_iqm.iqm_operation_mapping.html">iqm.cirq_iqm.iqm_operation_mapping</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_operation_mapping.instruction_to_operation.html">iqm.cirq_iqm.iqm_operation_mapping.instruction_to_operation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_operation_mapping.map_operation.html">iqm.cirq_iqm.iqm_operation_mapping.map_operation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_operation_mapping.OperationNotSupportedError.html">iqm.cirq_iqm.iqm_operation_mapping.OperationNotSupportedError</a></li>
-</ul>
-</details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.html">iqm.cirq_iqm.iqm_sampler</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.IQMResult.html">iqm.cirq_iqm.iqm_sampler.IQMResult</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.iqm_sampler.IQMSampler.html">iqm.cirq_iqm.iqm_sampler.IQMSampler</a></li>
@@ -185,7 +179,10 @@
 </details></li>
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="iqm.cirq_iqm.serialize.html">iqm.cirq_iqm.serialize</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.serialize.deserialize_circuit.html">iqm.cirq_iqm.serialize.deserialize_circuit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.serialize.instruction_to_operation.html">iqm.cirq_iqm.serialize.instruction_to_operation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.serialize.map_operation.html">iqm.cirq_iqm.serialize.map_operation</a></li>
 <li class="toctree-l4 current active"><a class="current reference internal" href="#">iqm.cirq_iqm.serialize.serialize_circuit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.serialize.OperationNotSupportedError.html">iqm.cirq_iqm.serialize.OperationNotSupportedError</a></li>
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="iqm.cirq_iqm.transpiler.html">iqm.cirq_iqm.transpiler</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -362,7 +359,7 @@
 <h1>iqm.cirq_iqm.serialize.serialize_circuit<a class="headerlink" href="#iqm-cirq-iqm-serialize-serialize-circuit" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="iqm.cirq_iqm.serialize.serialize_circuit">
-<span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.serialize.</span></span><span class="sig-name descname"><span class="pre">serialize_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Circuit</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.Circuit.html#iqm.iqm_client.models.Circuit" title="(in IQM client v22.0)"><span class="pre">Circuit</span></a></span></span><a class="headerlink" href="#iqm.cirq_iqm.serialize.serialize_circuit" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.serialize.</span></span><span class="sig-name descname"><span class="pre">serialize_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Circuit</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.Circuit.html#iqm.iqm_client.models.Circuit" title="(in IQM client v22.4)"><span class="pre">Circuit</span></a></span></span><a class="headerlink" href="#iqm.cirq_iqm.serialize.serialize_circuit" title="Link to this definition">#</a></dt>
 <dd><p>Serializes a quantum circuit into the IQM data transfer format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -372,7 +369,7 @@
 <dd class="field-even"><p>data transfer object representing the circuit</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.Circuit.html#iqm.iqm_client.models.Circuit" title="(in IQM client v22.0)"><em>Circuit</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.Circuit.html#iqm.iqm_client.models.Circuit" title="(in IQM client v22.4)"><em>Circuit</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -391,20 +388,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="iqm.cirq_iqm.serialize.deserialize_circuit.html"
+       href="iqm.cirq_iqm.serialize.map_operation.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">iqm.cirq_iqm.serialize.deserialize_circuit</p>
+        <p class="prev-next-title">iqm.cirq_iqm.serialize.map_operation</p>
       </div>
     </a>
     <a class="right-next"
-       href="iqm.cirq_iqm.transpiler.html"
+       href="iqm.cirq_iqm.serialize.OperationNotSupportedError.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">iqm.cirq_iqm.transpiler</p>
+        <p class="prev-next-title">iqm.cirq_iqm.serialize.OperationNotSupportedError</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -459,7 +456,7 @@ By Cirq on IQM developers
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on 2025-02-17.
+  Last updated on 2025-03-21.
   <br/>
 </p>
   </div>

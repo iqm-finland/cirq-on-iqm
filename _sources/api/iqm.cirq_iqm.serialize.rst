@@ -15,6 +15,8 @@ iqm.cirq\_iqm.serialize
       :toctree:
    
       deserialize_circuit
+      instruction_to_operation
+      map_operation
       serialize_circuit
    
    
@@ -24,6 +26,13 @@ iqm.cirq\_iqm.serialize
    
 
    
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      OperationNotSupportedError
    
    
 
