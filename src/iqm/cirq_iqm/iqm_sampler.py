@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Circuit sampler that executes quantum circuits on an IQM quantum computer.
+Circuit sampler that executes quantum circuits on an IQM quantum computer
 """
 from __future__ import annotations
 
