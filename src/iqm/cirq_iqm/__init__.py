@@ -13,7 +13,6 @@
 # limitations under the License.
 """Types for representing and methods for manipulating operations on IQM's quantum computers."""
 from importlib.metadata import PackageNotFoundError, version
-import sys
 import warnings
 
 from .devices import *
@@ -30,5 +29,9 @@ finally:
 from .iqm_gates import *
 from .transpiler import transpile_insert_moves_into_circuit
 
-if sys.version_info < (3, 10):
-    warnings.warn(DeprecationWarning('Python 3.9 will no longer be supported in a later release of cirq-iqm.'))
+warnings.warn(
+    DeprecationWarning(
+        'The cirq-iqm package is deprecated and new versions of Cirq on IQM will be published as part of '
+        'iqm-client. Please uninstall cirq-iqm and install iqm-client[cirq] to get the newest version.'
+    )
+)
