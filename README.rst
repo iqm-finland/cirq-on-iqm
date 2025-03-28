@@ -8,6 +8,13 @@
 Cirq on IQM
 ###########
 
+**The** ``cirq-iqm`` **package is deprecated and the GitHub repository has been archived. New versions of
+Cirq on IQM will be published as part of the** `iqm-client <https://pypi.org/project/iqm-client/>`_
+**package and can be installed from public PyPI with** ``pip install iqm-client[cirq]``.
+**See the latest documentation at** `<https://docs.meetiqm.com/iqm-client/user_guide_cirq.html>`_ **for more
+information. The source code is available as part of the** ``iqm-client`` **package and a public mirror of the source
+code is available at** `<https://github.com/iqm-finland/sdk>`_. **For support, you can contact support@meetiqm.com**.
+
 `Google Cirq <https://quantumai.google/cirq>`_ adapter for `IQM's <https://www.meetiqm.com>`_ quantum architectures.
 
 
