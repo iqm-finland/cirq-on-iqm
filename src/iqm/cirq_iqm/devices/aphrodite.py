@@ -20,31 +20,31 @@ from .iqm_device import IQMDevice, IQMDeviceMetadata
 
 
 class Aphrodite(IQMDevice):
-    r"""IQM's twenty-qubit transmon device.
+    r"""IQM's 54-qubit transmon device.
 
     The qubits are connected thus::
 
-            QB54  QB51  QB46  QB39
-            /  \  /  \  /  \  /  \ 
-        QB53  QB50  QB45  QB38  QB31
-        /  \  /  \  /  \  /  \  / 
-        QB52  QB49  QB44  QB37  QB30
-        \  /  \  /  \  /  \  /  \ 
-        QB48  QB43  QB36  QB29  QB22
-        /  \  /  \  /  \  /  \  /  \ 
-        QB47  QB42  QB35  QB28  QB21  QB14
-        \  /  \  /  \  /  \  /  \  / 
-        QB41  QB34  QB27  QB20  QB13
-        /  \  /  \  /  \  /  \  /  \ 
-        QB40  QB33  QB26  QB19  QB12  QB7
-        \  /  \  /  \  /  \  /  \  / 
-        QB32  QB25  QB18  QB11  QB6
-            \  /  \  /  \  /  \  /  \ 
-            QB24  QB17  QB10  QB5   QB2
-            /  \  /  \  /  \  /  \  / 
-        QB23  QB16  QB9   QB4   QB1
-            \  /  \  /  \  / 
-            QB15  QB8   QB3
+          QB54  QB51  QB46  QB39
+          /  \  /  \  /  \  /  \
+       QB53  QB50  QB45  QB38  QB31
+       /  \  /  \  /  \  /  \  /
+    QB52  QB49  QB44  QB37  QB30
+       \  /  \  /  \  /  \  /  \
+       QB48  QB43  QB36  QB29  QB22
+       /  \  /  \  /  \  /  \  /  \
+    QB47  QB42  QB35  QB28  QB21  QB14
+       \  /  \  /  \  /  \  /  \  /
+       QB41  QB34  QB27  QB20  QB13
+       /  \  /  \  /  \  /  \  /  \
+    QB40  QB33  QB26  QB19  QB12  QB7
+       \  /  \  /  \  /  \  /  \  /
+       QB32  QB25  QB18  QB11  QB6
+          \  /  \  /  \  /  \  /  \
+          QB24  QB17  QB10  QB5   QB2
+          /  \  /  \  /  \  /  \  /
+       QB23  QB16  QB9   QB4   QB1
+          \  /  \  /  \  /
+          QB15  QB8   QB3
 
     where the lines denote which qubit pairs can be subject to two-qubit gates.
 
