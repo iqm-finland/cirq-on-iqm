@@ -8,6 +8,11 @@ Version 17.0
 * Deprecate the ``cirq-iqm`` package. New versions of Cirq on IQM are published as part of iqm-client.
   `#150 <https://github.com/iqm-finland/cirq-on-iqm/pull/150>`_
 
+Version 16.2
+============
+
+* Added a new 54-qubit IQMDevice :class:`Aphrodite`. `#149 <https://github.com/iqm-finland/cirq-on-iqm/pull/149>`_
+
 Version 16.1
 ============
 

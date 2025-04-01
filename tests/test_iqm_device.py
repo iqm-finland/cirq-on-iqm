@@ -15,7 +15,7 @@ from cirq import Circuit, HardCodedInitialMapper, NamedQid, NamedQubit, ops
 from cirq.testing import assert_circuits_have_same_unitary_given_final_permutation, assert_has_diagram, random_circuit
 import pytest
 
-from iqm.cirq_iqm import Adonis, Apollo, IQMDevice, IQMMoveGate
+from iqm.cirq_iqm import Adonis, Aphrodite, Apollo, IQMDevice, IQMMoveGate
 
 
 def test_equality_method():
@@ -24,10 +24,13 @@ def test_equality_method():
     adonis_3 = Adonis()
     apollo_1 = Apollo()
     apollo_2 = Apollo()
+    aphrodite_1 = Aphrodite()
+    aphrodite_2 = Aphrodite()
     adonis_3._metadata = apollo_1.metadata
 
     assert adonis_1 == adonis_2
     assert apollo_1 == apollo_2
+    assert aphrodite_1 == aphrodite_2
     assert adonis_2 != adonis_3
 
 
@@ -59,7 +62,9 @@ def assert_qubit_indexing(backend: IQMDevice, correct_idx_name_associations):
     # assert backend.qubit_name_to_index("Alice") is None
 
 
-@pytest.mark.parametrize("device", ["device_without_resonator", "device_with_resonator", Apollo(), Adonis()])
+@pytest.mark.parametrize(
+    "device", ["device_without_resonator", "device_with_resonator", Apollo(), Adonis(), Aphrodite()]
+)
 def test_transpilation(device: IQMDevice, request):
     if isinstance(device, str):
         device = request.getfixturevalue(device)
@@ -105,7 +110,14 @@ def test_transpilation(device: IQMDevice, request):
 
 @pytest.mark.parametrize(
     "device",
-    ["device_without_resonator", "device_with_resonator", Apollo(), Adonis(), "device_with_multiple_resonators"],
+    [
+        "device_without_resonator",
+        "device_with_resonator",
+        Apollo(),
+        Adonis(),
+        "device_with_multiple_resonators",
+        Aphrodite(),
+    ],
 )
 def test_qubit_connectivity(device: IQMDevice, request):
     if isinstance(device, str):

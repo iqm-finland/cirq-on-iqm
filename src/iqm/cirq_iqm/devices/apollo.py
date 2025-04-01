@@ -40,10 +40,8 @@ class Apollo(IQMDevice):
 
     where the lines denote which qubit pairs can be subject to two-qubit gates.
 
-    Each qubit can be rotated about any axis in the xy plane by an arbitrary angle.
-    Apollo thus has native PhasedXPowGate, XPowGate, and YPowGate gates. The two-qubit gate CZ is
-    native, as well. The qubits can be measured simultaneously or separately once, at the end of
-    the circuit.
+    Apollo has native PhasedXPowGate, XPowGate, and YPowGate gates. The two-qubit gate CZ is
+    native, as well. The qubits can be measured simultaneously or separately any number of times.
     """
 
     def __init__(self):
