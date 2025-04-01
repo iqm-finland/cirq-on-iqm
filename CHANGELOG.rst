@@ -2,10 +2,15 @@
 Changelog
 =========
 
-Version 16.1
+Version 16.2
 ============
 
 * Added a new 54-qubit IQMDevice :class:`Aphrodite`. `#149 <https://github.com/iqm-finland/cirq-on-iqm/pull/149>`_
+
+Version 16.1
+============
+
+* Support for the classically controlled prx gate `#147 <https://github.com/iqm-finland/cirq-on-iqm/pull/147>`_
 
 Version 16.0
 ============

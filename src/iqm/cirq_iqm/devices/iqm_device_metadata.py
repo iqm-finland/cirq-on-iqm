@@ -21,7 +21,7 @@ import cirq
 from cirq import Gate, NamedQid, devices, ops
 from cirq.contrib.routing.router import nx
 
-from iqm.cirq_iqm.iqm_operation_mapping import _IQM_CIRQ_OP_MAP
+from iqm.cirq_iqm.serialize import _IQM_CIRQ_OP_MAP
 from iqm.iqm_client import DynamicQuantumArchitecture
 
 

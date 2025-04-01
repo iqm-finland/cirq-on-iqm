@@ -12,12 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import cirq
-from cirq import CZPowGate, GateOperation, MeasurementGate, PhasedXPowGate, XPowGate, YPowGate, ZPowGate
+from cirq import (
+    ClassicallyControlledOperation,
+    CZPowGate,
+    GateOperation,
+    MeasurementGate,
+    PhasedXPowGate,
+    XPowGate,
+    YPowGate,
+    ZPowGate,
+)
 from mockito import mock
 import pytest
+from sympy import Eq, symbols  # type: ignore
 
 from iqm.cirq_iqm.iqm_gates import IQMMoveGate
-from iqm.cirq_iqm.iqm_operation_mapping import OperationNotSupportedError, instruction_to_operation, map_operation
+from iqm.cirq_iqm.serialize import (
+    OperationNotSupportedError,
+    instruction_to_operation,
+    map_operation,
+    serialize_circuit,
+)
 from iqm.iqm_client import Instruction
 
 
@@ -114,3 +129,65 @@ def test_instruction_to_operation():
     operation = instruction_to_operation(instruction)
     assert isinstance(operation.gate, IQMMoveGate)
     assert operation.qubits == (cirq.NamedQubit('QB1'), cirq.NamedQid('COMP_R', dimension=2))
+
+
+def test_cc_prx_operation():
+    instruction = Instruction(
+        name='cc_prx',
+        qubits=('QB1',),
+        args={'angle_t': 0.5, 'phase_t': 0.75, 'feedback_qubit': 'COMP_R', 'feedback_key': 'test key'},
+    )
+    operation = instruction_to_operation(instruction)
+    assert isinstance(operation, ClassicallyControlledOperation)
+    assert isinstance(operation._sub_operation.gate, PhasedXPowGate)
+
+
+def test_cc_prx_error_circuits():
+    qubits = cirq.LineQubit.range(2)
+    late_measurement_circuit = cirq.Circuit(
+        cirq.X(qubits[1]).with_classical_controls('f'), cirq.measure(qubits[0], key='f')
+    )
+    with pytest.raises(
+        OperationNotSupportedError,
+        match='cc_prx has feedback_key f, but no measure operation with that key precedes it.',
+    ):
+        serialize_circuit(late_measurement_circuit)
+
+    multiple_conditions = cirq.Circuit(
+        cirq.measure(qubits[0], key='f'),
+        cirq.measure(qubits[1], key='g'),
+        cirq.X(qubits[1]).with_classical_controls('f', 'g'),
+    )
+    with pytest.raises(
+        OperationNotSupportedError, match='Classically controlled gates can currently only have one condition.'
+    ):
+        serialize_circuit(multiple_conditions)
+
+    same_key_circuit = cirq.Circuit(
+        cirq.measure(qubits[0], key='f'),
+        cirq.measure(qubits[1], key='f'),
+        cirq.X(qubits[1]).with_classical_controls('f'),
+    )
+
+    with pytest.raises(OperationNotSupportedError, match='Cannot use the same key for multiple measurements.'):
+        serialize_circuit(same_key_circuit)
+
+    long_measurement = cirq.Circuit(
+        cirq.measure(qubits[0], qubits[1], key='f'), cirq.X(qubits[1]).with_classical_controls('f')
+    )
+    with pytest.raises(
+        OperationNotSupportedError, match='cc_prx must depend on the measurement result of a single qubit.'
+    ):
+        serialize_circuit(long_measurement)
+
+    f = symbols('f')
+    condition = Eq(f, 0)
+    wrong_condition_circuit = cirq.Circuit(
+        cirq.measure(qubits[0], key='f'), cirq.X(qubits[1]).with_classical_controls(condition)
+    )
+    with pytest.raises(OperationNotSupportedError, match='Only KeyConditions are supported as classical controls.'):
+        serialize_circuit(wrong_condition_circuit)
+
+    cc_z_circuit = cirq.Circuit(cirq.measure(qubits[0], key='f'), cirq.Z(qubits[1]).with_classical_controls('f'))
+    with pytest.raises(OperationNotSupportedError, match='Classical control on the Z gate is not supported.'):
+        serialize_circuit(cc_z_circuit)
