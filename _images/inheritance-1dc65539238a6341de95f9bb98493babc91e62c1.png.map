@@ -1,0 +1,5 @@
+<map id="inheritance787d4f250c" name="inheritance787d4f250c">
+<area shape="rect" id="node1" href="iqm.cirq_iqm.devices.aphrodite.Aphrodite.html#iqm.cirq_iqm.devices.aphrodite.Aphrodite" target="_top" title="IQM&#39;s 54&#45;qubit transmon device." alt="" coords="267,5,352,31"/>
+<area shape="rect" id="node2" href="iqm.cirq_iqm.devices.iqm_device.IQMDevice.html#iqm.cirq_iqm.devices.iqm_device.IQMDevice" target="_top" title="ABC for the properties of a specific IQM quantum architecture." alt="" coords="125,5,219,31"/>
+<area shape="rect" id="node3" title="Hardware constraints for validating circuits." alt="" coords="5,5,77,31"/>
+</map>

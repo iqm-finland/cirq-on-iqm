@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>iqm.cirq_iqm.serialize.deserialize_circuit &#8212; Cirq on IQM 16.2 documentation</title>
+    <title>iqm.cirq_iqm.devices.aphrodite.Aphrodite &#8212; Cirq on IQM 16.2 documentation</title>
   
   
   
@@ -44,12 +44,12 @@
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api/iqm.cirq_iqm.serialize.deserialize_circuit';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/iqm.cirq_iqm.devices.aphrodite.Aphrodite';</script>
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="iqm.cirq_iqm.serialize.instruction_to_operation" href="iqm.cirq_iqm.serialize.instruction_to_operation.html" />
-    <link rel="prev" title="iqm.cirq_iqm.serialize" href="iqm.cirq_iqm.serialize.html" />
+    <link rel="next" title="iqm.cirq_iqm.devices.apollo" href="iqm.cirq_iqm.devices.apollo.html" />
+    <link rel="prev" title="iqm.cirq_iqm.devices.aphrodite" href="iqm.cirq_iqm.devices.aphrodite.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="16.2" />
@@ -150,9 +150,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User guide</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../API.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="iqm.cirq_iqm.html">iqm.cirq_iqm</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l3 has-children"><a class="reference internal" href="iqm.cirq_iqm.devices.html">iqm.cirq_iqm.devices</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="iqm.cirq_iqm.devices.html">iqm.cirq_iqm.devices</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.devices.adonis.html">iqm.cirq_iqm.devices.adonis</a></li>
-<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.devices.aphrodite.html">iqm.cirq_iqm.devices.aphrodite</a></li>
+<li class="toctree-l4 current active"><a class="reference internal" href="iqm.cirq_iqm.devices.aphrodite.html">iqm.cirq_iqm.devices.aphrodite</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.devices.apollo.html">iqm.cirq_iqm.devices.apollo</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.devices.iqm_device.html">iqm.cirq_iqm.devices.iqm_device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.devices.iqm_device_metadata.html">iqm.cirq_iqm.devices.iqm_device_metadata</a></li>
@@ -178,8 +178,8 @@
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.optimizers.MergeOneParameterGroupGates.html">iqm.cirq_iqm.optimizers.MergeOneParameterGroupGates</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3 current active has-children"><a class="reference internal" href="iqm.cirq_iqm.serialize.html">iqm.cirq_iqm.serialize</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l4 current active"><a class="current reference internal" href="#">iqm.cirq_iqm.serialize.deserialize_circuit</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="iqm.cirq_iqm.serialize.html">iqm.cirq_iqm.serialize</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.serialize.deserialize_circuit.html">iqm.cirq_iqm.serialize.deserialize_circuit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.serialize.instruction_to_operation.html">iqm.cirq_iqm.serialize.instruction_to_operation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.serialize.map_operation.html">iqm.cirq_iqm.serialize.map_operation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="iqm.cirq_iqm.serialize.serialize_circuit.html">iqm.cirq_iqm.serialize.serialize_circuit</a></li>
@@ -258,7 +258,7 @@
       
       
       
-      <li><a href="../_sources/api/iqm.cirq_iqm.serialize.deserialize_circuit.rst" target="_blank"
+      <li><a href="../_sources/api/iqm.cirq_iqm.devices.aphrodite.Aphrodite.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -334,7 +334,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>iqm.cirq_iqm.serialize.deserialize_circuit</h1>
+    <h1>iqm.cirq_iqm.devices.aphrodite.Aphrodite</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -344,7 +344,7 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.serialize.deserialize_circuit"><code class="docutils literal notranslate"><span class="pre">deserialize_circuit()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.aphrodite.Aphrodite"><code class="docutils literal notranslate"><span class="pre">Aphrodite</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -356,23 +356,52 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="iqm-cirq-iqm-serialize-deserialize-circuit">
-<h1>iqm.cirq_iqm.serialize.deserialize_circuit<a class="headerlink" href="#iqm-cirq-iqm-serialize-deserialize-circuit" title="Link to this heading">#</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="iqm.cirq_iqm.serialize.deserialize_circuit">
-<span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.serialize.</span></span><span class="sig-name descname"><span class="pre">deserialize_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.Circuit.html#iqm.iqm_client.models.Circuit" title="(in IQM client v22.4)"><span class="pre">Circuit</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Circuit</span></span></span><a class="headerlink" href="#iqm.cirq_iqm.serialize.deserialize_circuit" title="Link to this definition">#</a></dt>
-<dd><p>Deserializes a quantum circuit from the IQM data transfer format to a Cirq Circuit.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>circuit</strong> (<a class="reference external" href="https://iqm-finland.github.io/iqm-client/api/iqm.iqm_client.models.Circuit.html#iqm.iqm_client.models.Circuit" title="(in IQM client v22.4)"><em>Circuit</em></a>) – data transfer object representing the circuit</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>quantum circuit</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Circuit</em></p>
-</dd>
-</dl>
+  <section id="iqm-cirq-iqm-devices-aphrodite-aphrodite">
+<h1>iqm.cirq_iqm.devices.aphrodite.Aphrodite<a class="headerlink" href="#iqm-cirq-iqm-devices-aphrodite-aphrodite" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="iqm.cirq_iqm.devices.aphrodite.Aphrodite">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">iqm.cirq_iqm.devices.aphrodite.</span></span><span class="sig-name descname"><span class="pre">Aphrodite</span></span><a class="headerlink" href="#iqm.cirq_iqm.devices.aphrodite.Aphrodite" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="iqm.cirq_iqm.devices.iqm_device.IQMDevice.html#iqm.cirq_iqm.devices.iqm_device.IQMDevice" title="iqm.cirq_iqm.devices.iqm_device.IQMDevice"><code class="xref py py-class docutils literal notranslate"><span class="pre">IQMDevice</span></code></a></p>
+<p>IQM’s 54-qubit transmon device.</p>
+<p>The qubits are connected thus:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>      <span class="n">QB54</span>  <span class="n">QB51</span>  <span class="n">QB46</span>  <span class="n">QB39</span>
+      <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \
+   <span class="n">QB53</span>  <span class="n">QB50</span>  <span class="n">QB45</span>  <span class="n">QB38</span>  <span class="n">QB31</span>
+   <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>
+<span class="n">QB52</span>  <span class="n">QB49</span>  <span class="n">QB44</span>  <span class="n">QB37</span>  <span class="n">QB30</span>
+   \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \
+   <span class="n">QB48</span>  <span class="n">QB43</span>  <span class="n">QB36</span>  <span class="n">QB29</span>  <span class="n">QB22</span>
+   <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \
+<span class="n">QB47</span>  <span class="n">QB42</span>  <span class="n">QB35</span>  <span class="n">QB28</span>  <span class="n">QB21</span>  <span class="n">QB14</span>
+   \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>
+   <span class="n">QB41</span>  <span class="n">QB34</span>  <span class="n">QB27</span>  <span class="n">QB20</span>  <span class="n">QB13</span>
+   <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \
+<span class="n">QB40</span>  <span class="n">QB33</span>  <span class="n">QB26</span>  <span class="n">QB19</span>  <span class="n">QB12</span>  <span class="n">QB7</span>
+   \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>
+   <span class="n">QB32</span>  <span class="n">QB25</span>  <span class="n">QB18</span>  <span class="n">QB11</span>  <span class="n">QB6</span>
+      \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \
+      <span class="n">QB24</span>  <span class="n">QB17</span>  <span class="n">QB10</span>  <span class="n">QB5</span>   <span class="n">QB2</span>
+      <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>
+   <span class="n">QB23</span>  <span class="n">QB16</span>  <span class="n">QB9</span>   <span class="n">QB4</span>   <span class="n">QB1</span>
+      \  <span class="o">/</span>  \  <span class="o">/</span>  \  <span class="o">/</span>
+      <span class="n">QB15</span>  <span class="n">QB8</span>   <span class="n">QB3</span>
+</pre></div>
+</div>
+<p>where the lines denote which qubit pairs can be subject to two-qubit gates.</p>
+<p>Aphrodite has native PhasedXPowGate, XPowGate, and YPowGate gates. The two-qubit gate CZ is
+native, as well. The qubits can be measured simultaneously or separately any number of times.</p>
+<p class="rubric">Attributes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+</tbody>
+</table>
+</div>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+</tbody>
+</table>
+</div>
 </dd></dl>
 
 </section>
@@ -389,20 +418,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="iqm.cirq_iqm.serialize.html"
+       href="iqm.cirq_iqm.devices.aphrodite.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">iqm.cirq_iqm.serialize</p>
+        <p class="prev-next-title">iqm.cirq_iqm.devices.aphrodite</p>
       </div>
     </a>
     <a class="right-next"
-       href="iqm.cirq_iqm.serialize.instruction_to_operation.html"
+       href="iqm.cirq_iqm.devices.apollo.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">iqm.cirq_iqm.serialize.instruction_to_operation</p>
+        <p class="prev-next-title">iqm.cirq_iqm.devices.apollo</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -423,7 +452,7 @@
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.serialize.deserialize_circuit"><code class="docutils literal notranslate"><span class="pre">deserialize_circuit()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iqm.cirq_iqm.devices.aphrodite.Aphrodite"><code class="docutils literal notranslate"><span class="pre">Aphrodite</span></code></a></li>
 </ul>
   </nav></div>
 
