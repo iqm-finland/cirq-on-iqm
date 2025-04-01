@@ -51,6 +51,7 @@ class Aphrodite(IQMDevice):
     Aphrodite has native PhasedXPowGate, XPowGate, and YPowGate gates. The two-qubit gate CZ is
     native, as well. The qubits can be measured simultaneously or separately any number of times.
     """
+
     def __init__(self):
         qubit_count = 54
         connectivity = (
