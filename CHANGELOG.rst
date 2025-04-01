@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 16.2
+============
+
+* Added a new 54-qubit IQMDevice :class:`Aphrodite`. `#149 <https://github.com/iqm-finland/cirq-on-iqm/pull/149>`_
+
 Version 16.1
 ============
 
